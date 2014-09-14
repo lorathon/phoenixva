@@ -70,7 +70,7 @@ if (defined('ENVIRONMENT'))
  * as this file.
  *
  */
-	$system_path = 'system';
+	$system_path = '/home/phoenix/system';
 
 /*
  *---------------------------------------------------------------
@@ -86,7 +86,7 @@ if (defined('ENVIRONMENT'))
  * NO TRAILING SLASH!
  *
  */
-	$application_folder = 'application';
+	$application_folder = '/home/phoenix/app_20140914_CT';
 
 /*
  * --------------------------------------------------------------------
