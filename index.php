@@ -23,7 +23,7 @@ date_default_timezone_set('UTC');
 
 
 
-if(strpos(dirname(__FILE__), 'Sites') === FALSE)
+if(strpos(dirname(__FILE__), 'zz_dev') === FALSE)
 {
     define('ENVIRONMENT', 'production');
 }
