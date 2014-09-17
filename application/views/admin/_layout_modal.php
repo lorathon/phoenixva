@@ -5,7 +5,7 @@
         
         <?php $this->load->view($subview);  //Subview is set in controller ?>
         <div class="modal-footer">
-            &copy: <?php echo $meta_title?>
+            &copy;: <?php echo $meta_title?>
         </div> 
     </div>    
 
