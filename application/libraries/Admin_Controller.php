@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Admin controller
+ * @author Chuck
+ * @deprecated Use PVA_Controller instead.
+ */
 class Admin_Controller extends MY_Controller
 {
     function __construct()

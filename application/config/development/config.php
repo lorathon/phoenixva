@@ -1,17 +1,5 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-
-function __autoload($className)
-{
-    if(strpos($className, 'CI') !== 0)
-    {
-        $file = APPPATH . 'libraries/' . $className . '.php';
-        if(file_exists($file) && is_file($file))
-            @include_once($file);
-    }
-    
-}
-
 /*
 |--------------------------------------------------------------------------
 | Base Site URL
@@ -193,7 +181,7 @@ $config['directory_trigger']	= 'd'; // experimental not currently in use
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] = 0;
+$config['log_threshold'] = 2;
 
 /*
 |--------------------------------------------------------------------------
@@ -261,7 +249,7 @@ $config['sess_cookie_name']		= 'cisessionDEV';
 $config['sess_expiration']		= 7200;
 $config['sess_expire_on_close']	= TRUE;
 $config['sess_encrypt_cookie']	= TRUE;
-$config['sess_use_database']	= TRUE;
+$config['sess_use_database']	= FALSE;
 $config['sess_table_name']		= 'ci_sessions';
 $config['sess_match_ip']		= FALSE;
 $config['sess_match_useragent']	= TRUE;

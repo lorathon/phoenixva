@@ -1,7 +1,6 @@
 <?php
 
-class Session_Log_m extends MY_Model
-{
+class Session_Log_m extends PVA_Model {
     protected $_table_name			= 'session_log';	
     protected $_order_by            = 'id ASC';
     protected $_timestamps          = TRUE;

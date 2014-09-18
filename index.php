@@ -86,7 +86,7 @@ if (defined('ENVIRONMENT'))
  * NO TRAILING SLASH!
  *
  */
-	$application_folder = '/home/phoenix/app_20140914_CT';
+	$application_folder = '/home/phoenix/app_20140917_CT';
 
 /*
  * --------------------------------------------------------------------

@@ -1,6 +1,6 @@
 <?php
 
-class MY_Model extends CI_Model
+class PVA_Model extends CI_Model
 {
     protected $_table_name = '';
     protected $_primary_key = 'id';

@@ -1,7 +1,12 @@
-<?php
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Home extends Public_Controller
-{
+/**
+ * Default home page
+ * 
+ * @author Chuck
+ *
+ */
+class Home extends PVA_Controller {
     function __construct()
     {
         parent::__construct();
