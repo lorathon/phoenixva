@@ -1,6 +1,6 @@
 <?php
 
-class Regional extends Admin_Controller
+class Regional extends PVA_Controller
 {
     protected $_table_name = 'airlines_regional';
     protected $_order_by = 'icao';

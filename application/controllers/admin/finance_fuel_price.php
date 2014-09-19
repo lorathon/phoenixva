@@ -1,6 +1,6 @@
 <?php
 
-class Finance_Fuel_Price extends Admin_Controller
+class Finance_Fuel_Price extends PVA_Controller
 {
     protected $_table_name = 'finance_fuel_prices';
     protected $_order_by = 'id';

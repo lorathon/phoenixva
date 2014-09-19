@@ -1,6 +1,6 @@
 <?php
 
-class Airline extends Admin_Controller
+class Airline extends PVA_Controller
 {
     protected $_table_name = 'airlines';
     protected $_order_by = 'icao';

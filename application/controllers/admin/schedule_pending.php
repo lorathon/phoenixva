@@ -1,6 +1,6 @@
 <?php
 
-class Schedule_Pending extends Admin_Controller
+class Schedule_Pending extends PVA_Controller
 {
     protected $_table_name = 'schedules_pending';
     protected $_order_by = 'icao';

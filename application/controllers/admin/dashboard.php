@@ -1,6 +1,6 @@
 <?php
 
-class Dashboard extends Admin_Controller
+class Dashboard extends PVA_Controller
 {
     public function __construct()
     {

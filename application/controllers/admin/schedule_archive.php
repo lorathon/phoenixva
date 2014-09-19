@@ -1,6 +1,6 @@
 <?php
 
-class Schedule_Archive extends Admin_Controller
+class Schedule_Archive extends PVA_Controller
 {
     protected $_table_name = 'schedules_archive';
     protected $_order_by = 'icao';

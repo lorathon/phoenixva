@@ -1,6 +1,6 @@
 <?php
 
-class Schedule_Active extends Admin_Controller
+class Schedule_Active extends PVA_Controller
 {
     protected $_table_name = 'schedules_active';
     protected $_order_by = 'icao';

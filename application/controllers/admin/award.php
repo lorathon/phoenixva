@@ -1,6 +1,6 @@
 <?php
 
-class Award extends Admin_Controller
+class Award extends PVA_Controller
 {
     protected $_table_name = 'awards';
     protected $_table_name_users = 'user_awards';

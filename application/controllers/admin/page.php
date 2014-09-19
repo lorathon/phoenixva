@@ -1,6 +1,6 @@
 <?php
 
-class Page extends Admin_Controller
+class Page extends PVA_Controller
 {
     protected $_table_name = 'pages';
     protected $_order_by = 'id';

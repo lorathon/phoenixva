@@ -1,6 +1,6 @@
 <?php
 
-class User extends Admin_Controller
+class User extends PVA_Controller
 {
 	protected $_table_name = 'users';
     protected $_table_name_profile = 'user_profiles';

@@ -1,6 +1,6 @@
 <?php
 
-class Rank extends Admin_Controller
+class Rank extends PVA_Controller
 {
     protected $_table_name = 'user_ranks';
     protected $_order_by = 'id';
