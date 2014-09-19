@@ -7,12 +7,19 @@
  * handles login redirection and admin checks. Private areas of the application
  * should have a URL like domain.com/private/ and admin areas should have a URL
  * like domain.com/admin/. All other URLs will be treated as public.
+ * 
+ * General controller usage should be to instantiate and populate models, set the
+ * necessary values in the $data array, and then call $this->_render('view_name');
+ * where 'view_name' = the view to render. This will automatically render the 
+ * view within the appropriate template.
+ * 
  * @author Chuck Topinka
  *
  */
 class PVA_Controller extends CI_Controller {
     
-	public $data = array();
+	public $data    = array();
+	private $_access = 'public';
     
     function __construct()
     {
@@ -24,7 +31,7 @@ class PVA_Controller extends CI_Controller {
         log_message('debug', 'PVA Controller class initialized');
         
         // Register autoloader
-        spl_autoload_register(array('PVA_Controller','autoload'));
+        spl_autoload_register(array('PVA_Controller','_autoload'));
                 
         // Ensure database is current
         $this->load->library('migration');
@@ -74,10 +81,12 @@ class PVA_Controller extends CI_Controller {
         	// Indicate admin area
         	$this->data['site_name']  .= ' - Admin';
         	$this->data['meta_title'] .= ' - Admin';
+        	$this->_access = 'admin';
         }
         elseif ($access == 'private')
         {
         	// Any common stuff for private access goes here.
+        	$this->_access = 'private';
         }
         
         
@@ -104,15 +113,50 @@ class PVA_Controller extends CI_Controller {
             $this->data['alert'] = FALSE;
         }
     }
+    
+    /**
+     * Renders views as part of overall template
+     * 
+     * This method should be called to display a view to ensure it is wrapped in
+     * the template as appropriate.
+     * @param string|array $view The view(s) to render.
+     * TODO Have the view default to the current controller name.
+     */
+    protected function _render($view)
+    {
+    	// Get the view and place in view_output
+    	if (is_array($view))
+    	{
+    		foreach ($view as $subview)
+    		{
+    			$this->data['view_output'] .= $this->load->view($view, $this->data, TRUE);
+    		}
+    	}
+    	else 
+    	{
+    		$this->data['view_output'] = $this->load->view($view, $this->data, TRUE);
+    	}
+    	
+    	if ($this->_access == 'admin')
+    	{
+    		// Load the admin template
+    		$this->load->view('templates/admin', $this->data);
+    	}
+    	else 
+    	{
+    		// Load the site template
+    		$this->load->view('templates/pva', $this->data);
+    	}
+    }
 
     /**
      * PVA Application autoloader
      * 
      * Allows calling objects without having to load models first.
      * XXX Not sure this is the best way to do this.
-     * @param unknown $class
+     * @param string $class The class name to load.
      */
-    function autoload($class)
+    protected function _autoload($class)
     {
    		if(strpos($class, 'CI') !== 0)
    		{

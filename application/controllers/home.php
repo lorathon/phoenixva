@@ -7,6 +7,7 @@
  *
  */
 class Home extends PVA_Controller {
+	
     function __construct()
     {
         parent::__construct();
@@ -18,6 +19,6 @@ class Home extends PVA_Controller {
         $this->data['midview'] = 'home_mid';
         $this->data['rightview'] = 'home_right';
         $this->data['articles'] = $this->article_m->get_with_limit(5);
-        $this->load->view('_layout_main.php', $this->data);
+        $this->_render('home');
     }
 }
