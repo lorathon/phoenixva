@@ -52,7 +52,7 @@ $autoload['packages'] = array();
 |	$autoload['libraries'] = array('database', 'session', 'xmlrpc');
 */
 
-$autoload['libraries'] = array('database', 'session', 'tank_auth');
+$autoload['libraries'] = array('database', 'session');
 
 
 /*
@@ -80,7 +80,7 @@ $autoload['helper'] = array('url', 'html', 'my', 'breadcrumb');
 |
 */
 
-$autoload['config'] = array('PVA_config');
+$autoload['config'] = array('pva_config');
 
 
 /*

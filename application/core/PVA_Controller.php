@@ -18,15 +18,15 @@ class PVA_Controller extends CI_Controller {
     {
         parent::__construct();
         
+        // Styling and profiling
+        $this->output->enable_profiler(TRUE);
+        
         log_message('debug', 'PVA Controller class initialized');
         
         // Register autoloader
         spl_autoload_register(array('PVA_Controller','autoload'));
-        
-        // Styling and profiling
-        $this->output->enable_profiler(TRUE);
-        
-        // Ensure database is current XXX For development only!!!
+                
+        // Ensure database is current
         $this->load->library('migration');
         
         if ( ! $this->migration->current())
@@ -35,8 +35,8 @@ class PVA_Controller extends CI_Controller {
         	log_message('error', 'Migration error: '.$this->migration->error_string());
         }
         
-        // Load Site config file
-        $this->config->load('PVA_config');        
+        // Load PVA config file
+        $this->config->load('pva_config');        
         
         $this->data['errors'] = array();
         $this->data['site_name'] = config_item('site_name');
@@ -48,6 +48,8 @@ class PVA_Controller extends CI_Controller {
         if ($access == 'admin' OR $access == 'private')
         {
         	// Verify user logged in
+        	$this->library->load('tank_auth');
+        	
         	if ( ! $this->tank_auth->is_logged_in())
         	{
         		// User not logged in so redirect to login
