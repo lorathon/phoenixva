@@ -27,6 +27,11 @@ $config['date_field'] = array(
 			'type' => 'DATE',
 			);
 
+/* Definition for datetime fields */
+$config['datetime_field'] = array(
+		'type' => 'DATETIME',
+		);
+
 /* Definition for timestamp fields */
 $config['timestamp_field'] = array(
 			'type' => 'TIMESTAMP',
@@ -39,6 +44,13 @@ $config['counter_field'] = array(
 			'unsigned'   => TRUE,
 			'default'    => 0,
 			);
+
+/* Definition for counter fields */
+$config['counter_field_signed'] = array(
+		'type'       => 'BIGINT',
+		'constraint' => 11,
+		'default'    => 0,
+);
 
 /* Definition for calculated fields */
 $config['calculated_field'] = array(
@@ -60,7 +72,7 @@ $config['input_field'] = array(
 /* Definition for short input fields */
 $config['short_input_field'] = array(
 			'type'       => 'VARCHAR',
-			'constraint' => 25,
+			'constraint' => 50,
 			);
 
 /* Definition for text input fields */

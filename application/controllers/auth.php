@@ -8,7 +8,7 @@
  * BY: Jeffrey F. Kobus
 */
 
-class Auth extends MY_Controller
+class Auth extends PVA_Controller
 {
 	function __construct()
 	{
