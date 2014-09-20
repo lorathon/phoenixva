@@ -18,7 +18,7 @@
 		<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800%7CShadows+Into+Light" rel="stylesheet" type="text/css">
 		<!-- Libs CSS -->
 		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/bootstrap/css/bootstrap.css');?>">
-		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/font-awesome/css/font-awesome.css');?>">
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
 		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/owl-carousel/owl.carousel.css');?>" media="screen">
 		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/owl-carousel/owl.theme.css');?>" media="screen">
 		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/magnific-popup/magnific-popup.css');?>" media="screen">
@@ -62,18 +62,25 @@
 			<header id="header">
 				<div class="container">
 					<h1 class="logo">
-						<a href="/zz_staging_ci/index.php">
-							<img alt="Porto" width="225" height="75" data-sticky-width="180" data-sticky-height="60" src="<?php echo base_url('assets/img/Logo.png');?>">
-						</a>
+						<?php echo anchor('','<img alt="Phoenix Virtual Airways" 
+								width="225" height="75" 
+								data-sticky-width="180" data-sticky-height="60" 
+								src="'.base_url('assets/img/Logo.png').'">','title="Home Page"'); ?>
 					</h1>
 					<nav>
 						<ul class="nav nav-pills nav-top">
-							<li>
-								<a href="/index.php/login_form"><i class="icon icon-angle-right"></i>Sign In</a>
-							</li>
-							<li>
-								<a href="contact-us.html"><i class="icon icon-angle-right"></i>Join PVA</a>
-							</li>
+							<?php if (isset($userdata)): ?>
+								<li>
+									<?php echo anchor('auth/logout','<i class="fa fa-sign-out fa-lg"></i>','title="Sign Out"')?>
+								</li>
+							<?php else: ?>
+								<li>
+									<?php echo anchor('auth/login','<i class="fa fa-sign-in fa-lg"></i>Sign In'); ?>
+								</li>
+								<li>
+									<?php echo anchor('auth/register','<i class="fa fa-angle-right fa-lg"></i>Join PVA'); ?>
+								</li>
+							<?php endif; ?>
 						</ul>
 					</nav>
 					<button class="btn btn-responsive-nav btn-inverse" data-toggle="collapse" data-target=".nav-main-collapse">
@@ -88,15 +95,9 @@
 						</ul>
 						<nav class="nav-main mega-menu">
 							<ul class="nav nav-pills nav-main" id="mainMenu">
-								<li>
-									<a href="/zz_staging_ci/index.php/airports">Destinations</a>
-								</li>
-								<li>
-									<a href="/zz_staging_ci/index.php/typeahead">Type Ahead</a>
-								</li>
-								<li>
-									<a href="/zz_staging_ci/index.php/faq-public">FAQ's</a>
-								</li>								
+								<li><?php echo anchor('pages/airports','Destinations'); ?></li>
+								<li><?php echo anchor('pages/typeahead','Type Ahead'); ?></li>
+								<li><?php echo anchor('pages/faq-public','FAQ\'s'); ?></li>
 							</ul>
 						</nav>
 					</div>
@@ -110,7 +111,13 @@
 					<div class="row">
 						<div class="col-md-8">
 							<h4>About Phoenix Virtual Airways</h4>
-							<p>Phoenix Virtual Airways brings forth experienced virtual airline managers and a core group of pilots who seek a rewarding, fun flying experience as part of a community of flight simulation enthusiasts.<a href="#" class="btn-flat btn-xs">View More <i class="icon icon-arrow-right"></i></a></p>
+							<p>
+								Phoenix Virtual Airways brings forth experienced 
+								virtual airline managers and a core group of pilots 
+								who seek a rewarding, fun flying experience as part 
+								of a community of flight simulation enthusiasts.
+								<a href="#" class="btn-flat btn-xs">View More <i class="icon icon-arrow-right"></i></a>
+							</p>
 							<hr class="light">
 						</div>
 						<div class="col-md-3 col-md-offset-1">
@@ -119,12 +126,11 @@
 							<p class="short">International: (333) 456-6670</p>
 							<p class="short">Fax: (222) 531-8999</p>
 							<ul class="list icons list-unstyled">
-								<li><i class="icon icon-envelope"></i> <a href="mailto:okler@okler.net">okler@okler.net</a></li>
+								<li><i class="fa fa-envelope"></i> <?php echo safe_mailto('helpdesk@phoenixva.org','Email Us'); ?></li>
 							</ul>
 							<div class="social-icons">
 								<ul class="social-icons">
-									<li class="facebook"><a href="http://www.facebook.com/" target="_blank" data-placement="bottom" rel="tooltip" title="Facebook">Facebook</a></li>
-									<li class="twitter"><a href="http://www.twitter.com/" target="_blank" data-placement="bottom" rel="tooltip" title="Twitter">Twitter</a></li>
+									<li class="facebook"><a href="https://www.facebook.com/phoenixairways" target="_blank" data-placement="bottom" rel="tooltip" title="Facebook">Facebook</a></li>
 								</ul>
 							</div>
 						</div>

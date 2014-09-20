@@ -18,7 +18,7 @@
  */
 class PVA_Controller extends CI_Controller {
     
-	public $data    = array();
+	public $data     = array();
 	private $_access = 'public';
     
     function __construct()
@@ -118,33 +118,43 @@ class PVA_Controller extends CI_Controller {
      * Renders views as part of overall template
      * 
      * This method should be called to display a view to ensure it is wrapped in
-     * the template as appropriate.
-     * @param string|array $view The view(s) to render.
-     * TODO Have the view default to the current controller name.
+     * the template as appropriate. If an array of views is loaded, the views
+     * will be rendered in the order set in the array.
+     * 
+     * @param string|array $view The view(s) to render. Optional. If not provided,
+     * a view with the same name as the current controller will be rendered.
      */
-    protected function _render($view)
+    protected function _render($view = NULL)
     {
-    	// Get the view and place in view_output
+    	// Default view to current class
+    	if (is_null($view)) $view = get_class($this);
+    	
+    	// Get the view(s) and place in view_output
     	if (is_array($view))
     	{
     		foreach ($view as $subview)
     		{
+    			log_message('debug', 'Rendering '.$subview);
     			$this->data['view_output'] .= $this->load->view($view, $this->data, TRUE);
     		}
     	}
     	else 
     	{
+    		log_message('debug', 'Rendering '.$view);
     		$this->data['view_output'] = $this->load->view($view, $this->data, TRUE);
     	}
     	
+    	// Render the appropriate template
     	if ($this->_access == 'admin')
     	{
     		// Load the admin template
+    		log_message('debug', 'Using admin template.');
     		$this->load->view('templates/admin', $this->data);
     	}
     	else 
     	{
     		// Load the site template
+    		log_message('debug', 'Using site template.');
     		$this->load->view('templates/pva', $this->data);
     	}
     }
@@ -165,7 +175,10 @@ class PVA_Controller extends CI_Controller {
    			{
    				$file = APPPATH . 'libraries/' . $class . '.php';
    				if(file_exists($file) && is_file($file))
+   				{
+   					log_message('debug', 'Autoloading '.$file);
    					@include_once($file);
+   				}
    			}
    		}    	 
     }
