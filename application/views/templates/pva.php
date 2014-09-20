@@ -7,9 +7,7 @@
 		<!-- Basic -->
 		<meta charset="utf-8">
 		<title><?php echo $meta_title; ?></title>		
-		<meta name="keywords" content="HTML5 Template" />
-		<meta name="description" content="Porto - Responsive HTML5 Template">
-		<meta name="author" content="okler.net">
+		<meta name="description" content="<?php echo $meta_description; ?>">
 
 		<!-- Mobile Metas -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
