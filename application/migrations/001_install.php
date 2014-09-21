@@ -45,7 +45,7 @@ class Migration_Install extends CI_Migration {
 				'heard_about'            => $field_config['input_field'],
 				));
 		$this->dbforge->add_key('id', TRUE);
-		$this->dbforge->add_key('hub');
+		$this->dbforge->add_key(array('hub','rank_id'));
 		$this->dbforge->create_table('users');
 		
 		// User_profiles table
@@ -55,6 +55,7 @@ class Migration_Install extends CI_Migration {
 				'location'       => $field_config['input_field'],
 				'avatar'         => $field_config['input_field'],
 				'background_sig' => $field_config['input_field'],
+				'bio'            => $field_config['text_input_field'],
 				'modified'       => $field_config['timestamp_field'],
 				));
 		$this->dbforge->add_key('id', TRUE);
@@ -147,6 +148,60 @@ class Migration_Install extends CI_Migration {
 		$this->dbforge->add_key('user_id', TRUE);
 		$this->dbforge->add_key('airline_id', TRUE);
 		$this->dbforge->create_table('user_airlines');
+		
+		// Airports table
+		$this->dbforge->add_field(array(
+				'id'              => $field_config['id_field'],
+				'icao'            => $field_config['icao_field'],
+				'iata'            => $field_config['icao_field'],
+				'name'            => $field_config['short_input_field'],
+				'city'            => $field_config['short_input_field'],
+				'state_code'      => $field_config['short_input_field'],
+				'country'         => $field_config['short_input_field'],
+				'utc_offset'      => $field_config['tiny_int'],
+				'lat'             => $field_config['location_field'],
+				'long'            => $field_config['location_field'],
+				'elevation'       => $field_config['altitude_field'],
+				'classification'  => $field_config['status_field'],
+				'type'            => $field_config['short_input_field'],
+				'active'          => $field_config['status_field'],
+				'delay_index_url' => $field_config['short_input_field'],
+				'weather_url'     => $field_config['short_input_field'],
+				'hub'             => $field_config['status_field'],
+				));
+		$this->dbforge->add_key('id', TRUE);
+		$this->dbforge->add_key(array('icao','iata','hub'));
+		$this->dbforge->create_table('airports');
+		
+		// Airlines table
+		$this->dbforge->add_field(array(
+				'id'              => $field_config['id_field'],
+				'iata'            => $field_config['icao_field'],
+				'icao'            => $field_config['icao_field'],
+				'name'            => $field_config['short_input_field'],
+				'active'          => $field_config['status_field'],
+				'fuel_discount'   => $field_config['status_field'],
+				'airline_image'   => $field_config['short_input_field'],
+				'total_schedules' => $field_config['counter_field'],
+				'total_pireps'    => $field_config['counter_field'],
+				'total_hours'     => $field_config['counter_field'],
+				'regional'        => $field_config['status_field'],
+				));
+		$this->dbforge->add_key('id', TRUE);
+		$this->dbforge->add_key(array('iata','icao'));
+		$this->dbforge->create_table('airlines');
+		
+		// Ranks table
+		$this->dbforge->add_field(array(
+				'id'         => $field_config['id_field'],
+				'rank'       => $field_config['short_input_field'],
+				'rank_image' => $field_config['short_input_field'],
+				'min_hours'  => $field_config['counter_field'],
+				'pay_rate'   => $field_config['money_field'],
+				'short'      => $field_config['short_input_field'],
+				));
+		$this->dbforge->add_key('id', TRUE);
+		$this->dbforge->create_table('ranks');
 		
 		// Notes table
 		$this->dbforge->add_field(array(
