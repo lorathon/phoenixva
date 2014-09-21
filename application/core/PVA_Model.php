@@ -1,5 +1,11 @@
-<?php
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
 
+/**
+ * PVA Application base model
+ * 
+ * @author Chuck
+ *
+ */
 class PVA_Model extends CI_Model
 {
     protected $_table_name = '';
@@ -9,12 +15,35 @@ class PVA_Model extends CI_Model
     public $_rules = array();
     protected $_timestamps = FALSE;
     
+    // ID
+    public $id = NULL;
     
-    function __construct()
+    // Default offset
+    protected $_offset = 0;
+    
+    // Default limit
+    protected $_limit = 25;
+    
+    function __construct($id = NULL)
     {
         parent::__construct();
+        
+        // Connect to data store
+        $this->load->database();
+        
+        // Set the ID
+        if ($id && $id > 0)
+        {
+        	$this->id = $id;
+        }
     }
-    
+        
+    /**
+     * 
+     * @param unknown $fields
+     * @return multitype:NULL
+     * @deprecated Models should not get post input directly
+     */
     public function array_from_post($fields)
     {
         // Return array from Post data

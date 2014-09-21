@@ -41,8 +41,11 @@ class Migration_Install extends CI_Migration {
 				'admin_level'            => $field_config['status_field'],
 				'rank_id'                => $field_config['fk_field'],
 				'hub'                    => $field_config['fk_field'],
+				'transfer_link'          => $field_config['input_field'],
+				'heard_about'            => $field_config['input_field'],
 				));
 		$this->dbforge->add_key('id', TRUE);
+		$this->dbforge->add_key('hub');
 		$this->dbforge->create_table('users');
 		
 		// User_profiles table

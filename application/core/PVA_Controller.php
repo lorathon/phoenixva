@@ -42,12 +42,15 @@ class PVA_Controller extends CI_Controller {
 			log_message('error', 'Migration error: '.$this->migration->error_string());
 		}
 
-		// Load PVA config file
+		// Load PVA config file XXX This should probably not be loaded here.
 		$this->load->config('pva_config');
 
 		$this->data['errors'] = array();
+		
+		// XXX These config items don't apply to all requests
 		$this->data['site_name'] = config_item('site_name');
 		$this->data['meta_title'] = config_item('site_name');
+		$this->data['meta_description'] = config_item('site_description');
 
 		// Public, private or admin access
 		$access = $this->uri->segment(1);

@@ -69,7 +69,10 @@
 						<ul class="nav nav-pills nav-top">
 							<?php if (isset($userdata)): ?>
 								<li>
-									<?php echo anchor('auth/logout','<i class="fa fa-sign-out fa-lg"></i>','title="Sign Out"')?>
+									<?php echo anchor('private/profile','<i class="fa fa-user fa-lg"></i>'.$userdata['name'],'title="Pilot Profile"'); ?>
+								</li>
+								<li>
+									<?php echo anchor('auth/logout','<i class="fa fa-sign-out fa-lg"></i>','title="Sign Out"'); ?>
 								</li>
 							<?php else: ?>
 								<li>
@@ -82,7 +85,7 @@
 						</ul>
 					</nav>
 					<button class="btn btn-responsive-nav btn-inverse" data-toggle="collapse" data-target=".nav-main-collapse">
-						<i class="icon icon-bars"></i>
+						<i class="fa fa-bars"></i>
 					</button>
 				</div>
 				<div class="navbar-collapse nav-main-collapse collapse">
@@ -114,7 +117,7 @@
 								virtual airline managers and a core group of pilots 
 								who seek a rewarding, fun flying experience as part 
 								of a community of flight simulation enthusiasts.
-								<a href="#" class="btn-flat btn-xs">View More <i class="icon icon-arrow-right"></i></a>
+								<a href="#" class="btn-flat btn-xs">View More <i class="fa fa-arrow-right"></i></a>
 							</p>
 							<hr class="light">
 						</div>

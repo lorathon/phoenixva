@@ -9,6 +9,8 @@
  *
  * @package	Tank_auth
  * @author	Ilya Konyukhov (http://konyukhov.com/soft/)
+ * 
+ * @deprecated Will be removed prior to production launch. Use User model instead.
  */
 class Users extends CI_Model
 {

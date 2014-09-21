@@ -40,9 +40,9 @@ class Auth extends PVA_Controller
 			redirect('/auth/send_again/');
 
 		} else {
-			$data['login_by_username'] = ($this->config->item('login_by_username', 'tank_auth') AND
+			$this->data['login_by_username'] = ($this->config->item('login_by_username', 'tank_auth') AND
 					$this->config->item('use_username', 'tank_auth'));
-			$data['login_by_email'] = $this->config->item('login_by_email', 'tank_auth');
+			$this->data['login_by_email'] = $this->config->item('login_by_email', 'tank_auth');
 
 			$this->form_validation->set_rules('login', 'Login', 'trim|required|xss_clean');
 			$this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean');
@@ -56,24 +56,24 @@ class Auth extends PVA_Controller
 				$login = '';
 			}
 
-			$data['use_recaptcha'] = $this->config->item('use_recaptcha', 'tank_auth');
+			$this->data['use_recaptcha'] = $this->config->item('use_recaptcha', 'tank_auth');
 			if ($this->tank_auth->is_max_login_attempts_exceeded($login)) {
-				if ($data['use_recaptcha'])
+				if ($this->data['use_recaptcha'])
 					$this->form_validation->set_rules('recaptcha_response_field', 'Confirmation Code', 'trim|xss_clean|required|callback__check_recaptcha');
 				else
 					$this->form_validation->set_rules('captcha', 'Confirmation Code', 'trim|xss_clean|required|callback__check_captcha');
 			}
-			$data['errors'] = array();
+			$this->data['errors'] = array();
 
 			if ($this->form_validation->run()) {								// validation ok 
 				if ($this->tank_auth->login(
 						$this->form_validation->set_value('login'),
 						$this->form_validation->set_value('password'),
 						$this->form_validation->set_value('remember'),
-						$data['login_by_username'],
-						$data['login_by_email'])) {								// success
+						$this->data['login_by_username'],
+						$this->data['login_by_email'])) {								// success
 					$this->session->set_flashdata('success', 'You have successfully logged into your account.');
-                    redirect('home');
+                    redirect('private/profile');
 
 				} else {
 					$errors = $this->tank_auth->get_error_message();
@@ -84,23 +84,22 @@ class Auth extends PVA_Controller
 						redirect('/auth/send_again/');
 
 					} else {													// fail
-						foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
+						foreach ($errors as $k => $v)	$this->data['errors'][$k] = $this->lang->line($v);
 					}
 				}
 			}
-			$data['show_captcha'] = FALSE;
+			$this->data['show_captcha'] = FALSE;
 			if ($this->tank_auth->is_max_login_attempts_exceeded($login)) {
-				$data['show_captcha'] = TRUE;
-				if ($data['use_recaptcha']) {
-					$data['recaptcha_html'] = $this->_create_recaptcha();
+				$this->data['show_captcha'] = TRUE;
+				if ($this->data['use_recaptcha']) {
+					$this->data['recaptcha_html'] = $this->_create_recaptcha();
 				} else {
-					$data['captcha_html'] = $this->_create_captcha();
+					$this->data['captcha_html'] = $this->_create_captcha();
 				}
 			}
 			
-            $data['meta_title'] = config_item('site_name');            
-            $data['subview'] = '/auth/login_form';
-            $this->load->view('_layout_modal', $data);
+            $this->data['meta_title'] = config_item('site_name');            
+            $this->_render('/auth/login_form');
 		}
 	}
 
@@ -154,60 +153,80 @@ class Auth extends PVA_Controller
 					$this->form_validation->set_rules('captcha', 'Confirmation Code', 'trim|xss_clean|required|callback__check_captcha');
 				}
 			}
-			$data['errors'] = array();
+			$this->data['errors'] = array();
 
 			$email_activation = $this->config->item('email_activation', 'tank_auth');
 
-			if ($this->form_validation->run()) {								// validation ok
-				if (!is_null($data = $this->tank_auth->create_user(
-						$use_username ? $this->form_validation->set_value('username') : '',
-						$this->form_validation->set_value('email'),
-						$this->form_validation->set_value('password'),
-						$email_activation,
-						$this->form_validation->set_value('first_name'),
-						$this->form_validation->set_value('last_name'),
-						$this->form_validation->set_value('birth_date')
-						))) {									// success
+			if ($this->form_validation->run()) 
+			{
+				// validation ok, create user object
+				$user = new User();
+				$user->name = $this->form_validation->set_value('first_name').' '.$this->form_validation->set_value('last_name');
+				$user->email = $this->form_validation->set_value('email');
+				$user->password = $this->form_validation->set_value('password');
+				$user->birthday = $this->form_validation->set_value('birth_date');
+				$user->last_ip = $this->input->ip_address();
+				$user->hub = $this->form_validation->set_value('crew_center');
+				$user->transfer_link = $this->form_validation->set_value('transfer_link');
+				$user->heard_about = $this->form_validation->set_value('heard_about');
+				
+				// Set user profile info
+				$user_profile = $user->get_user_profile();
+				$user_profile->location = $this->form_validation->set_value('location');
+				$user->set_user_profile($user_profile);
+				
+				// Set user stat info
+				$user_stats = $user->get_user_stats();
+				$user_stats->hours_transfer = $this->form_validation->set_value('transfer_hours');
+				$user->set_user_stats($user_stats);
+				
+				if ( ! $user->create_user() === FALSE) 
+				{
+					// User created
 
-					$data['site_name'] = $this->config->item('website_name', 'tank_auth');
+					$this->data['site_name'] = $this->config->item('website_name', 'tank_auth');
 
-					if ($email_activation) {									// send "activate" email
-						$data['activation_period'] = $this->config->item('email_activation_expire', 'tank_auth') / 3600;
+					if ($email_activation) 
+					{
+						// Send activate email
+						$this->data['activation_period'] = $this->config->item('email_activation_expire', 'tank_auth') / 3600;
 
-						$this->_send_email('activate', $data['email'], $data);
-
-						unset($data['password']); // Clear password (just for any case)
+						$this->_send_email('activate', $this->data['email'], $this->data);
 
 						$this->_show_message('info', $this->lang->line('auth_message_registration_completed_1'));
 
-					} else {
-						if ($this->config->item('email_account_details', 'tank_auth')) {	// send "welcome" email
-
-							$this->_send_email('welcome', $data['email'], $data);
+					} 
+					else 
+					{
+						if ($this->config->item('email_account_details', 'tank_auth')) 
+						{
+							// Send welcome email
+							$this->_send_email('welcome', $this->data['email'], $this->data);
 						}
-						unset($data['password']); // Clear password (just for any case)
 
 						$this->_show_message('info', $this->lang->line('auth_message_registration_completed_2').' '.anchor('/auth/login/', 'Login'));
 					}
-				} else {
+					
+					unset($this->data['password']); // Clear password (just for any case)
+				} 
+				else 
+				{
 					$errors = $this->tank_auth->get_error_message();
-					foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
+					foreach ($errors as $k => $v)	$this->data['errors'][$k] = $this->lang->line($v);
 				}
 			}
 			if ($captcha_registration) {
 				if ($use_recaptcha) {
-					$data['recaptcha_html'] = $this->_create_recaptcha();
+					$this->data['recaptcha_html'] = $this->_create_recaptcha();
 				} else {
-					$data['captcha_html'] = $this->_create_captcha();
+					$this->data['captcha_html'] = $this->_create_captcha();
 				}
 			}
-			$data['use_username'] = $use_username;
-			$data['captcha_registration'] = $captcha_registration;
-			$data['use_recaptcha'] = $use_recaptcha;
-			//$this->load->view('auth/register_form', $data);
-            $data['meta_title'] = config_item('site_name');            
-            $data['subview'] = 'auth/register_form';			
-            $this->load->view('_layout_modal', $data);
+			$this->data['use_username'] = $use_username;
+			$this->data['captcha_registration'] = $captcha_registration;
+			$this->data['use_recaptcha'] = $use_recaptcha;
+            $this->data['meta_title'] = config_item('site_name');            
+            $this->_render('auth/register_form');
 		}
 	}
 
@@ -224,25 +243,25 @@ class Auth extends PVA_Controller
 		} else {
 			$this->form_validation->set_rules('email', 'Email', 'trim|required|xss_clean|valid_email');
 
-			$data['errors'] = array();
+			$this->data['errors'] = array();
 
 			if ($this->form_validation->run()) {								// validation ok
-				if (!is_null($data = $this->tank_auth->change_email(
+				if (!is_null($this->data = $this->tank_auth->change_email(
 						$this->form_validation->set_value('email')))) {			// success
 
-					$data['site_name']	= $this->config->item('website_name', 'tank_auth');
-					$data['activation_period'] = $this->config->item('email_activation_expire', 'tank_auth') / 3600;
+					$this->data['site_name']	= $this->config->item('website_name', 'tank_auth');
+					$this->data['activation_period'] = $this->config->item('email_activation_expire', 'tank_auth') / 3600;
 
-					$this->_send_email('activate', $data['email'], $data);
+					$this->_send_email('activate', $this->data['email'], $this->data);
 
-					$this->_show_message('info', sprintf($this->lang->line('auth_message_activation_email_sent'), $data['email']));
+					$this->_show_message('info', sprintf($this->lang->line('auth_message_activation_email_sent'), $this->data['email']));
 
 				} else {
 					$errors = $this->tank_auth->get_error_message();
-					foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
+					foreach ($errors as $k => $v)	$this->data['errors'][$k] = $this->lang->line($v);
 				}
 			}
-			$this->load->view('auth/send_again_form', $data);
+			$this->load->view('auth/send_again_form', $this->data);
 		}
 	}
 
@@ -284,28 +303,28 @@ class Auth extends PVA_Controller
 		} else {
 			$this->form_validation->set_rules('login', 'Email or login', 'trim|required|xss_clean');
 
-			$data['errors'] = array();
+			$this->data['errors'] = array();
 
 			if ($this->form_validation->run()) {								// validation ok
-				if (!is_null($data = $this->tank_auth->forgot_password(
+				if (!is_null($this->data = $this->tank_auth->forgot_password(
 						$this->form_validation->set_value('login')))) {
 
-					$data['site_name'] = $this->config->item('website_name', 'tank_auth');
+					$this->data['site_name'] = $this->config->item('website_name', 'tank_auth');
 
 					// Send email with password activation link
-					$this->_send_email('forgot_password', $data['email'], $data);
+					$this->_send_email('forgot_password', $this->data['email'], $this->data);
 
 					$this->_show_message('info', $this->lang->line('auth_message_new_password_sent'));
 
 				} else {
 					$errors = $this->tank_auth->get_error_message();
-					foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
+					foreach ($errors as $k => $v)	$this->data['errors'][$k] = $this->lang->line($v);
 				}
 			}
-			//$this->load->view('auth/forgot_password_form', $data);
-            $data['meta_title'] = config_item('site_name');            
-            $data['subview'] = 'auth/forgot_password_form';
-            $this->load->view('_layout_modal', $data);
+			//$this->load->view('auth/forgot_password_form', $this->data);
+            $this->data['meta_title'] = config_item('site_name');            
+            $this->data['subview'] = 'auth/forgot_password_form';
+            $this->load->view('_layout_modal', $this->data);
 		}
 	}
 
@@ -324,17 +343,17 @@ class Auth extends PVA_Controller
 		$this->form_validation->set_rules('new_password', 'New Password', 'trim|required|xss_clean|min_length['.$this->config->item('password_min_length', 'tank_auth').']|max_length['.$this->config->item('password_max_length', 'tank_auth').']|alpha_dash');
 		$this->form_validation->set_rules('confirm_new_password', 'Confirm new Password', 'trim|required|xss_clean|matches[new_password]');
 
-		$data['errors'] = array();
+		$this->data['errors'] = array();
 
 		if ($this->form_validation->run()) {								// validation ok
-			if (!is_null($data = $this->tank_auth->reset_password(
+			if (!is_null($this->data = $this->tank_auth->reset_password(
 					$user_id, $new_pass_key,
 					$this->form_validation->set_value('new_password')))) {	// success
 
-				$data['site_name'] = $this->config->item('website_name', 'tank_auth');
+				$this->data['site_name'] = $this->config->item('website_name', 'tank_auth');
 
 				// Send email with new password
-				$this->_send_email('reset_password', $data['email'], $data);
+				$this->_send_email('reset_password', $this->data['email'], $this->data);
 
 				$this->_show_message('success', $this->lang->line('auth_message_new_password_activated').' '.anchor('/auth/login/', 'Login'));
 
@@ -351,7 +370,7 @@ class Auth extends PVA_Controller
 				$this->_show_message('error', $this->lang->line('auth_message_new_password_failed'));
 			}
 		}
-		$this->load->view('auth/reset_password_form', $data);
+		$this->load->view('auth/reset_password_form', $this->data);
 	}
 
 	/**
@@ -369,7 +388,7 @@ class Auth extends PVA_Controller
 			$this->form_validation->set_rules('new_password', 'New Password', 'trim|required|xss_clean|min_length['.$this->config->item('password_min_length', 'tank_auth').']|max_length['.$this->config->item('password_max_length', 'tank_auth').']|alpha_dash');
 			$this->form_validation->set_rules('confirm_new_password', 'Confirm new Password', 'trim|required|xss_clean|matches[new_password]');
 
-			$data['errors'] = array();
+			$this->data['errors'] = array();
 
 			if ($this->form_validation->run()) {								// validation ok
 				if ($this->tank_auth->change_password(
@@ -379,10 +398,10 @@ class Auth extends PVA_Controller
 
 				} else {														// fail
 					$errors = $this->tank_auth->get_error_message();
-					foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
+					foreach ($errors as $k => $v)	$this->data['errors'][$k] = $this->lang->line($v);
 				}
 			}
-			$this->load->view('auth/change_password_form', $data);
+			$this->load->view('auth/change_password_form', $this->data);
 		}
 	}
 
@@ -400,26 +419,26 @@ class Auth extends PVA_Controller
 			$this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean');
 			$this->form_validation->set_rules('email', 'Email', 'trim|required|xss_clean|valid_email');
 
-			$data['errors'] = array();
+			$this->data['errors'] = array();
 
 			if ($this->form_validation->run()) {								// validation ok
-				if (!is_null($data = $this->tank_auth->set_new_email(
+				if (!is_null($this->data = $this->tank_auth->set_new_email(
 						$this->form_validation->set_value('email'),
 						$this->form_validation->set_value('password')))) {			// success
 
-					$data['site_name'] = $this->config->item('website_name', 'tank_auth');
+					$this->data['site_name'] = $this->config->item('website_name', 'tank_auth');
 
 					// Send email with new email address and its activation link
-					$this->_send_email('change_email', $data['new_email'], $data);
+					$this->_send_email('change_email', $this->data['new_email'], $this->data);
 
-					$this->_show_message('info', sprintf($this->lang->line('auth_message_new_email_sent'), $data['new_email']));
+					$this->_show_message('info', sprintf($this->lang->line('auth_message_new_email_sent'), $this->data['new_email']));
 
 				} else {
 					$errors = $this->tank_auth->get_error_message();
-					foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
+					foreach ($errors as $k => $v)	$this->data['errors'][$k] = $this->lang->line($v);
 				}
 			}
-			$this->load->view('auth/change_email_form', $data);
+			$this->load->view('auth/change_email_form', $this->data);
 		}
 	}
 
@@ -458,7 +477,7 @@ class Auth extends PVA_Controller
 		} else {
 			$this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean');
 
-			$data['errors'] = array();
+			$this->data['errors'] = array();
 
 			if ($this->form_validation->run()) {								// validation ok
 				if ($this->tank_auth->delete_user(
@@ -467,10 +486,10 @@ class Auth extends PVA_Controller
 
 				} else {														// fail
 					$errors = $this->tank_auth->get_error_message();
-					foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
+					foreach ($errors as $k => $v)	$this->data['errors'][$k] = $this->lang->line($v);
 				}
 			}
-			$this->load->view('auth/unregister_form', $data);
+			$this->load->view('auth/unregister_form', $this->data);
 		}
 	}
 
