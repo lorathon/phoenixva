@@ -41,16 +41,16 @@ class User extends PVA_Model {
 	public $heard_about = NULL;
 	
 	/* Related objects */
-	protected $user_profile = NULL;
-	protected $user_stats = NULL;
+	protected $_user_profile = NULL;
+	protected $_user_stats = NULL;
 	
 	function __construct()
 	{
 		parent::__construct();
 		
 		// Create empty related objects
-		$this->user_profile = new User_profile();
-		$this->user_stats   = new User_stats();
+		$this->_user_profile = new User_profile();
+		$this->_user_stats   = new User_stats();
 		
 		// Set default order
 		$this->_order_by = 'name asc';
@@ -65,7 +65,7 @@ class User extends PVA_Model {
 	 */
 	function get_user_profile()
 	{
-		return $this->user_profile;
+		return $this->_user_profile;
 	}
 	
 	/**
@@ -77,7 +77,7 @@ class User extends PVA_Model {
 	 */
 	function get_user_stats()
 	{
-		return $this->user_stats;
+		return $this->_user_stats;
 	}
 	
 	/**
@@ -88,7 +88,7 @@ class User extends PVA_Model {
 	 */
 	function set_user_profile($profile)
 	{
-		$this->user_profile = $profile;
+		$this->_user_profile = $profile;
 	}
 	
 	/**
@@ -99,7 +99,7 @@ class User extends PVA_Model {
 	 */
 	function set_user_stats($stats)
 	{
-		$this->user_stats = $stats;
+		$this->_user_stats = $stats;
 	}
 	
 	/**
@@ -114,9 +114,13 @@ class User extends PVA_Model {
 	{
 		// Set the time
 		$this->created = date('Y-m-d H:i:s');
+		$this->modified = $this->created;
 		
 		// Set the email activation code
 		$this->new_email_key = md5(rand().microtime());
+		
+		// Set the default rank
+		$this->rank_id = 1;
 		
 		// Hash the password
 		$this->benchmark->mark('password_hash_start');
@@ -128,20 +132,27 @@ class User extends PVA_Model {
 		$this->password = password_hash($this->password, PASSWORD_DEFAULT);
 		$this->benchmark->mark('password_hash_end');
 		
+		// Prep the data
+		$user_parms = $this->_prep_data();
+		
 		// Do these creates in a transaction so the user is entirely created.
 		$this->db->trans_start();
 		
 		// Create the master user record
-		$this->db->insert($this->user_table, $this);
+		$this->db->insert($this->user_table, $user_parms);
 		
 		// Use the user id from the previous insert
 		$this->id = $this->db->insert_id();
-		$this->user_profile->user_id = $this->id;
-		$this->user_stats->user_id = $this->id;
+		$this->_user_profile->user_id = $this->id;
+		$this->_user_stats->user_id = $this->id;
+		
+		// Prep sub table data
+		$prof_parms = $this->_user_profile->_prep_data();
+		$stat_parms = $this->_user_stats->_prep_data();
 		
 		// Create child records
-		$this->db->insert($this->user_profile_table, $this->user_profile);
-		$this->db->insert($this->user_stats_table, $this->user_stats);
+		$this->db->insert($this->user_profile_table, $prof_parms);
+		$this->db->insert($this->user_stats_table, $stat_parms);
 		
 		// Transaction complete
 		$this->db->trans_complete();

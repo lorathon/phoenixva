@@ -143,19 +143,10 @@ class PVA_Model extends CI_Model
     		throw new Exception('Method find_all() cannot be called with id.');
     	}
     	
-    	$parms = array();
-    	
-    	// Build the query from the current object
-    	$props = get_object_vars($this);
-    	
-    	foreach ($props as $key => $prop)
-    	{
-    		// If a property is null or starts with underscore, do not include it.
-    		if ( ! is_null($prop) && substr($key,0,1) != '_')
-    		{
-    			$parms[$key] = $prop;
-    		}
-    	}
+    	// Prep the data
+    	$parms = $this->_prep_data();
+
+    	// Build the query
     	$this->db->select()
     	         ->from($this->_table_name)
     	         ->where($parms)
@@ -236,7 +227,11 @@ class PVA_Model extends CI_Model
     /**
      * Returns an array of objects.
      * 
-     * @param unknown $query Query object for the database.
+     * Using a standard return will provide objects of stdClass but those won't
+     * include the additional methods. This method will create true objects that
+     * include the additional methods.
+     * 
+     * @param object $query Query object for the database.
      * @return array |boolean Array of objects or FALSE if none found.
      */
     protected function _get_objects($query)
@@ -268,5 +263,28 @@ class PVA_Model extends CI_Model
     		return $obj_array;
     	}
     	return FALSE;
+    }
+    
+    /**
+     * Uses the current object to get an array suitable for queries.
+     * 
+     * @return array containing the populated, public properties.
+     */
+    protected function _prep_data()
+    {
+    	$parms = array();
+    	
+    	$props = get_object_vars($this);
+    	
+    	foreach ($props as $key => $prop)
+    	{
+    		// If a property is null or starts with underscore, do not include it.
+    		if ( ! is_null($prop) && substr($key,0,1) != '_')
+    		{
+    			$parms[$key] = $prop;
+    		}
+    	}
+    	
+    	return $parms;
     }
 }

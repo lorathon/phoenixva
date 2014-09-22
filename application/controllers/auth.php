@@ -138,11 +138,14 @@ class Auth extends PVA_Controller
 			$this->form_validation->set_rules('email', 'Email', 'trim|required|xss_clean|valid_email');
 			$this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean|min_length['.$this->config->item('password_min_length', 'tank_auth').']|max_length['.$this->config->item('password_max_length', 'tank_auth').']|alpha_dash');
 			$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'trim|required|xss_clean|matches[password]');
-
-			// Modified to ensure that first/last/birthdate are required when registering
 			$this->form_validation->set_rules('first_name', 'First Name', 'trim|required|xss_clean');
 			$this->form_validation->set_rules('last_name', 'Last Name', 'trim|required|xss_clean');
 			$this->form_validation->set_rules('birth_date', 'Birth Date', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('location', 'Location', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('crew_center', 'Crew Center', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('transfer_hours', 'Transfer Hours', 'trim|xss_clean|numeric|less_than[151]');
+			$this->form_validation->set_rules('transfer_link', 'Transfer Link', 'trim|xss_clean');
+			$this->form_validation->set_rules('heard_about', 'Heard About', 'trim|xss_clean');
 						
 			$captcha_registration	= $this->config->item('captcha_registration', 'tank_auth');
 			$use_recaptcha			= $this->config->item('use_recaptcha', 'tank_auth');
@@ -185,14 +188,20 @@ class Auth extends PVA_Controller
 				{
 					// User created
 
+					// Set values for the views
 					$this->data['site_name'] = $this->config->item('website_name', 'tank_auth');
+					$this->data['user_id'] = $user->id;
+					$this->data['username'] = $user->username;
+					$this->data['email'] = $user->email;
+					$this->data['new_email_key'] = $user->new_email_key;
+					
 
 					if ($email_activation) 
 					{
 						// Send activate email
 						$this->data['activation_period'] = $this->config->item('email_activation_expire', 'tank_auth') / 3600;
 
-						$this->_send_email('activate', $this->data['email'], $this->data);
+						$this->_send_email('activate', $user->email, $this->data);
 
 						$this->_show_message('info', $this->lang->line('auth_message_registration_completed_1'));
 
@@ -202,13 +211,11 @@ class Auth extends PVA_Controller
 						if ($this->config->item('email_account_details', 'tank_auth')) 
 						{
 							// Send welcome email
-							$this->_send_email('welcome', $this->data['email'], $this->data);
+							$this->_send_email('welcome', $user->email, $this->data);
 						}
 
 						$this->_show_message('info', $this->lang->line('auth_message_registration_completed_2').' '.anchor('/auth/login/', 'Login'));
 					}
-					
-					unset($this->data['password']); // Clear password (just for any case)
 				} 
 				else 
 				{
@@ -517,7 +524,7 @@ class Auth extends PVA_Controller
 	function _show_message($status, $message)
 	{        
 		$this->session->set_flashdata($status, $message);
-		redirect('home');
+		redirect('');
 	}
 
 	/**
