@@ -55,6 +55,7 @@
 					<div class="row">
 						<div class="col-md-12" align="center">
 							<button type="submit" class="btn btn-primary btn-lg">Submit Search</button>
+						</div>
 					</div>
 
 
