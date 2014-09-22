@@ -163,6 +163,7 @@ class Auth extends PVA_Controller
 				$user = new User();
 				$user->name = $this->form_validation->set_value('first_name').' '.$this->form_validation->set_value('last_name');
 				$user->email = $this->form_validation->set_value('email');
+				$user->username = $user->email;
 				$user->password = $this->form_validation->set_value('password');
 				$user->birthday = $this->form_validation->set_value('birth_date');
 				$user->last_ip = $this->input->ip_address();

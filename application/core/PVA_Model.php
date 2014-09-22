@@ -218,6 +218,7 @@ class PVA_Model extends CI_Model
         {
         	// Update if id is passed
             $this->db->update($this->_table_name,$this);
+            $this->db->where($this->_primary_key, $this->id);
         }
     }
         

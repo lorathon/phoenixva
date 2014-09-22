@@ -130,6 +130,13 @@ $captcha = array(
 <div class="modal-header">
     <h3>Join Phoenix Virtual Airways</h3>
 </div>
+<?php if ($errors):?>
+	<div class="error">
+		<?php foreach ($errors as $error): ?>
+			<p><?php echo $error; ?></p>
+		<?php endforeach; ?>
+	</div>
+<?php endif; ?>
 <div class="container">
 	<div class="col-md-8">
 		<?php echo form_open($this->uri->uri_string(), $form_attributes); ?>
@@ -167,11 +174,11 @@ $captcha = array(
 		</div>
 		<div class="form-group">
 			<?php echo form_label('Password', $password['id'], $label_attributes); ?>
-			<div class="col-sm-8"><?php echo form_input($password); ?></div>
+			<div class="col-sm-8"><?php echo form_password($password); ?></div>
 		</div>
 		<div class="form-group">
 			<?php echo form_label('Confirm Password', $confirm_password['id'], $label_attributes); ?>
-			<div class="col-sm-8"><?php echo form_input($confirm_password); ?></div>
+			<div class="col-sm-8"><?php echo form_password($confirm_password); ?></div>
 		</div>
 		<div class="form-group">
 			<?php echo form_label('Hours To Transfer', $transfer_hours['id'], $label_attributes); ?>
