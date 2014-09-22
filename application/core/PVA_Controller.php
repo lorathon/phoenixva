@@ -174,16 +174,20 @@ class PVA_Controller extends CI_Controller {
 	 */
 	protected function _autoload($class)
 	{
-		log_message('debug', 'Autoloading '.$class);
-		$path = array('models','libraries','core');
-		foreach ($path as $dir)
+		if (substr($class,0,3) != 'CI_')
 		{
-			$file = APPPATH.$dir.'/'.strtolower($class).'.php';
-			log_message('debug', 'Looking for file '.$file);
-			if(file_exists($file) && is_file($file))
+			log_message('debug', 'Autoloading '.$class);
+			$path = array('models','libraries','core');
+			foreach ($path as $dir)
 			{
-				log_message('debug', 'Autoloading file '.$file);
-				@include_once($file);
+				$file = APPPATH.$dir.'/'.strtolower($class).'.php';
+				log_message('debug', 'Looking for file '.$file);
+				if(file_exists($file) && is_file($file))
+				{
+					log_message('debug', 'Autoloading file '.$file);
+					@include_once($file);
+					break;
+				}
 			}
 		}
 	}
