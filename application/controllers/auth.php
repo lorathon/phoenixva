@@ -228,9 +228,10 @@ class Auth extends PVA_Controller
 			$airport = new Airport();
 			if ($hubs = $airport->find_hubs())
 			{
+				$this->data['hubs'][''] = 'Select one:';
 				foreach ($hubs as $hub)
 				{
-					$this->data['hubs'][$hub->id] = $hub->name;
+					$this->data['hubs'][$hub->id] = $hub->icao.' - '.$hub->name;
 				}
 			}
 			
