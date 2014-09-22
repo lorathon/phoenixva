@@ -175,7 +175,7 @@ class PVA_Controller extends CI_Controller {
 	protected function _autoload($class)
 	{
 		log_message('debug', 'Autoloading '.$class);
-		$path = array('core', 'libraries', 'models');
+		$path = array('models','libraries','core');
 		foreach ($path as $dir)
 		{
 			$file = APPPATH.$dir.'/'.strtolower($class).'.php';
