@@ -20,21 +20,25 @@ $config['status_field'] = array(
 		'type'       => 'TINYINT',
 		'constraint' => 3,
 		'unsigned'   => TRUE,
+		'default'    => 0,
 );
 
 /* Definition for date fields */
 $config['date_field'] = array(
 		'type' => 'DATE',
+		'null' => TRUE,
 );
 
 /* Definition for datetime fields */
 $config['datetime_field'] = array(
 		'type' => 'DATETIME',
+		'null' => TRUE,
 );
 
 /* Definition for timestamp fields */
 $config['timestamp_field'] = array(
 		'type' => 'TIMESTAMP',
+		'null' => TRUE,
 );
 
 /* Definition for counter fields */
@@ -61,42 +65,49 @@ $config['tiny_int'] = array(
 
 /* Definition for calculated fields */
 $config['calculated_field'] = array(
-		'type' => 'FLOAT',
+		'type'    => 'FLOAT',
+		'default' => 0,
 );
 
 /* Definition for money fields */
 $config['money_field'] = array(
 		'type'       => 'DECIMAL',
 		'constraint' => '10,2',
+		'default'    => 0,
 );
 
 /* Definition for user input fields */
 $config['input_field'] = array(
 		'type'       => 'VARCHAR',
 		'constraint' => 255,
+		'null'       => TRUE,
 );
 
 /* Definition for short input fields */
 $config['short_input_field'] = array(
 		'type'       => 'VARCHAR',
 		'constraint' => 50,
+		'null'       => TRUE,
 );
 
 /* Definition for text input fields */
 $config['text_input_field'] = array(
 		'type' => 'TEXT',
+		'null' => TRUE,
 );
 
 /* Definition for ICAO based fields */
 $config['icao_field'] = array(
 		'type'       => 'VARCHAR',
 		'constraint' => 4,
+		'null'       => TRUE,
 );
 
 /* Definition for location fields (lat/long) */
 $config['location_field'] = array(
 		'type'       => 'FLOAT',
 		'constraint' => '10,6',
+		'null'       => TRUE,
 );
 
 /* Definition for altitude fields (0-65535) */
