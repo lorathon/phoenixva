@@ -12,9 +12,9 @@
 class User extends PVA_Model {
 	
 	/* Database tables */
-	private $user_table = 'users';
+	private $user_table         = 'users';
 	private $user_profile_table = 'user_profiles';
-	private $user_stats_table = 'user_stats';
+	private $user_stats_table   = 'user_stats';
 	
 	/* Default user properties */
 	public $name = '';
@@ -50,6 +50,9 @@ class User extends PVA_Model {
 		// Create empty related objects
 		$this->user_profile = new User_profile();
 		$this->user_stats   = new User_stats();
+		
+		// Set default order
+		$this->_order_by = 'name asc';
 	}
 	
 	/**
@@ -106,7 +109,7 @@ class User extends PVA_Model {
 	 * 
 	 * @return int|bool id of the created user on success or FALSE on failure.
 	 */
-	function create_user()
+	function create()
 	{
 		// Set the time
 		$this->created = date('Y-m-d H:i:s');
@@ -151,12 +154,32 @@ class User extends PVA_Model {
 	}
 	
 	/**
+	 * Saves a user
+	 * 
+	 * This method can only be used for updating a user. If saving a new user,
+	 * use the create() method instead.
+	 * 
+	 * @see PVA_Model::save()
+	 * @see User::create()
+	 * @return bool FALSE if trying to create a user.
+	 */
+	function save()
+	{
+		// Can only be used for updating
+		if (is_null($this->id))
+		{
+			return FALSE;
+		}
+		parent::save();
+	}
+	
+	/**
 	 * Deletes a user from the system
 	 * 
 	 * Unlike creating a user, deleting a user will permanently remove them from
 	 * all databases. This cannot be undone.
 	 */
-	function delete_user()
+	function delete()
 	{
 
 	}
@@ -167,7 +190,7 @@ class User extends PVA_Model {
 	 * Activates the user in the main database and creates their user accounts
 	 * in other required databases.
 	 */
-	function activate_user()
+	function activate()
 	{
 
 	}
@@ -177,9 +200,19 @@ class User extends PVA_Model {
 	 * 
 	 * Banned users cannot login and cannot re-register.
 	 */
-	function ban_user()
+	function ban()
 	{
 
+	}
+	
+	/**
+	 * Unbans a user.
+	 * 
+	 * Allows a previously banned user to login again.
+	 */
+	function unban()
+	{
+		
 	}
 	
 	/**
@@ -188,7 +221,7 @@ class User extends PVA_Model {
 	 * Users on a leave of absence (LOA) can re-activate themselves by filing a 
 	 * PIREP or logging in and marking themselves as being off LOA.
 	 */
-	function loa_user()
+	function loa()
 	{
 
 	}
@@ -198,7 +231,7 @@ class User extends PVA_Model {
 	 * 
 	 * Retired users cannot login and must be re-activated by an administrator.
 	 */
-	function retire_user()
+	function retire()
 	{
 
 	}
@@ -210,7 +243,7 @@ class User extends PVA_Model {
 	 * a warning can be issued by any staff member but only executive staff can
 	 * issue a ban.
 	 */
-	function warn_user()
+	function warn()
 	{
 
 	}

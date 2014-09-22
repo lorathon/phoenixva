@@ -157,7 +157,9 @@ $captcha = array(
 		</div>
 		<div class="form-group">
 			<?php echo form_label('Desired Crew Center', $crew_center['id'], $label_attributes); ?>
-			<div class="col-sm-8"><?php echo form_input($crew_center); ?></div>
+			<div class="col-sm-8">
+				<?php echo form_dropdown('crew_center',$hubs,set_value('crew_center'),"class='{$field_class}'"); ?>
+			</div>
 		</div>
 		<div class="form-group">
 			<?php echo form_label('Your Location', $location['id'], $label_attributes); ?>

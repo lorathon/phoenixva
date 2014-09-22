@@ -3,12 +3,15 @@
 /**
  * PVA Application base model
  * 
+ * Uses Kohana-esque ORM features.
+ * 
  * @author Chuck
  *
  */
 class PVA_Model extends CI_Model
 {
     protected $_table_name = '';
+    protected $_object_name = '';
     protected $_primary_key = 'id';
     protected $_primary_filter = 'intval';
     protected $_order_by = '';
@@ -31,11 +34,30 @@ class PVA_Model extends CI_Model
         // Connect to data store
         $this->load->database();
         
-        // Set the ID
-        if ($id && $id > 0)
-        {
-        	$this->id = $id;
-        }
+        // Set the object name
+        $this->_object_name = strtolower(get_class($this));
+        
+        // Guess the table name
+        $this->_table_name = strtolower(get_class($this).'s');
+        
+        // If the id is set, create a populated model (Kohana-esque)
+    	if ($id !== NULL)
+		{
+			if (is_array($id))
+			{
+				// Passing an array of column => values
+				foreach ($id as $field => $value)
+				{
+					$this->$field = $value;
+				}
+			}
+			else
+			{
+				// Passing the primary key
+				$this->$this->_primary_key = $id;
+			}
+			$this->find();
+		}        
     }
         
     /**
@@ -55,100 +77,141 @@ class PVA_Model extends CI_Model
         return $data;
     }
     
-    public function get($id = NULL, $single = FALSE)
+    /**
+     * Finds a record in the database based on the current object.
+     * 
+     * Note that this method will only populate the current object with the 
+     * first result from the database (a LIMIT 1). If you are expecting to find
+     * multiple records use the find_all method.
+     * 
+     * @return boolean FALSE if no record was found.
+     */
+    public function find()
     {
+    	if (is_null($this->$_primary_key))
+    	{
+    		// Searching with parameters
+    		$parms = get_object_vars($this);
+    		$this->db->select()
+    		         ->from($this->_table_name)
+    		         ->where($parms)
+    		         ->limit(1);
+    	}
+    	else
+    	{
+    		// Getting by ID
+    		$this->db->select()
+    		         ->from($this->_table_name)
+    		         ->where($this->_primary_key, $this->$this->_primary_key)
+    		         ->limit(1);
+    	}
         
-        if($id != NULL)
-        {
-            // Return single row if id is passed
-            $filter = $this->_primary_filter;
-            $id = $filter($id);
-            $this->db->where($this->_primary_key, $id);
-            $method = 'row';
-        }
-        elseif($single == TRUE)
-        {
-            // Return single row if single is TRUE
-            $method = 'row';
-        }
-        else
-        {
-            // Return array 
-            $method = 'result';
-        }
-        
-        // Check if order by is set.
-        // If not use class variable
-        if(!count($this->db->ar_orderby))
-        {
-            $this->db->order_by($this->_order_by);                   
-        }
-        
-        // Fetch query
-        return $this->db->get($this->_table_name)->$method();
+    	// Query the database
+    	$query = $this->db->get();
+    	
+    	// Did we get a result?
+    	if ($query->num_rows() > 0)
+    	{
+    		// Populate the current object
+    		$result = $query->row_array();
+    		$keys = array_keys($result);
+    		foreach ($keys as $key)
+    		{
+    			$this->$key = $result[$key];
+    		}
+    		return TRUE;
+    	}
+    	return FALSE;
     }
     
-    public function get_by($where, $single = FALSE)
+    /**
+     * Finds all objects similar to the current object.
+     * 
+     * Create an object populated with the search criteria, then call find_all on
+     * that object to return an array of populated objects of the same type. This
+     * method is subject to limit and offset settings.
+     * 
+     * @throws Exception if the object id is populated.
+     * @return array |boolean Array of populated objects if found or FALSE if no
+     * records were found. 
+     */
+    public function find_all()
     {
-        // Get using a where statement Send to get()
-        $this->db->where($where);
-        return $this->get(NULL, $single);
+    	if (! is_null($this->id))
+    	{
+    		// Improper usage
+    		throw new Exception('Method find_all() cannot be called with id.');
+    	}
+    	
+    	// Build the query from the current object
+    	$parms = get_object_vars($this);
+    	$this->db->select()
+    	         ->from($this->_table_name)
+    	         ->where($parms)
+    	         ->limit($this->_limit, $this->_offset);
+    	if ($this->_order_by != '')
+    	{
+    		$this->db->order_by($this->_order_by);
+    	}
+    	
+    	// Query the database
+    	$query = $this->db->get();
+    	
+    	return $this->_get_objects($query);
     }
     
-    public function save($data, $id = NULL)
+    /**
+     * Allows access to all properties of an object.
+     * 
+     * Normally this method only needs to be used to access protected or private
+     * properties in error messages and stuff. All normal properties should be
+     * accessed using $object->property.
+     * 
+     * @param string $property The object property to get
+     * @return mixed The requested property
+     */
+    public function get($property)
+    {
+    	return $this->$property;
+    }
+    
+    /**
+     * Saves a record in the database
+     * 
+     * If the id is populated this method will perform an update. For this reason
+     * it is important to make sure that if the id is populated the entire object
+     * must also be populated.
+     */
+    public function save()
     {
         // Check if Timestamps variable is TRUE
         if($this->_timestamps == TRUE)
         {
             // If TRUE create timestamps
             $now = date('Y-m-d H:i:s');
-            $id || $data['created'] = $now;
-            $data['modified'] = $now;
+            if (is_null($this->id))
+            {
+            	$this->created = $now;
+            }
+            $this->modified = $now;
         }
-        // Insert if id is NOT passed
-        if($id === NULL)
-        {            
-            if(isset($data[$this->_primary_key]))
-                $data[$this->_primary_key] = NULL;
-                
-            $this->db->set($data);
-            $this->db->insert($this->_table_name);
-            $id = $this->db->insert_id();
+        
+        // Insert or update
+        if(is_null($this->id))
+        {
+        	// Insert if id is NOT passed
+            $this->db->insert($this->_table_name,$this);
+            $this->id = $this->db->insert_id();
         }
-        // Update if id is passed
         else
         {
-            $filter = $this->_primary_filter;
-            $id = $filter($id);
-            $this->db->set($data);
-            $this->db->where($this->_primary_key, $id);
-            $this->db->update($this->_table_name);
+        	// Update if id is passed
+            $this->db->update($this->_table_name,$this);
         }
-        return $id;
     }
-    
-    public function save_with_id($data)
+        
+    public function delete()
     {        
-        // Check if Timestamps variable is TRUE
-        if($this->_timestamps == TRUE)
-        {
-            // If TRUE create timestamps
-            $now = date('Y-m-d H:i:s');
-            $data['modified'] = $now;
-        }
-        
-        $this->db->set((array)$data);
-        $this->db->insert($this->_table_name);
-        
-        return $this->db->insert_id();
-    }
-    
-    public function delete($id)
-    {
-        // Delete row based on id passed
-        $filter = $this->_primary_filter;
-        $id = $filter($id);
-        
         if(!$id)
         {
             return FALSE;
@@ -158,4 +221,40 @@ class PVA_Model extends CI_Model
         $this->db->delete($this->_table_name);
     }
     
+    /**
+     * Returns an array of objects.
+     * 
+     * @param unknown $query Query object for the database.
+     * @return array |boolean Array of objects or FALSE if none found.
+     */
+    protected function _get_objects($query)
+    {    	 
+    	if ($query->num_rows() > 0)
+    	{
+    		// Results found, create array for the output
+    		$obj_array = array();
+    	
+    		// Set first run
+    		$first = TRUE;
+    		foreach ($query->result_array() as $row)
+    		{
+    			// Create a new object
+    			$obj = new $this->_object_name;
+    			if ($first)
+    			{
+    				// First run, get the keys
+    				$keys = array_keys($row);
+    				$first = FALSE;
+    			}
+    			foreach ($keys as $key)
+    			{
+    				// Populate the object
+    				$obj->$key = $row[$key];
+    			}
+    			$obj_array[] = $obj;
+    		}
+    		return $obj_array;
+    	}
+    	return FALSE;
+    }
 }

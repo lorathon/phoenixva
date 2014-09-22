@@ -180,7 +180,7 @@ class Auth extends PVA_Controller
 				$user_stats->hours_transfer = $this->form_validation->set_value('transfer_hours');
 				$user->set_user_stats($user_stats);
 				
-				if ( ! $user->create_user() === FALSE) 
+				if ( ! $user->create() === FALSE) 
 				{
 					// User created
 
@@ -222,6 +222,18 @@ class Auth extends PVA_Controller
 					$this->data['captcha_html'] = $this->_create_captcha();
 				}
 			}
+			
+			// Get hub list for desired crew center
+			$this->data['hubs'] = array();
+			$airport = new Airport();
+			if ($hubs = $airport->find_hubs())
+			{
+				foreach ($hubs as $hub)
+				{
+					$this->data['hubs'][$hub->id] = $hub->name;
+				}
+			}
+			
 			$this->data['use_username'] = $use_username;
 			$this->data['captcha_registration'] = $captcha_registration;
 			$this->data['use_recaptcha'] = $use_recaptcha;
