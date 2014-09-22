@@ -14,7 +14,7 @@ class PVA_Model extends CI_Model
     protected $_object_name = '';
     protected $_primary_key = 'id';
     protected $_primary_filter = 'intval';
-    protected $_order_by = '';
+    protected $_order_by = NULL;
     public $_rules = array();
     protected $_timestamps = FALSE;
     
@@ -41,7 +41,7 @@ class PVA_Model extends CI_Model
         $this->_table_name = strtolower(get_class($this).'s');
         
         // If the id is set, create a populated model (Kohana-esque)
-    	if ($id !== NULL)
+    	if ( ! is_null($id))
 		{
 			if (is_array($id))
 			{
@@ -143,13 +143,24 @@ class PVA_Model extends CI_Model
     		throw new Exception('Method find_all() cannot be called with id.');
     	}
     	
+    	$parms = array();
+    	
     	// Build the query from the current object
-    	$parms = get_object_vars($this);
+    	$props = get_object_vars($this);
+    	
+    	foreach ($props as $key => $prop)
+    	{
+    		// If a property is null or starts with underscore, do not include it.
+    		if ( ! is_null($prop) && substr($key,0,1) != '_')
+    		{
+    			$parms[$key] = $prop;
+    		}
+    	}
     	$this->db->select()
     	         ->from($this->_table_name)
     	         ->where($parms)
     	         ->limit($this->_limit, $this->_offset);
-    	if ($this->_order_by != '')
+    	if ( ! is_null($this->_order_by))
     	{
     		$this->db->order_by($this->_order_by);
     	}
@@ -170,9 +181,9 @@ class PVA_Model extends CI_Model
      * @param string $property The object property to get
      * @return mixed The requested property
      */
-    public function get($property)
+    public function get_property($prop)
     {
-    	return $this->$property;
+    	return $this->$prop;
     }
     
     /**
@@ -185,7 +196,7 @@ class PVA_Model extends CI_Model
     public function save()
     {
         // Check if Timestamps variable is TRUE
-        if($this->_timestamps == TRUE)
+        if ($this->_timestamps == TRUE)
         {
             // If TRUE create timestamps
             $now = date('Y-m-d H:i:s');
@@ -197,7 +208,7 @@ class PVA_Model extends CI_Model
         }
         
         // Insert or update
-        if(is_null($this->id))
+        if (is_null($this->id))
         {
         	// Insert if id is NOT passed
             $this->db->insert($this->_table_name,$this);
@@ -212,11 +223,11 @@ class PVA_Model extends CI_Model
         
     public function delete()
     {        
-        if(!$id)
+        if (is_null($this->id))
         {
             return FALSE;
         }
-        $this->db->where($this->_primary_key, $id);
+        $this->db->where($this->_primary_key, $this->id);
         $this->db->limit(1);
         $this->db->delete($this->_table_name);
     }

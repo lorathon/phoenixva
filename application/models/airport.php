@@ -3,22 +3,22 @@
 class Airport extends PVA_Model {
 	
 	/* Airport properties */
-	public $icao            = '';
-	public $iata            = '';
-	public $name            = '';
-	public $city            = '';
-	public $state_code      = '';
-	public $country         = '';
-	public $utc_offset      = 0;
-	public $lat             = 0;
-	public $long            = 0;
-	public $elevation       = 0;
-	public $classification  = 0;
-	public $type            = '';
-	public $active          = 0;
-	public $delay_index_url = '';
-	public $weather_url     = '';
-	public $hub             = 0;
+	public $icao            = NULL;
+	public $iata            = NULL;
+	public $name            = NULL;
+	public $city            = NULL;
+	public $state_code      = NULL;
+	public $country         = NULL;
+	public $utc_offset      = NULL;
+	public $lat             = NULL;
+	public $long            = NULL;
+	public $elevation       = NULL;
+	public $classification  = NULL;
+	public $type            = NULL;
+	public $active          = NULL;
+	public $delay_index_url = NULL;
+	public $weather_url     = NULL;
+	public $hub             = NULL;
 	
 	function __construct()
 	{
@@ -39,13 +39,8 @@ class Airport extends PVA_Model {
 	 */
 	function find_hubs()
 	{
-		$this->db->select()
-		         ->from($this->_table_name)
-		         ->where('hub',1);
-		// Query the database
-		$query = $this->db->get();
-		 
-		return parent::_get_objects($query);
+		$this->hub = 1;
+		return $this->find_all();
 	} 
 	
 	/**
