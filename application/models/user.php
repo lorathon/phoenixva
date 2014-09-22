@@ -17,27 +17,28 @@ class User extends PVA_Model {
 	private $user_stats_table   = 'user_stats';
 	
 	/* Default user properties */
-	public $name = '';
-	public $email = '';
-	public $birthday = '';
-	public $password = '';
-	public $activated = 0;
-	public $status    = 0;
-	public $banned    = 0;
-	public $ban_reason = '';
-	public $new_password_key = '';
-	public $new_password_requested = '';
-	public $new_email = '';
-	public $new_email_key = '';
-	public $last_ip = '';
-	public $last_login = '';
-	public $created = '';
+	public $username = NULL;
+	public $name = NULL;
+	public $email = NULL;
+	public $birthday = NULL;
+	public $password = NULL;
+	public $activated = NULL;
+	public $status    = NULL;
+	public $banned    = NULL;
+	public $ban_reason = NULL;
+	public $new_password_key = NULL;
+	public $new_password_requested = NULL;
+	public $new_email = NULL;
+	public $new_email_key = NULL;
+	public $last_ip = NULL;
+	public $last_login = NULL;
+	public $created = NULL;
 	public $modified = NULL;
-	public $admin_level = 0;
-	public $rank_id = '';
-	public $hub = '';
-	public $transfer_link = '';
-	public $heard_about = '';
+	public $admin_level = NULL;
+	public $rank_id = NULL;
+	public $hub = NULL;
+	public $transfer_link = NULL;
+	public $heard_about = NULL;
 	
 	/* Related objects */
 	protected $user_profile = NULL;
@@ -121,8 +122,8 @@ class User extends PVA_Model {
 		$this->benchmark->mark('password_hash_start');
 		if (PHP_VERSION_ID < 50500)
 		{
-			// Get password library if PHP version less than 5.5.0
-			$this->load->library('password');
+			// Get password helper if PHP version less than 5.5.0
+			$this->load->helper('password');
 		}
 		$this->password = password_hash($this->password, PASSWORD_DEFAULT);
 		$this->benchmark->mark('password_hash_end');
