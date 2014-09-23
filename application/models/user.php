@@ -59,24 +59,44 @@ class User extends PVA_Model {
 	/**
 	 * Gets the user profile associated with this user object.
 	 * 
-	 * The user object must be populated separately.
+	 * The user object must be populated separately. Normal usage would be:
+	 * $user = new User();
+	 * $user->id = 123;
+	 * $user->find();
+	 * $user->get_user_profile();
 	 * 
-	 * @return User_profile
+	 * @return object User_profile object for the populated user
 	 */
 	function get_user_profile()
 	{
+		if ( ! is_null($this->id) && is_null($this->_user_profile->user_id))
+		{
+			// Populate user profile object
+			$this->_user_profile->user_id = $this->id;
+			$this->_user_profile->find();
+		}
 		return $this->_user_profile;
 	}
 	
 	/**
 	 * Gets the user stats associated with this user object.
 	 * 
-	 * The user object must be populated separately.
+	 * The user object must be populated separately. Normal usage would be:
+	 * $user = new User();
+	 * $user->id = 123;
+	 * $user->find();
+	 * $user->get_user_profile();
 	 * 
-	 * @return User_stats
+	 * @return object User_stats object for the populated user
 	 */
 	function get_user_stats()
 	{
+		if ( ! is_null($this->id) && is_null($this->_user_stats->user_id))
+		{
+			// Populate user stats object
+			$this->_user_stats->user_id = $this->id;
+			$this->_user_stats->find();
+		}
 		return $this->_user_stats;
 	}
 	
@@ -123,14 +143,11 @@ class User extends PVA_Model {
 		$this->rank_id = 1;
 		
 		// Hash the password
-		$this->benchmark->mark('password_hash_start');
-		if (PHP_VERSION_ID < 50500)
-		{
-			// Get password helper if PHP version less than 5.5.0
-			$this->load->helper('password');
-		}
-		$this->password = password_hash($this->password, PASSWORD_DEFAULT);
-		$this->benchmark->mark('password_hash_end');
+		$this->_hash_password();
+		
+		// Massage data
+		$this->email = strtolower($this->email);
+		$this->name = $this->_set_name($this->name);
 		
 		// Prep the data
 		$user_parms = $this->_prep_data();
@@ -193,7 +210,8 @@ class User extends PVA_Model {
 	 */
 	function delete()
 	{
-
+		// Users can't be deleted at the moment.
+		return FALSE;
 	}
 	
 	/**
@@ -201,10 +219,67 @@ class User extends PVA_Model {
 	 * 
 	 * Activates the user in the main database and creates their user accounts
 	 * in other required databases.
+	 * 
+	 * @return boolean TRUE if user was activated or FALSE if there was a problem.
 	 */
 	function activate()
 	{
-
+		// Populate the user if we have a match
+		if ($this->find())
+		{
+			// User found, activate if not activated or banned
+			if ( ! $this->activated && ! $this->banned)
+			{
+				$this->activated = 1;
+				$this->new_email_key = '';
+				$this->status = 1;
+				$this->save();
+				
+				// TODO Create user in other systems
+			}
+			return TRUE;
+		}
+		
+		return FALSE;
+	}
+	
+	/**
+	 * Verifies the user for login.
+	 * 
+	 * It's important to note that this does not create sessions or anything. That
+	 * is left up to the controller/application. If the user is logged in successfully,
+	 * the user object will be fully populated.
+	 * 
+	 * @return boolean TRUE if user logged in or FALSE if information does not match.
+	 */
+	function login()
+	{
+		// Get clear password from the object
+		$pass_clear = $this->password;
+		
+		// Set the clear password to null
+		$this->password = NULL;
+		
+		// Populate if we have a match
+		$this->find();
+		
+		// Validate		
+		if ($this->activated && ! $this->banned && $this->_verify_password($pass_clear))
+		{
+			// Populate sub tables
+			$this->_user_profile->user_id = $this->id;
+			$this->_user_stats->user_id = $this->id;
+			$this->_user_profile->find();
+			$this->_user_stats->find();
+			
+			// Set last login
+			$this->last_login = date('Y-m-d H:i:s');
+			$this->save();
+			
+			return TRUE;
+		}
+		
+		return FALSE;
 	}
 	
 	/**
@@ -214,7 +289,15 @@ class User extends PVA_Model {
 	 */
 	function ban()
 	{
-
+		if (is_null($this->id)) return FALSE;
+		
+		$this->banned = 1;
+		if (is_null($this->ban_reason))
+		{
+			$this->ban_reason = 'No reason given';
+		}
+		
+		$this->save();
 	}
 	
 	/**
@@ -224,7 +307,12 @@ class User extends PVA_Model {
 	 */
 	function unban()
 	{
+		if (is_null($this->id)) return FALSE;
 		
+		$this->banned = 0;
+		$this->ban_reason = '';
+		
+		$this->save();
 	}
 	
 	/**
@@ -235,7 +323,10 @@ class User extends PVA_Model {
 	 */
 	function loa()
 	{
-
+		if (is_null($this->id)) return FALSE;
+		
+		$this->status = 4;
+		$this->save();
 	}
 	
 	/**
@@ -245,7 +336,10 @@ class User extends PVA_Model {
 	 */
 	function retire()
 	{
-
+		if (is_null($this->id)) return FALSE;
+		
+		$this->status = 5;
+		$this->save();
 	}
 	
 	/**
@@ -257,18 +351,74 @@ class User extends PVA_Model {
 	 */
 	function warn()
 	{
-
+		if (is_null($this->id)) return FALSE;
+		
+		$this->status = 2;
+		$this->save();
 	}
 	
 	/**
 	 * Changes a user's password.
 	 * 
-	 * The old password is required for validation purposes.
+	 * The old password is required for validation purposes. User object should
+	 * be populated with id and new password.
+	 * 
 	 * @param string $old_pass
+	 * @return boolean FALSE if there was an error changing the password.
 	 */
 	function change_password($old_pass)
-	{
+	{		
+		if ( ! is_null($this->id) && $this->_verify_password($old_pass))
+		{
+			$this->_hash_password();
+			$this->save();
+			
+			return TRUE;
+		}
 		
+		return FALSE;
+		
+	}
+	
+	private function _hash_password()
+	{
+		if (is_null($this->password)) return FALSE;
+		
+		$this->benchmark->mark('password_hash_start');
+		if (PHP_VERSION_ID < 50500)
+		{
+			// Get password helper if PHP version less than 5.5.0
+			$this->load->helper('password');
+		}
+		$this->password = password_hash($this->password, PASSWORD_DEFAULT);
+		$this->benchmark->mark('password_hash_end');
+	}
+	
+	private function _verify_password($clear_pass)
+	{
+		if (is_null($this->password)) return FALSE;
+		
+		$this->benchmark->mark('password_verify_start');
+		if (PHP_VERSION_ID < 50500)
+		{
+			// Get password helper if PHP version less than 5.5.0
+			$this->load->helper('password');
+		}
+		return password_verify($clear_pass, $this->password);
+	}
+	
+	private function _set_name($name)
+	{
+		$string =ucwords(strtolower($name));
+		
+		foreach (array('-', '\'') as $delimiter) 
+		{
+			if (strpos($string, $delimiter)!==false) 
+			{
+				$string =implode($delimiter, array_map('ucfirst', explode($delimiter, $string)));
+			}
+		}
+		return $string;
 	}
 }
 
@@ -334,5 +484,25 @@ class User_stats extends PVA_Model {
 		parent::__construct();
 		
 		$this->user_id = $user_id;
+	}
+	
+	/**
+	 * Total flights for the user.
+	 * 
+	 * @return number
+	 */
+	function total_flights()
+	{
+		return $this->flights_early + $this->flights_late + $this->flights_ontime;
+	}
+	
+	/**
+	 * Total hours for the user.
+	 * 
+	 * @return number
+	 */
+	function total_hours()
+	{
+		return $this->hours_flights + $this->hours_transfer + $this->hours_adjustment;
 	}
 }
