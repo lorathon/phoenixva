@@ -3,7 +3,7 @@
 						<div class="row">
 							<div class="col-md-12">
 								<ul class="breadcrumb">
-									<li><a href="/zz_staging_ci/">Home</a></li>
+									<li><?php echo anchor('','Home'); ?></li>
 								</ul>
 							</div>
 						</div>
@@ -41,7 +41,7 @@
 
 
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
-<script type="text/javascript" src="/zz_staging_ci/assets/js/downloadxml.js" ></script>
+<script type="text/javascript" src="<?php echo base_url('/assets/js/downloadxml.js'); ?>"></script>
 <script type="text/javascript">
 //<![CDATA[
 var map;
@@ -70,7 +70,7 @@ var customIcons = {
   });
   var infoWindow = new google.maps.InfoWindow;
   
-  downloadUrl("/zz_staging_ci/assets/data/markers.xml", function(data) {
+  downloadUrl("<?php echo base_url('/assets/data/markers.xml'); ?>", function(data) {
     var xml = xmlParse(data);
     var markers = xml.documentElement.getElementsByTagName("marker");
     var bounds = new google.maps.LatLngBounds();

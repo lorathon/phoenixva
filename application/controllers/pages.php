@@ -28,6 +28,7 @@ class Pages extends PVA_Controller {
 			show_404();
 		}
 		
+		$this->data['title'] = $page;
 		$this->_render('pages/'.$page);
 	}
 }

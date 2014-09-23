@@ -1,22 +1,3 @@
-<div role="main" class="main">
-
-				<section class="page-top">
-					<div class="container">
-						<div class="row">
-							<div class="col-md-12">
-								<ul class="breadcrumb">
-									<li><a href="/zz_staging_ci/">Home</a></li>
-								</ul>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-12">
-								<h2>Type Ahead</h2>
-							</div>
-						</div>
-					</div>
-				</section>
-
 				<div class="container">
 
 				<form name="typeahead_search" id="typeahead_search" action="/zz_staging_ci/index.php/typeahead_results" method="post">
@@ -61,5 +42,4 @@
 
 				</form>
 				
-				</div>
-			</div>				
+				</div>		

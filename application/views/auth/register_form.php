@@ -127,19 +127,17 @@ $captcha = array(
 		'class' => $field_class,
 );
 ?>
-<div class="modal-header">
-    <h3>Join Phoenix Virtual Airways</h3>
-</div>
-<?php if ($errors):?>
-	<div class="error">
-		<?php foreach ($errors as $error): ?>
-			<p><?php echo $error; ?></p>
-		<?php endforeach; ?>
-	</div>
-<?php endif; ?>
 <div class="container">
+	<?php if ($errors):?>
+		<div class="alert alert-danger">
+			<?php foreach ($errors as $error): ?>
+				<p><?php echo $error; ?></p>
+			<?php endforeach; ?>
+		</div>
+	<?php endif; ?>
+	<?php echo validation_errors('<div class="alert alert-danger" role="alert">','</div>'); ?>
 	<div class="col-md-8">
-		<?php echo form_open($this->uri->uri_string(), $form_attributes); ?>
+		<?php echo form_open('auth/register', $form_attributes); ?>
 		<div class="form-group">
 			<?php if ($use_username): ?>
 				<?php echo form_label('Username', $username['id'], $label_attributes); ?>

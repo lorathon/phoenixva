@@ -161,6 +161,9 @@ class PVA_Controller extends CI_Controller {
 		{
 			// Load the site template
 			log_message('debug', 'Using site template.');
+			
+			// Set title if not set already
+			if ( ! array_key_exists('title', $this->data)) $this->data['title'] = $view;
 			$this->load->view('templates/pva', $this->data);
 		}
 	}

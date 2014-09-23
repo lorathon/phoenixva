@@ -104,8 +104,29 @@
 					</div>
 				</div>
 			</header>
+			<div role="main" class="main">
+				<?php if (current_url() != base_url()): ?>
+					<section class="page-top">
+						<div class="container">
+							<div class="row">
+								<div class="col-md-12">
+									<ul class="breadcrumb">
+										<li><?php echo anchor('','Home'); ?></li>
+									</ul>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12">
+									<h2><?php echo $title; ?></h2>
+								</div>
+							</div>
+						</div>
+					</section>
+				<?php endif; ?>
+	
+				<?php echo $view_output; ?>
 			
-			<?php echo $view_output; ?>
+			</div>
 			
 			<footer class="short" id="footer">
 				<div class="container">
