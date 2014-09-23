@@ -45,6 +45,7 @@ class Migration_Install extends CI_Migration {
 				'heard_about'            => $field_config['input_field'],
 				));
 		$this->dbforge->add_key('id', TRUE);
+		$this->dbforge->add_key('email', TRUE);
 		$this->dbforge->add_key(array('hub','rank_id'));
 		$this->dbforge->create_table('users');
 		
@@ -84,6 +85,7 @@ class Migration_Install extends CI_Migration {
 				'hours_transfer'    => $field_config['counter_field'],
 				'hours_adjustment'  => $field_config['counter_field_signed'],
 				'hours_type_rating' => $field_config['counter_field'],
+				'hours_hub'         => $field_config['counter_field'],
 				'current_location'  => $field_config['icao_field'],
 				'modified'          => $field_config['timestamp_field'],
 				));
