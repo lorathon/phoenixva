@@ -25,3 +25,29 @@ function pva_id($user)
 	}
 	return 'PVA'.str_pad($user, 4, '0', STR_PAD_LEFT);
 }
+
+/**
+ * Builds a modal dialog using a title and body.
+ * 
+ * @param string $title
+ * @param string $body
+ * @return string
+ */
+function modal_window($title = '', $body = '')
+{
+	$output  = '<div class="modal fade">';
+	$output .= '<div class="modal-dialog">';
+	$output .= '<div class="modal-content">';
+	$output .= '<div class="modal-header">';
+	$output .= '<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>';
+	$output .= '<h4 class="modal-title">'.$title.'</h4>';
+	$output .= '</div>';
+	$output .= '<div class="modal-body">';
+	$output .= "<p>{$body}</p>";
+	$output .= '</div>';
+	$output .= '<div class="modal-footer">';
+	$output .= '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
+	$output .= '</div></div><!-- /.modal-content --></div><!-- /.modal-dialog --></div><!-- /.modal -->';
+	
+	return $output;
+}

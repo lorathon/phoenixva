@@ -230,12 +230,17 @@ class User extends PVA_Model {
 			// User found, activate if not activated or banned
 			if ( ! $this->activated && ! $this->banned)
 			{
+
+				// TODO Background checking
+				
+				// Background check ok, activate the user
 				$this->activated = 1;
 				$this->new_email_key = '';
 				$this->status = 1;
 				$this->save();
-				
+
 				// TODO Create user in other systems
+				
 			}
 			return TRUE;
 		}
@@ -257,8 +262,12 @@ class User extends PVA_Model {
 		// Get clear password from the object
 		$pass_clear = $this->password;
 		
-		// Set the clear password to null
+		// Get IP address from the object
+		$curr_ip = $this->last_ip;
+		
+		// Set the object properties to null for lookup
 		$this->password = NULL;
+		$this->last_ip = NULL;
 		
 		// Populate if we have a match
 		$this->find();
@@ -274,6 +283,7 @@ class User extends PVA_Model {
 			
 			// Set last login
 			$this->last_login = date('Y-m-d H:i:s');
+			$this->last_ip = $curr_ip;
 			$this->save();
 			
 			return TRUE;
@@ -482,7 +492,7 @@ class User_stats extends PVA_Model {
 	function __construct($user_id = NULL)
 	{
 		parent::__construct();
-		
+		$this->_table_name = 'user_stats';
 		$this->user_id = $user_id;
 	}
 	

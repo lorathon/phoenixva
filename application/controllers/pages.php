@@ -19,6 +19,10 @@ class Pages extends PVA_Controller {
 	public function view($page = 'home')
 	{
 		log_message('debug','Pages Controller viewing '.$page);
+		
+		// Load the session
+		$this->load->library('session');
+		
 		// File or database
 		if ( ! file_exists(APPPATH.'/views/pages/'.$page.'.php'))
 		{

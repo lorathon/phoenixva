@@ -14,6 +14,7 @@
 
 		<!-- Web Fonts  -->
 		<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800%7CShadows+Into+Light" rel="stylesheet" type="text/css">
+		
 		<!-- Libs CSS -->
 		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/bootstrap/css/bootstrap.css');?>">
 		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
@@ -123,6 +124,23 @@
 						</div>
 					</section>
 				<?php endif; ?>
+				
+				<?php if (isset($this->session) && $this->session->flashdata('title')): ?>
+					<div class="container">
+						<div class="row">
+							<div class="col-md-offset-3 col-md-6">
+								<div class="panel panel-info">
+									<div class="panel-heading">
+										<h4 class="title"><?php echo $this->session->flashdata('title'); ?></h4>
+									</div>
+									<div class="panel-body">
+										<p><?php echo $this->session->flashdata('message'); ?></p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				<?php endif;?>
 	
 				<?php echo $view_output; ?>
 			
@@ -191,7 +209,7 @@
 		<script src="<?php echo base_url('assets/js/theme.plugins.js');?>"></script>
 		<script src="<?php echo base_url('assets/js/theme.js');?>"></script>
 		
-		<!-- Current Page JS -->
+		<!-- Current Page JS -->		
 		<script src="<?php echo base_url('assets/vendor/rs-plugin/js/jquery.themepunch.plugins.min.js');?>"></script>
 		<script src="<?php echo base_url('assets/vendor/rs-plugin/js/jquery.themepunch.revolution.js');?>"></script>
 		<script src="<?php echo base_url('assets/vendor/circle-flip-slideshow/js/jquery.flipshow.js');?>"></script>

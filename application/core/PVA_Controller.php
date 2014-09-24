@@ -63,6 +63,7 @@ class PVA_Controller extends CI_Controller {
 			if ( ! $this->tank_auth->is_logged_in())
 			{
 				// User not logged in so redirect to login
+				$this->load->helper('url');
 				redirect('/auth/login/');
 			}
 
@@ -130,7 +131,7 @@ class PVA_Controller extends CI_Controller {
 	protected function _render($view = NULL)
 	{
 		// Default view to current class
-		if (is_null($view)) $view = get_class($this);
+		if (is_null($view)) $view = strtolower(get_class($this));
 		
 		// Load helpers
 		$this->load->helper('url');

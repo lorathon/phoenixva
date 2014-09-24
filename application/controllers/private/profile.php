@@ -1,10 +1,12 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Profile extends PVA_Controller {
-	
+		
 	function index()
 	{
 		// Display the profile for the logged in user.
+		$this->load->library('session');
+		$this->data['title'] = $this->session->userdata('name');
 		$this->_render();
 	}
 	

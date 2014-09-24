@@ -66,27 +66,45 @@ class Auth extends PVA_Controller
 			}
 			$this->data['errors'] = array();
 
-			if ($this->form_validation->run()) {								// validation ok 
-				if ($this->tank_auth->login(
-						$this->form_validation->set_value('login'),
-						$this->form_validation->set_value('password'),
-						$this->form_validation->set_value('remember'),
-						$this->data['login_by_username'],
-						$this->data['login_by_email'])) {								// success
-					$this->session->set_flashdata('success', 'You have successfully logged into your account.');
+			if ($this->form_validation->run()) 
+			{
+				// Validation OK
+				$user = new User();
+				$user->username = $this->form_validation->set_value('login');
+				$user->password = $this->form_validation->set_value('password');
+				$user->last_ip = $this->input->ip_address();
+				if ($user->login()) 
+				{
+					// Login success
+					$this->session->set_userdata(array(
+							'user_id'  => $user->id,
+							'username' => $user->username,
+							'status'   => $user->activated,
+							'admin'    => $user->admin_level,
+							'name'     => $user->name,
+							'rank'     => $user->rank_id,
+							'hub'      => $user->hub,
+							));
+					
+					$this->session->set_flashdata('title', 'Welcome');
+					$this->session->set_flashdata('message', 'You have successfully logged into your account.');
                     redirect('private/profile');
 
-				} else {
-					$errors = $this->tank_auth->get_error_message();
-					if (isset($errors['banned'])) {								// banned user
-						$this->_show_message('error', $this->lang->line('auth_message_banned').' '.$errors['banned']);
-
-					} elseif (isset($errors['not_activated'])) {				// not activated user
-						redirect('/auth/send_again/');
-
-					} else {													// fail
-						foreach ($errors as $k => $v)	$this->data['errors'][$k] = $this->lang->line($v);
+				} 
+				else 
+				{
+					$errors = array('Unable to log in.');
+					
+					if ($user->banned)
+					{
+						$errors[] = 'You are not able to log in at this time.';
 					}
+					
+					if ( ! $user->activated)
+					{
+						$errors[] = 'Login information does not match an activated user.';
+					}
+					$this->data['errors'] = $errors;				
 				}
 			}
 			$this->data['show_captcha'] = FALSE;
@@ -99,6 +117,7 @@ class Auth extends PVA_Controller
 				}
 			}
 			
+			$this->data['title'] = 'Sign In';
             $this->data['meta_title'] = config_item('site_name');            
             $this->_render('auth/login_form');
 		}
@@ -308,15 +327,20 @@ class Auth extends PVA_Controller
 		// Activate user
 		if ($user->activate()) 
 		{
+			// TODO Notify staff
+			
 			// success
 			$this->tank_auth->logout();
-			$this->_show_message('success', $this->lang->line('auth_message_activation_completed').' '.anchor('/auth/login/', 'Login'));
-
+			$this->session->set_flashdata('title', 'Activation Successful');
+			$this->session->set_flashdata('message', $this->lang->line('auth_message_activation_completed'));
+			redirect('auth/login');
 		} 
 		else 
 		{
 			// fail
-			$this->_show_message('error', $this->lang->line('auth_message_activation_failed'));
+			$this->session->set_flashdata('title', 'Activation Error');
+			$this->session->set_flashdata('message', $this->lang->line('auth_message_activation_failed'));
+			redirect('');
 		}
 	}
 

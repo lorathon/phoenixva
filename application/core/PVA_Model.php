@@ -88,10 +88,13 @@ class PVA_Model extends CI_Model
      */
     public function find()
     {
-    	if (is_null($this->$_primary_key))
+    	if (is_null($this->id))
     	{
     		// Searching with parameters
-    		$parms = get_object_vars($this);
+    		
+    		// Prep the data
+    		$parms = $this->_prep_data();
+    		
     		$this->db->select()
     		         ->from($this->_table_name)
     		         ->where($parms)
@@ -102,7 +105,7 @@ class PVA_Model extends CI_Model
     		// Getting by ID
     		$this->db->select()
     		         ->from($this->_table_name)
-    		         ->where($this->_primary_key, $this->$this->_primary_key)
+    		         ->where($this->_primary_key, $this->id)
     		         ->limit(1);
     	}
         
@@ -208,8 +211,9 @@ class PVA_Model extends CI_Model
         else
         {
         	// Update if id is passed
+        	$this->db->where($this->_primary_key, $this->id);
             $this->db->update($this->_table_name,$this);
-            $this->db->where($this->_primary_key, $this->id);
+            
         }
     }
         
