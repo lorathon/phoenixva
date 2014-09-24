@@ -34,7 +34,7 @@ class Auth extends PVA_Controller
 	function login()
 	{
 		if ($this->tank_auth->is_logged_in()) {									// logged in
-			redirect('');
+			redirect('private/profile');
 
 		} elseif ($this->tank_auth->is_logged_in(FALSE)) {						// logged in, not activated
 			redirect('/auth/send_again/');
@@ -57,7 +57,8 @@ class Auth extends PVA_Controller
 			}
 
 			$this->data['use_recaptcha'] = $this->config->item('use_recaptcha', 'tank_auth');
-			if ($this->tank_auth->is_max_login_attempts_exceeded($login)) {
+			$max_login_exceeded = $this->tank_auth->is_max_login_attempts_exceeded($login);
+			if ($max_login_exceeded) {
 				if ($this->data['use_recaptcha'])
 					$this->form_validation->set_rules('recaptcha_response_field', 'Confirmation Code', 'trim|xss_clean|required|callback__check_recaptcha');
 				else
@@ -89,7 +90,7 @@ class Auth extends PVA_Controller
 				}
 			}
 			$this->data['show_captcha'] = FALSE;
-			if ($this->tank_auth->is_max_login_attempts_exceeded($login)) {
+			if ($max_login_exceeded) {
 				$this->data['show_captcha'] = TRUE;
 				if ($this->data['use_recaptcha']) {
 					$this->data['recaptcha_html'] = $this->_create_recaptcha();
@@ -99,7 +100,7 @@ class Auth extends PVA_Controller
 			}
 			
             $this->data['meta_title'] = config_item('site_name');            
-            $this->_render('/auth/login_form');
+            $this->_render('auth/login_form');
 		}
 	}
 
@@ -122,7 +123,7 @@ class Auth extends PVA_Controller
 	function register()
 	{
 		if ($this->tank_auth->is_logged_in()) {									// logged in
-			redirect('');
+			redirect('private/profile');
 
 		} elseif ($this->tank_auth->is_logged_in(FALSE)) {						// logged in, not activated
 			redirect('/auth/send_again/');
@@ -135,7 +136,7 @@ class Auth extends PVA_Controller
 			if ($use_username) {
 				$this->form_validation->set_rules('username', 'Username', 'trim|required|xss_clean|min_length['.$this->config->item('username_min_length', 'tank_auth').']|max_length['.$this->config->item('username_max_length', 'tank_auth').']|alpha_dash');
 			}
-			$this->form_validation->set_rules('email', 'Email', 'trim|required|xss_clean|valid_email');
+			$this->form_validation->set_rules('email', 'Email', 'trim|required|xss_clean|valid_email|is_unique[users.email]');
 			$this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean|min_length['.$this->config->item('password_min_length', 'tank_auth').']|max_length['.$this->config->item('password_max_length', 'tank_auth').']|alpha_dash');
 			$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'trim|required|xss_clean|matches[password]');
 			$this->form_validation->set_rules('first_name', 'First Name', 'trim|required|xss_clean');
@@ -143,7 +144,7 @@ class Auth extends PVA_Controller
 			$this->form_validation->set_rules('birth_date', 'Birth Date', 'trim|required|xss_clean');
 			$this->form_validation->set_rules('location', 'Location', 'trim|required|xss_clean');
 			$this->form_validation->set_rules('crew_center', 'Crew Center', 'trim|required|xss_clean');
-			$this->form_validation->set_rules('transfer_hours', 'Transfer Hours', 'trim|xss_clean|numeric|less_than[151]');
+			$this->form_validation->set_rules('transfer_hours', 'Transfer Hours', 'trim|xss_clean|numeric|less_than[150.01]');
 			$this->form_validation->set_rules('transfer_link', 'Transfer Link', 'trim|xss_clean');
 			$this->form_validation->set_rules('heard_about', 'Heard About', 'trim|xss_clean');
 						
@@ -189,11 +190,15 @@ class Auth extends PVA_Controller
 					// User created
 
 					// Set values for the views
+					$this->load->helper('html');
+					$this->data['title'] = 'Application Submitted';
 					$this->data['site_name'] = $this->config->item('website_name', 'tank_auth');
-					$this->data['user_id'] = $user->id;
+					$this->data['user_id'] = pva_id($user->id);
 					$this->data['username'] = $user->username;
 					$this->data['email'] = $user->email;
 					$this->data['new_email_key'] = $user->new_email_key;
+					$this->data['transfer_link'] = $user->transfer_link;
+					$this->data['transfer_hours'] = $user_stats->hours_transfer;
 					
 
 					if ($email_activation) 
@@ -203,7 +208,7 @@ class Auth extends PVA_Controller
 
 						$this->_send_email('activate', $user->email, $this->data);
 
-						$this->_show_message('info', $this->lang->line('auth_message_registration_completed_1'));
+						$this->_render('auth/register_result');
 
 					} 
 					else 
@@ -243,6 +248,7 @@ class Auth extends PVA_Controller
 				}
 			}
 			
+			$this->data['title'] = 'Join Phoenix Virtual Airways';
 			$this->data['use_username'] = $use_username;
 			$this->data['captcha_registration'] = $captcha_registration;
 			$this->data['use_recaptcha'] = $use_recaptcha;
@@ -293,17 +299,23 @@ class Auth extends PVA_Controller
 	 *
 	 * @return void
 	 */
-	function activate()
+	function activate($id, $email_key)
 	{
-		$user_id		= $this->uri->segment(3);
-		$new_email_key	= $this->uri->segment(4);
+		$user = new User();
+		$user->id = $id;
+		$user->new_email_key = $email_key;
 
 		// Activate user
-		if ($this->tank_auth->activate_user($user_id, $new_email_key)) {		// success
+		if ($user->activate()) 
+		{
+			// success
 			$this->tank_auth->logout();
 			$this->_show_message('success', $this->lang->line('auth_message_activation_completed').' '.anchor('/auth/login/', 'Login'));
 
-		} else {																// fail
+		} 
+		else 
+		{
+			// fail
 			$this->_show_message('error', $this->lang->line('auth_message_activation_failed'));
 		}
 	}

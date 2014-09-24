@@ -31,7 +31,7 @@ $captcha = array(
 	'maxlength'	=> 8,
 );
 ?>
-<?php echo form_open($this->uri->uri_string()); ?>
+<?php echo form_open('auth/login'); ?>
 <div class="modal-header">
     <h3>Login</h3>
     <p>Please login using your credentials.</p>
