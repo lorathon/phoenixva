@@ -57,6 +57,9 @@ class PVA_Controller extends CI_Controller {
 
 		if ($access == 'admin' OR $access == 'private')
 		{
+			// Session required for all admin/private pages
+			$this->load->library('session');
+			
 			// Verify user logged in
 			$this->load->library('tank_auth');
 
@@ -100,6 +103,7 @@ class PVA_Controller extends CI_Controller {
 			if($this->data['userdata']['admin'] < 2)
 			{
 				// NO admin Credentials found.  Redirect to UNAUTH page
+				$this->load->helper('url');
 				redirect('/auth/unauth/');
 			}
 
@@ -167,6 +171,16 @@ class PVA_Controller extends CI_Controller {
 			if ( ! array_key_exists('title', $this->data)) $this->data['title'] = $view;
 			$this->load->view('templates/pva', $this->data);
 		}
+	}
+	
+	/**
+	 * Sets response headers so browsers do not cache the output.
+	 */
+	protected function _no_cache()
+	{
+		$this->output->set_header("Cache-Control: no-store, no-cache, must-revalidate");
+		$this->output->set_header("Cache-Control: post-check=0, pre-check=0");
+		$this->output->set_header("Pragma: no-cache");
 	}
 
 	/**
