@@ -414,7 +414,10 @@ class User extends PVA_Model {
 			// Get password helper if PHP version less than 5.5.0
 			$this->load->helper('password');
 		}
-		return password_verify($clear_pass, $this->password);
+		$verified = password_verify($clear_pass, $this->password);
+		$this->benchmark->mark('password_verify_end');
+		 
+		return $verified; 
 	}
 	
 	private function _set_name($name)
