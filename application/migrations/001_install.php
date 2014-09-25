@@ -73,7 +73,7 @@ class Migration_Install extends CI_Migration {
 				'aircraft_flown'    => $field_config['counter_field'],
 				'airports_landed'   => $field_config['counter_field'],
 				'fuel_used'         => $field_config['calculated_field'],
-				'total_landings'    => $field_config['counter_field'],
+				'total_landings'    => $field_config['calculated_field'],
 				'total_gross'       => $field_config['money_field'],
 				'total_expenses'    => $field_config['money_field'],
 				'flights_early'     => $field_config['counter_field'],
