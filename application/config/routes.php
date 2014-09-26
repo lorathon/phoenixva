@@ -37,8 +37,16 @@
 | in the URL cannot be matched to a valid route.
 |
 */
+// Admin routing
+$route['admin'] = "admin/dashboard";
+
+// Remove controller action for pages calls
 $route['pages/(:any)'] = "pages/view/$1";
+
+// Default route
 $route['default_controller'] = 'pages/view';
+
+// 404 Error routing
 $route['404_override'] = '';
 
 

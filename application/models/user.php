@@ -85,7 +85,7 @@ class User extends PVA_Model {
 	 * $user = new User();
 	 * $user->id = 123;
 	 * $user->find();
-	 * $user->get_user_profile();
+	 * $user->get_user_stats();
 	 * 
 	 * @return object User_stats object for the populated user
 	 */
@@ -231,7 +231,7 @@ class User extends PVA_Model {
 			if ( ! $this->activated && ! $this->banned)
 			{
 
-				// TODO Background checking
+				// TODO Background checking (business logic level)
 				
 				// Background check ok, activate the user
 				$this->activated = 1;
@@ -445,10 +445,10 @@ class User extends PVA_Model {
 class User_profile extends PVA_Model {
 	
 	/* Default Properties */
-	public $user_id = '';
-	public $location = '';
-	public $avatar = '';
-	public $background_sig = '';
+	public $user_id = NULL;
+	public $location = NULL;
+	public $avatar = NULL;
+	public $background_sig = NULL;
 	public $modified = NULL;
 	
 	function __construct($user_id = NULL)
@@ -470,26 +470,26 @@ class User_profile extends PVA_Model {
 class User_stats extends PVA_Model {
 	
 	/* Default properties */
-	public $user_id = '';
-	public $total_pay = 0;
-	public $pay_adjustment = 0;
-	public $airlines_flown = 0;
-	public $aircraft_flown = 0;
-	public $airports_landed = 0;
-	public $fuel_used = 0;
-	public $total_landings = 0;
-	public $total_gross = 0;
-	public $total_expenses = 0;
-	public $flights_early = 0;
-	public $flights_ontime = 0;
-	public $flights_late = 0;
-	public $flights_manual = 0;
-	public $flights_rejected = 0;
-	public $hours_flights = 0;
-	public $hours_transfer = 0;
-	public $hours_adjustment = 0;
-	public $hours_type_rating = 0;
-	public $current_location = '';
+	public $user_id = NULL;
+	public $total_pay = NULL;
+	public $pay_adjustment = NULL;
+	public $airlines_flown = NULL;
+	public $aircraft_flown = NULL;
+	public $airports_landed = NULL;
+	public $fuel_used = NULL;
+	public $total_landings = NULL;
+	public $total_gross = NULL;
+	public $total_expenses = NULL;
+	public $flights_early = NULL;
+	public $flights_ontime = NULL;
+	public $flights_late = NULL;
+	public $flights_manual = NULL;
+	public $flights_rejected = NULL;
+	public $hours_flights = NULL;
+	public $hours_transfer = NULL;
+	public $hours_adjustment = NULL;
+	public $hours_type_rating = NULL;
+	public $current_location = NULL;
 	public $modified = NULL;
 	
 	function __construct($user_id = NULL)

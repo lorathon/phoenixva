@@ -18,7 +18,13 @@
 */
 class PVA_Controller extends CI_Controller {
 
+	// Holds the data for display by the view
 	public $data     = array();
+	
+	// Used to enable/disable the profiler (can be overriden by child controllers)
+	protected $profile_this = TRUE;
+	
+	// Controls which template to render
 	private $_access = 'public';
 
 	function __construct()
@@ -26,7 +32,7 @@ class PVA_Controller extends CI_Controller {
 		parent::__construct();
 
 		// Styling and profiling
-		$this->output->enable_profiler(TRUE);
+		$this->output->enable_profiler($this->profile_this);
 
 		log_message('debug', 'PVA Controller class initialized');
 
@@ -45,9 +51,10 @@ class PVA_Controller extends CI_Controller {
 		// Load PVA config file XXX This should probably not be loaded here.
 		$this->load->config('pva_config');
 
+		// Holds errors for display by the view
 		$this->data['errors'] = array();
 		
-		// XXX These config items don't apply to all requests
+		// Set defaults so controllers can override later
 		$this->data['site_name'] = config_item('site_name');
 		$this->data['meta_title'] = config_item('site_name');
 		$this->data['meta_description'] = config_item('site_description');
@@ -70,8 +77,6 @@ class PVA_Controller extends CI_Controller {
 				redirect('/auth/login/');
 			}
 
-			// Logged In User's userdata
-			$this->load->library('session');
 			$this->data['userdata'] = $this->session->all_userdata();
 
 			/* XXX Is this even used?
@@ -139,6 +144,13 @@ class PVA_Controller extends CI_Controller {
 		
 		// Load helpers
 		$this->load->helper('url');
+		
+		// Load session
+		$this->load->library('session');
+		$this->data['userdata'] = $this->session->all_userdata();
+		
+		// No cacheing
+		$this->_no_cache();
 		 
 		// Get the view(s) and place in view_output
 		if (is_array($view))

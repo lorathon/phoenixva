@@ -201,7 +201,7 @@ class Auth extends PVA_Controller
 				
 				// Set user stat info
 				$user_stats = $user->get_user_stats();
-				$user_stats->hours_transfer = $this->form_validation->set_value('transfer_hours');
+				$user_stats->hours_transfer = $this->form_validation->set_value('transfer_hours') * 60;
 				$user->set_user_stats($user_stats);
 				
 				if ( ! $user->create() === FALSE) 
@@ -325,9 +325,9 @@ class Auth extends PVA_Controller
 		$user->new_email_key = $email_key;
 
 		// Activate user
-		if ($user->activate()) 
+		if ($this->_background_checks($user) && $user->activate()) 
 		{
-			// TODO Notify staff
+			// TODO Notify staff (call osTicket API and create ticket)
 			
 			// success
 			$this->tank_auth->logout();
@@ -675,6 +675,17 @@ class Auth extends PVA_Controller
 			$this->form_validation->set_message('_check_recaptcha', $this->lang->line('auth_incorrect_captcha'));
 			return FALSE;
 		}
+		return TRUE;
+	}
+	
+	/**
+	 * Runs automated background checks
+	 * 
+	 * @param object $user Reference to a populated user object
+	 * @return boolean TRUE if automated background checks pass
+	 */
+	protected function _background_checks(&$user)
+	{
 		return TRUE;
 	}
 

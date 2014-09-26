@@ -8,7 +8,7 @@
  */
 function user($user)
 {
-	return anchor('private/profile/view'.$user->id, pva_id($user->id).' '.$user->name);
+	return anchor('private/profile/view/'.$user->id, pva_id($user->id).' '.$user->name);
 }
 
 /**
@@ -28,6 +28,8 @@ function pva_id($user)
 
 /**
  * Builds a modal dialog using a title and body.
+ * 
+ * XXX Not working due to css/js conflict.
  * 
  * @param string $title
  * @param string $body
@@ -50,4 +52,20 @@ function modal_window($title = '', $body = '')
 	$output .= '</div></div><!-- /.modal-content --></div><!-- /.modal-dialog --></div><!-- /.modal -->';
 	
 	return $output;
+}
+
+/**
+ * Sets the table layout for the system.
+ * 
+ * @return array suitable for use by $this->table->set_template()
+ */
+function table_layout()
+{
+	// Set the table layout
+	$table_layout = array(
+			'table_open' => '<div class="table-responsive"><table class="table table-condensed table-hover">',
+			'table_close' => '</table></div>',
+	);
+	
+	return $table_layout;
 }

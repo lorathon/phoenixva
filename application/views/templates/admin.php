@@ -143,7 +143,7 @@
 			<!-- Main Column -->
 			<div class="span1"></div>
 			<div class="span10">
-				<?php echo set_breadcrumb(); ?>
+				<?php //echo set_breadcrumb(); ?>
 			</div>
 			<div class="span1"></div>
 		</div>
@@ -181,7 +181,7 @@
 	<!-- END: admin/_layout_main.php -->
 	<!-- START: admin/components/page_footer.php -->
 	<!--<script src="http://code.jquery.com/jquery.js"></script>-->
-	<script src="&lt;?php echo base_url('js/bootstrap.min.js')?&gt;"
+	<script src="<?php echo base_url('js/bootstrap.min.js')?>"
 		type="text/javascript"></script>
 </body>
 </html>

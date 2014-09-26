@@ -2,37 +2,52 @@
 
 class Profile extends PVA_Controller {
 		
+	/**
+	 * Short circuit to the view
+	 */
 	function index()
 	{
-		// Display the profile for the logged in user.
-		
-		// Make sure this page is not cached
-		$this->_no_cache();
-		
-		$this->data['title'] = $this->session->userdata('name');
-		$this->_render();
+		$this->view();	
 	}
 	
+	/**
+	 * Display a pilot profile
+	 * 
+	 * Defaults to the currently logged in pilot if no ID is provided.
+	 * 
+	 * @param string $id of the pilot to display
+	 */
 	function view($id = NULL)
 	{
 		if (is_null($id)) 
 		{
 			// Default to current user
-			$this->index();
+			$id = $this->session->userdata('user_id');
 		}
-		
-		// Display the profile for the selected user.
-		
+				
 		// Make sure this page is not cached
 		$this->_no_cache();
+		
+		// Own profile?
+		$this->data['own_profile'] = ($id == $this->session->userdata('user_id'));
 		
 		// Get the user
 		$user = new User();
 		$user->id = $id;
 		$user->find();
 		
-		$this->data['title'] = $user->name;
-		
+		if ($user->name)
+		{
+			// User found
+			
+			$this->data['title'] = $user->name;
+		}
+		else 
+		{
+			// User doesn't exist
+			$this->data['title'] = 'No Pilot Found';
+			$this->data['errors'][] = 'A pilot with that ID could not be located.';
+		}
 		$this->_render();
 	}
 }

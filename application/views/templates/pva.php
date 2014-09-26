@@ -68,7 +68,7 @@
 					</h1>
 					<nav>
 						<ul class="nav nav-pills nav-top">
-							<?php if (isset($userdata)): ?>
+							<?php if (isset($userdata['name'])): ?>
 								<li>
 									<?php echo anchor('private/profile','<i class="fa fa-user fa-lg"></i>'.$userdata['name'],'title="Pilot Profile"'); ?>
 								</li>
@@ -100,6 +100,13 @@
 								<li><?php echo anchor('pages/airports','Destinations'); ?></li>
 								<li><?php echo anchor('pages/typeahead','Type Ahead'); ?></li>
 								<li><?php echo anchor('pages/faq-public','FAQ\'s'); ?></li>
+								<?php if (isset($userdata['name'])): ?>
+									<li><?php echo anchor('http://helpdesk.phoenixva.org/','Help'); ?></li>
+									<?php if ($userdata['admin'] > 2): ?>
+										<li><!-- Spacer --></li>
+										<li><?php echo anchor('admin','Admin'); ?>
+									<?php endif; ?>
+								<?php endif; ?>
 							</ul>
 						</nav>
 					</div>
@@ -131,10 +138,10 @@
 							<div class="col-md-offset-3 col-md-6">
 								<div class="panel panel-info">
 									<div class="panel-heading">
-										<h4 class="title"><?php echo $this->session->flashdata('title'); ?></h4>
+										<?php echo $this->session->flashdata('title'); ?>
 									</div>
 									<div class="panel-body">
-										<p><?php echo $this->session->flashdata('message'); ?></p>
+										<?php echo $this->session->flashdata('message'); ?>
 									</div>
 								</div>
 							</div>
@@ -215,10 +222,14 @@
 		<script src="<?php echo base_url('assets/vendor/circle-flip-slideshow/js/jquery.flipshow.js');?>"></script>
 		<script src="<?php echo base_url('assets/js/views/view.home.js');?>"></script>
 		
-		<!-- Type Ahead -->
-		<script src="<?php echo base_url('assets/js/typeahead.bundle.js');?>"></script>	
-		<script src="<?php echo base_url('assets/js/prefetch.js');?>"></script>
-				
+		<?php if (isset($scripts))
+		{
+			foreach ($scripts as $script)
+			{
+				echo $script."\n";
+			}
+		}
+		?>		
 
 		<!-- Google Analytics: Change UA-XXXXX-X to be your site's ID. Go to http://www.google.com/analytics/ for more information.
 		<script type="text/javascript">
