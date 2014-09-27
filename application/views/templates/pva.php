@@ -97,16 +97,50 @@
 						</ul>
 						<nav class="nav-main mega-menu">
 							<ul class="nav nav-pills nav-main" id="mainMenu">
-								<li><?php echo anchor('pages/airports','Destinations'); ?></li>
-								<li><?php echo anchor('pages/typeahead','Type Ahead'); ?></li>
-								<li><?php echo anchor('pages/faq-public','FAQ\'s'); ?></li>
+								<li><?php echo anchor('','Home'); ?>
 								<?php if (isset($userdata['name'])): ?>
+									<li class="dropdown">
+										<a class="dropdown-toggle" data-toggle="dropdown"
+										   href="#">
+											Public Pages <span class="caret"></span>
+										</a>
+										<ul class="dropdown-menu" role="menu">
+								<?php endif; ?>
+										<li><?php echo anchor('live','Live Ops'); ?>
+										<li><?php echo anchor('pages/faq-public','FAQ\'s'); ?></li>
+										<li class="dropdown">
+											<a class="dropdown-toggle" data-toggle="dropdown"
+										       href="#">
+												About PVA <span class="caret"></span>
+											</a>
+											<ul class="dropdown-menu" role="menu">
+												<li><?php echo anchor('pages/airports','Destinations'); ?></li>
+												<li><?php echo anchor('pages/typeahead','Airlines'); ?></li>
+												<li><?php echo anchor('aircraft','Aircraft Fleet'); ?></li>
+												<li><?php echo anchor('hubs','Crew Centers'); ?></li>
+												<li><?php echo anchor('pages/achievements','Achievements'); ?></li>
+											</ul>
+										</li>
+								<?php if (isset($userdata['name'])): ?>
+										</ul>
+									</li>
+									<li class="dropdown">
+										<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+											Pilot Tools <span class="caret"></span>
+										</a>
+										<ul class="dropdown-menu" role="menu">
+											<li><?php echo anchor('private/profile','Your Profile'); ?>
+											<li><?php echo anchor('private/schedules','Schedule Search'); ?></li>
+											<li><?php echo anchor('private/bids','Bids'); ?></li>
+											<li><?php echo anchor('private/brief','Flight Brief'); ?></li>
+										</ul>
+									</li>
+									<li><?php echo anchor('http://phoenixva.org/forums/','Forums'); ?></li>
 									<li><?php echo anchor('http://helpdesk.phoenixva.org/','Help'); ?></li>
 									<?php if ($userdata['admin'] > 2): ?>
-										<li><!-- Spacer --></li>
 										<li><?php echo anchor('admin','Admin'); ?>
-									<?php endif; ?>
-								<?php endif; ?>
+									<?php endif; // Admin ?>
+								<?php endif; // Logged in ?>
 							</ul>
 						</nav>
 					</div>

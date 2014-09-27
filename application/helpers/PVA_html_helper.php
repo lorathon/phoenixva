@@ -10,7 +10,7 @@ function airport($airport)
 {
 	$attribs = array();
 	
-	if ($airport->hub)
+	if ($airport->is_hub())
 	{
 		$attribs['class'] = 'hub';
 	}
