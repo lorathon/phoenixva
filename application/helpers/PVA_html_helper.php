@@ -1,6 +1,24 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
+ * Returns airport info in a consistent format.
+ * 
+ * @param object $airport Airport object of the airport to display.
+ * @return string in the format ICAO Name with a link to the airport details page.
+ */
+function airport($airport)
+{
+	$attribs = array();
+	
+	if ($airport->hub)
+	{
+		$attribs['class'] = 'hub';
+	}
+	
+	return anchor('airport/view/'.$airport->id, $airport->icao.' '.$airport->name, $attribs);
+}
+
+/**
  * Returns the user info in a consistent format.
  * 
  * @param object $user User object of the user to display.
@@ -14,6 +32,9 @@ function user($user)
 /**
  * Returns the user ID formatted for display.
  * 
+ * In most cases you'll want to use the user() function instead of this one.
+ * 
+ * @see user()
  * @param string|object $user Either the ID or a full User object.
  * @return string the formatted ID (PVA####)
  */
