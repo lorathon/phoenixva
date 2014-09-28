@@ -87,6 +87,7 @@ class Migration_Install extends CI_Migration {
 				'hours_type_rating' => $field_config['counter_field'],
 				'hours_hub'         => $field_config['counter_field'],
 				'current_location'  => $field_config['icao_field'],
+				'last_flight_date'  => $field_config['date_field'],
 				'modified'          => $field_config['timestamp_field'],
 				));
 		$this->dbforge->add_key('id', TRUE);
