@@ -19,6 +19,49 @@ function airport($airport)
 }
 
 /**
+ * Returns button attributes for an anchor link.
+ * 
+ * @param string $type The button type to create
+ * @return array Associative array suitable for use in anchor().
+ */
+function button($type)
+{
+	$class = 'btn btn-'.$type;
+	$role  = 'button';
+		
+	$btn_array = array(
+			'class' => $class,
+			'role'  => $role,
+			);
+	
+	return $btn_array;
+}
+
+/**
+ * Returns the date format used by the system.
+ * 
+ * @return string
+ */
+function pva_date_format()
+{
+	return 'YYYY-MM-DD';
+}
+
+/**
+ * Formats hours and minutes for display
+ * 
+ * @param int $hours Total number of minutes
+ * @param string $separator Optional separator (defaults to :)
+ * @return string formatted hours and minutes for display
+ */
+function format_hours($hours,$separator = ':')
+{
+	$mins = $hours % 60;
+	$hours = floor($hours / 60);
+	return $hours.$separator.str_pad($mins,2,0);
+}
+
+/**
  * Returns the user info in a consistent format.
  * 
  * @param object $user User object of the user to display.
@@ -73,6 +116,18 @@ function modal_window($title = '', $body = '')
 	$output .= '</div></div><!-- /.modal-content --></div><!-- /.modal-dialog --></div><!-- /.modal -->';
 	
 	return $output;
+}
+
+/**
+ * Returns only the date from a date time.
+ * 
+ * @param string $datetime A string in the format "DATE TIME"
+ * @return string containing only the data part.
+ */
+function strip_time($datetime)
+{
+	$parts = explode(' ',$datetime);
+	return $parts[0];
 }
 
 /**

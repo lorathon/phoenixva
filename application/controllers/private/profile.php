@@ -40,7 +40,75 @@ class Profile extends PVA_Controller {
 		{
 			// User found
 			
+			// Load helpers
+			$this->load->helper('html');
+			$this->load->helper('url');
+			
+			// Populate user info
+			$this->data['meta_title'] = pva_id($user).' '.$user->name;
 			$this->data['title'] = $user->name;
+			$this->data['user_id'] = $user->id;
+			$this->data['name'] = pva_id($user).' '.$user->name;
+			$this->data['birthday'] = $user->birthday;
+			$this->data['joined'] = strip_time($user->created);
+			
+			// Status
+			$status_array = $this->config->item('user_status');
+			$this->data['status'] = $status_array[$user->status];
+			$this->data['raw_status'] = $user->status;
+			
+			// Hub
+			$hub = new Airport();
+			$hub->id = $user->hub;
+			$hub->find();
+			$this->data['hub'] = $hub->icao;
+			
+			// Populate profile
+			$user_profile = $user->get_user_profile();
+			$this->data['avatar'] = 'http://www.phoenixva.org/lib/images/noavatar.png';
+			if (strlen($user_profile->avatar > 0))
+			{
+				$this->data['avatar'] == $user_profile->avatar;
+			}
+			$this->data['signature'] = $user_profile->background_sig;
+			$this->data['home_town'] = $user_profile->location;
+			
+			// Populate stats
+			$user_stats = $user->get_user_stats();
+			$this->data['total_flights'] = $user_stats->total_flights();
+			$this->data['total_hours'] = format_hours($user_stats->total_hours());
+			$this->data['flight_hours'] = format_hours($user_stats->hours_flights);
+			$this->data['transfer_hours'] = format_hours($user_stats->hours_transfer);
+			$this->data['bonus_hours'] = format_hours($user_stats->hours_adjustment);
+			$this->data['type_hours'] = format_hours($user_stats->hours_type_rating);
+			$this->data['airlines_flown'] = number_format($user_stats->airlines_flown);
+			$this->data['aircraft_flown'] = number_format($user_stats->aircraft_flown);
+			$this->data['airports_flown'] = number_format($user_stats->airports_landed);
+			$this->data['total_pay'] = number_format($user_stats->total_pay,2);
+			
+			// Current location
+			$this->data['location'] = 'No Info';
+			if (strlen($user_stats->current_location) > 0)
+			{
+				$this->data['location'] = $user_stats->current_location;
+			}
+			
+			// Get rank info
+			$rank = new Rank();
+			$rank->id = $user->rank_id;
+			$rank->find();
+			$this->data['rank'] = $rank->rank;
+			$this->data['rank_image'] = $rank->rank_image;
+			$this->data['next_rank'] = FALSE;
+			
+			if ($next_rank = $rank->next_rank())
+			{
+				$this->data['next_rank'] = $next_rank->rank;
+				$this->data['next_rank_hours'] = $next_rank->min_hours;
+				$next_rank_mins = $next_rank->min_hours * 60;
+				$this->data['next_rank_percent'] = 100 * ($user_stats->total_hours() / ($next_rank_mins));
+				$this->data['next_rank_to_go'] = format_hours($next_rank_mins - $user_stats->total_hours());
+			}
 		}
 		else 
 		{

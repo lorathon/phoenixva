@@ -247,6 +247,19 @@ class User extends PVA_Model {
 		
 		return FALSE;
 	}
+
+	/**
+	 * Makes a user fully active.
+	 * 
+	 * @return boolean FALSE if user id is not populated
+	 */
+	function make_active()
+	{
+		if (is_null($this->id)) return FALSE;
+		
+		$this->status = 3;
+		$this->save();
+	}
 	
 	/**
 	 * Verifies the user for login.
@@ -302,6 +315,7 @@ class User extends PVA_Model {
 		if (is_null($this->id)) return FALSE;
 		
 		$this->banned = 1;
+		$this->status = 7;
 		if (is_null($this->ban_reason))
 		{
 			$this->ban_reason = 'No reason given';
@@ -320,6 +334,7 @@ class User extends PVA_Model {
 		if (is_null($this->id)) return FALSE;
 		
 		$this->banned = 0;
+		$this->status = 2;
 		$this->ban_reason = '';
 		
 		$this->save();
@@ -506,7 +521,11 @@ class User_stats extends PVA_Model {
 	 */
 	function total_flights()
 	{
-		return $this->flights_early + $this->flights_late + $this->flights_ontime;
+		return array_sum(array(
+				$this->flights_early, 
+				$this->flights_late, 
+				$this->flights_ontime,
+				));
 	}
 	
 	/**
@@ -516,6 +535,11 @@ class User_stats extends PVA_Model {
 	 */
 	function total_hours()
 	{
-		return $this->hours_flights + $this->hours_transfer + $this->hours_adjustment;
+		return array_sum(array(
+				$this->hours_flights, 
+				$this->hours_transfer, 
+				$this->hours_adjustment,
+				$this->hours_type_rating,				
+				));
 	}
 }
