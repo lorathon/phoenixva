@@ -41,7 +41,7 @@
 							</dd>
 							<?php if ($raw_status < 4): ?>
 								<dt>Valid Thru</dt>
-								<dd>2014-12-31</dd>
+								<dd>2015-09-22</dd>
 							<?php endif; ?>
 						</dl>
 					</div>
@@ -130,29 +130,38 @@
 						<hr />
 						<dl class="dl-horizontal">	
 							<dt>Total Hours</dt>
-							<dd><?php echo $total_hours; ?></dd>
+							<dd class="text-right"><?php echo $total_hours; ?></dd>
 							<dt>PVA Hours</dt>
-							<dd><?php echo $flight_hours; ?></dd>
+							<dd class="text-right"><?php echo $flight_hours; ?></dd>
 							<dt>Transfer Hours</dt>
-							<dd><?php echo $transfer_hours; ?></dd>
+							<dd class="text-right"><?php echo $transfer_hours; ?></dd>
 							<dt>Bonus Hours</dt>
-							<dd><?php echo $bonus_hours; ?></dd>
+							<dd class="text-right"><?php echo $bonus_hours; ?></dd>
 							<dt>Typerating Hours</dt>
-							<dd><?php echo $type_hours; ?></dd>
+							<dd class="text-right"><?php echo $type_hours; ?></dd>
 						</dl>
 						<hr />
 						<dl class="dl-horizontal">
 							<dt>Earnings</dt>
-							<dd>$ <?php echo $total_pay; ?></dd>
+							<dd class="text-right">$ <?php echo $total_pay; ?></dd>
 						</dl>
 						<hr />
 						<dl class="dl-horizontal">
 							<dt>Airlines Flown</dt>
-							<dd><?php echo $airlines_flown; ?></dd>
+							<dd class="text-right">
+								<?php echo $airlines_flown; ?>
+								<?php echo anchor('stats/pilot_airline/'.$user_id,'Details'); ?>
+							</dd>
 							<dt>Airports Visited</dt>
-							<dd><?php echo $airports_flown; ?></dd>
+							<dd class="text-right">
+								<?php echo $airports_flown; ?>
+								<?php echo anchor('stats/pilot_airports/'.$user_id,'Details'); ?>
+							</dd>
 							<dt>Aircraft Flown</dt>
-							<dd><?php echo $aircraft_flown; ?></dd>
+							<dd class="text-right">
+								<?php echo $aircraft_flown; ?>
+								<?php echo anchor('stats/pilot_aircraft/'.$user_id,'Details'); ?>
+							</dd>
 						</dl>
 					</div>
 				</div>
@@ -204,12 +213,14 @@
 							</div>
 						</div>
 						<dl class="dl-horizontal">
+							<dt>Total Flights</dt>
+							<dd class="text-right"><?php echo $total_flights; ?></dd>
 							<dt>Early Flights</dt>
-							<dd><?php echo $early_flights; ?></dd>
+							<dd class="text-right"><?php echo $early_flights; ?></dd>
 							<dt>Ontime Flights</dt>
-							<dd><?php echo $ontime_flights; ?></dd>
+							<dd class="text-right"><?php echo $ontime_flights; ?></dd>
 							<dt>Delayed Flights</dt>
-							<dd><?php echo $delayed_flights; ?></dd>
+							<dd class="text-right"><?php echo $delayed_flights; ?></dd>
 						</dl>
 						<hr />
 						<p class="text-center">Landings</p>
@@ -226,7 +237,7 @@
 						</div>
 						<dl class="dl-horizontal">
 							<dt>Landing Avg.</dt>
-							<dd><?php echo $landing_avg; ?></dd>
+							<dd class="text-right"><?php echo $landing_avg; ?></dd>
 						</dl>
 					</div>
 				</div>
