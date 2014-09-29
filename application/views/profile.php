@@ -45,7 +45,15 @@
 							<?php endif; ?>
 						</dl>
 					</div>
-					<div class="panel-footer">					 
+					<div class="panel-footer">
+						<?php if ( ! $own_profile): ?>
+							<p class="text-center">
+								<?php echo anchor(
+										'http://www.phoenixva.org/forums/index.php?app=members&module=messaging&section=send&do=form&fromMemberID='.$ipbuser_id,
+										'<i class="fa fa-envelope"></i> Send Message',
+										button('default')); ?>
+							</p>
+						<?php endif; ?>				 
 						<?php if ($own_profile OR $userdata['admin'] > 49): ?>
 							<p class="text-center">
 								<?php echo anchor('auth/change_password/'.$user_id,'Change Password', button('default')); ?>
@@ -82,8 +90,11 @@
 								else 
 								{
 									echo anchor('admin/users/warn/'.$user_id, '<i class="fa fa-exclamation-triangle"></i> Warn', button('warning'));
-									echo "\n";
-									echo anchor('admin/users/ban/'.$user_id, '<i class="fa fa-ban"></i> Ban', button('danger'));
+									if ($userdata['admin'] > 98)
+									{
+										echo "\n";
+										echo anchor('admin/users/ban/'.$user_id, '<i class="fa fa-ban"></i> Ban', button('danger'));
+									}
 								}
 							?>
 							</p>

@@ -73,6 +73,12 @@
 									<?php echo anchor('private/profile','<i class="fa fa-user fa-lg"></i>'.$userdata['name'],'title="Pilot Profile"'); ?>
 								</li>
 								<li>
+									<?php echo anchor('http://www.phoenixva.org/forums/index.php?app=members&module=messaging','<i class="fa fa-inbox fa-lg"></i>','title="Messenger"'); ?>
+								</li>
+								<li>
+									<?php echo anchor('http://helpdesk.phoenixva.org/','<i class="fa fa-life-ring fa-lg"></i>','title="Help Desk"'); ?>
+								</li>
+								<li>
 									<?php echo anchor('auth/logout','<i class="fa fa-sign-out fa-lg"></i>','title="Sign Out"'); ?>
 								</li>
 							<?php else: ?>
@@ -136,7 +142,6 @@
 										</ul>
 									</li>
 									<li><?php echo anchor('http://phoenixva.org/forums/','Forums'); ?></li>
-									<li><?php echo anchor('http://helpdesk.phoenixva.org/','Help'); ?></li>
 									<?php if ($userdata['admin'] > 2): ?>
 										<li><?php echo anchor('admin','Admin'); ?>
 									<?php endif; // Admin ?>
