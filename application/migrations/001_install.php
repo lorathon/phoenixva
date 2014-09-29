@@ -45,6 +45,7 @@ class Migration_Install extends CI_Migration {
 				'hub_transfer'           => $field_config['fk_field'],
 				'transfer_link'          => $field_config['input_field'],
 				'heard_about'            => $field_config['input_field'],
+				'ipbuser_id'             => $field_config['fk_field'],
 				));
 		$this->dbforge->add_key('id', TRUE);
 		$this->dbforge->add_key('email', TRUE);
