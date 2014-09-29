@@ -163,6 +163,9 @@ class User extends PVA_Model {
 		$this->_user_profile->user_id = $this->id;
 		$this->_user_stats->user_id = $this->id;
 		
+		// Use minutes for transfer hours
+		$this->_user_stats->hours_transfer = $this->_user_stats->hours_transfer * 60; 
+		
 		// Prep sub table data
 		$prof_parms = $this->_user_profile->_prep_data();
 		$stat_parms = $this->_user_stats->_prep_data();
