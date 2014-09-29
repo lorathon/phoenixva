@@ -51,6 +51,7 @@ class Profile extends PVA_Controller {
 			$this->data['name'] = pva_id($user).' '.$user->name;
 			$this->data['birthday'] = $user->birthday;
 			$this->data['joined'] = strip_time($user->created);
+			$this->data['is_premium'] = FALSE;
 			
 			// Status
 			$status_array = $this->config->item('user_status');
@@ -76,14 +77,58 @@ class Profile extends PVA_Controller {
 			// Populate stats
 			$user_stats = $user->get_user_stats();
 			$this->data['total_flights'] = $user_stats->total_flights();
+			$this->data['early_flights'] = $user_stats->flights_early;
+			$this->data['ontime_flights'] = $user_stats->flights_ontime;
+			$this->data['delayed_flights'] = $user_stats->flights_late;
+			$this->data['early_percent'] = 0;
+			$this->data['ontime_percent'] = 0;
+			$this->data['delayed_percent'] = 0;
+			$this->data['landing_avg'] = 0;
+			$this->data['landing_danger'] = 0;
+			$this->data['landing_warning'] = 0;
+			$this->data['landing_success'] = 0;
+				
+			if ($user_stats->total_flights() > 0)
+			{
+				$this->data['early_percent'] = 100 * ($user_stats->flights_early / $user_stats->total_flights());
+				$this->data['ontime_percent'] = 100 * ($user_stats->flights_ontime / $user_stats->total_flights());
+				$this->data['delayed_percent'] = 100 * ($user_stats->flights_late / $user_stats->total_flights());
+				$landing_avg = $user_stats->total_landings / $user_stats->total_flights();
+				$this->data['landing_avg'] = number_format($landing_avg,2);
+					
+				$landing_pct = $landing_avg / 1000;
+				if ($landing_pct > 0.75)
+				{
+					$this->data['landing_danger'] = 100 * ($landing_pct - 0.75);
+					$this->data['landing_warning'] = 25;
+					$this->data['landing_success'] = 50;
+				}
+				elseif ($landing_pct > 0.5)
+				{
+					$this->data['landing_warning'] = 100 * ($landing_pct - 0.5);
+					$this->data['landing_success'] = 50;
+				}
+				else
+				{
+					$this->data['landing_success'] = 100 * $landing_pct;
+				}
+			}
+			else
+			{
+				$this->data['help'] = '<h4>Welcome to PVA!</h4>
+						<p>Be sure to download PVACARS so you can file your flights.</p>';
+			}
+			
 			$this->data['total_hours'] = format_hours($user_stats->total_hours());
 			$this->data['flight_hours'] = format_hours($user_stats->hours_flights);
 			$this->data['transfer_hours'] = format_hours($user_stats->hours_transfer);
 			$this->data['bonus_hours'] = format_hours($user_stats->hours_adjustment);
 			$this->data['type_hours'] = format_hours($user_stats->hours_type_rating);
+			
 			$this->data['airlines_flown'] = number_format($user_stats->airlines_flown);
 			$this->data['aircraft_flown'] = number_format($user_stats->aircraft_flown);
 			$this->data['airports_flown'] = number_format($user_stats->airports_landed);
+			
 			$this->data['total_pay'] = number_format($user_stats->total_pay,2);
 			
 			// Current location
@@ -109,6 +154,12 @@ class Profile extends PVA_Controller {
 				$this->data['next_rank_percent'] = 100 * ($user_stats->total_hours() / ($next_rank_mins));
 				$this->data['next_rank_to_go'] = format_hours($next_rank_mins - $user_stats->total_hours());
 			}
+			
+			// Get Bids
+			$this->data['bids'] = array();
+			
+			// Get Logbook
+			$this->data['logs'] = array();
 		}
 		else 
 		{

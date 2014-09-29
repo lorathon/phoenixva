@@ -6,14 +6,25 @@
 			<?php endforeach; ?>
 		</div>
 	<?php else: ?>
+		<?php if (isset($help)): ?>
+			<div class="alert alert-info">
+				<?php echo $help; ?>
+			</div>
+		<?php endif;?>
 		<div class="row">
+			<!-- First column -->
 			<div class="col-sm-6 col-md-4">
 				<div class="panel panel-info">
 					<div class="panel-body">
 						<p class="text-center">
 							<img src="<?php echo $avatar; ?>" class="avatar" />
 						</p>
-						<h4 class="text-center text-uppercase"><?php echo $name; ?></h4>
+						<h4 class="text-center text-uppercase">
+							<?php if ($is_premium): ?>
+								<i class="fa fa-star" title="Premium Member"></i>
+							<?php endif; ?>
+							<?php echo $name; ?>
+						</h4>
 						<dl class="dl-horizontal">
 							<dt>Joined</dt>
 							<dd><?php echo $joined; ?></dd>
@@ -24,13 +35,23 @@
 							<dt>Rank</dt>
 							<dd><?php echo $rank; ?></dd>
 							<dt>Crew Center</dt>
-							<dd><?php echo $hub; ?></dd>
+							<dd>
+								<?php echo $hub; ?>
+								<?php echo anchor('hubs/transfer','<i class="fa fa-exclamation-circle"></i> Transfer'); ?>
+							</dd>
+							<?php if ($raw_status < 4): ?>
+								<dt>Valid Thru</dt>
+								<dd>2014-12-31</dd>
+							<?php endif; ?>
 						</dl>
 					</div>
 					<div class="panel-footer">					 
 						<?php if ($own_profile OR $userdata['admin'] > 49): ?>
 							<p class="text-center">
 								<?php echo anchor('auth/change_password/'.$user_id,'Change Password', button('default')); ?>
+								<?php if ($own_profile && ! $is_premium): ?>
+									<?php echo anchor('private/profile/premium','<i class="fa fa-star"></i> Go Premium', button('success')); ?>
+								<?php endif; ?>
 							</p>
 							<p class="text-center">
 								<?php
@@ -60,16 +81,40 @@
 								} 
 								else 
 								{
-									echo anchor('admin/users/warn/'.$user_id, 'Warn', button('warning'));
+									echo anchor('admin/users/warn/'.$user_id, '<i class="fa fa-exclamation-triangle"></i> Warn', button('warning'));
 									echo "\n";
-									echo anchor('admin/users/ban/'.$user_id, 'Ban', button('danger'));
+									echo anchor('admin/users/ban/'.$user_id, '<i class="fa fa-ban"></i> Ban', button('danger'));
 								}
 							?>
 							</p>
 						<?php endif; ?>
 					</div>
 				</div>
+				<div class="panel panel-info">
+					<div class="panel-heading">Upcoming Bids</div>
+					<div class="panel-body">
+						<?php foreach ($bids as $bid): ?>
+							
+						<?php endforeach; ?>
+					</div>
+					<div class="panel-footer">
+						<p class="text-center">
+						<?php
+							if ($own_profile)
+							{
+								echo anchor('private/brief', '<i class="fa fa-plane"></i> Flight Brief', button('success'));
+								echo "\n";
+								echo anchor('private/bid/pilot/'.$user_id, 'Bids', button('default'));
+								echo "\n";
+								echo anchor('private/schedules', 'Schedules', button('default'));
+							}
+						?>
+						</p>
+					</div>
+				</div>
 			</div>
+			
+			<!-- Second column -->
 			<div class="col-sm-6 col-md-4">
 				<div class="panel panel-info">
 					<div class="panel-heading">Career Details</div>
@@ -111,7 +156,17 @@
 						</dl>
 					</div>
 				</div>
+				<div class="panel panel-info">
+					<div class="panel-heading">Logbook</div>
+					<div class="panel-body">
+						<?php foreach ($logs as $log): ?>
+						
+						<?php endforeach; ?>
+					</div>
+				</div>
 			</div>
+			
+			<!-- Third column -->
 			<div class="col-sm-6 col-md-4">
 				<div class="panel panel-info">
 					<div class="panel-heading">Next Rank</div>
@@ -128,6 +183,51 @@
 							</div>
 							<p class="text-center"><?php echo $next_rank_to_go; ?> hours to go</p>
 						<?php endif; ?>
+					</div>
+				</div>
+				<div class="panel panel-info">
+					<div class="panel-heading">Your Stats</div>
+					<div class="panel-body">
+						<p class="text-center">Flights</p>
+						<div class="progress">
+							<div class="progress-bar progress-bar-warning"
+							     style="width: <?php echo $early_percent; ?>%">
+							     Early
+							</div>
+							<div class="progress-bar progress-bar-success"
+							     style="width: <?php echo $ontime_percent; ?>%">
+							     On Time
+							</div>
+							<div class="progress-bar progress-bar-danger"
+							     style="width: <?php echo $delayed_percent; ?>%">
+								Delayed
+							</div>
+						</div>
+						<dl class="dl-horizontal">
+							<dt>Early Flights</dt>
+							<dd><?php echo $early_flights; ?></dd>
+							<dt>Ontime Flights</dt>
+							<dd><?php echo $ontime_flights; ?></dd>
+							<dt>Delayed Flights</dt>
+							<dd><?php echo $delayed_flights; ?></dd>
+						</dl>
+						<hr />
+						<p class="text-center">Landings</p>
+						<div class="progress">
+							<div class="progress-bar progress-bar-success"
+							     style="width: <?php echo $landing_success; ?>%">
+							</div>
+							<div class="progress-bar progress-bar-warning"
+							     style="width: <?php echo $landing_warning; ?>%">
+							</div>
+							<div class="progress-bar progress-bar-danger"
+							     style="width: <?php echo $landing_danger; ?>%">
+							</div>
+						</div>
+						<dl class="dl-horizontal">
+							<dt>Landing Avg.</dt>
+							<dd><?php echo $landing_avg; ?></dd>
+						</dl>
 					</div>
 				</div>
 			</div>
