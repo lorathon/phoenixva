@@ -221,6 +221,20 @@ class PVA_Controller extends CI_Controller {
 			}
 		}
 	}
+	
+	/**
+	 * Creates flash data for messaging in a consistent format.
+	 * 
+	 * @param string $type Type of message: info (default), primary, success, warning, danger
+	 * @param string $title Title of the message
+	 * @param string $msg The message itself
+	 */
+	protected function _flash_message($type = 'info', $title = '', $msg = '')
+	{
+		$this->session->set_flashdata('msg_type', $type);
+		$this->session->set_flashdata('title', $title);
+		$this->session->set_flashdata('message', $msg);
+	}
 }
 
 /* End of file PVA_Controller.php */

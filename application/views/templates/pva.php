@@ -175,7 +175,7 @@
 					<div class="container">
 						<div class="row">
 							<div class="col-md-offset-3 col-md-6">
-								<div class="panel panel-info">
+								<div class="panel panel-<?php echo $this->session->flashdata('msg_type'); ?>">
 									<div class="panel-heading">
 										<?php echo $this->session->flashdata('title'); ?>
 									</div>

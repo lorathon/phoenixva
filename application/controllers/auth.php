@@ -86,8 +86,7 @@ class Auth extends PVA_Controller
 							'hub'      => $user->hub,
 							));
 					
-					$this->session->set_flashdata('title', 'Welcome');
-					$this->session->set_flashdata('message', 'You have successfully logged into your account.');
+					$this->_flash_message('success','Welcome','You have successfully logged into your account.');
                     redirect('private/profile');
 
 				} 
@@ -331,15 +330,13 @@ class Auth extends PVA_Controller
 			
 			// success
 			$this->tank_auth->logout();
-			$this->session->set_flashdata('title', 'Activation Successful');
-			$this->session->set_flashdata('message', $this->lang->line('auth_message_activation_completed'));
+			$this->_flash_message('success', 'Activation Successful', $this->lang->line('auth_message_activation_completed'));
 			redirect('auth/login');
 		} 
 		else 
 		{
 			// fail
-			$this->session->set_flashdata('title', 'Activation Error');
-			$this->session->set_flashdata('message', $this->lang->line('auth_message_activation_failed'));
+			$this->_flash_message('danger', 'Activation Error', $this->lang->line('auth_message_activation_failed'));
 			redirect('');
 		}
 	}
@@ -686,6 +683,14 @@ class Auth extends PVA_Controller
 	 */
 	protected function _background_checks(&$user)
 	{
+		// PVA transfers, move data from old database
+		
+		// Old enough?
+		
+		// Previously Banned?
+		
+		// Vataware hours verification
+		
 		return TRUE;
 	}
 
