@@ -157,3 +157,12 @@ body {
 	height: auto;
 	width: 200px;
 }
+
+/* Progress bars */
+.progress-label {
+	margin-top: -20px;
+	font-size: 80%;
+}
+.progress-label .max {
+	float: right;
+}

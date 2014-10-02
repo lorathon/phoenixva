@@ -196,10 +196,14 @@
 								<dt><?php echo $next_rank; ?></dt>
 								<dd><?php echo $next_rank_hours; ?> hours</dd>
 							</dl>
-							<div class="progress vertical">
+							<div class="progress">
 								<div class="progress-bar progress-bar-success" 
 								     style="width: <?php echo $next_rank_percent; ?>%">
 								</div>
+							</div>
+							<div class="progress-label">
+								<span class="min">0</span>
+								<span class="max"><?php echo $next_rank_hours; ?></span>
 							</div>
 							<p class="text-center"><?php echo $next_rank_to_go; ?> hours to go</p>
 						<?php endif; ?>
@@ -212,16 +216,20 @@
 						<div class="progress">
 							<div class="progress-bar progress-bar-warning"
 							     style="width: <?php echo $early_percent; ?>%">
-							     Early
+							     Early (<?php echo $early_flights; ?>)
 							</div>
 							<div class="progress-bar progress-bar-success"
 							     style="width: <?php echo $ontime_percent; ?>%">
-							     On Time
+							     On Time (<?php echo $ontime_flights; ?>)
 							</div>
 							<div class="progress-bar progress-bar-danger"
 							     style="width: <?php echo $delayed_percent; ?>%">
-								Delayed
+								Delayed (<?php echo $delayed_flights; ?>)
 							</div>
+						</div>
+						<div class="progress-label">
+							<span class="min">0</span>
+							<span class="max"><?php echo $total_flights; ?></span>
 						</div>
 						<dl class="dl-horizontal">
 							<dt>Total Flights</dt>
@@ -246,9 +254,13 @@
 							     style="width: <?php echo $landing_danger; ?>%">
 							</div>
 						</div>
+						<div class="progress-label">
+							<span class="min">0</span>
+							<span class="max">1000</span>
+						</div>
 						<dl class="dl-horizontal">
 							<dt>Landing Avg.</dt>
-							<dd class="text-right"><?php echo $landing_avg; ?></dd>
+							<dd class="text-right"><?php echo $landing_avg; ?> fpm</dd>
 						</dl>
 					</div>
 				</div>
