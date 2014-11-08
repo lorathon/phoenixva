@@ -51,6 +51,8 @@ class Migration_Install extends CI_Migration {
 		$this->dbforge->add_key('email', TRUE);
 		$this->dbforge->add_key(array('hub','rank_id'));
 		$this->dbforge->create_table('users');
+		// Leave room for legacy users so they don't have to change their IDs
+		$this->db->query('ALTER TABLE '.$this->db->dbprefix('users').' AUTO_INCREMENT = 4000');
 		
 		// User_profiles table
 		$this->dbforge->add_field(array(
@@ -59,6 +61,7 @@ class Migration_Install extends CI_Migration {
 				'location'       => $field_config['input_field'],
 				'avatar'         => $field_config['input_field'],
 				'background_sig' => $field_config['input_field'],
+				'sig_color'      => $field_config['short_input_field'],
 				'bio'            => $field_config['text_input_field'],
 				'modified'       => $field_config['timestamp_field'],
 				));
