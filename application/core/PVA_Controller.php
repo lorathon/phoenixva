@@ -74,6 +74,7 @@ class PVA_Controller extends CI_Controller {
 			{
 				// User not logged in so redirect to login
 				$this->load->helper('url');
+				$this->session->set_flashdata('return_url',uri_string());
 				redirect('/auth/login/');
 			}
 

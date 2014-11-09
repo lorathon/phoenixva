@@ -38,7 +38,6 @@ $config['datetime_field'] = array(
 /* Definition for timestamp fields */
 $config['timestamp_field'] = array(
 		'type' => 'TIMESTAMP',
-		'null' => TRUE,
 );
 
 /* Definition for counter fields */

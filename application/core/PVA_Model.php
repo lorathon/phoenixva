@@ -291,4 +291,24 @@ class PVA_Model extends CI_Model
     	
     	return $parms;
     }
+    
+    /**
+     * Changes hours into minutes.
+     * 
+     * The hours is expected to use HH.MM format.
+     * 
+     * @param string $time in HH.MM format
+     * @return number of minutes
+     */
+    protected function _hours_to_mins($time)
+    {
+    	$hours = 0;
+    	$mins = 0;
+    	$parts = explode('.', $time);
+    	if (count($parts) == 2)
+    	{
+    		list ($hours, $mins) = $parts;
+    	} 
+    	return ($hours * 60) + $mins;
+    }
 }

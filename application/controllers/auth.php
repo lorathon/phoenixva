@@ -44,10 +44,6 @@ class Auth extends PVA_Controller
 					$this->config->item('use_username', 'tank_auth'));
 			$this->data['login_by_email'] = $this->config->item('login_by_email', 'tank_auth');
 
-			$this->form_validation->set_rules('login', 'Login', 'trim|required|xss_clean');
-			$this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean');
-			$this->form_validation->set_rules('remember', 'Remember me', 'integer');
-
 			// Get login for counting attempts to login
 			if ($this->config->item('login_count_attempts', 'tank_auth') AND
 					($login = $this->input->post('login'))) {
@@ -87,8 +83,16 @@ class Auth extends PVA_Controller
 							));
 					
 					$this->_flash_message('success','Welcome','You have successfully logged into your account.');
-                    redirect('private/profile');
-
+					if ($this->session->flashdata('return_url') != '')
+					{
+						// Take the user to the page they were trying to access
+						redirect($this->session->flashdata('return_url'));
+					}
+					else 
+					{
+						// Default to the user's profile
+						redirect('private/profile');
+					}
 				} 
 				else 
 				{
@@ -116,6 +120,8 @@ class Auth extends PVA_Controller
 				}
 			}
 			
+			$this->session->keep_flashdata('return_url');
+			
 			$this->data['title'] = 'Sign In';
             $this->data['meta_title'] = config_item('site_name');            
             $this->_render('auth/login_form');
@@ -135,6 +141,7 @@ class Auth extends PVA_Controller
 
 	/**
 	 * Register user on the site
+	 * XXX Form validation can't mix config file and set_rules()
 	 *
 	 * @return void
 	 */
@@ -182,28 +189,52 @@ class Auth extends PVA_Controller
 			if ($this->form_validation->run()) 
 			{
 				// validation ok, create user object
+				$created = FALSE;
 				$user = new User();
-				$user->name = $this->form_validation->set_value('first_name').' '.$this->form_validation->set_value('last_name');
-				$user->email = $this->form_validation->set_value('email');
-				$user->username = $user->email;
-				$user->password = $this->form_validation->set_value('password');
-				$user->birthday = $this->form_validation->set_value('birth_date');
-				$user->last_ip = $this->input->ip_address();
-				$user->hub = $this->form_validation->set_value('crew_center');
-				$user->transfer_link = $this->form_validation->set_value('transfer_link');
-				$user->heard_about = $this->form_validation->set_value('heard_about');
+				if ($this->form_validation->set_value('transfer_link') == 'legacy')
+				{
+					// Legacy PVA pilot.
+					log_message('debug', 'Look up legacy pilot: '.$user->email);
+					$user->email = $this->form_validation->set_value('email');
+					if ($user->populate_legacy() !== FALSE)
+					{
+						log_message('debug', 'Loaded legacy pilot: '.$user->id.' - '.$user->email);
+						$user->last_ip = $this->input->ip_address();
+						if ($user->create() !== FALSE)
+						{
+							$created = TRUE;
+						}
+					}
+				}
+				else 
+				{
+					$user->name = $this->form_validation->set_value('first_name').' '.$this->form_validation->set_value('last_name');
+					$user->email = $this->form_validation->set_value('email');
+					$user->username = $user->email;
+					$user->password = $this->form_validation->set_value('password');
+					$user->birthday = $this->form_validation->set_value('birth_date');
+					$user->last_ip = $this->input->ip_address();
+					$user->hub = $this->form_validation->set_value('crew_center');
+					$user->transfer_link = $this->form_validation->set_value('transfer_link');
+					$user->heard_about = $this->form_validation->set_value('heard_about');
+					
+					// Set user profile info
+					$user_profile = $user->get_user_profile();
+					$user_profile->location = $this->form_validation->set_value('location');
+					$user->set_user_profile($user_profile);
+					
+					// Set user stat info
+					$user_stats = $user->get_user_stats();
+					$user_stats->hours_transfer = $this->form_validation->set_value('transfer_hours') * 60;
+					$user->set_user_stats($user_stats);
+					
+					if ($user->create() !== FALSE)
+					{
+						$created = TRUE;
+					}
+				}
 				
-				// Set user profile info
-				$user_profile = $user->get_user_profile();
-				$user_profile->location = $this->form_validation->set_value('location');
-				$user->set_user_profile($user_profile);
-				
-				// Set user stat info
-				$user_stats = $user->get_user_stats();
-				$user_stats->hours_transfer = $this->form_validation->set_value('transfer_hours') * 60;
-				$user->set_user_stats($user_stats);
-				
-				if ( ! $user->create() === FALSE) 
+				if ($created) 
 				{
 					// User created
 
@@ -286,8 +317,6 @@ class Auth extends PVA_Controller
 			redirect('/auth/login/');
 
 		} else {
-			$this->form_validation->set_rules('email', 'Email', 'trim|required|xss_clean|valid_email');
-
 			$this->data['errors'] = array();
 
 			if ($this->form_validation->run()) {								// validation ok
@@ -355,8 +384,6 @@ class Auth extends PVA_Controller
 			redirect('/auth/send_again/');
 
 		} else {
-			$this->form_validation->set_rules('login', 'Email or login', 'trim|required|xss_clean');
-
 			$this->data['errors'] = array();
 
 			if ($this->form_validation->run()) {								// validation ok
@@ -395,8 +422,7 @@ class Auth extends PVA_Controller
 		$new_pass_key	= $this->uri->segment(4);
 
 		$this->form_validation->set_rules('new_password', 'New Password', 'trim|required|xss_clean|min_length['.$this->config->item('password_min_length', 'tank_auth').']|max_length['.$this->config->item('password_max_length', 'tank_auth').']|alpha_dash');
-		$this->form_validation->set_rules('confirm_new_password', 'Confirm new Password', 'trim|required|xss_clean|matches[new_password]');
-
+		
 		$this->data['errors'] = array();
 
 		if ($this->form_validation->run()) {								// validation ok
@@ -438,9 +464,7 @@ class Auth extends PVA_Controller
 			redirect('/auth/login/');
 
 		} else {
-			$this->form_validation->set_rules('old_password', 'Old Password', 'trim|required|xss_clean');
 			$this->form_validation->set_rules('new_password', 'New Password', 'trim|required|xss_clean|min_length['.$this->config->item('password_min_length', 'tank_auth').']|max_length['.$this->config->item('password_max_length', 'tank_auth').']|alpha_dash');
-			$this->form_validation->set_rules('confirm_new_password', 'Confirm new Password', 'trim|required|xss_clean|matches[new_password]');
 
 			$this->data['errors'] = array();
 
@@ -470,9 +494,6 @@ class Auth extends PVA_Controller
 			redirect('/auth/login/');
 
 		} else {
-			$this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean');
-			$this->form_validation->set_rules('email', 'Email', 'trim|required|xss_clean|valid_email');
-
 			$this->data['errors'] = array();
 
 			if ($this->form_validation->run()) {								// validation ok
@@ -692,6 +713,51 @@ class Auth extends PVA_Controller
 		// Vataware hours verification
 		
 		return TRUE;
+	}
+	
+	function _check_transfer($link)
+	{
+		if (strstr($link,'phoenixva.org') !== FALSE)
+		{
+			// Legacy Phoenix pilot.
+			return 'legacy';
+		}
+		else
+		{
+			// Try to get a 200 response from the link provided
+			if (substr($link, 0, 7) != 'http://')
+			{
+				$link = 'http://'.$link;
+			}
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $link);
+			curl_setopt($ch, CURLOPT_HEADER, true);
+			curl_setopt($ch, CURLOPT_NOBODY, true);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+			curl_setopt($ch, CURLOPT_MAXREDIRS, 2);
+			$out = curl_exec($ch);
+			curl_close($ch);
+			if ( ! $out)
+			{
+				$this->form_validation->set_message('_check_transfer', 'The %s field does not appear to be a valid URL.');
+				return FALSE;
+			}
+			else
+			{
+				preg_match_all("/HTTP\/1\.[1|0]\s(\d{3})/",$out,$matches);
+				$resp_code = end($matches[1]);
+				if ($code == 200)
+				{
+					return $link;
+				}
+				else 
+				{
+					$this->form_validation->set_message('_check_transfer', 'The %s field does not appear to be a valid page.');
+					return FALSE;
+				}
+			}
+		}
 	}
 
 }
