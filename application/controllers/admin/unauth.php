@@ -1,6 +1,6 @@
 <?php
 
-class Unauth extends MY_Controller
+class Unauth extends PVA_Controller
 {
     function __construct()
     {

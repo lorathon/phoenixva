@@ -8,7 +8,7 @@
 |--------------------------------------------------------------------------
 */
 $config['website_name']     = 'Phoenix Virtual Airways';
-$config['webmaster_email']  = 'webmaster@your-site.com';
+$config['webmaster_email']  = 'helpdesk@phoenixva.org';
 
 /*
 |--------------------------------------------------------------------------

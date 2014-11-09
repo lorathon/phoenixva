@@ -23,7 +23,7 @@ date_default_timezone_set('UTC');
 
 
 
-if(strpos(dirname(__FILE__), 'Sites') === FALSE)
+if(strpos(dirname(__FILE__), 'zz_dev') === FALSE)
 {
     define('ENVIRONMENT', 'production');
 }
@@ -70,7 +70,7 @@ if (defined('ENVIRONMENT'))
  * as this file.
  *
  */
-	$system_path = 'system';
+	$system_path = '/home/phoenix/system';
 
 /*
  *---------------------------------------------------------------
@@ -86,7 +86,7 @@ if (defined('ENVIRONMENT'))
  * NO TRAILING SLASH!
  *
  */
-	$application_folder = 'application';
+	$application_folder = '/home/phoenix/app_20140917_CT';
 
 /*
  * --------------------------------------------------------------------

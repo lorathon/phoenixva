@@ -1,17 +1,5 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-
-function __autoload($className)
-{
-    if(strpos($className, 'CI') !== 0)
-    {
-        $file = APPPATH . 'libraries/' . $className . '.php';
-        if(file_exists($file) && is_file($file))
-            @include_once($file);
-    }
-    
-}
-
 /*
 |--------------------------------------------------------------------------
 | Base Site URL
@@ -38,7 +26,7 @@ $config['base_url']	= '';
 | variable so that it is blank.
 |
 */
-$config['index_page'] = 'index.php';
+$config['index_page'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -69,7 +57,7 @@ $config['uri_protocol']	= 'AUTO';
 | http://codeigniter.com/user_guide/general/urls.html
 */
 
-$config['url_suffix'] = '';
+$config['url_suffix'] = '.html';
 
 /*
 |--------------------------------------------------------------------------
@@ -118,7 +106,7 @@ $config['enable_hooks'] = FALSE;
 | http://codeigniter.com/user_guide/general/creating_libraries.html
 |
 */
-$config['subclass_prefix'] = 'MY_';
+$config['subclass_prefix'] = 'PVA_';
 
 
 /*
@@ -138,7 +126,8 @@ $config['subclass_prefix'] = 'MY_';
 | DO NOT CHANGE THIS UNLESS YOU FULLY UNDERSTAND THE REPERCUSSIONS!!
 |
 */
-$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-';
+$config['permitted_uri_chars'] = 'a-z 0-9-';
+
 
 
 /*
@@ -192,7 +181,7 @@ $config['directory_trigger']	= 'd'; // experimental not currently in use
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] = 0;
+$config['log_threshold'] = 2;
 
 /*
 |--------------------------------------------------------------------------
@@ -260,7 +249,7 @@ $config['sess_cookie_name']		= 'cisessionDEV';
 $config['sess_expiration']		= 7200;
 $config['sess_expire_on_close']	= TRUE;
 $config['sess_encrypt_cookie']	= TRUE;
-$config['sess_use_database']	= TRUE;
+$config['sess_use_database']	= FALSE;
 $config['sess_table_name']		= 'ci_sessions';
 $config['sess_match_ip']		= FALSE;
 $config['sess_match_useragent']	= TRUE;
@@ -277,8 +266,8 @@ $config['sess_time_to_update']	= 300;
 | 'cookie_secure' =  Cookies will only be set if a secure HTTPS connection exists.
 |
 */
-$config['cookie_prefix']	= "";
-$config['cookie_domain']	= "";
+$config['cookie_prefix']	= "pva";
+$config['cookie_domain']	= ".phoenixva.org";
 $config['cookie_path']		= "/";
 $config['cookie_secure']	= FALSE;
 
@@ -305,9 +294,9 @@ $config['global_xss_filtering'] = FALSE;
 | 'csrf_cookie_name' = The cookie name
 | 'csrf_expire' = The number in seconds the token should expire.
 */
-$config['csrf_protection'] = FALSE;
-$config['csrf_token_name'] = 'csrf_test_name';
-$config['csrf_cookie_name'] = 'csrf_cookie_name';
+$config['csrf_protection'] = TRUE;
+$config['csrf_token_name'] = 'csrf_pva_token';
+$config['csrf_cookie_name'] = 'csrf_pva_cookie';
 $config['csrf_expire'] = 7200;
 
 /*
@@ -340,7 +329,7 @@ $config['compress_output'] = FALSE;
 | regarding date handling.
 |
 */
-$config['time_reference'] = 'local';
+$config['time_reference'] = 'gmt';
 
 
 /*

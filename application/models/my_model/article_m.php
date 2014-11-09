@@ -1,6 +1,6 @@
 <?php
 
-class Article_m extends MY_Model
+class Article_m extends PVA_Model
 {
     protected $_table_name = 'articles';
     protected $_order_by = 'pubdate desc, id desc';

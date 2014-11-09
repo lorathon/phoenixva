@@ -68,13 +68,13 @@
                         </ul>
                     </li>
                     <li>
-                        <?php if($this->tank_auth->is_logged_in()) : ?>
+                        <?php if (isset($userdata)) : ?>
                             <?php echo anchor('auth/logout', 'Logout'); ?>
                         <?php else : ?>
                             <?php echo anchor('auth/login', 'Login'); ?>
                         <?php endif; ?>
                     </li>
-                    <?php if($this->tank_auth->is_logged_in()) : ?>
+                    <?php if(isset($userdata)) : ?>
                     <?php if($userdata['admin'] > 1) : ?>
                     <li>
                         <?php echo anchor('admin/dashboard', 'Admin'); ?>

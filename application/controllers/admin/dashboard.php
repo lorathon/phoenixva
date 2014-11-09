@@ -1,6 +1,6 @@
 <?php
 
-class Dashboard extends Admin_Controller
+class Dashboard extends PVA_Controller
 {
     public function __construct()
     {
@@ -10,10 +10,60 @@ class Dashboard extends Admin_Controller
     
     public function index()
     {
-        $this->load->model('my_model/user_m');
         // Display Standard View
-        $this->data['new_users'] = $this->user_m->get_status_type(array_search('New Registration', config_item('user_status')));
-        $this->data['subview'] = 'admin/dashboard/index';
-        $this->load->view('admin/_layout_main', $this->data);   
+        $user_lku = new User();
+        
+        if ($users = $user_lku->find_all())
+        {
+        	// Users to display
+        	$this->load->helper('url');
+        	$this->load->helper('html');
+        	$this->load->library('table');
+        	
+        	// Set the template using the standard
+        	$this->table->set_template(table_layout());
+        	
+        	// Set the headings
+        	$headings = array(
+        			'Pilot',
+        			'Email',
+        			'Status',
+        			'Rank',
+        			'Flights',
+        			'Hours',
+        			'Hub',
+        			);
+        	
+        	$this->table->set_heading($headings);
+        	
+        	foreach ($users as $user)
+        	{
+        		$stats = $user->get_user_stats();
+        		
+        		// Get the user's rank name
+        		$rank = new Rank();
+        		$rank->id = $user->rank_id;
+        		$rank->find();
+        		
+        		// Get the user's hub name
+        		$hub = new Airport();
+        		$hub->id = $user->hub;
+        		$hub->find();
+        		
+        		$row = array(
+        				user($user),
+        				$user->email,
+        				$user->status,
+        				$rank->short,
+        				$stats->total_flights(),
+        				$stats->total_hours(),
+        				$hub->icao.' '.$hub->name,
+        				);
+        		$this->table->add_row($row);
+        	}
+        	$this->data['user_table'] = $this->table->generate();
+        }
+        
+        $this->_render('admin/dashboard');   
     }        
 }

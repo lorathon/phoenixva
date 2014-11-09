@@ -1,6 +1,6 @@
 <?php
 
-class Finance_Pireps_Fees extends Admin_Controller
+class Finance_Pireps_Fees extends PVA_Controller
 {
     protected $_table_name = 'finance_pireps_fees';
     protected $_order_by = 'id';

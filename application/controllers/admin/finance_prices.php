@@ -1,6 +1,6 @@
 <?php
 
-class Finance_Prices extends Admin_Controller
+class Finance_Prices extends PVA_Controller
 {
     protected $_table_name = 'finance_prices';
     protected $_order_by = 'id';

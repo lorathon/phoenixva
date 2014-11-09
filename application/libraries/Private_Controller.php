@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Private controller
+ * @author Chuck
+ * @deprecated Use PVA_Controller instead. 
+ */
 class Private_Controller extends MY_Controller
 {
     function __construct()

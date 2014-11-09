@@ -2,6 +2,8 @@
 
 $config['site_name'] = 'Phoenix Virtual Airways';
 
+$config['site_description'] = 'Phoenix Virtual Airways is the largest virtual airline.';
+
 /* mi = miles | km = kilometers */
 $config['units_distance'] = 'km';
 
@@ -35,13 +37,14 @@ $config['img_folder_avatar'] = 'images/avatar';
 $config['img_folder_award'] = 'images/award';
 
 $config['user_status'] = array (
-    '1' => 'New Registration',
-    '2' => 'Probation',
-    '3' => 'Accepted',
-    '4' => 'Leave of Absence',
-    '5' => 'Retired',
-    '6' => 'Rejected',
-    '7' => 'Banned',
+		'0' => 'Waiting Activation',
+    	'1' => 'New Registration',          // Activated, no PIREPs
+    	'2' => 'Probation',                 // After 1st PIREP until accepted or anytime a pilot is warned.
+    	'3' => 'Active',
+    	'4' => 'Leave of Absence',
+    	'5' => 'Retired',
+    	'6' => 'Rejected',
+    	'7' => 'Banned',
 );
 
 $config['pirep_status'] = array (
