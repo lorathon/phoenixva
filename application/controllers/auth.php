@@ -242,7 +242,8 @@ class Auth extends PVA_Controller
 					$this->load->helper('html');
 					$this->data['title'] = 'Application Submitted';
 					$this->data['site_name'] = $this->config->item('website_name', 'tank_auth');
-					$this->data['user_id'] = pva_id($user->id);
+					$this->data['user_id'] = $user->id;
+					$this->data['user_id_full'] = pva_id($user->id);
 					$this->data['username'] = $user->username;
 					$this->data['email'] = $user->email;
 					$this->data['new_email_key'] = $user->new_email_key;
