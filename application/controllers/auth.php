@@ -199,11 +199,15 @@ class Auth extends PVA_Controller
 					if ($user->populate_legacy() !== FALSE)
 					{
 						log_message('debug', 'Loaded legacy pilot: '.$user->id.' - '.$user->email);
+						$user->password = $this->form_validation->set_value('password');
 						$user->last_ip = $this->input->ip_address();
+						$user->hub = $this->form_validation->set_value('crew_center');
 						if ($user->create() !== FALSE)
 						{
 							$created = TRUE;
 						}
+						
+						$user_stats = $user->get_user_stats();
 					}
 				}
 				else 
