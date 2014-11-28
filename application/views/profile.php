@@ -46,7 +46,7 @@
 						</dl>
 					</div>
 					<div class="panel-footer">
-						<?php if ( ! $own_profile): ?>
+						<?php if ( ! $own_profile && $ipbuser_id > 0): ?>
 							<p class="text-center">
 								<?php echo anchor(
 										'http://www.phoenixva.org/forums/index.php?app=members&module=messaging&section=send&do=form&fromMemberID='.$ipbuser_id,
@@ -259,8 +259,12 @@
 							<span class="max">1000</span>
 						</div>
 						<dl class="dl-horizontal">
-							<dt>Landing Avg.</dt>
+							<dt>Average</dt>
 							<dd class="text-right"><?php echo $landing_avg; ?> fpm</dd>
+							<dt>Softest</dt>
+							<dd class="text-right"><?php echo $landing_softest; ?> fpm</dd>
+							<dt>Hardest</dt>
+							<dd class="text-right"><?php echo $landing_hardest; ?> fpm</dd>
 						</dl>
 					</div>
 				</div>

@@ -9,9 +9,9 @@ class Rank extends PVA_Model {
 	public $pay_rate   = NULL;
 	public $short      = NULL;
 	
-	function __construct()
+	function __construct($id = NULL)
 	{
-		parent::__construct();
+		parent::__construct($id);
 		
 		// Set default order
 		$this->_order_by = 'min_hours asc';

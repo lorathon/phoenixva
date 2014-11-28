@@ -32,8 +32,7 @@ class Profile extends PVA_Controller {
 		$this->data['own_profile'] = ($id == $this->session->userdata('user_id'));
 		
 		// Get the user
-		$user = new User();
-		$user->id = $id;
+		$user = new User($id);
 		$user->find();
 		
 		if ($user->name)
@@ -54,8 +53,7 @@ class Profile extends PVA_Controller {
 			$this->data['ipbuser_id'] = 0;
 
 			// Premium user
-			$this->data['is_premium'] = FALSE;
-			if ($user->admin_level > 10) $this->data['is_premium'] = TRUE;	
+			$this->data['is_premium'] = $user->is_premium();
 			
 			// Status
 			$status_array = $this->config->item('user_status');
@@ -63,9 +61,7 @@ class Profile extends PVA_Controller {
 			$this->data['raw_status'] = $user->status;
 			
 			// Hub
-			$hub = new Airport();
-			$hub->id = $user->hub;
-			$hub->find();
+			$hub = new Airport($user->hub);
 			$this->data['hub'] = $hub->icao;
 			
 			// Populate profile
@@ -88,6 +84,8 @@ class Profile extends PVA_Controller {
 			$this->data['ontime_percent'] = 0;
 			$this->data['delayed_percent'] = 0;
 			$this->data['landing_avg'] = 0;
+			$this->data['landing_softest'] = 0;
+			$this->data['landing_hardest'] = 0;
 			$this->data['landing_danger'] = 0;
 			$this->data['landing_warning'] = 0;
 			$this->data['landing_success'] = 0;
@@ -116,6 +114,9 @@ class Profile extends PVA_Controller {
 				{
 					$this->data['landing_success'] = 100 * $landing_pct;
 				}
+				
+				$this->data['landing_softest'] = $user_stats->landing_softest;
+				$this->data['landing_hardest'] = $user_stats->landing_hardest;
 			}
 			else
 			{
@@ -139,13 +140,12 @@ class Profile extends PVA_Controller {
 			$this->data['location'] = 'No Info';
 			if (strlen($user_stats->current_location) > 0)
 			{
-				$this->data['location'] = $user_stats->current_location;
+				$location = new Airport($user_stats->current_location);
+				$this->data['location'] = $location->icao;
 			}
 			
 			// Get rank info
-			$rank = new Rank();
-			$rank->id = $user->rank_id;
-			$rank->find();
+			$rank = new Rank($user->rank_id);
 			$this->data['rank'] = $rank->rank;
 			$this->data['rank_image'] = $rank->rank_image;
 			$this->data['next_rank'] = FALSE;

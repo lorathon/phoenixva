@@ -20,9 +20,9 @@ class Airport extends PVA_Model {
 	public $weather_url     = NULL;
 	public $hub             = NULL;
 	
-	function __construct()
+	function __construct($id = NULL)
 	{
-		parent::__construct();
+		parent::__construct($id);
 		
 		// Set default order
 		$this->_order_by = 'icao asc';
