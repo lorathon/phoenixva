@@ -199,11 +199,15 @@ class Auth extends PVA_Controller
 					if ($user->populate_legacy() !== FALSE)
 					{
 						log_message('debug', 'Loaded legacy pilot: '.$user->id.' - '.$user->email);
+						$user->password = $this->form_validation->set_value('password');
 						$user->last_ip = $this->input->ip_address();
+						$user->hub = $this->form_validation->set_value('crew_center');
 						if ($user->create() !== FALSE)
 						{
 							$created = TRUE;
 						}
+						
+						$user_stats = $user->get_user_stats();
 					}
 				}
 				else 
@@ -242,7 +246,8 @@ class Auth extends PVA_Controller
 					$this->load->helper('html');
 					$this->data['title'] = 'Application Submitted';
 					$this->data['site_name'] = $this->config->item('website_name', 'tank_auth');
-					$this->data['user_id'] = pva_id($user->id);
+					$this->data['user_id'] = $user->id;
+					$this->data['user_id_full'] = pva_id($user->id);
 					$this->data['username'] = $user->username;
 					$this->data['email'] = $user->email;
 					$this->data['new_email_key'] = $user->new_email_key;

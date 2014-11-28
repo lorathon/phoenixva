@@ -123,7 +123,7 @@ class User extends PVA_Model {
 		$db_legacy = $this->load->database('legacy', TRUE);
 		
 		// Find the legacy user
-		$db_legacy->select('pilotid, firstname,	lastname, location,	currlocation
+		$db_legacy->select('pilotid, firstname,	lastname, location,	currlocation,
 				birthday, bgimage, sigfontcolor, totalhours, totalpay, transferhours,
 				rankid, joindate, lastpirep, bonushours, trhours, payadjust, stat_airlines, stat_aircraft,
 				stat_airports');
@@ -164,7 +164,6 @@ class User extends PVA_Model {
 		$this->_user_stats->aircraft_flown = $row->stat_aircraft;
 		$this->_user_stats->airlines_flown = $row->stat_airlines;
 		$this->_user_stats->airports_landed = $row->stat_airports;
-		$this->_user_stats->current_location = $row->currlocation;
 		$this->_user_stats->hours_flights = $this->_hours_to_mins($row->totalhours);
 		$this->_user_stats->hours_transfer = $this->_hours_to_mins($row->transferhours);
 		$this->_user_stats->hours_adjustment = $this->_hours_to_mins($row->bonushours);
@@ -172,9 +171,19 @@ class User extends PVA_Model {
 		$this->_user_stats->total_pay = $row->totalpay;
 		$this->_user_stats->pay_adjustment = $row->payadjust;
 		
+		// Translate current location
+		$airport = new Airport();
+		$airport->icao = $row->currlocation;
+		$airport->find();		
+		$this->_user_stats->current_location = $airport->id;		
+		
 		// Calculate totals
-		$db_legacy->select('sum(landingrate) as totallandings, sum(fuelused) as totalfuel,
-				sum(gross) as gross, sum(expenses) as expenses');
+		$db_legacy->select('sum(landingrate) as totallandings, 
+				max(landingrate) as softestlanding,
+				min(landingrate) as hardestlanding,
+				sum(fuelused) as totalfuel,
+				sum(gross) as gross, 
+				sum(expenses) as expenses');
 		$db_legacy->from('phpvms_pireps');
 		$db_legacy->where('accepted', 1);
 		$db_legacy->where('pilotid', $this->id);
@@ -188,6 +197,8 @@ class User extends PVA_Model {
 			$this->_user_stats->total_expenses = $row->expenses;
 			$this->_user_stats->total_gross = $row->gross;
 			$this->_user_stats->total_landings = abs($row->totallandings);
+			$this->_user_stats->landing_softest = abs($row->softestlanding);
+			$this->_user_stats->landing_hardest = abs($row->hardestlanding);
 		}
 		
 		// Calculate ontime stats
@@ -411,7 +422,10 @@ class User extends PVA_Model {
 				// Background check ok, activate the user
 				$this->activated = 1;
 				$this->new_email_key = '';
-				$this->status = 1;
+				if ($this->status == 0)
+				{
+					$this->status = 1;
+				}
 				$this->save();
 
 				// TODO Create user in other systems

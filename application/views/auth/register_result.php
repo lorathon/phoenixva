@@ -18,10 +18,10 @@
 								<?php echo safe_mailto('helpdesk@phoenixva.org'); ?> or by visiting
 								<?php echo anchor('http://helpdesk.phoenixva.org'); ?> and logging a
 								ticket. <strong>Whenever you contact support be sure to include your
-								pilot ID#, <?php echo $user_id; ?>.</strong>
+								pilot ID#, <?php echo $user_id_full; ?>.</strong>
 							</p>
 							<p>
-								You have been assigned pilot ID# <?php echo $user_id; ?>. You can use
+								You have been assigned pilot ID# <?php echo $user_id_full; ?>. You can use
 								this ID as your callsign when flying online or you can use the callsign
 								of whatever airline you are flying.
 							</p>
