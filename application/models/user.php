@@ -47,9 +47,12 @@ class User extends PVA_Model {
 	protected $_user_profile = NULL;
 	protected $_user_stats   = NULL;
 	
-	function __construct()
+	/* Derived properties */
+	protected $_is_premium = NULL;
+	
+	function __construct($id = NULL)
 	{
-		parent::__construct();
+		parent::__construct($id);
 		
 		// Create empty related objects
 		$this->_user_profile = new User_profile();
@@ -592,6 +595,20 @@ class User extends PVA_Model {
 		
 		return FALSE;
 		
+	}
+	
+	/**
+	 * Determines if user is a premium user.
+	 * 
+	 * @return boolean TRUE if user is a premium user.
+	 */
+	function is_premium()
+	{
+		if (is_null($this->_is_premium))
+		{
+			($this->admin_level > 10) ? $this->_is_premium = TRUE : $this->_is_premium = FALSE;
+		}
+		return $this->_is_premium;
 	}
 	
 	private function _hash_password()
