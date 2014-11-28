@@ -54,7 +54,8 @@ class PVA_Model extends CI_Model
 			else
 			{
 				// Passing the primary key
-				$this->$this->_primary_key = $id;
+				$key = $this->_primary_key;
+				$this->$key = $id;
 			}
 			$this->find();
 		}        
