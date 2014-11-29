@@ -162,25 +162,23 @@
 				
 					</div>
 				</div>
-				
-				<div class="container">
+                            <div class="container">
 				
 					<div class="row center">
 						<div class="col-md-12">
-							<h2 class="short word-rotator-title">
-								Phoenix Virtual Airways is
+							<h1 class="short word-rotator-title">
+								Porto is
 								<strong class="inverted">
-									<span class="word-rotate">
+									<span class="word-rotate" data-plugin-options='{"delay": 2000, "animDelay": 300}'>
 										<span class="word-rotate-items">
-											<span>designed</span>
-											<span>waiting</span>
-											<span>perfect</span>
-											<span>the home</span>
+											<span>incredibly</span>
+											<span>especially</span>
+											<span>extremely</span>
 										</span>
 									</span>
 								</strong>
-								for you.
-							</h2>
+								beautiful and fully responsive.
+							</h1>
 							<p class="featured lead">
 								Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce elementum, nulla vel pellentesque consequat, ante nulla hendrerit arcu, ac tincidunt mauris lacus sed leo. vamus suscipit molestie vestibulum.
 							</p>
@@ -197,19 +195,19 @@
 							<span class="cloud"></span>
 							<div class="col-md-2 col-md-offset-1">
 								<div class="process-image" data-appear-animation="bounceIn">
-									<img src="<?php echo base_url('assets/img/home-concept-item-1.png');?>" alt="" />
+									<img src="img/home-concept-item-1.png" alt="" />
 									<strong>Strategy</strong>
 								</div>
 							</div>
 							<div class="col-md-2">
 								<div class="process-image" data-appear-animation="bounceIn" data-appear-animation-delay="200">
-									<img src="<?php echo base_url('assets/img/home-concept-item-2.png');?>" alt="" />
+									<img src="img/home-concept-item-2.png" alt="" />
 									<strong>Planning</strong>
 								</div>
 							</div>
 							<div class="col-md-2">
 								<div class="process-image" data-appear-animation="bounceIn" data-appear-animation-delay="400">
-									<img src="<?php echo base_url('assets/img/home-concept-item-3.png');?>" alt="" />
+									<img src="img/home-concept-item-3.png" alt="" />
 									<strong>Build</strong>
 								</div>
 							</div>
@@ -217,9 +215,9 @@
 								<div class="project-image">
 									<div id="fcSlideshow" class="fc-slideshow">
 										<ul class="fc-slides">
-											<li><a href="portfolio-single-project.html"><img class="img-responsive" src="<?php echo base_url('assets/img/projects/project-home-1.jpg');?>" /></a></li>
-											<li><a href="portfolio-single-project.html"><img class="img-responsive" src="<?php echo base_url('assets/img/projects/project-home-2.jpg');?>" /></a></li>
-											<li><a href="portfolio-single-project.html"><img class="img-responsive" src="<?php echo base_url('assets/img/projects/project-home-3.jpg');?>" /></a></li>
+											<li><a href="portfolio-single-project.html"><img class="img-responsive" src="img/projects/project-home-1.jpg" /></a></li>
+											<li><a href="portfolio-single-project.html"><img class="img-responsive" src="img/projects/project-home-2.jpg" /></a></li>
+											<li><a href="portfolio-single-project.html"><img class="img-responsive" src="img/projects/project-home-3.jpg" /></a></li>
 										</ul>
 									</div>
 									<strong class="our-work">Our Work</strong>
@@ -244,10 +242,10 @@
 						<div class="col-md-8">
 							<h2>Our <strong>Features</strong></h2>
 							<div class="row">
-								<div class="col-md-6">
+								<div class="col-sm-6">
 									<div class="feature-box">
 										<div class="feature-box-icon">
-											<i class="icon icon-group"></i>
+											<i class="fa fa-group"></i>
 										</div>
 										<div class="feature-box-info">
 											<h4 class="shorter">Customer Support</h4>
@@ -256,7 +254,7 @@
 									</div>
 									<div class="feature-box">
 										<div class="feature-box-icon">
-											<i class="icon icon-file"></i>
+											<i class="fa fa-file"></i>
 										</div>
 										<div class="feature-box-info">
 											<h4 class="shorter">HTML5 / CSS3 / JS</h4>
@@ -265,7 +263,7 @@
 									</div>
 									<div class="feature-box">
 										<div class="feature-box-icon">
-											<i class="icon icon-google-plus"></i>
+											<i class="fa fa-google-plus"></i>
 										</div>
 										<div class="feature-box-info">
 											<h4 class="shorter">500+ Google Fonts</h4>
@@ -274,7 +272,7 @@
 									</div>
 									<div class="feature-box">
 										<div class="feature-box-icon">
-											<i class="icon icon-adjust"></i>
+											<i class="fa fa-adjust"></i>
 										</div>
 										<div class="feature-box-info">
 											<h4 class="shorter">Colors</h4>
@@ -282,10 +280,10 @@
 										</div>
 									</div>
 								</div>
-								<div class="col-md-6">
+								<div class="col-sm-6">
 									<div class="feature-box">
 										<div class="feature-box-icon">
-											<i class="icon icon-film"></i>
+											<i class="fa fa-film"></i>
 										</div>
 										<div class="feature-box-info">
 											<h4 class="shorter">Sliders</h4>
@@ -294,7 +292,7 @@
 									</div>
 									<div class="feature-box">
 										<div class="feature-box-icon">
-											<i class="icon icon-user"></i>
+											<i class="fa fa-user"></i>
 										</div>
 										<div class="feature-box-info">
 											<h4 class="shorter">Icons</h4>
@@ -303,7 +301,7 @@
 									</div>
 									<div class="feature-box">
 										<div class="feature-box-icon">
-											<i class="icon icon-bars"></i>
+											<i class="fa fa-bars"></i>
 										</div>
 										<div class="feature-box-info">
 											<h4 class="shorter">Buttons</h4>
@@ -312,7 +310,7 @@
 									</div>
 									<div class="feature-box">
 										<div class="feature-box-icon">
-											<i class="icon icon-desktop"></i>
+											<i class="fa fa-desktop"></i>
 										</div>
 										<div class="feature-box-info">
 											<h4 class="shorter">Lightbox</h4>
@@ -330,7 +328,7 @@
 									<div class="panel-heading">
 										<h4 class="panel-title">
 											<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-												<i class="icon icon-usd"></i>
+												<i class="fa fa-usd"></i>
 												Pricing Tables
 											</a>
 										</h4>
@@ -345,7 +343,7 @@
 									<div class="panel-heading">
 										<h4 class="panel-title">
 											<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
-												<i class="icon icon-comment"></i>
+												<i class="fa fa-comment"></i>
 												Contact Forms
 											</a>
 										</h4>
@@ -360,7 +358,7 @@
 									<div class="panel-heading">
 										<h4 class="panel-title">
 											<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
-												<i class="icon icon-laptop"></i>
+												<i class="fa fa-laptop"></i>
 												Portfolio Pages
 											</a>
 										</h4>
@@ -382,7 +380,7 @@
 							<h2 class="short word-rotator-title">
 								We're not the only ones
 								<strong>
-									<span class="word-rotate">
+									<span class="word-rotate" data-plugin-options='{"delay": 3500, "animDelay": 400}'>
 										<span class="word-rotate-items">
 											<span>excited</span>
 											<span>happy</span>
@@ -397,10 +395,28 @@
 					<div class="row center">
 						<div class="owl-carousel" data-plugin-options='{"items": 6, "singleItem": false, "autoPlay": true}'>
 							<div>
-								<img class="img-responsive" src="<?php echo base_url('assets/img/logos/logo-1.png');?>" alt="">
+								<img class="img-responsive" src="img/logos/logo-1.png" alt="">
 							</div>
 							<div>
-								<img class="img-responsive" src="<?php echo base_url('assets/img/logos/logo-2.png');?>" alt="">
+								<img class="img-responsive" src="img/logos/logo-2.png" alt="">
+							</div>
+							<div>
+								<img class="img-responsive" src="img/logos/logo-3.png" alt="">
+							</div>
+							<div>
+								<img class="img-responsive" src="img/logos/logo-4.png" alt="">
+							</div>
+							<div>
+								<img class="img-responsive" src="img/logos/logo-5.png" alt="">
+							</div>
+							<div>
+								<img class="img-responsive" src="img/logos/logo-6.png" alt="">
+							</div>
+							<div>
+								<img class="img-responsive" src="img/logos/logo-4.png" alt="">
+							</div>
+							<div>
+								<img class="img-responsive" src="img/logos/logo-2.png" alt="">
 							</div>
 						</div>
 					</div>
@@ -413,7 +429,7 @@
 							<div class="row">
 								<div class="col-md-6">
 									<div class="recent-posts push-bottom">
-										<h2>Latest <strong>Press</strong> Releases</h2>
+										<h2>Latest <strong>Blog</strong> Posts</h2>
 										<div class="row">
 											<div class="owl-carousel" data-plugin-options='{"items": 1, "autoHeight": true}'>
 												<div>
@@ -424,7 +440,7 @@
 																<span class="month">Jan</span>
 															</div>
 															<h4><a href="blog-post.html">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h4>
-															<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec hendrerit vehicula est, in consequat libero. <a href="/" class="read-more">read more <i class="icon icon-angle-right"></i></a></p>
+															<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec hendrerit vehicula est, in consequat libero. <a href="/" class="read-more">read more <i class="fa fa-angle-right"></i></a></p>
 														</article>
 													</div>
 													<div class="col-md-6">
@@ -434,7 +450,7 @@
 																<span class="month">Jan</span>
 															</div>
 															<h4><a href="blog-post.html">Lorem ipsum dolor</a></h4>
-															<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec hendrerit vehicula est, in consequat. <a href="/" class="read-more">read more <i class="icon icon-angle-right"></i></a></p>
+															<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec hendrerit vehicula est, in consequat. <a href="/" class="read-more">read more <i class="fa fa-angle-right"></i></a></p>
 														</article>
 													</div>
 												</div>
@@ -446,7 +462,7 @@
 																<span class="month">Jan</span>
 															</div>
 															<h4><a href="blog-post.html">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h4>
-															<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec hendrerit vehicula est, in consequat libero. <a href="/" class="read-more">read more <i class="icon icon-angle-right"></i></a></p>
+															<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec hendrerit vehicula est, in consequat libero. <a href="/" class="read-more">read more <i class="fa fa-angle-right"></i></a></p>
 														</article>
 													</div>
 													<div class="col-md-6">
@@ -456,7 +472,7 @@
 																<span class="month">Jan</span>
 															</div>
 															<h4><a href="blog-post.html">Lorem ipsum dolor</a></h4>
-															<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <a href="/" class="read-more">read more <i class="icon icon-angle-right"></i></a></p>
+															<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <a href="/" class="read-more">read more <i class="fa fa-angle-right"></i></a></p>
 														</article>
 													</div>
 												</div>
@@ -468,7 +484,7 @@
 																<span class="month">Jan</span>
 															</div>
 															<h4><a href="blog-post.html">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h4>
-															<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec hendrerit vehicula est, in consequat libero. <a href="/" class="read-more">read more <i class="icon icon-angle-right"></i></a></p>
+															<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec hendrerit vehicula est, in consequat libero. <a href="/" class="read-more">read more <i class="fa fa-angle-right"></i></a></p>
 														</article>
 													</div>
 													<div class="col-md-6">
@@ -478,7 +494,7 @@
 																<span class="month">Jan</span>
 															</div>
 															<h4><a href="blog-post.html">Lorem ipsum dolor</a></h4>
-															<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec hendrerit vehicula est, in consequat. <a href="/" class="read-more">read more <i class="icon icon-angle-right"></i></a></p>
+															<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec hendrerit vehicula est, in consequat. <a href="/" class="read-more">read more <i class="fa fa-angle-right"></i></a></p>
 														</article>
 													</div>
 												</div>
@@ -487,7 +503,7 @@
 									</div>
 								</div>
 								<div class="col-md-6">
-									<h2>What <strong>Our Pilots</strong> Say</h2>
+									<h2><strong>What</strong> Client’s Say</h2>
 									<div class="row">
 										<div class="owl-carousel push-bottom" data-plugin-options='{"items": 1, "autoHeight": true}'>
 											<div>
@@ -498,7 +514,7 @@
 													<div class="testimonial-arrow-down"></div>
 													<div class="testimonial-author">
 														<div class="img-thumbnail img-thumbnail-small">
-															<img src="<?php echo base_url('assets/img/clients/client-1.jpg');?>" alt="">
+															<img src="img/clients/client-1.jpg" alt="">
 														</div>
 														<p><strong>John Smith</strong><span>CEO & Founder - Okler</span></p>
 													</div>
@@ -512,7 +528,7 @@
 													<div class="testimonial-arrow-down"></div>
 													<div class="testimonial-author">
 														<div class="img-thumbnail img-thumbnail-small">
-															<img src="<?php echo base_url('assets/img/clients/client-1.jpg');?>" alt="">
+															<img src="img/clients/client-1.jpg" alt="">
 														</div>
 														<p><strong>John Smith</strong><span>CEO & Founder - Okler</span></p>
 													</div>

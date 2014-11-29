@@ -163,36 +163,41 @@ class Migration_Install extends CI_Migration {
 		// Airports table
 		$this->dbforge->add_field(array(
 				'id'              => $field_config['id_field'],
-				'icao'            => $field_config['icao_field'],
+				'fs'              => $field_config['icao_field'],
 				'iata'            => $field_config['icao_field'],
-				'name'            => $field_config['short_input_field'],
+				'icao'            => $field_config['icao_field'],
+				'name'            => $field_config['input_field'],
 				'city'            => $field_config['short_input_field'],
 				'state_code'      => $field_config['short_input_field'],
-				'country'         => $field_config['short_input_field'],
+				'country_code'    => $field_config['icao_field'],
+				'country_name'    => $field_config['short_input_field'],
+				'region_name'     => $field_config['short_input_field'],
 				'utc_offset'      => $field_config['tiny_int'],
 				'lat'             => $field_config['location_field'],
 				'long'            => $field_config['location_field'],
 				'elevation'       => $field_config['altitude_field'],
-				'classification'  => $field_config['status_field'],
-				'type'            => $field_config['short_input_field'],
+				'classification'  => $field_config['tiny_int'],
 				'active'          => $field_config['status_field'],
-				'delay_index_url' => $field_config['short_input_field'],
-				'weather_url'     => $field_config['short_input_field'],
+				'port_type'       => $field_config['short_input_field'],
 				'hub'             => $field_config['status_field'],
+				'delay_url'       => $field_config['input_field'],
+				'weather_url'     => $field_config['input_field'],
 				));
 		$this->dbforge->add_key('id', TRUE);
-		$this->dbforge->add_key(array('icao','iata','hub'));
+		$this->dbforge->add_key(array('iata','icao','hub'));
 		$this->dbforge->create_table('airports');
 		
 		// Airlines table
 		$this->dbforge->add_field(array(
 				'id'              => $field_config['id_field'],
+				'fs'              => $field_config['icao_field'],
 				'iata'            => $field_config['icao_field'],
 				'icao'            => $field_config['icao_field'],
-				'name'            => $field_config['short_input_field'],
+				'name'            => $field_config['input_field'],
 				'active'          => $field_config['status_field'],
+				'category'        => $field_config['icao_field'],
 				'fuel_discount'   => $field_config['status_field'],
-				'airline_image'   => $field_config['short_input_field'],
+				'airline_image'   => $field_config['input_field'],
 				'total_schedules' => $field_config['counter_field'],
 				'total_pireps'    => $field_config['counter_field'],
 				'total_hours'     => $field_config['counter_field'],
@@ -202,6 +207,58 @@ class Migration_Install extends CI_Migration {
 		$this->dbforge->add_key(array('iata','icao'));
 		$this->dbforge->create_table('airlines');
 		
+		// Airlines categories table
+		$this->dbforge->add_field(array(
+				'id'          => $field_config['id_field'],
+				'value'       => $field_config['icao_field'],
+				'description' => $field_config['input_field'],
+				'passenger'   => $field_config['status_field'],
+				'cargo'       => $field_config['status_field'],
+		));
+		$this->dbforge->add_key('id', TRUE);
+		$this->dbforge->create_table('airlines_categories');
+		
+		// Schedules table
+		$this->dbforge->add_field(array(
+				'id'              => $field_config['id_field'],
+				'flight_id'       => $field_config['short_input_field'],
+				'carrier'         => $field_config['short_input_field'],
+				'operator'        => $field_config['short_input_field'],
+				'flight_num'      => $field_config['short_input_field'],
+				'dep_airport'     => $field_config['icao_field'],
+				'arr_airport'     => $field_config['icao_field'],
+				'equip'           => $field_config['icao_field'],
+				'tail_number'     => $field_config['short_input_field'],
+				'flight_type'     => $field_config['icao_field'],
+				'regional'        => $field_config['status_field'],
+				'dep_time_local'  => $field_config['short_input_field'],
+				'dep_time_utc'    => $field_config['short_input_field'],
+				'dep_terminal'    => $field_config['short_input_field'],
+				'dep_gate'        => $field_config['short_input_field'],
+				'block_time'      => $field_config['short_input_field'],
+				'taxi_out_time'   => $field_config['short_input_field'],
+				'air_time'        => $field_config['short_input_field'],
+				'taxi_in_time'    => $field_config['short_input_field'],
+				'arr_time_local'  => $field_config['short_input_field'],
+				'arr_time_utc'    => $field_config['short_input_field'],
+				'arr_terminal'    => $field_config['short_input_field'],
+				'arr_gate'        => $field_config['short_input_field'],
+				'downline_apt'	  => $field_config['icao_field'],
+				'downline_fltId'  => $field_config['short_input_field'],
+				'source_date'	  => $field_config['timestamp_field'],	
+				));
+		$this->dbforge->add_key('id', TRUE);
+		$this->dbforge->create_table('schedules');
+		
+		// Schedules Categories table
+		$this->dbforge->add_field(array(
+				'id'          => $field_config['id_field'],
+				'value'       => $field_config['icao_field'],
+				'description' => $field_config['input_field'],
+				));
+		$this->dbforge->add_key('id', TRUE);
+		$this->dbforge->create_table('schedules_categories');
+		
 		// Ranks table
 		$this->dbforge->add_field(array(
 				'id'         => $field_config['id_field'],
@@ -210,7 +267,7 @@ class Migration_Install extends CI_Migration {
 				'min_hours'  => $field_config['counter_field'],
 				'pay_rate'   => $field_config['money_field'],
 				'short'      => $field_config['short_input_field'],
-				));
+		));
 		$this->dbforge->add_key('id', TRUE);
 		$this->dbforge->create_table('ranks');
 		
