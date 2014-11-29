@@ -48,7 +48,11 @@ class User extends PVA_Model {
 	protected $_user_stats   = NULL;
 	
 	/* Derived properties */
-	protected $_is_premium = NULL;
+	private $_is_premium = NULL;
+	private $_is_admin   = NULL;
+	private $_is_manager = NULL;
+	private $_is_exec    = NULL;
+	private $_is_super   = NULL;
 	
 	function __construct($id = NULL)
 	{
@@ -630,9 +634,65 @@ class User extends PVA_Model {
 	{
 		if (is_null($this->_is_premium))
 		{
-			($this->admin_level > 10) ? $this->_is_premium = TRUE : $this->_is_premium = FALSE;
+			$this->_set_access();
 		}
 		return $this->_is_premium;
+	}
+	
+	/**
+	 * Determines if user is an admin user.
+	 *
+	 * @return boolean TRUE if user is an admin user.
+	 */
+	function is_admin()
+	{
+		if (is_null($this->_is_admin))
+		{
+			$this->_set_access();
+		}
+		return $this->_is_admin;
+	}
+	
+	/**
+	 * Determines if user is a manager user.
+	 *
+	 * @return boolean TRUE if user is a manager user.
+	 */
+	function is_manager()
+	{
+		if (is_null($this->_is_manager))
+		{
+			$this->_set_access();
+		}
+		return $this->_is_manager;
+	}
+
+	/**
+	 * Determines if user is an executive user.
+	 *
+	 * @return boolean TRUE if user is an executive user.
+	 */
+	function is_executive()
+	{
+		if (is_null($this->_is_exec))
+		{
+			$this->_set_access();
+		}
+		return $this->_is_exec;
+	}
+	
+	/**
+	 * Determines if user is an admin user.
+	 *
+	 * @return boolean TRUE if user is an admin user.
+	 */
+	function is_superadmin()
+	{
+		if (is_null($this->_is_super))
+		{
+			$this->_set_access();
+		}
+		return $this->_is_super;
 	}
 	
 	private function _hash_password()
@@ -677,6 +737,18 @@ class User extends PVA_Model {
 			}
 		}
 		return $string;
+	}
+	
+	/**
+	 * Access levels for the system are defined here.
+	 */
+	private function _set_access()
+	{
+		($this->admin_level >= 10) ? $this->_is_premium = TRUE : $this->_is_premium = FALSE;
+		($this->admin_level >= 50) ? $this->_is_admin = TRUE : $this->_is_admin = FALSE;
+		($this->admin_level >= 60) ? $this->_is_manager = TRUE : $this->_is_manager = FALSE;
+		($this->admin_level >= 70) ? $this->_is_exec = TRUE : $this->_is_exec = FALSE;
+		($this->admin_level >= 90) ? $this->_is_super = TRUE : $this->_is_super = FALSE;
 	}
 }
 
