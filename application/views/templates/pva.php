@@ -215,7 +215,7 @@
 																<div class="row">
 																	<div class="form-group">
 																		<div class="col-md-12">
-																			<a class="pull-right" id="headerRecover" href="#">(Lost Password?)</a>
+																			<?php echo anchor('/auth/forgot_password/', '(Lost Password?)', 'class="pull-right" id="headerRecover"'); ?>
 																			<label>Password</label>
 																			<input type="password" 
 																			       name="password"
@@ -243,7 +243,7 @@
 																</div>
 															</form>
 
-															<p class="sign-up-info">Don't have an account yet? <a href="#" id="headerSignUp">Sign Up!</a></p>
+															<p class="sign-up-info">Don't have an account yet? <?php echo anchor('auth/register','Sign Up!'); ?></p>
 
 														</div>
 
