@@ -101,7 +101,7 @@ class Note extends PVA_Model {
 	 * The model should have been created with entity type and id specified or
 	 * otherwise had those parameters set prior to calling this method.
 	 * 
-	 * @return array of notes objects.
+	 * @return boolean|array FALSE if no notes found or an array of notes objects.
 	 */
 	function get_notes()
 	{
