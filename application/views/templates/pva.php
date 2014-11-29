@@ -12,10 +12,10 @@
 
 		<!-- Web Fonts  -->
 		<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800%7CShadows+Into+Light" rel="stylesheet" type="text/css">
-
+                <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+                
 		<!-- Vendor CSS -->
 		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/bootstrap/bootstrap.css');?>">
-		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/fontawesome/css/font-awesome.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/owlcarousel/owl.carousel.css');?>" media="screen">
 		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/owlcarousel/owl.theme.css');?>" media="screen">
 		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/magnific-popup/magnific-popup.css');?>" media="screen">
@@ -23,11 +23,7 @@
 		<!-- Theme CSS -->
 		<link rel="stylesheet" href="<?php echo base_url('assets/css/theme.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/css/theme-elements.css');?>">
-		<link rel="stylesheet" href="<?php echo base_url('assets/css/theme-blog.css');?>">
-		<link rel="stylesheet" href="<?php echo base_url('assets/css/theme-shop.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/css/theme-animate.css');?>">
-
-		<!-- Current Page CSS -->
 		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/rs-plugin/css/settings.css');?>" media="screen">
 		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/circle-flip-slideshow/css/component.css');?>" media="screen">
 
@@ -141,7 +137,7 @@
                                                                         
 									<li><?php echo anchor('http://phoenixva.org/forums/','Forums'); ?></li>
                                                                         
-									<?php if ($userdata['admin'] > 2): ?>
+									<?php if ($userdata['is_admin']): ?>
 										<li><?php echo anchor('admin','Admin'); ?>
 									<?php endif; // Admin ?>
 								<?php endif; // Logged in ?>
@@ -202,13 +198,17 @@
 														<div class="signin-form">
 
 															<span class="mega-menu-sub-title">Sign In</span>
-
-															<form action="" id="" method="post">
+															<?php $this->load->helper('form'); ?>
+															<?php echo form_open('auth/login'); ?>
 																<div class="row">
 																	<div class="form-group">
 																		<div class="col-md-12">
 																			<label>Username or E-mail Address</label>
-																			<input type="text" value="" class="form-control input-lg">
+																			<input type="text"
+																			       name="login"
+																			       id="login"
+																			       value="<?php echo set_value('login'); ?>" 
+																			       class="form-control input-lg">
 																		</div>
 																	</div>
 																</div>
@@ -217,7 +217,11 @@
 																		<div class="col-md-12">
 																			<a class="pull-right" id="headerRecover" href="#">(Lost Password?)</a>
 																			<label>Password</label>
-																			<input type="password" value="" class="form-control input-lg">
+																			<input type="password" 
+																			       name="password"
+																			       id="password"
+																			       value="" 
+																			       class="form-control input-lg">
 																		</div>
 																	</div>
 																</div>
@@ -225,7 +229,11 @@
 																	<div class="col-md-6">
 																		<span class="remember-box checkbox">
 																			<label for="rememberme">
-																				<input type="checkbox" id="rememberme" name="rememberme">Remember Me
+																				<input type="checkbox" 
+																				       id="remember" 
+																				       name="remember"
+																				       value="1"
+																				       checked="<?php echo set_value('remember'); ?>">Remember Me
 																			</label>
 																		</span>
 																	</div>
@@ -408,10 +416,6 @@
 		<script src="<?php echo base_url('assets/vendor/bootstrap/bootstrap.js');?>"></script>
 		<script src="<?php echo base_url('assets/vendor/common/common.js');?>"></script>
 		<script src="<?php echo base_url('assets/vendor/jquery.validation/jquery.validation.js');?>"></script>
-		<script src="<?php echo base_url('assets/vendor/jquery.stellar/jquery.stellar.js');?>"></script>
-		<script src="<?php echo base_url('assets/vendor/jquery.easy-pie-chart/jquery.easy-pie-chart.js');?>"></script>
-		<script src="<?php echo base_url('assets/vendor/jquery.gmap/jquery.gmap.js');?>"></script>
-		<script src="<?php echo base_url('assets/vendor/twitterjs/twitter.js');?>"></script>
 		<script src="<?php echo base_url('assets/vendor/isotope/jquery.isotope.js');?>"></script>
 		<script src="<?php echo base_url('assets/vendor/owlcarousel/owl.carousel.js');?>"></script>
 		<script src="<?php echo base_url('assets/vendor/jflickrfeed/jflickrfeed.js');?>"></script>
