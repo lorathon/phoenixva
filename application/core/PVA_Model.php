@@ -310,6 +310,10 @@ class PVA_Model extends CI_Model
     	{
     		list ($hours, $mins) = $parts;
     	} 
+    	else
+    	{
+    		$hours = $time;
+    	}
     	return ($hours * 60) + $mins;
     }
 }
