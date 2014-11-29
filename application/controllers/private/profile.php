@@ -50,7 +50,7 @@ class Profile extends PVA_Controller {
 			$this->data['name'] = pva_id($user).' '.$user->name;
 			$this->data['birthday'] = $user->birthday;
 			$this->data['joined'] = strip_time($user->created);
-			$this->data['ipbuser_id'] = 0;
+			$this->data['ipbuser_id'] = $user->ipbuser_id;
 
 			// Premium user
 			$this->data['is_premium'] = $user->is_premium();
