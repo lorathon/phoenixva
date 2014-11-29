@@ -72,14 +72,16 @@ class Auth extends PVA_Controller
 				if ($user->login()) 
 				{
 					// Login success
+					$rank = new Rank($user->rank_id);
 					$this->session->set_userdata(array(
-							'user_id'  => $user->id,
-							'username' => $user->username,
-							'status'   => $user->activated,
-							'admin'    => $user->admin_level,
-							'name'     => $user->name,
-							'rank'     => $user->rank_id,
-							'hub'      => $user->hub,
+							'user_id'    => $user->id,
+							'username'   => $user->username,
+							'status'     => $user->activated,
+							'admin'      => $user->admin_level,
+							'name'       => $user->name,
+							'rank'       => $user->rank_id,
+							'rank_short' => $rank->short,
+							'hub'        => $user->hub,
 							));
 					
 					$this->_flash_message('success','Welcome','You have successfully logged into your account.');

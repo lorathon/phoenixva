@@ -70,7 +70,7 @@
 						<ul class="nav nav-pills nav-top">
 							<?php if (isset($userdata['name'])): ?>
 								<li>
-									<?php echo anchor('private/profile','<i class="fa fa-user fa-lg"></i>'.$userdata['name'],'title="Pilot Profile"'); ?>
+									<?php echo anchor('private/profile','<i class="fa fa-user fa-lg"></i>'.$userdata['rank_short'].' '.$userdata['name'],'title="Pilot Profile"'); ?>
 								</li>
 								<li>
 									<?php echo anchor('http://www.phoenixva.org/forums/index.php?app=members&module=messaging','<i class="fa fa-inbox fa-lg"></i>','title="Messenger"'); ?>
