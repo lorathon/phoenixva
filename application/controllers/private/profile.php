@@ -164,6 +164,17 @@ class Profile extends PVA_Controller {
 			
 			// Get Logbook
 			$this->data['logs'] = array();
+			
+			// Get Notes XXX Probably need this in PVA_Controller
+			$this->data['notes'] = array();
+			$note_model = new Note('user', $user->id);
+			$notes = $note_model->get_notes();
+			foreach ($notes as $note)
+			{
+				$note_user = $note->get_user();
+				$note->name = pva_id($note_user->id).' '.$note_user->name;
+				$this->data['notes'][] = $note;
+			}
 		}
 		else 
 		{

@@ -262,6 +262,30 @@ class User extends PVA_Model {
 			$this->_user_stats->flights_rejected = $row->flights;
 		}
 		
+		// Get user comments
+		$db_legacy->select('adminid, comment, date, staff')
+		          ->from('phpvms_pilotcomments')
+		          ->where('pilotid', $this->id);
+		
+		$query = $db_legacy->get();
+		
+		if ($query->num_rows() > 0)
+		{
+			$note = new Note();
+			$note->entity_type = 'user';
+			$note->entity_id = $this->id;
+			
+			foreach ($query->result() as $row)
+			{
+				$note->user = $row->adminid;
+				$note->note = $row->comment;
+				$note->date = $row->date;
+				$note->private_note = $row->staff;
+				
+				$note->save();
+			}
+		}
+		
 		// Get IP Board user ID
 		$db_legacy->select('member_id');
 		$db_legacy->from('ipbmembers');
