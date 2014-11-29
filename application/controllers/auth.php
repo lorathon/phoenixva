@@ -80,6 +80,7 @@ class Auth extends PVA_Controller
 							'admin'      => $user->admin_level,
 							'name'       => $user->name,
 							'rank'       => $user->rank_id,
+							'rank_name'  => $rank->rank,
 							'rank_short' => $rank->short,
 							'hub'        => $user->hub,
 							));
