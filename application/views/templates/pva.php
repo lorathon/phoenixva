@@ -23,11 +23,7 @@
 		<!-- Theme CSS -->
 		<link rel="stylesheet" href="<?php echo base_url('assets/css/theme.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/css/theme-elements.css');?>">
-		<link rel="stylesheet" href="<?php echo base_url('assets/css/theme-blog.css');?>">
-		<link rel="stylesheet" href="<?php echo base_url('assets/css/theme-shop.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/css/theme-animate.css');?>">
-
-		<!-- Current Page CSS -->
 		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/rs-plugin/css/settings.css');?>" media="screen">
 		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/circle-flip-slideshow/css/component.css');?>" media="screen">
 
@@ -408,10 +404,6 @@
 		<script src="<?php echo base_url('assets/vendor/bootstrap/bootstrap.js');?>"></script>
 		<script src="<?php echo base_url('assets/vendor/common/common.js');?>"></script>
 		<script src="<?php echo base_url('assets/vendor/jquery.validation/jquery.validation.js');?>"></script>
-		<script src="<?php echo base_url('assets/vendor/jquery.stellar/jquery.stellar.js');?>"></script>
-		<script src="<?php echo base_url('assets/vendor/jquery.easy-pie-chart/jquery.easy-pie-chart.js');?>"></script>
-		<script src="<?php echo base_url('assets/vendor/jquery.gmap/jquery.gmap.js');?>"></script>
-		<script src="<?php echo base_url('assets/vendor/twitterjs/twitter.js');?>"></script>
 		<script src="<?php echo base_url('assets/vendor/isotope/jquery.isotope.js');?>"></script>
 		<script src="<?php echo base_url('assets/vendor/owlcarousel/owl.carousel.js');?>"></script>
 		<script src="<?php echo base_url('assets/vendor/jflickrfeed/jflickrfeed.js');?>"></script>
