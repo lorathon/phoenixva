@@ -222,6 +222,7 @@ class Migration_Install extends CI_Migration {
 				'table_entry' => $field_config['fk_field'],
 				'note'        => $field_config['text_input_field'],
 				'modified'    => $field_config['timestamp_field'],
+				'staff'       => $field_config['status_field'],
 				));
 		$this->dbforge->add_key('id', TRUE);
 		$this->dbforge->add_key('user_id');

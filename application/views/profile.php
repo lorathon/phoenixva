@@ -11,6 +11,7 @@
 				<?php echo $help; ?>
 			</div>
 		<?php endif;?>
+		<!-- Stats row -->
 		<div class="row">
 			<!-- First column -->
 			<div class="col-sm-6 col-md-4">
@@ -123,7 +124,7 @@
 						</p>
 					</div>
 				</div>
-			</div>
+			</div><!-- End first column -->
 			
 			<!-- Second column -->
 			<div class="col-sm-6 col-md-4">
@@ -184,7 +185,7 @@
 						<?php endforeach; ?>
 					</div>
 				</div>
-			</div>
+			</div><!-- End second column -->
 			
 			<!-- Third column -->
 			<div class="col-sm-6 col-md-4">
@@ -268,7 +269,24 @@
 						</dl>
 					</div>
 				</div>
+			</div><!-- End third column -->
+		</div><!-- End Stats row -->
+		
+		<!-- Notes row -->
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="panel panel-info">
+					<div class="panel-heading">Pilot Notes</div>
+					<div class="panel-body">
+						<dl>
+							<?php foreach ($notes as $note): ?>
+								<dt><?php echo $note->name; ?> at <?php echo $note->modified; ?></dt>
+								<dd><?php echo $note->note; ?></dd>
+							<?php endforeach; ?>
+						</dl>
+					</div>
+				</div>
 			</div>
-		</div>
+		</div><!-- End Notes row -->
 	<?php endif; ?>
 </div>

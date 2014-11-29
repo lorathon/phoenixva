@@ -43,11 +43,32 @@ class Note extends PVA_Model {
 	public $note;
 	
 	/**
+	 * Flag whether the note is only visible to staff
+	 * 
+	 * @var boolean
+	 */
+	public $private_note;
+	
+	/**
+	 * Date the note was added (only needed when transferring legacy pilots)
+	 * 
+	 * @var string
+	 */
+	public $date;
+	
+	/**
 	 * Array of notes for the desired entity.
 	 * 
 	 * @var array
 	 */
 	protected $_notes = array();
+	
+	/**
+	 * User object corresponding to the user that made the note
+	 * 
+	 * @var User object
+	 */
+	protected $_user_object;
 	
 	/**
 	 * Creates a new note model.
@@ -94,6 +115,50 @@ class Note extends PVA_Model {
 	}
 	
 	/**
+	 * Override base find_all.
+	 * 
+	 * Translates properties and controls the where clause based on business
+	 * logic.
+	 * 
+	 * @see PVA_Model::find_all()
+	 */
+	function find_all()
+	{
+		// Where
+		($this->private_note) ? $staff = 1 : $staff = 0;
+		$parms = array(
+				'table_name'  => $this->entity_type,
+				'table_entry' => $this->entity_id,
+				'staff'       => $staff,
+				);
+		
+		// Build the query
+		$this->db->select()
+		         ->from($this->_table_name)
+		         ->where($parms)
+		         ->order_by($this->_order_by);
+		 
+		// Query the database
+		$query = $this->db->get();
+		 
+		return $this->_get_objects($query);
+	}
+	
+	/**
+	 * Gets the user object of the user who added the note
+	 * 
+	 * @return User
+	 */
+	function get_user()
+	{
+		if (is_null($this->_user_object))
+		{
+			$this->_user_object = new User($this->user);
+		}
+		return $this->_user_object;
+	}
+	
+	/**
 	 * Override base save method
 	 * 
 	 * Ensures Note integrity and provides defaulting for entity and ID. If not
@@ -104,7 +169,7 @@ class Note extends PVA_Model {
 	function save()
 	{
 		// Required info
-		if (isnull($this->user) OR isnull($this->note))
+		if (is_null($this->user) OR is_null($this->note))
 		{
 			return FALSE;
 		}
@@ -113,14 +178,15 @@ class Note extends PVA_Model {
 		$obj = new stdClass();
 		
 		// Timestamp
-		$obj->modified = date('Y-m-d H:i:s');
+		(is_null($this->date)) ? $obj->modified = date('Y-m-d H:i:s') : $obj->modified = $this->date;
 		
 		$obj->user_id = $this->user;
 		$obj->note = $this->note;
 		
 		// Set defaults as necessary
-		(isnull($this->entity_type)) ? $obj->table_name = 'users' : $obj->table_name = $this->entity_type;
-		(isnull($this->entity_id)) ? $obj->table_entry = $this->user : $obj->table_entry = $this->entity_id;
+		(is_null($this->entity_type)) ? $obj->table_name = 'users' : $obj->table_name = $this->entity_type;
+		(is_null($this->entity_id)) ? $obj->table_entry = $this->user : $obj->table_entry = $this->entity_id;
+		($this->private_note) ? $obj->staff = 1 : $obj->staff = 0;
 		
 		// Insert note
 		return $this->db->insert($this->_table_name,$obj);
