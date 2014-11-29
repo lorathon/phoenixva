@@ -111,7 +111,7 @@ class PVA_Controller extends CI_Controller {
 
 		if ($access == 'admin')
 		{
-			if($this->data['userdata']['admin'] < 2)
+			if( ! $this->data['userdata']['is_admin'])
 			{
 				// NO admin Credentials found.  Redirect to UNAUTH page
 				$this->load->helper('url');

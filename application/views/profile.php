@@ -29,7 +29,7 @@
 						<dl class="dl-horizontal">
 							<dt>Joined</dt>
 							<dd><?php echo $joined; ?></dd>
-							<?php if ($own_profile OR $userdata['admin'] > 49): ?>
+							<?php if ($own_profile OR $userdata['is_admin']): ?>
 								<dt>Birthday</dt>
 								<dd><?php echo $birthday; ?></dd>
 							<?php endif; ?>
@@ -55,7 +55,7 @@
 										button('default')); ?>
 							</p>
 						<?php endif; ?>				 
-						<?php if ($own_profile OR $userdata['admin'] > 49): ?>
+						<?php if ($own_profile OR $userdata['is_admin']): ?>
 							<p class="text-center">
 								<?php echo anchor('auth/change_password/'.$user_id,'Change Password', button('default')); ?>
 								<?php if ($own_profile && ! $is_premium): ?>
@@ -80,7 +80,7 @@
 								?>
 							</p>
 						<?php endif;?>
-						<?php if (! $own_profile && $userdata['admin'] > 49): ?>
+						<?php if (! $own_profile && $userdata['is_admin']): ?>
 							<hr />
 							<p class="text-center">
 							<?php 
@@ -91,7 +91,7 @@
 								else 
 								{
 									echo anchor('admin/users/warn/'.$user_id, '<i class="fa fa-exclamation-triangle"></i> Warn', button('warning'));
-									if ($userdata['admin'] > 98)
+									if ($userdata['is_executive'])
 									{
 										echo "\n";
 										echo anchor('admin/users/ban/'.$user_id, '<i class="fa fa-ban"></i> Ban', button('danger'));
