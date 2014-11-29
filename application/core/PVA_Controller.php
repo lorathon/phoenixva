@@ -22,7 +22,7 @@ class PVA_Controller extends CI_Controller {
 	public $data     = array();
 	
 	// Used to enable/disable the profiler (can be overriden by child controllers)
-	protected $_profile_this = TRUE;
+	protected $_profile_this = FALSE;
 	
 	// Controls which template to render
 	private $_access = 'public';
@@ -32,6 +32,11 @@ class PVA_Controller extends CI_Controller {
 		parent::__construct();
 
 		// Styling and profiling
+		if (ENVIRONMENT == 'development')
+		{
+			// Profiler is always on in development
+			$this->_profile_this = TRUE;
+		}
 		$this->output->enable_profiler($this->_profile_this);
 
 		log_message('debug', 'PVA Controller class initialized');
