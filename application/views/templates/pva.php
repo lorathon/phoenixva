@@ -12,10 +12,10 @@
 
 		<!-- Web Fonts  -->
 		<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800%7CShadows+Into+Light" rel="stylesheet" type="text/css">
-                <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-		
-                <!-- Vendor CSS -->
-                <link rel="stylesheet" href="<?php echo base_url('assets/vendor/bootstrap/bootstrap.css');?>">
+
+		<!-- Vendor CSS -->
+		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/bootstrap/bootstrap.css');?>">
+		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/fontawesome/css/font-awesome.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/owlcarousel/owl.carousel.css');?>" media="screen">
 		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/owlcarousel/owl.theme.css');?>" media="screen">
 		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/magnific-popup/magnific-popup.css');?>" media="screen">
