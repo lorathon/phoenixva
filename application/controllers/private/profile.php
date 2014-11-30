@@ -50,7 +50,7 @@ class Profile extends PVA_Controller {
 			$this->data['name'] = pva_id($user).' '.$user->name;
 			$this->data['birthday'] = $user->birthday;
 			$this->data['joined'] = strip_time($user->created);
-			$this->data['ipbuser_id'] = 0;
+			$this->data['ipbuser_id'] = $user->ipbuser_id;
 
 			// Premium user
 			$this->data['is_premium'] = $user->is_premium();
@@ -169,11 +169,14 @@ class Profile extends PVA_Controller {
 			$this->data['notes'] = array();
 			$note_model = new Note('user', $user->id);
 			$notes = $note_model->get_notes();
-			foreach ($notes as $note)
+			if ($notes)
 			{
-				$note_user = $note->get_user();
-				$note->name = pva_id($note_user->id).' '.$note_user->name;
-				$this->data['notes'][] = $note;
+				foreach ($notes as $note)
+				{
+					$note_user = $note->get_user();
+					$note->name = pva_id($note_user->id).' '.$note_user->name;
+					$this->data['notes'][] = $note;
+				}
 			}
 		}
 		else 
