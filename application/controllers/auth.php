@@ -260,7 +260,7 @@ class Auth extends PVA_Controller
 					$this->data['email'] = $user->email;
 					$this->data['new_email_key'] = $user->new_email_key;
 					$this->data['transfer_link'] = $user->transfer_link;
-					$this->data['transfer_hours'] = $user_stats->hours_transfer;
+					$this->data['transfer_hours'] = $user_stats->hours_transfer / 60;
 					
 
 					if ($email_activation) 
