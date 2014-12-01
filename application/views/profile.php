@@ -15,8 +15,11 @@
 		<div class="row">
 			<!-- First column -->
 			<div class="col-sm-6 col-md-4">
-				<div class="panel panel-info">
-					<div class="panel-body">
+				<div class="panel panel-featured panel-featured-info">
+                                    <header class="panel-heading">
+                                        <h2 class="panel-title">Pilot Information</h2>
+                                    </header>
+                                    <div class="panel-body">
 						<p class="text-center">
 							<img src="<?php echo $avatar; ?>" class="avatar" />
 						</p>
@@ -102,9 +105,12 @@
 						<?php endif; ?>
 					</div>
 				</div>
-				<div class="panel panel-info">
-					<div class="panel-heading">Upcoming Bids</div>
+				<div class="panel panel-featured panel-featured-danger">
+					<header class="panel-heading">
+                                        <h2 class="panel-title">Upcoming Bids</h2>
+                                        </header>
 					<div class="panel-body">
+                                            
 						<?php foreach ($bids as $bid): ?>
 							
 						<?php endforeach; ?>
@@ -128,8 +134,10 @@
 			
 			<!-- Second column -->
 			<div class="col-sm-6 col-md-4">
-				<div class="panel panel-info">
-					<div class="panel-heading">Career Details</div>
+				<div class="panel panel-featured panel-featured-success">
+					<header class="panel-heading">
+                                        <h2 class="panel-title">Career Details</h2>
+                                        </header>
 					<div class="panel-body">
 						<dl class="dl-horizontal">
 							<dt>Status</dt>
@@ -177,8 +185,10 @@
 						</dl>
 					</div>
 				</div>
-				<div class="panel panel-info">
-					<div class="panel-heading">Logbook</div>
+				<div class="panel panel-featured panel-featured-dark">
+					<header class="panel-heading">
+                                        <h2 class="panel-title">Recent Logbook</h2>
+                                        </header>
 					<div class="panel-body">
 						<?php foreach ($logs as $log): ?>
 						
@@ -189,31 +199,39 @@
 			
 			<!-- Third column -->
 			<div class="col-sm-6 col-md-4">
-				<div class="panel panel-info">
-					<div class="panel-heading">Next Rank</div>
-					<div class="panel-body">
+				<div class="panel panel-featured panel-featured-warning">
+					<header class="panel-heading">
+                                            <h2 class="panel-title">Next Rank</h2>
+                                        </header>
+					
+                                        <div class="panel-body">
 						<?php if ($next_rank !== FALSE): ?>
 							<dl class="dl-horizontal">
 								<dt><?php echo $next_rank; ?></dt>
 								<dd><?php echo $next_rank_hours; ?> hours</dd>
 							</dl>
-							<div class="progress">
-								<div class="progress-bar progress-bar-success" 
-								     style="width: <?php echo $next_rank_percent; ?>%">
+							<div class="progress progress-striped light active m-md">
+								<div class="progress-bar progress-bar-warning" 
+								     style="width: <?php echo $next_rank_percent; ?>%"
+                                                                     role="progressbar"
+                                                                     aria-valuenow="<?php echo $next_rank_percent; ?>"
+                                                                     aria-valuemin="0"
+                                                                     aria-valuemax="<?php echo $next_rank_hours; ?>">
+                                                                    
+                                                                    <?php echo $next_rank_percent; ?>%
 								</div>
 							</div>
-							<div class="progress-label">
-								<span class="min">0</span>
-								<span class="max"><?php echo $next_rank_hours; ?></span>
-							</div>
+							
 							<p class="text-center"><?php echo $next_rank_to_go; ?> hours to go</p>
 						<?php endif; ?>
 					</div>
 				</div>
-				<div class="panel panel-info">
-					<div class="panel-heading">Your Stats</div>
+				<div class="panel panel-featured panel-featured-info">
+					<header class="panel-heading">
+                                        <h2 class="panel-title">Your Stats</h2>
+                                        </header>
 					<div class="panel-body">
-						<p class="text-center">Flights</p>
+						<h5 class="text-center">Flights</h5>
 						<div class="progress">
 							<div class="progress-bar progress-bar-warning"
 							     style="width: <?php echo $early_percent; ?>%">
@@ -243,7 +261,7 @@
 							<dd class="text-right"><?php echo $delayed_flights; ?></dd>
 						</dl>
 						<hr />
-						<p class="text-center">Landings</p>
+						<h5 class="text-center">Landings</h5>
 						<div class="progress">
 							<div class="progress-bar progress-bar-success"
 							     style="width: <?php echo $landing_success; ?>%">
