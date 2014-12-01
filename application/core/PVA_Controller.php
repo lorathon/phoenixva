@@ -214,12 +214,13 @@ class PVA_Controller extends CI_Controller {
 	{
 		log_message('debug', 'Sending email of type: '.$type);
 		$this->load->library('email');
-		$this->email->from($this->config->item('webmaster_email', 'pva'), $this->config->item('site_name', 'pva'));
-		$this->email->reply_to($this->config->item('webmaster_email', 'pva'), $this->config->item('site_name', 'pva'));
+		$this->email->from(config_item('webmaster_email'), config_item('site_name'));
+		$this->email->reply_to(config_item('webmaster_email'), config_item('site_name'));
 		$this->email->to($email);
-		$this->email->subject(sprintf($this->lang->line('auth_subject_'.$type), $this->config->item('site_name', 'pva')));
+		$this->email->subject(sprintf($this->lang->line('auth_subject_'.$type), config_item('site_name')));
 		$this->email->message($this->load->view('email/'.$type.'-html', $data, TRUE));
 		$this->email->set_alt_message($this->load->view('email/'.$type.'-txt', $data, TRUE));
+		log_message('debug', 'Email object: '.print_r($this->email, TRUE));
 		
 		return $this->email->send();
 	}

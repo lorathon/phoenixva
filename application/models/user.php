@@ -611,12 +611,12 @@ class User extends PVA_Model {
 	 * @param string $old_pass
 	 * @return boolean FALSE if there was an error changing the password.
 	 */
-	function change_password($old_pass)
+	function change_password($old_pass, $admin = FALSE)
 	{		
 		if ( ! is_null($this->id) && ! is_null($this->password))
 		{
 			$user = new User($this->id);
-			if ($user->_verify_password($old_pass))
+			if ($admin OR $user->_verify_password($old_pass))
 			{
 				$user->password = $this->password;
 				$user->_hash_password();

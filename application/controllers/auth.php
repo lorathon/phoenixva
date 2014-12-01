@@ -521,12 +521,12 @@ class Auth extends PVA_Controller
 				// validation ok
 				$user->id = $id;	// Set ID separately; don't want a fully populated object.
 				$user->password = $this->form_validation->set_value('new_password');
-				if ($user->change_password($this->form_validation->set_value('old_password'))) 
-				{	
+				if ($user->change_password($this->form_validation->set_value('old_password'), $admin_change)) 
+				{
 					// success
 					log_message('debug','Password changed for user id: '.$user->id);
 					$user->find();
-					$this->_show_message('success', $this->lang->line('auth_message_password_changed'));
+					$this->_flash_message('success', 'Password Changed', $this->lang->line('auth_message_password_changed'));
 					$this->data['admin'] = $admin_change;
 					if ($admin_change)
 					{
@@ -536,7 +536,7 @@ class Auth extends PVA_Controller
 					$this->data['email'] = $user->email;
 						
 					$sent = $this->_send_email('reset_password', $user->email, $this->data);
-					log_message('debug', 'Email sent, redirect to profile id: '.$id);
+					log_message('debug', 'Email sent to: '.$user->email.', redirecting to profile id: '.$id);
 					redirect('/private/profile/view/'.$id);
 				} 
 				else 
@@ -646,6 +646,7 @@ class Auth extends PVA_Controller
 	/**
 	 * Show info message
 	 * 
+	 * @deprecated Use _flash_message() instead
 	 * @param string - success | info | warning | error
 	 * @param	string
 	 * @return	void
