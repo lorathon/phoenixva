@@ -122,7 +122,14 @@
 										<a href="#S">
 											<span class="pull-right label label-primary">2</span>
 											<i class="fa fa-envelope" aria-hidden="true"></i>
-											<span>Pending Registrations</span>
+											<span>Pending Applications</span>
+										</a>
+									</li>
+                                                                        <li>
+										<a href="#S">
+											<span class="pull-right label label-primary">2</span>
+											<i class="fa fa-envelope" aria-hidden="true"></i>
+											<span>Pending Flight Reports</span>
 										</a>
 									</li>
 									<li class="nav-parent">
@@ -132,25 +139,103 @@
 										</a>
 										<ul class="nav nav-children">
 											<li>
-												<a href="#">
-													 Active Pilots
-												</a>
+												<?php echo anchor('admin/users/active','Active Pilots'); ?>
 											</li>
 											<li>
-												<a href="#">
-													 Inactive Pilots
-												</a>
+												<?php echo anchor('admin/users/inactive','Inactive Pilots'); ?>
+											</li>
+                                                                                        <li>
+												<?php echo anchor('admin/users/ranks','Pilot Ranks'); ?>
 											</li>
 										</ul>
 									</li>
-									
-									<li>
-										<a href="http://themeforest.net/item/porto-responsive-html5-template/4106987?ref=Okler" target="_blank">
-											<i class="fa fa-external-link" aria-hidden="true"></i>
-											<span>Front-End <em class="not-included">(Not Included)</em></span>
+                                                                        
+                                                                        <li class="nav-parent">
+										<a>
+											<i class="fa fa-copy" aria-hidden="true"></i>
+											<span>Flights (PIREPs)</span>
 										</a>
+										<ul class="nav nav-children">
+											<li>
+												<?php echo anchor('admin/pireps/recent','View Recent PIREPs'); ?>
+											</li>
+											<li>
+												<?php echo anchor('admin/pireps/all','View All PIREPs'); ?>
+											</li>
+                                                                                        <li>
+												<?php echo anchor('admin/pireps/bids','Current Bids'); ?>
+											</li>
+										</ul>
 									</li>
-								</ul>
+                                                                        
+                                                                        <li class="nav-parent">
+										<a>
+											<i class="fa fa-copy" aria-hidden="true"></i>
+											<span>Airline Ops</span>
+										</a>
+										<ul class="nav nav-children">
+											<li>
+												<?php echo anchor('admin/airport/all','View Airports'); ?>
+											</li>
+                                                                                        <li>
+												<?php echo anchor('admin/airline/all','View Airlines'); ?>
+											</li>
+                                                                                        <li>
+												<?php echo anchor('admin/aircraft/all','View Aircraft'); ?>
+											</li>
+                                                                                        <li>
+												<?php echo anchor('admin/schedules/all','View Schedules'); ?>
+											</li>
+										</ul>
+									</li>
+                                                                        
+                                                                        <li class="nav-parent">
+										<a>
+											<i class="fa fa-copy" aria-hidden="true"></i>
+											<span>Events Dept</span>
+										</a>
+										<ul class="nav nav-children">
+											<li>
+												<?php echo anchor('admin/events/special','Special Events'); ?>
+											</li>
+                                                                                        <li>
+												<?php echo anchor('admin/events/waiver','Waiver Events'); ?>
+											</li>
+											<li>
+												<?php echo anchor('admin/events/missions','Missions'); ?>
+											</li>
+                                                                                        <li>
+												<?php echo anchor('admin/events/landingcomp','Landing Competitions'); ?>
+											</li>
+                                                                                        <li>
+												<?php echo anchor('admin/events/aotm','Airport of the Month'); ?>
+											</li>
+										</ul>
+									</li>
+                                                                        
+                                                                        <li class="nav-parent">
+										<a>
+											<i class="fa fa-copy" aria-hidden="true"></i>
+											<span>Site Settings</span>
+										</a>
+										<ul class="nav nav-children">
+											<li>
+												<?php echo anchor('admin/managedata','Flightstats Data'); ?>
+											</li>
+                                                                                        <li>
+                                                                                                <?php echo anchor('admin/settings/general','General Settings'); ?>
+											</li>
+                                                                                        <li>
+												<?php echo anchor('admin/settings/pvacars','PVACARS Settings'); ?>
+											</li>
+                                                                                        <li>
+												<?php echo anchor('admin/logs','Admin Activity Logs'); ?>
+											</li>
+                                                                                        
+                                                                                        
+										</ul>
+									</li>
+      								</ul>
 							</nav>
 						</div>
 				
