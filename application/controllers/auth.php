@@ -543,7 +543,6 @@ class Auth extends PVA_Controller
 				{														
 					// fail
 					log_message('debug','Error changing password for user id: '.$user->id);
-					log_message('debug','Old password: '.$this->form_validation->set_value('old_password'));
 					$this->data['errors'][] = 'An error occurred changing the password.';
 				}
 			}
@@ -759,9 +758,7 @@ class Auth extends PVA_Controller
 	 * @return boolean TRUE if automated background checks pass
 	 */
 	protected function _background_checks(&$user)
-	{
-		// PVA transfers, move data from old database
-		
+	{		
 		// Old enough?
 		
 		// Previously Banned?
