@@ -471,28 +471,90 @@ class Auth extends PVA_Controller
 	 *
 	 * @return void
 	 */
-	function change_password()
+	function change_password($id = NULL)
 	{
-		if (!$this->tank_auth->is_logged_in()) {								// not logged in or not activated
+		log_message('debug','Changing password for user id: '.$id);
+		if (!$this->tank_auth->is_logged_in()) 
+		{								
+			// not logged in or not activated
 			redirect('/auth/login/');
 
-		} else {
+		} 
+		else 
+		{
+			$user = new User();
+				
+			if (is_null($id)) 
+			{
+				// Default to current user
+				$id = $this->session->userdata('user_id');
+				log_message('debug','Defaulted user id: '.$id);
+			}
+			
+			// Admin changing someone else's password
+			$admin_change = ($id != $this->session->userdata('user_id'));
+
+			// Verify admin
+			if ( $admin_change AND ! $this->session->userdata('is_admin'))
+			{
+				// Make a note of unauthorized activity
+				$note = new Note();
+				$note->entity_type = 'user';
+				$note->entity_id = $this->session->userdata('user_id');
+				$note->note = '[WARNING ISSUED] - Non-admin attempted to change another user\'s password.';
+				$note->private_note = TRUE;
+				$note->save();
+				
+				$this->_flash_message('danger','UNAUTHORIZED','You are not authorized to perform this function. A formal warning has been issued and recorded on your permanent record.');
+				redirect('');
+			}
+			
 			$this->form_validation->set_rules('new_password', 'New Password', 'trim|required|xss_clean|min_length['.$this->config->item('password_min_length', 'tank_auth').']|max_length['.$this->config->item('password_max_length', 'tank_auth').']|alpha_dash');
+			$this->form_validation->set_rules('old_password', 'Old Password', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('confirm_new_password', 'Confirm new Password', 'trim|required|xss_clean|matches[new_password]');
 
 			$this->data['errors'] = array();
 
-			if ($this->form_validation->run()) {								// validation ok
-				if ($this->tank_auth->change_password(
-						$this->form_validation->set_value('old_password'),
-						$this->form_validation->set_value('new_password'))) {	// success
+			if ($this->form_validation->run()) 
+			{
+				log_message('debug','Form submission valid');
+				// validation ok
+				$user->id = $id;	// Set ID separately; don't want a fully populated object.
+				$user->password = $this->form_validation->set_value('new_password');
+				if ($user->change_password($this->form_validation->set_value('old_password'))) 
+				{	
+					// success
+					log_message('debug','Password changed for user id: '.$user->id);
+					$user->find();
 					$this->_show_message('success', $this->lang->line('auth_message_password_changed'));
-
-				} else {														// fail
-					$errors = $this->tank_auth->get_error_message();
-					foreach ($errors as $k => $v)	$this->data['errors'][$k] = $this->lang->line($v);
+					$this->data['admin'] = $admin_change;
+					if ($admin_change)
+					{
+						$this->data['new_password'] = $this->form_validation->set_value('new_password');
+					}
+					$this->data['username'] = $user->username;
+					$this->data['email'] = $user->email;
+						
+					$sent = $this->_send_email('reset_password', $user->email, $this->data);
+					log_message('debug', 'Email sent, redirect to profile id: '.$id);
+					redirect('/private/profile/view/'.$id);
+				} 
+				else 
+				{														
+					// fail
+					log_message('debug','Error changing password for user id: '.$user->id);
+					log_message('debug','Old password: '.$this->form_validation->set_value('old_password'));
+					$this->data['errors'][] = 'An error occurred changing the password.';
 				}
 			}
-			$this->load->view('auth/change_password_form', $this->data);
+			
+			if (is_null($user->name))
+			{
+				$user = new User($id);
+			}
+			
+			$this->data['title'] = 'Changing Password For '.$user->name;
+			$this->_render('auth/change_password_form');
 		}
 	}
 
@@ -592,26 +654,6 @@ class Auth extends PVA_Controller
 	{        
 		$this->session->set_flashdata($status, $message);
 		redirect('');
-	}
-
-	/**
-	 * Send email message of given type (activate, forgot_password, etc.)
-	 *
-	 * @param	string
-	 * @param	string
-	 * @param	array
-	 * @return	void
-	 */
-	function _send_email($type, $email, &$data)
-	{
-		$this->load->library('email');
-		$this->email->from($this->config->item('webmaster_email', 'tank_auth'), $this->config->item('website_name', 'tank_auth'));
-		$this->email->reply_to($this->config->item('webmaster_email', 'tank_auth'), $this->config->item('website_name', 'tank_auth'));
-		$this->email->to($email);
-		$this->email->subject(sprintf($this->lang->line('auth_subject_'.$type), $this->config->item('website_name', 'tank_auth')));
-		$this->email->message($this->load->view('email/'.$type.'-html', $data, TRUE));
-		$this->email->set_alt_message($this->load->view('email/'.$type.'-txt', $data, TRUE));
-		$this->email->send();
 	}
 
 	/**

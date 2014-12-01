@@ -4,6 +4,8 @@ $config['site_name'] = 'Phoenix Virtual Airways';
 
 $config['site_description'] = 'Phoenix Virtual Airways is the largest virtual airline.';
 
+$config['webmaster_email']  = 'helpdesk@phoenixva.org';
+
 /* mi = miles | km = kilometers */
 $config['units_distance'] = 'km';
 

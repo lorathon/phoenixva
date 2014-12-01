@@ -200,6 +200,29 @@ class PVA_Controller extends CI_Controller {
 		$this->output->set_header("Cache-Control: post-check=0, pre-check=0");
 		$this->output->set_header("Pragma: no-cache");
 	}
+	
+	/**
+	 * Send email message of given type (activate, forgot_password, etc.)
+	 *
+	 * @param	string Type of email to send. Corresponds to the views/email/type
+	 * files for both -html and -txt.
+	 * @param	string Email address to send to.
+	 * @param	array Data for the email view to use.
+	 * @return	boolean TRUE if the email was queued for delivery.
+	 */
+	protected function _send_email($type, $email, &$data)
+	{
+		log_message('debug', 'Sending email of type: '.$type);
+		$this->load->library('email');
+		$this->email->from($this->config->item('webmaster_email', 'pva'), $this->config->item('site_name', 'pva'));
+		$this->email->reply_to($this->config->item('webmaster_email', 'pva'), $this->config->item('site_name', 'pva'));
+		$this->email->to($email);
+		$this->email->subject(sprintf($this->lang->line('auth_subject_'.$type), $this->config->item('site_name', 'pva')));
+		$this->email->message($this->load->view('email/'.$type.'-html', $data, TRUE));
+		$this->email->set_alt_message($this->load->view('email/'.$type.'-txt', $data, TRUE));
+		
+		return $this->email->send();
+	}
 
 	/**
 	 * PVA Application autoloader

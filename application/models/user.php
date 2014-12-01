@@ -613,12 +613,17 @@ class User extends PVA_Model {
 	 */
 	function change_password($old_pass)
 	{		
-		if ( ! is_null($this->id) && $this->_verify_password($old_pass))
+		if ( ! is_null($this->id) && ! is_null($this->password))
 		{
-			$this->_hash_password();
-			$this->save();
+			$user = new User($this->id);
+			if ($user->_verify_password($old_pass))
+			{
+				$user->password = $this->password;
+				$user->_hash_password();
+				$user->save();
 			
-			return TRUE;
+				return TRUE;
+			}
 		}
 		
 		return FALSE;
