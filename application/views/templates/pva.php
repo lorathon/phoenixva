@@ -11,6 +11,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 		<!-- Web Fonts  -->
+                
 		<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800%7CShadows+Into+Light" rel="stylesheet" type="text/css">
                 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
                 
@@ -21,20 +22,24 @@
 		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/magnific-popup/magnific-popup.css');?>" media="screen">
 
 		<!-- Theme CSS -->
+                
 		<link rel="stylesheet" href="<?php echo base_url('assets/css/theme.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/css/theme-elements.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/css/theme-animate.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/rs-plugin/css/settings.css');?>" media="screen">
 		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/circle-flip-slideshow/css/component.css');?>" media="screen">
+                <link rel="stylesheet" href="<?php echo base_url('assets/admin/stylesheets/theme-admin-extension.css');?>">
 
 		<!-- Skin CSS -->
 		<link rel="stylesheet" href="<?php echo base_url('assets/css/skins/default.css');?>">
+                <link rel="stylesheet" href="<?php echo base_url('assets/admin/stylesheets/skins/extension.css');?>">
 
 		<!-- Theme Custom CSS -->
 		<link rel="stylesheet" href="<?php echo base_url('assets/css/custom.css');?>">
 
 		<!-- Head Libs -->
 		<script src="<?php echo base_url('assets/vendor/modernizr/modernizr.js');?>"></script>
+                
 
 		<!--[if IE]>
 			<link rel="stylesheet" href="css/ie.css">
