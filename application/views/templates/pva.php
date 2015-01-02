@@ -11,6 +11,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 		<!-- Web Fonts  -->
+                
 		<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800%7CShadows+Into+Light" rel="stylesheet" type="text/css">
                 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
                 
@@ -21,20 +22,24 @@
 		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/magnific-popup/magnific-popup.css');?>" media="screen">
 
 		<!-- Theme CSS -->
+                
 		<link rel="stylesheet" href="<?php echo base_url('assets/css/theme.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/css/theme-elements.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/css/theme-animate.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/rs-plugin/css/settings.css');?>" media="screen">
 		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/circle-flip-slideshow/css/component.css');?>" media="screen">
+                <link rel="stylesheet" href="<?php echo base_url('assets/admin/stylesheets/theme-admin-extension.css');?>">
 
 		<!-- Skin CSS -->
 		<link rel="stylesheet" href="<?php echo base_url('assets/css/skins/default.css');?>">
+                <link rel="stylesheet" href="<?php echo base_url('assets/admin/stylesheets/skins/extension.css');?>">
 
 		<!-- Theme Custom CSS -->
 		<link rel="stylesheet" href="<?php echo base_url('assets/css/custom.css');?>">
 
 		<!-- Head Libs -->
 		<script src="<?php echo base_url('assets/vendor/modernizr/modernizr.js');?>"></script>
+                
 
 		<!--[if IE]>
 			<link rel="stylesheet" href="css/ie.css">
@@ -65,22 +70,13 @@
 					<nav>
 						<ul class="nav nav-pills nav-top">
 							<?php if (isset($userdata['name'])): ?>
-								<li>
-									<?php echo anchor('private/profile','<i class="fa fa-user fa-lg"></i>'.$userdata['rank_short'].' '.$userdata['name'],'title="Pilot Profile"'); ?>
-								</li>
-								<li>
+                                                                <li>
 									<?php echo anchor('http://www.phoenixva.org/forums/index.php?app=members&module=messaging','<i class="fa fa-inbox fa-lg"></i>','title="Messenger"'); ?>
 								</li>
 								<li>
 									<?php echo anchor('http://helpdesk.phoenixva.org/','<i class="fa fa-life-ring fa-lg"></i>','title="Help Desk"'); ?>
 								</li>
-								<li>
-									<?php echo anchor('auth/logout','<i class="fa fa-sign-out fa-lg"></i>','title="Sign Out"'); ?>
-								</li>
 							<?php else: ?>
-								<li>
-									<?php echo anchor('auth/login','<i class="fa fa-sign-in fa-lg"></i>Sign In'); ?>
-								</li>
 								<li>
 									<?php echo anchor('auth/register','<i class="fa fa-angle-right fa-lg"></i>Join PVA'); ?>
 								</li>
@@ -96,52 +92,44 @@
 					<div class="container">
 						<nav class="nav-main mega-menu">
 							<ul class="nav nav-pills nav-main" id="mainMenu">
-								<li><?php echo anchor('','Home'); ?>
-								<?php if (isset($userdata['name'])): ?>
-									<li class="dropdown">
-										<a class="dropdown-toggle" data-toggle="dropdown"
-										   href="#">
-											Public Pages <span class="caret"></span>
-										</a>
-										<ul class="dropdown-menu" role="menu">
-								<?php endif; ?>
-										<li><?php echo anchor('live','Live Ops'); ?>
-										<li><?php echo anchor('pages/faq-public','FAQ\'s'); ?></li>
-										<li class="dropdown">
-											<a class="dropdown-toggle" data-toggle="dropdown"
-										       href="#">
-												About PVA <span class="caret"></span>
-											</a>
-											<ul class="dropdown-menu" role="menu">
-												<li><?php echo anchor('pages/airports','Destinations'); ?></li>
-												<li><?php echo anchor('pages/typeahead','Airlines'); ?></li>
-												<li><?php echo anchor('aircraft','Aircraft Fleet'); ?></li>
-												<li><?php echo anchor('hubs','Crew Centers'); ?></li>
-												<li><?php echo anchor('pages/achievements','Achievements'); ?></li>
-											</ul>
-										</li>
-								<?php if (isset($userdata['name'])): ?>
-										</ul>
-									</li>
-									<li class="dropdown">
-										<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-											Pilot Tools <span class="caret"></span>
-										</a>
-										<ul class="dropdown-menu" role="menu">
-											<li><?php echo anchor('private/profile','Your Profile'); ?>
-											<li><?php echo anchor('private/schedules','Schedule Search'); ?></li>
-											<li><?php echo anchor('private/bids','Bids'); ?></li>
-											<li><?php echo anchor('private/brief','Flight Brief'); ?></li>
-										</ul>
-									</li>
+                                                                <li><?php echo anchor('live','Live Ops'); ?></li>
+                                                                
+                                                                <!-- if not logged in, show about us and public FAQ page on bar -->
+                                                                <?php if ( ! isset($userdata['name'])): ?>
+                                                                    <li><?php echo anchor('pages/about','About Us'); ?></li>
+                                                                    <li><?php echo anchor('pages/faq-public','FAQ\'s'); ?></li>
+                                                                <?php endif; ?>
                                                                         
+									<li class="dropdown">
+										<a class="dropdown-toggle" data-toggle="dropdown">
+											General Info <span class="caret"></span>
+										</a>
+										<ul class="dropdown-menu" role="menu">
+                                                                                <?php if (isset($userdata['name'])): ?>                    
+                                                                                    <li><?php echo anchor('pages/about','About Us'); ?></li>
+                                                                                    <li><?php echo anchor('pages/faq-crew','Crew FAQ\'s'); ?></li>
+                                                                                <?php endif; ?>			
+											
+                                                                                    <li><?php echo anchor('pages/airports','Destinations'); ?></li>
+                                                                                    <li><?php echo anchor('pages/typeahead','Airlines'); ?></li>
+                                                                                    <li><?php echo anchor('aircraft','Aircraft Fleet'); ?></li>
+                                                                                    <li><?php echo anchor('hubs','Crew Centers'); ?></li>
+                                                                                    <li><?php echo anchor('pages/achievements','Achievements'); ?></li>
+										</ul>
+									</li>
+									                                                                        
 									<li><?php echo anchor('http://phoenixva.org/forums/','Forums'); ?></li>
                                                                         
-									<?php if ($userdata['is_admin']): ?>
+									<?php if (isset($userdata['name']) && $userdata['is_admin']): ?>
 										<li><?php echo anchor('admin','Admin'); ?>
 									<?php endif; // Admin ?>
-								<?php endif; // Logged in ?>
+								
+                                                                
+                                                                
                                                                                     
+                                                                                    
+                                                                <!-- PILOT PROFILE DROPDOWN -->
+                                                                
                                                                 <?php if (isset($userdata['name'])): //Logged In?>
                                                                 <li class="dropdown mega-menu-item mega-menu-signin signin logged" id="headerAccount">
 									<a class="dropdown-toggle" href="private/profile">
@@ -152,7 +140,7 @@
 										<li>
 											<div class="mega-menu-content">
 												<div class="row">
-													<div class="col-md-7">
+													<div class="col-md-6">
 														<div class="user-avatar">
 															<div class="img-thumbnail">
 																<img src="img/clients/client-1.jpg" alt="">
@@ -160,7 +148,7 @@
 															<p><strong><?php echo $userdata['name']; ?></strong><span><?php echo $userdata['rank_name']; ?></span></p>
 														</div>
 													</div>
-													<div class="col-md-5">
+													<div class="col-md-6">
 														<ul class="list-account-options">
 															<li>
 																<?php echo anchor('private/profile','Your Profile'); ?>
@@ -171,6 +159,9 @@
                                                                                                                         <li>
 																<?php echo anchor('private/schedules','Schedule Search'); ?>
 															</li>
+                                                                                                                        <li>
+                                                                                                                                <?php echo anchor('private/brief','Flight Brief'); ?>
+                                                                                                                        </li>
 															<li>
 																<?php echo anchor('auth/logout','Sign Out'); ?>
 															</li>

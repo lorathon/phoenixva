@@ -44,8 +44,6 @@ class Profile extends PVA_Controller {
 			$this->load->helper('url');
 			
 			// Populate user info
-			$this->data['meta_title'] = pva_id($user).' '.$user->name;
-			$this->data['title'] = $user->name;
 			$this->data['user_id'] = $user->id;
 			$this->data['name'] = pva_id($user).' '.$user->name;
 			$this->data['birthday'] = $user->birthday;
@@ -179,6 +177,10 @@ class Profile extends PVA_Controller {
 					$this->data['notes'][] = $note;
 				}
 			}
+                        
+                        // Set Page Title and Description
+                        $this->data['meta_title'] = pva_id($user).' '.$user->name;
+			$this->data['title'] = $rank->rank . " " . $user->name;
 		}
 		else 
 		{

@@ -4,9 +4,6 @@ body.boxed.sticky-menu-active #header {
 	top: -64px;
 }
 
-#header .nav-main {
-	width: 70%
-}
 
 /* rev-slider, additional caption colors */
 .tp-caption.modern_med_redbg {
@@ -165,4 +162,49 @@ body {
 }
 .progress-label .max {
 	float: right;
+}
+
+
+
+/* Panel Boxes (from admin) */
+
+.panel-featured-info {
+	border-color: #0088cc;
+}
+
+.panel-featured-info .panel-title {
+	color: #0088cc;
+}
+
+/* Progress bar light style */
+.progress.light {
+	background: #f6f7f8;
+	background: -webkit-linear-gradient(#f6f7f8, #f6f7f8 10%, whitesmoke 11%);
+	background: linear-gradient(#f6f7f8, #f6f7f8 10%, whitesmoke 11%);
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset;
+}
+
+
+.progress .progress-bar-primary {
+	background-color: #cccccc;
+}
+
+.progress .progress-bar-success {
+	background-color: #47a447;
+}
+
+.progress .progress-bar-warning {
+	background-color: #ed9c28;
+}
+
+.progress .progress-bar-danger {
+	background-color: #d2322d;
+}
+
+.progress .progress-bar-info {
+	background-color: #5bc0de;
+}
+
+.progress .progress-bar-dark {
+	background-color: #171717;
 }
