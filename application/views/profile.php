@@ -42,7 +42,7 @@
 							</dd>
 							<?php if ($raw_status < 4): ?>
 								<dt>Valid Thru</dt>
-								<dd>2015-09-22</dd>
+								<dd><?php echo $retire_date; ?></dd>
 							<?php endif; ?>
 						</dl>
 					</div>
@@ -68,7 +68,7 @@
 									{
 										if ($raw_status >= 4)
 										{
-											echo anchor('auth/return/'.$user_id,'Re-activate', button('success'));
+											echo anchor('auth/reactivate/'.$user_id,'Re-activate', button('success'));
 										}
 										else
 										{

@@ -207,17 +207,18 @@ class PVA_Controller extends CI_Controller {
 	 * @param	string Type of email to send. Corresponds to the views/email/type
 	 * files for both -html and -txt.
 	 * @param	string Email address to send to.
+	 * @param   string Subject for the email.
 	 * @param	array Data for the email view to use.
 	 * @return	boolean TRUE if the email was queued for delivery.
 	 */
-	protected function _send_email($type, $email, &$data)
+	protected function _send_email($type, $email, $subject, &$data)
 	{
 		log_message('debug', 'Sending email of type: '.$type);
 		$this->load->library('email');
 		$this->email->from(config_item('webmaster_email'), config_item('site_name'));
 		$this->email->reply_to(config_item('webmaster_email'), config_item('site_name'));
 		$this->email->to($email);
-		$this->email->subject(sprintf($this->lang->line('auth_subject_'.$type), config_item('site_name')));
+		$this->email->subject($subject);
 		$this->email->message($this->load->view('email/'.$type.'-html', $data, TRUE));
 		$this->email->set_alt_message($this->load->view('email/'.$type.'-txt', $data, TRUE));
 		log_message('debug', 'Email object: '.print_r($this->email, TRUE));

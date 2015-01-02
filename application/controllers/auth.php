@@ -144,7 +144,7 @@ class Auth extends PVA_Controller
 	function logout()
 	{
 		$this->tank_auth->logout();
-		$this->_show_message('info', $this->lang->line('auth_message_logged_out'));
+		$this->_flash_message('info','Logged Out',$this->lang->line('auth_message_logged_out'));
 	}
 
 	/**
@@ -162,7 +162,7 @@ class Auth extends PVA_Controller
 			redirect('/auth/send_again/');
 
 		} elseif (!$this->config->item('allow_registration', 'tank_auth')) {	// registration is off
-			$this->_show_message('error', $this->lang->line('auth_message_registration_disabled'));
+			$this->_flash_message('danger', 'Registration Disabled', $this->lang->line('auth_message_registration_disabled'));
 
 		} else {
 			$use_username = $this->config->item('use_username', 'tank_auth');
@@ -249,6 +249,12 @@ class Auth extends PVA_Controller
 				if ($created) 
 				{
 					// User created
+					$note = new Note();
+					$note->entity_type = 'user';
+					$note->entity_id = $user->id;
+					$note->note = '[SYSTEM] - Registered for the site.';
+					$note->private_note = FALSE;
+					$note->save();
 
 					// Set values for the views
 					$this->load->helper('html');
@@ -268,7 +274,7 @@ class Auth extends PVA_Controller
 						// Send activate email
 						$this->data['activation_period'] = $this->config->item('email_activation_expire', 'tank_auth') / 3600;
 
-						$this->_send_email('activate', $user->email, $this->data);
+						$this->_send_email('activate', $user->email, 'Welcome to Phoenix Virtual Airways!', $this->data);
 
 						$this->_render('auth/register_result');
 
@@ -278,10 +284,10 @@ class Auth extends PVA_Controller
 						if ($this->config->item('email_account_details', 'tank_auth')) 
 						{
 							// Send welcome email
-							$this->_send_email('welcome', $user->email, $this->data);
+							$this->_send_email('welcome', $user->email, 'Welcome to Phoenix Virtual Airways!', $this->data);
 						}
 
-						$this->_show_message('info', $this->lang->line('auth_message_registration_completed_2').' '.anchor('/auth/login/', 'Login'));
+						$this->_flash_message('info', 'Welcome', $this->lang->line('auth_message_registration_completed_2').' '.anchor('/auth/login/', 'Login'));
 					}
 				} 
 				else 
@@ -339,9 +345,9 @@ class Auth extends PVA_Controller
 					$this->data['site_name']	= $this->config->item('website_name', 'tank_auth');
 					$this->data['activation_period'] = $this->config->item('email_activation_expire', 'tank_auth') / 3600;
 
-					$this->_send_email('activate', $this->data['email'], $this->data);
+					$this->_send_email('activate', $this->data['email'], 'Welcome to Phoenix Virtual Airways!', $this->data);
 
-					$this->_show_message('info', sprintf($this->lang->line('auth_message_activation_email_sent'), $this->data['email']));
+					$this->_flash_message('info', 'Email Sent', sprintf($this->lang->line('auth_message_activation_email_sent'), $this->data['email']));
 
 				} else {
 					$errors = $this->tank_auth->get_error_message();
@@ -371,6 +377,13 @@ class Auth extends PVA_Controller
 			// TODO Notify staff (call osTicket API and create ticket)
 			
 			// success
+			$note = new Note();
+			$note->entity_type = 'user';
+			$note->entity_id = $user->id;
+			$note->note = '[SYSTEM] - User activated.';
+			$note->private_note = FALSE;
+			$note->save();
+			
 			$this->tank_auth->logout();
 			$this->_flash_message('success', 'Activation Successful', $this->lang->line('auth_message_activation_completed'));
 			redirect('auth/login');
@@ -406,7 +419,7 @@ class Auth extends PVA_Controller
 					$this->data['site_name'] = $this->config->item('website_name', 'tank_auth');
 
 					// Send email with password activation link
-					$this->_send_email('forgot_password', $this->data['email'], $this->data);
+					$this->_send_email('forgot_password', $this->data['email'], 'Forgot your password on Phoenix Virtual Airways?', $this->data);
 
 					$this->_show_message('info', $this->lang->line('auth_message_new_password_sent'));
 
@@ -446,7 +459,7 @@ class Auth extends PVA_Controller
 				$this->data['site_name'] = $this->config->item('website_name', 'tank_auth');
 
 				// Send email with new password
-				$this->_send_email('reset_password', $this->data['email'], $this->data);
+				$this->_send_email('reset_password', $this->data['email'], 'Your new password on Phoenix Virtual Airways', $this->data);
 
 				$this->_show_message('success', $this->lang->line('auth_message_new_password_activated').' '.anchor('/auth/login/', 'Login'));
 
@@ -535,7 +548,7 @@ class Auth extends PVA_Controller
 					$this->data['username'] = $user->username;
 					$this->data['email'] = $user->email;
 						
-					$sent = $this->_send_email('reset_password', $user->email, $this->data);
+					$sent = $this->_send_email('reset_password', $user->email, 'Your new password on Phoenix Virtual Airways', $this->data);
 					log_message('debug', 'Email sent to: '.$user->email.', redirecting to profile id: '.$id);
 					redirect('/private/profile/view/'.$id);
 				} 
@@ -578,7 +591,7 @@ class Auth extends PVA_Controller
 					$this->data['site_name'] = $this->config->item('website_name', 'tank_auth');
 
 					// Send email with new email address and its activation link
-					$this->_send_email('change_email', $this->data['new_email'], $this->data);
+					$this->_send_email('change_email', $this->data['new_email'], 'Your new email address on Phoenix Virtual Airways', $this->data);
 
 					$this->_show_message('info', sprintf($this->lang->line('auth_message_new_email_sent'), $this->data['new_email']));
 
@@ -640,6 +653,123 @@ class Auth extends PVA_Controller
 			}
 			$this->load->view('auth/unregister_form', $this->data);
 		}
+	}
+	
+	function loa($id = NULL)
+	{
+		log_message('debug','Processing LOA for user id: '.$id);
+		if (!$this->tank_auth->is_logged_in())
+		{
+			// not logged in or not activated
+			redirect('/auth/login/');
+		
+		}
+	
+		if (is_null($id))
+		{
+			// Default to current user
+			$id = $this->session->userdata('user_id');
+			log_message('debug','Defaulted user id: '.$id);
+		}
+			
+		// Admin processing LOA
+		$admin_change = ($id != $this->session->userdata('user_id'));
+	
+		// Verify admin
+		if ( $admin_change AND ! $this->session->userdata('is_admin'))
+		{
+			// Make a note of unauthorized activity
+			$note = new Note();
+			$note->entity_type = 'user';
+			$note->entity_id = $this->session->userdata('user_id');
+			$note->note = '[WARNING ISSUED] - Non-admin attempted to place another user on LOA.';
+			$note->private_note = TRUE;
+			$note->save();
+	
+			$this->_flash_message('danger','UNAUTHORIZED','You are not authorized to perform this function. A formal warning has been issued and recorded on your permanent record.');
+			redirect('');
+		}
+		
+		$user = new User();
+		$user->id = $id;
+		$user->loa();
+		$user->find();
+		
+		// Make a note in the user's record
+		$note = new Note();
+		$note->entity_type = 'user';
+		$note->entity_id = $id;
+		$note->user = $this->session->userdata('user_id');
+		$note->note = '[SYSTEM] - Pilot placed on Leave of Absence.';
+		$note->private_note = FALSE;
+		$note->save();
+		
+		$this->_flash_message('success', 'LOA Processed', 'The pilot has been placed on LOA.');
+		$this->data['admin'] = $admin_change;
+		$this->data['username'] = $user->username;
+		$this->data['email'] = $user->email;
+		
+		$sent = $this->_send_email('loa_notice', $user->email, 'LOA Processed', $this->data);
+		log_message('debug', 'Email sent to: '.$user->email.', redirecting to profile id: '.$id);
+		redirect('/private/profile/view/'.$id);
+	}
+	
+	function reactivate($id = NULL)
+	{
+		log_message('debug','Processing Re-activation for user id: '.$id);
+		if (!$this->tank_auth->is_logged_in())
+		{
+			// not logged in or not activated
+			redirect('/auth/login/');
+		}
+	
+		if (is_null($id))
+		{
+			// Default to current user
+			$id = $this->session->userdata('user_id');
+			log_message('debug','Defaulted user id: '.$id);
+		}
+			
+		// Admin processing LOA
+		$admin_change = ($id != $this->session->userdata('user_id'));
+	
+		// Verify admin
+		if ( $admin_change AND ! $this->session->userdata('is_admin'))
+		{
+			// Make a note of unauthorized activity
+			$note = new Note();
+			$note->entity_type = 'user';
+			$note->entity_id = $this->session->userdata('user_id');
+			$note->note = '[WARNING ISSUED] - Non-admin attempted to re-activate another user.';
+			$note->private_note = TRUE;
+			$note->save();
+	
+			$this->_flash_message('danger','UNAUTHORIZED','You are not authorized to perform this function. A formal warning has been issued and recorded on your permanent record.');
+			redirect('');
+		}
+	
+		$user = new User();
+		$user->id = $id;
+		$user->make_active();
+		$user->find();
+	
+		// Make a note in the user's record
+		$note = new Note();
+		$note->entity_type = 'user';
+		$note->entity_id = $id;
+		$note->user = $this->session->userdata('user_id');
+		$note->note = '[SYSTEM] - Pilot re-activated.';
+		$note->private_note = FALSE;
+		$note->save();
+	
+		$this->_flash_message('success', 'Re-activated', 'The pilot has been re-activated.');
+		$this->data['admin'] = $admin_change;
+		$this->data['username'] = $user->username;
+		$this->data['email'] = $user->email;
+	
+		$sent = $this->_send_email('reactivated', $user->email, 'Reactivated', $this->data);
+		log_message('debug', 'Email sent to: '.$user->email.', redirecting to profile id: '.$id);
+		redirect('/private/profile/view/'.$id);
 	}
 
 	/**
