@@ -699,7 +699,7 @@ class Auth extends PVA_Controller
 		$note = new Note();
 		$note->entity_type = 'user';
 		$note->entity_id = $id;
-		$note->user = $this->session->userdata('user_id');
+		$note->user_id = $this->session->userdata('user_id');
 		$note->note = '[SYSTEM] - Pilot placed on Leave of Absence.';
 		$note->private_note = FALSE;
 		$note->save();
@@ -757,7 +757,7 @@ class Auth extends PVA_Controller
 		$note = new Note();
 		$note->entity_type = 'user';
 		$note->entity_id = $id;
-		$note->user = $this->session->userdata('user_id');
+		$note->user_id = $this->session->userdata('user_id');
 		$note->note = '[SYSTEM] - Pilot re-activated.';
 		$note->private_note = FALSE;
 		$note->save();

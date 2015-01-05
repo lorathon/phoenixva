@@ -19,7 +19,7 @@ class Note extends PVA_Model {
 	 * 
 	 * @var number
 	 */
-	public $user;
+	public $user_id;
 	
 	/**
 	 * The entity this note applies to.
@@ -153,7 +153,7 @@ class Note extends PVA_Model {
 	{
 		if (is_null($this->_user_object))
 		{
-			$this->_user_object = new User($this->user);
+			$this->_user_object = new User($this->user_id);
 		}
 		return $this->_user_object;
 	}
@@ -169,7 +169,7 @@ class Note extends PVA_Model {
 	function save()
 	{
 		// Required info
-		if (is_null($this->user) OR is_null($this->note))
+		if (is_null($this->user_id) OR is_null($this->note))
 		{
 			return FALSE;
 		}
@@ -180,12 +180,12 @@ class Note extends PVA_Model {
 		// Timestamp
 		(is_null($this->date)) ? $obj->modified = date('Y-m-d H:i:s') : $obj->modified = $this->date;
 		
-		$obj->user_id = $this->user;
+		$obj->user_id = $this->user_id;
 		$obj->note = $this->note;
 		
 		// Set defaults as necessary
 		(is_null($this->entity_type)) ? $obj->table_name = 'users' : $obj->table_name = $this->entity_type;
-		(is_null($this->entity_id)) ? $obj->table_entry = $this->user : $obj->table_entry = $this->entity_id;
+		(is_null($this->entity_id)) ? $obj->table_entry = $this->user_id : $obj->table_entry = $this->entity_id;
 		($this->private_note) ? $obj->staff = 1 : $obj->staff = 0;
 		
 		// Insert note
