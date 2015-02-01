@@ -8,12 +8,17 @@
 <td width="5%"></td>
 <td align="left" width="95%" style="font: 13px/18px Arial, Helvetica, sans-serif;">
 <h2 style="font: normal 20px/23px Arial, Helvetica, sans-serif; margin: 0; padding: 0 0 18px; color: black;">Your new password on <?php echo $site_name; ?></h2>
-You have changed your password.<br />
-Please, keep it in your records so you don't forget it.<br />
+Your password has been changed. If you did not change your password or request
+that your password be changed, please contact us immediately.<br />
 <br />
-<?php if (strlen($username) > 0) { ?>Your username: <?php echo $username; ?><br /><?php } ?>
+<?php if (strlen($username) > 0): ?>
+Your username: <?php echo $username; ?><br />
+<?php endif; ?>
 Your email address: <?php echo $email; ?><br />
-<?php /* Your new password: <?php echo $new_password; ?><br /> */ ?>
+<?php if ($admin): ?>
+Your new password: <?php echo $new_password; ?><br />
+Please log in and change this password right away.
+<?php endif; ?>
 <br />
 <br />
 Thank you,<br />

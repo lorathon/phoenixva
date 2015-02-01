@@ -281,7 +281,7 @@ class User extends PVA_Model {
 			
 			foreach ($query->result() as $row)
 			{
-				$note->user = $row->adminid;
+				$note->user_id = $row->adminid;
 				$note->note = $row->comment;
 				$note->date = $row->date;
 				$note->private_note = $row->staff;
@@ -359,6 +359,7 @@ class User extends PVA_Model {
 		// Massage data
 		$this->email = strtolower($this->email);
 		$this->name = $this->_set_name($this->name);
+		$this->retire_date = $this->_set_retirement('+14 days');
 		
 		// Prep the data
 		$user_parms = $this->_prep_data();
@@ -457,6 +458,7 @@ class User extends PVA_Model {
 				{
 					$this->status = 1;
 				}
+				$this->_set_retirement();
 				$this->save();
 
 				// TODO Create user in other systems
@@ -476,8 +478,9 @@ class User extends PVA_Model {
 	function make_active()
 	{
 		if (is_null($this->id)) return FALSE;
-		
+		$this->find();
 		$this->status = 3;
+		$this->_set_retirement();
 		$this->save();
 	}
 	
@@ -584,6 +587,7 @@ class User extends PVA_Model {
 		if (is_null($this->id)) return FALSE;
 		
 		$this->status = 5;
+		$this->retire_date = date('Y-m-d H:i:s');
 		$this->save();
 	}
 	
@@ -611,14 +615,19 @@ class User extends PVA_Model {
 	 * @param string $old_pass
 	 * @return boolean FALSE if there was an error changing the password.
 	 */
-	function change_password($old_pass)
+	function change_password($old_pass, $admin = FALSE)
 	{		
-		if ( ! is_null($this->id) && $this->_verify_password($old_pass))
+		if ( ! is_null($this->id) && ! is_null($this->password))
 		{
-			$this->_hash_password();
-			$this->save();
+			$user = new User($this->id);
+			if ($admin OR $user->_verify_password($old_pass))
+			{
+				$user->password = $this->password;
+				$user->_hash_password();
+				$user->save();
 			
-			return TRUE;
+				return TRUE;
+			}
 		}
 		
 		return FALSE;
@@ -749,6 +758,27 @@ class User extends PVA_Model {
 		($this->admin_level >= 60) ? $this->_is_manager = TRUE : $this->_is_manager = FALSE;
 		($this->admin_level >= 70) ? $this->_is_exec = TRUE : $this->_is_exec = FALSE;
 		($this->admin_level >= 90) ? $this->_is_super = TRUE : $this->_is_super = FALSE;
+	}
+	
+	/**
+	 * Sets the user's retirement date
+	 */
+	private function _set_retirement($retirement = '+30 days')
+	{
+		if ($this->is_premium())
+		{
+			$retirement = '+90 days';
+		}
+		if ($this->is_admin())
+		{
+			$retirement = '+180 days';
+		}
+		if ($this->is_executive())
+		{
+			$retirement = '+365 days';
+		}
+		$retire_date = strtotime($retirement);
+		$this->retire_date = date('Y-m-d H:i:s', $retire_date);
 	}
 }
 
