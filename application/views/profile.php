@@ -15,11 +15,9 @@
 		<div class="row">
 			<!-- First column -->
 			<div class="col-sm-6 col-md-4">
-				<div class="panel panel-featured panel-featured-info">
-                                    <header class="panel-heading">
-                                        <h2 class="panel-title">Pilot Information</h2>
-                                    </header>
-                                    <div class="panel-body">
+				<div class="featured-box featured-box-secundary">
+                                    <div class="box-content">
+                                        <h2>Pilot Information</h2>
 						<p class="text-center">
 							<img src="<?php echo $avatar; ?>" class="avatar" />
 						</p>
@@ -45,11 +43,10 @@
 							</dd>
 							<?php if ($raw_status < 4): ?>
 								<dt>Valid Thru</dt>
-								<dd><?php echo $retire_date; ?></dd>
+								<dd>2015-09-22</dd>
 							<?php endif; ?>
 						</dl>
-					</div>
-					<div class="panel-footer">
+                                                <hr />
 						<?php if ( ! $own_profile && $ipbuser_id > 0): ?>
 							<p class="text-center">
 								<?php echo anchor(
@@ -71,7 +68,7 @@
 									{
 										if ($raw_status >= 4)
 										{
-											echo anchor('auth/reactivate/'.$user_id,'Re-activate', button('success'));
+											echo anchor('auth/return/'.$user_id,'Re-activate', button('success'));
 										}
 										else
 										{
@@ -105,17 +102,14 @@
 						<?php endif; ?>
 					</div>
 				</div>
-				<div class="panel panel-featured panel-featured-danger">
-					<header class="panel-heading">
-                                        <h2 class="panel-title">Upcoming Bids</h2>
-                                        </header>
-					<div class="panel-body">
+				<div class="featured-box featured-box-secundary">
+					<div class="box-content">
+                                            <h2>Upcoming Bids</h2>
                                             
 						<?php foreach ($bids as $bid): ?>
 							
 						<?php endforeach; ?>
-					</div>
-					<div class="panel-footer">
+                                            <hr>
 						<p class="text-center">
 						<?php
 							if ($own_profile)
@@ -134,11 +128,9 @@
 			
 			<!-- Second column -->
 			<div class="col-sm-6 col-md-4">
-				<div class="panel panel-featured panel-featured-success">
-					<header class="panel-heading">
-                                        <h2 class="panel-title">Career Details</h2>
-                                        </header>
-					<div class="panel-body">
+				<div class="featured-box featured-box-green">
+					<div class="box-content">
+                                            <h2>Career Details</h2>
 						<dl class="dl-horizontal">
 							<dt>Status</dt>
 							<dd><?php echo $status; ?>
@@ -185,11 +177,9 @@
 						</dl>
 					</div>
 				</div>
-				<div class="panel panel-featured panel-featured-dark">
-					<header class="panel-heading">
-                                        <h2 class="panel-title">Recent Logbook</h2>
-                                        </header>
-					<div class="panel-body">
+				<div class="featured-box featured-box-green">
+					<div class="box-content">
+                                            <h2>Recent Logbook</h2>
 						<?php foreach ($logs as $log): ?>
 						
 						<?php endforeach; ?>
@@ -199,19 +189,16 @@
 			
 			<!-- Third column -->
 			<div class="col-sm-6 col-md-4">
-				<div class="panel panel-featured panel-featured-warning">
-					<header class="panel-heading">
-                                            <h2 class="panel-title">Next Rank</h2>
-                                        </header>
-					
-                                        <div class="panel-body">
+				<div class="featured-box featured-box-red">
+					<div class="box-content">
+                                            <h2>Next Rank</h2>
 						<?php if ($next_rank !== FALSE): ?>
-							<dl class="dl-horizontal">
+                                                        <dl class="dl-horizontal">
 								<dt><?php echo $next_rank; ?></dt>
 								<dd><?php echo $next_rank_hours; ?> hours</dd>
 							</dl>
 							<div class="progress progress-striped light active m-md">
-								<div class="progress-bar progress-bar-warning" 
+								<div class="progress-bar progress-bar-danger" 
 								     style="width: <?php echo $next_rank_percent; ?>%"
                                                                      role="progressbar"
                                                                      aria-valuenow="<?php echo $next_rank_percent; ?>"
@@ -226,12 +213,10 @@
 						<?php endif; ?>
 					</div>
 				</div>
-				<div class="panel panel-featured panel-featured-info">
-					<header class="panel-heading">
-                                        <h2 class="panel-title">Your Stats</h2>
-                                        </header>
-					<div class="panel-body">
-						<h5 class="text-center">Flights</h5>
+				<div class="featured-box featured-box-red">
+					<div class="box-content">
+                                            <h2>Your Stats</h2>
+                                            <h5 class="text-center" style="color: #d2322d">Flights</h5>
 						<div class="progress">
 							<div class="progress-bar progress-bar-warning"
 							     style="width: <?php echo $early_percent; ?>%">
@@ -261,7 +246,7 @@
 							<dd class="text-right"><?php echo $delayed_flights; ?></dd>
 						</dl>
 						<hr />
-						<h5 class="text-center">Landings</h5>
+						<h5 class="text-center" style="color: #d2322d">Landings</h5>
 						<div class="progress">
 							<div class="progress-bar progress-bar-success"
 							     style="width: <?php echo $landing_success; ?>%">
@@ -293,9 +278,9 @@
 		<!-- Notes row -->
 		<div class="row">
 			<div class="col-xs-12">
-				<div class="panel panel-info">
-					<div class="panel-heading">Pilot Notes</div>
-					<div class="panel-body">
+				<div class="featured-box featured-box-orange">
+					<div class="box-content">
+                                            <h2>Pilot Notes</h2>
 						<dl>
 							<?php foreach ($notes as $note): ?>
 								<dt><?php echo $note->name; ?> at <?php echo $note->modified; ?></dt>
