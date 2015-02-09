@@ -15,15 +15,15 @@ class Flightstatsschedules extends PVA_Controller
 	
 	
 	// single airport departures - 24 hours of data
-	public function apt($apt, $day)
+	public function apt($apt, $day, $version)
 	{
 		$year = date('Y');
 		$month = date('n');
 		
-		$this->start($apt, $year, $month, $day, 0);
-		$this->start($apt, $year, $month, $day, 6);
-		$this->start($apt, $year, $month, $day, 12);
-		$this->start($apt, $year, $month, $day, 18);
+		$this->start($apt, $year, $month, $day, 0, $version);
+		$this->start($apt, $year, $month, $day, 6, $version);
+		$this->start($apt, $year, $month, $day, 12, $version);
+		$this->start($apt, $year, $month, $day, 18, $version);
 	}
 
 
@@ -238,7 +238,7 @@ class Flightstatsschedules extends PVA_Controller
 				 * 
 				 * Checks to see if the unique route already exists in the system. Based on:
 				 * 
-				 * Carrier, Flight #, Dep Airport, Arr Airport, Equipment
+				 * Carrier, Flight #, Dep Airport, Arr Airport, Equipment, Schedule Version (added 20150209)
 				 * 
 				 * This will allow for same flight number but using different airframes, to allow
 				 * the most flights as possible without having duplicates. (Operated with 757 on Monday
@@ -261,6 +261,7 @@ class Flightstatsschedules extends PVA_Controller
 			  					  	->where('dep_airport', $depAirport)
                                                                         ->where('arr_airport', $arrAirport)
                                                                         ->where('equip', $equip)
+                                                                        ->where('version', $version)
 			  					  	->get();
 			  	
 			  	$query2 =  $this->db->from('schedules')
@@ -269,6 +270,7 @@ class Flightstatsschedules extends PVA_Controller
 			  						->where('arr_airport', $arrAirport)
 			  						->where('equip', $equip)
 			  						->where('dep_time_local', $depTimeLocal)
+                                                                        ->where('version', $version)
 			  						->get();
 			  	
 			  	
