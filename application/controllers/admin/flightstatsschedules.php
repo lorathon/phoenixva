@@ -29,7 +29,7 @@ class Flightstatsschedules extends PVA_Controller
 
 	
 	// main function to loop through 4 times for 24 hours of departures at designated airport
-	public function start($apt, $year, $month, $day, $hour)
+	public function start($apt, $year, $month, $day, $hour, $version)
 	{
 	
 		$json = file_get_contents("https://api.flightstats.com/flex/flightstatus/rest/v2/json/airport/status/$apt/dep/$year/$month/$day/$hour?appId=f48100ea&appKey=217ebf7797870e89ad05a5a69e4f4bf6&utc=false&numHours=6");
@@ -259,8 +259,8 @@ class Flightstatsschedules extends PVA_Controller
 			  					  	->where('carrier', $carrier)
 			  					  	->where('flight_num', $flightNumber)
 			  					  	->where('dep_airport', $depAirport)
-			  				        ->where('arr_airport', $arrAirport)
-			  			          	->where('equip', $equip)
+                                                                        ->where('arr_airport', $arrAirport)
+                                                                        ->where('equip', $equip)
 			  					  	->get();
 			  	
 			  	$query2 =  $this->db->from('schedules')
@@ -302,8 +302,9 @@ class Flightstatsschedules extends PVA_Controller
 					  	$sched_obj->arr_time_utc     = $arrTimeUtc;
 					  	$sched_obj->arr_terminal     = $arrTerminal;
 					  	$sched_obj->arr_gate         = $arrGate;
-					  	$sched_obj->downline_apt	 = $downlineapt;
-					  	$sched_obj->downline_fltId	 = $downlineflightid;
+					  	$sched_obj->downline_apt     = $downlineapt;
+					  	$sched_obj->downline_fltId   = $downlineflightid;
+                                                $sched_obj->version          = $version;
 					
 					  
 					  	$sched_obj->save();
