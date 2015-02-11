@@ -38,6 +38,15 @@ $config['img_folder_regional'] = 'images/regional';
 $config['img_folder_avatar'] = 'images/avatar';
 $config['img_folder_award'] = 'images/award';
 
+$config['img_folders'] = array (
+    'Aircraft'  => './images/aircraft/',
+    'Airline'   => './images/airline/',
+    'Avatar'    => './images/avatar/',
+    'Award'     => './images/award/',
+    'Badges'    => './images/badge/',
+    'Rank'      => './images/rank/', 
+);
+
 $config['user_status'] = array (
 		'0' => 'Waiting Activation',
     	'1' => 'New Registration',          // Activated, no PIREPs
