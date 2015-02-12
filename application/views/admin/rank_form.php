@@ -62,7 +62,7 @@ $short = array(
 	</div>
     <?php endif; ?>     
     
-    <?php echo form_open_multipart('admin/ranks/new_rank', $form_attributes); ?>
+    <?php echo form_open_multipart('admin/ranks/create_rank', $form_attributes); ?>
     
         <?php echo form_hidden('id', $record->id); ?>
     
