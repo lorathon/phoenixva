@@ -21,7 +21,7 @@ class Ranks extends PVA_Controller
         $this->_render('admin/ranks');
     } 
     
-    public function new_rank($id = NULL)
+    public function create_rank($id = NULL)
     {
         $rank = New Rank($id);
         $rank->find();        

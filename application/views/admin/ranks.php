@@ -19,7 +19,7 @@
         
             <header class="panel-heading">    
                  <h2 class="panel-title">View All Ranks</h2>
-                 <?php echo anchor('admin/ranks/new_rank/','NEW RANK')?>
+                 <?php echo anchor('admin/ranks/create_rank/','NEW RANK')?>
             </header>
             <div class="panel-body">
                 <table>
@@ -49,7 +49,7 @@
                         ?>
                         
                         <td><?php echo img($image_properties)?></td>
-                        <td><?php echo anchor('admin/ranks/new_rank/'.$rank->id,'EDIT')?></td>
+                        <td><?php echo anchor('admin/ranks/create_rank/'.$rank->id,'EDIT')?></td>
                         <td>DELETE</td>
                     </tr>
                     <?php endforeach; ?>
