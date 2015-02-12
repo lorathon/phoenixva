@@ -145,7 +145,7 @@
 												<?php echo anchor('admin/users/inactive','Inactive Pilots'); ?>
 											</li>
                                                                                         <li>
-												<?php echo anchor('admin/users/ranks','Pilot Ranks'); ?>
+												<?php echo anchor('admin/ranks','Pilot Ranks'); ?>
 											</li>
 										</ul>
 									</li>
