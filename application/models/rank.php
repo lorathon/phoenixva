@@ -16,6 +16,26 @@ class Rank extends PVA_Model {
 		// Set default order
 		$this->_order_by = 'min_hours asc';
 	}
+        
+        /**
+         * Override
+         * Overrides default find so that NULL 
+         * can be returned.
+         * 
+         * @return boolean|Rank object
+         */
+        public function find()
+        {
+            if (is_null($this->id))
+            {
+                return NULL;
+            }
+            else
+            {
+                return parent::find($this->id);
+            }
+
+        }
 	
 	/**
 	 * Finds the next rank.

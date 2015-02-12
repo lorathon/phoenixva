@@ -1,21 +1,64 @@
-<html>
-<head>
-<title>Upload Form</title>
-</head>
-<body>
+<?php
+$form_attributes = array(
+    'class' => 'form-horizontal',
+    'role'  => 'form',
+);
 
-<?php echo $errors;?>
+$label_attributes = array(
+    'class' => 'col-sm-1 control-label',
+); 
 
-<?php echo form_open_multipart('admin/upload/do_upload');?>
+$field_class = 'form-control';
 
-<input type="file" name="userfile" size="20" />
+$file_name = array(
+    'name'	    => 'file_name',
+    'id'	    => 'file_name',
+    'value'	    => set_value('file_name'),
+    //'maxlength'     => 100,
+    'size'	    => 30,
+    'class'         => $field_class,
+);
 
-<br /><br />
+$upload_path = array(
+    'name'  => 'upload_path',
+    'id'    => 'upload_path',
+    'value' => set_value('upload_path'),
+    'class' => $field_class,
+);
+?>
 
-<input type="submit" value="upload" />
+<div class="container">
+    
+    <?php if ($errors):?>
+        <div class="alert alert-danger">            
+            <p><?php echo $errors; ?></p>
+	</div>
+    <?php endif; ?> 
+    
+    <?php echo form_open_multipart('admin/upload/do_upload', $form_attributes); ?>
+    
+        <div class="form-group">
+            <?php echo form_label('File Name', $file_name['id'], $label_attributes); ?>
+            <div class="col-sm-2"><?php echo form_input($file_name); ?></div>
+	</div>
+    
+        <div class="form-group">
+            <?php echo form_label('Upload Path', $upload_path['id'], $label_attributes); ?>
+            <div class="col-sm-2">
+		<?php echo form_dropdown('upload_path',$paths,set_value('upload_path'),"class='{$field_class}'"); ?>
+            </div>
+	</div>
+    
+        <div class="form-group">	
+            <div class="col-sm-2"><input type="file" name="userfile" size="60" /></div>        
+        </div>
+    
+        <div class="form-group">
+            <div class="col-sm-3">
+                <?php echo form_submit('upload', 'Submit', 'class = "btn btn-primary btn-block"'); ?>
+            </div>
+        </div>
 
-</form>
-
-</body>
-</html>
+    <?php echo form_close(); ?>
+</div>
 

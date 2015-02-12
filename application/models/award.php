@@ -40,9 +40,7 @@ class Award extends PVA_Model {
 	 * 
 	 * @var url
 	 */
-	public $award_image     = NULL;
-
-	
+	public $award_image     = NULL;	
 	
 	
 	function __construct()

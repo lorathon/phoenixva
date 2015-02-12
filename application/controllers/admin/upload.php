@@ -97,8 +97,24 @@ class Upload extends PVA_Controller {
 	public function index()
 	{             
                 $this->data['errors'] = NULL;
+                //$this->data['paths'] = config_item('img_folders');
+                $this->get_paths();
+                $this->data['title'] = 'Join Phoenix Virtual Airways';
                 $this->_render('admin/upload_form');
 	}
+        
+        public function get_paths()
+        {
+            $paths = config_item('img_folders');
+            if ($paths)
+            {
+		$this->data['paths'][''] = 'Select one:';
+		foreach ($paths as $k => $v)
+		{
+                    $this->data['paths'][$v] = $k;
+                }
+            }
+        }
 
 	function do_upload()
 	{
@@ -112,16 +128,20 @@ class Upload extends PVA_Controller {
                 $config['max_filename']     = $this->max_filename;
                 $config['encrypt_name']     = $this->encrypt_name;
                 $config['remove_spaces']    = $this->remove_spaces;
+                
+                if($this->input->post('upload_path')) $config['upload_path'] = $this->input->post('upload_path');
+                if($this->input->post('file_name') != NULL) $config['file_name'] = $this->input->post('file_name');
 
-		$this->load->library('upload', $config);
+		$this->load->library('upload', $config);  
 
 		if ( ! $this->upload->do_upload())
-		{			
+		{	                    
                         $this->data['errors'] = $this->upload->display_errors();
+                        $this->get_paths();
 			$this->_render('admin/upload_form');
 		}
 		else
-		{
+		{                    
 			$this->data['upload_data'] = $this->upload->data();
                         $this->data['errors'] = NULL;
                         $this->_render('admin/upload_success');
