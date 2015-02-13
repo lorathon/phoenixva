@@ -4,58 +4,66 @@
 
 <!-- start: page -->
 <div class="row">
+    <div class="col-md-6">
 
-<div class="col-md-12">
-    
-    <?php if($alert) : ?>
-        <div class="alert alert-<?php echo $alert_type?>">            
-            <p><?php echo $alert_message?></p>
-        </div>
-    <?php endif; ?>
-    
-    <section class="panel panel-featured panel-featured-primary">
-        
-            
-        
-            <header class="panel-heading">    
-                 <h2 class="panel-title">View All Ranks</h2>
-                 <?php echo anchor('admin/ranks/create_rank/','NEW RANK')?>
+        <?php if ($alert) : ?>
+            <div class="alert alert-<?php echo $alert_type ?>">            
+                <p><?php echo $alert_message ?></p>
+            </div>
+        <?php endif; ?>
+
+        <section class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions">
+                    <a href="<?php echo site_url('admin/ranks/create_rank/') ?>" class="fa fa-plus-square"></a>
+                    <a href="#" class="fa fa-caret-down"></a>
+                    <a href="#" class="fa fa-times"></a>
+                </div>
+
+                <h2 class="panel-title">View All Ranks</h2>
             </header>
             <div class="panel-body">
-                <table>
-                    <tr>
-                        <th>ID</th>
-                        <th>Rank</th>
-                        <th>Pay Rate</th>
-                        <th>Min Hours</th>
-                        <th>Image</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
-                    </tr>
-                    <?php foreach($ranks as $rank): ?>
-                    <tr>
-                        <td><?php echo $rank->id?></td>
-                        <td><?php echo $rank->rank?></td>
-                        <td><?php echo $rank->pay_rate?></td>
-                        <td><?php echo $rank->min_hours?></td>
-                        
-                        <?php
-                            $image_properties = array(
-                                'src' => $paths['Rank'].$rank->rank_image,
-                                //'class' => 'post_images',
-                                'width' => '100',
-                                //'height' => '200',
-                            );
-                        ?>
-                        
-                        <td><?php echo img($image_properties)?></td>
-                        <td><?php echo anchor('admin/ranks/create_rank/'.$rank->id,'EDIT')?></td>
-                        <td>DELETE</td>
-                    </tr>
-                    <?php endforeach; ?>
-                </table>               
-                
+                <div class="table-responsive">
+                    <table class="table mb-none">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Rank</th>
+                                <th>Pay Rate</th>
+                                <th>Min Hours</th>
+                                <th>Image</th>
+                                <th>Options</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($ranks as $rank): ?>
+                                <tr>
+                                    <td><?php echo $rank->id ?></td>
+                                    <td><?php echo $rank->rank ?></td>
+                                    <td><?php echo $rank->pay_rate ?></td>
+                                    <td><?php echo $rank->min_hours ?></td>
+
+                                    <?php
+                                    $image_properties = array(
+                                        'src' => $paths['Rank'] . $rank->rank_image,
+                                        //'class' => 'post_images',
+                                        'width' => '100',
+                                        //'height' => '200',
+                                    );
+                                    ?>
+
+                                    <td><?php echo img($image_properties) ?></td>                                    
+                                    <td align="center">
+                                        <a href="<?php echo site_url('admin/ranks/create_rank/' . $rank->id) ?>" class="fa fa-pencil"></a>
+                                        <a href="#" class="fa fa-trash-o"></a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+
+                        </tbody>
+                    </table>
+                </div>
             </div>
-    </section>
-</div>
+        </section>
+    </div>
 </div>
