@@ -1,5 +1,13 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
+/**
+ * Rank model
+ * 
+ * Provides all business logic for ranks. 
+ * 
+ * @author 
+ *
+ */
 class Rank extends PVA_Model {
 	
 	// Rank properties
@@ -24,7 +32,7 @@ class Rank extends PVA_Model {
          * 
          * @return boolean|Rank object
          */
-        public function find()
+        /*public function find()
         {
             if (is_null($this->id))
             {
@@ -35,7 +43,7 @@ class Rank extends PVA_Model {
                 return parent::find($this->id);
             }
 
-        }
+        }*/
 	
 	/**
 	 * Finds the next rank.

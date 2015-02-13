@@ -43,9 +43,29 @@ class Award extends PVA_Model {
 	public $award_image     = NULL;	
 	
 	
-	function __construct()
+	function __construct($id = NULL)
 	{
-		parent::__construct();
+		parent::__construct($id);
 	}
 	
+                /**
+         * Override
+         * Overrides default find so that NULL 
+         * can be returned.
+         * 
+         * @return boolean|Rank object
+         */
+        /*public function find()
+        {
+            if (is_null($this->id))
+            {
+                return NULL;
+            }
+            else
+            {
+                return parent::find($this->id);
+            }
+
+        }*/
+        
 }

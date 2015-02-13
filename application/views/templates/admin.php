@@ -147,6 +147,9 @@
                                                                                         <li>
 												<?php echo anchor('admin/ranks','Pilot Ranks'); ?>
 											</li>
+                                                                                        <li>
+												<?php echo anchor('admin/awards','Pilot Awards'); ?>
+											</li>
 										</ul>
 									</li>
                                                                         

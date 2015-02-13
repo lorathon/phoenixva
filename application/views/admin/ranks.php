@@ -41,7 +41,7 @@
                         
                         <?php
                             $image_properties = array(
-                                'src' => './images/rank/'.$rank->rank_image,
+                                'src' => $paths['Rank'].$rank->rank_image,
                                 //'class' => 'post_images',
                                 'width' => '100',
                                 //'height' => '200',

@@ -46,6 +46,7 @@ class User extends PVA_Model {
 	/* Related objects */
 	protected $_user_profile = NULL;
 	protected $_user_stats   = NULL;
+        protected $_user_awards  = NULL;
 	
 	/* Derived properties */
 	private $_is_premium = NULL;
@@ -61,6 +62,7 @@ class User extends PVA_Model {
 		// Create empty related objects
 		$this->_user_profile = new User_profile();
 		$this->_user_stats   = new User_stats();
+                $this->_user_awards = new User_awards();
 		
 		// Set default order
 		$this->_order_by = 'name asc';
@@ -108,6 +110,30 @@ class User extends PVA_Model {
 			$this->_user_stats->find();
 		}
 		return $this->_user_stats;
+	}
+        
+        /**
+	 * Gets the user stats associated with this user object.
+	 * 
+	 * The user object must be populated separately. Normal usage would be:
+	 * $user = new User();
+	 * $user->id = 123;
+	 * $user->find();
+	 * $user->get_user_awards();
+	 * 
+	 * @return object User_stats object for the populated user
+         * @date 02/13/2015
+         * @author Jeff
+	 */
+	function get_user_awards()
+	{
+		if ( ! is_null($this->id) && is_null($this->_user_awards->user_id))
+		{
+			// Populate user stats object
+			$this->_user_awards->user_id = $this->id;
+			$this->_user_awards->find_all();
+		}
+		return $this->_user_awards;
 	}
 	
 	/**
@@ -880,4 +906,49 @@ class User_stats extends PVA_Model {
 				$this->hours_type_rating,				
 				));
 	}
+}
+
+/**
+ * User_awards object is essentially a sub of the User model.
+ * 
+ * The user awards contains all awards granted to the user.
+ * @date 02/15/2015
+ * @author Jeff
+ *
+ */
+class User_awards extends PVA_Model {
+	
+	/* Default Properties */
+	public $user_id     = NULL;
+	public $award_id    = NULL;
+	public $created     = NULL;
+        
+        protected $_award_object;
+	
+	function __construct($user_id = NULL)
+	{
+		parent::__construct();
+                $this->_table_name = 'user_awards';
+                $this->_order_by = 'created desc';
+		$this->user_id = $user_id;
+	}      
+        
+        function get_award()
+	{
+		if (is_null($this->_award_object))
+		{
+			$this->_award_object = new Award($this->award_id);
+		}
+		return $this->_award_object;
+	}
+        
+        function grant_award()
+        {
+            
+        }
+        
+        function forfeit_award()
+        {
+            
+        }
 }

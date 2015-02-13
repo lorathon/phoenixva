@@ -18,13 +18,18 @@ class Ranks extends PVA_Controller
         $rank = New Rank();
         $ranks = $rank->find_all();
         $this->data['ranks'] = $ranks;
+        $this->data['paths'] = config_item('img_folders');
         $this->_render('admin/ranks');
     } 
     
     public function create_rank($id = NULL)
     {
         $rank = New Rank($id);
-        $rank->find();        
+        
+        if(! is_null($id))
+        {
+            $rank->find();     
+        }
         
         $this->form_validation->set_rules('id', 'ID', '');
         $this->form_validation->set_rules('rank', 'Rank', 'trim|required|xss_clean');
