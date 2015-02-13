@@ -13,7 +13,7 @@
  * where 'view_name' = the view to render. This will automatically render the
  * view within the appropriate template.
  *
- * @author Chuck Topinka
+ * @author Chuck Topinka :)
  *
 */
 class PVA_Controller extends CI_Controller {
