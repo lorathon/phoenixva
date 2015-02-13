@@ -20,7 +20,7 @@ class Migration_Create_awards extends CI_Migration {
         ));
 
         $this->dbforge->add_key('id', TRUE);
-        $this->dbforge->create_table('user_awards');
+        $this->dbforge->create_table('awards');
         
          // User Awards table
         $this->dbforge->add_field(array(
