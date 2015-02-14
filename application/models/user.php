@@ -128,10 +128,11 @@ class User extends PVA_Model {
 	function get_user_awards()
 	{
 		if ( ! is_null($this->id) && is_null($this->_user_awards->user_id))
-		{
-			// Populate user stats object
-			$this->_user_awards->user_id = $this->id;
-			$this->_user_awards->find_all();
+		{          
+                        // Populate User Awrds
+                        // Thank you Chuck for helping me out :)
+                        $awards = new User_awards($this->id);
+                        $this->_user_awards = $awards->find_all();
 		}
 		return $this->_user_awards;
 	}
@@ -923,7 +924,7 @@ class User_awards extends PVA_Model {
 	public $award_id    = NULL;
 	public $created     = NULL;
         
-        protected $_award_object;
+        public $award;
 	
 	function __construct($user_id = NULL)
 	{
@@ -935,11 +936,11 @@ class User_awards extends PVA_Model {
         
         function get_award()
 	{
-		if (is_null($this->_award_object))
+		if (is_null($this->award))
 		{
-			$this->_award_object = new Award($this->award_id);
+			$this->award = new Award($this->award_id);
 		}
-		return $this->_award_object;
+		return $this->award;
 	}
         
         function grant_award()
