@@ -145,6 +145,7 @@ class Auth extends PVA_Controller
 	{
 		$this->tank_auth->logout();
 		$this->_flash_message('info','Logged Out',$this->lang->line('auth_message_logged_out'));
+		redirect();
 	}
 
 	/**
