@@ -136,7 +136,7 @@ class User extends PVA_Model {
 		}
 		return $this->_user_awards;
 	}
-	
+        
 	/**
 	 * Populates user object based on legacy data
 	 * 
@@ -292,6 +292,24 @@ class User extends PVA_Model {
 			$row = $query->row();
 			$this->_user_stats->flights_rejected = $row->flights;
 		}
+                
+                // Get user awards
+		$db_legacy->select('awardid, dateissued')
+		          ->from('phpvms_awardsgranted')
+		          ->where('pilotid', $this->id);
+		
+		$query = $db_legacy->get();
+		
+		if ($query->num_rows() > 0)
+		{
+			foreach ($query->result() as $row)
+			{
+                            $award = new User_award($this->id);
+                            $award->award_id = $row->awardid;
+                            $award->created = $row->dateissued;
+                            $award->save();
+			}
+		}
 		
 		// Get user comments
 		$db_legacy->select('adminid, comment, date, staff')
@@ -315,25 +333,7 @@ class User extends PVA_Model {
 				
 				$note->save();
 			}
-		}
-                
-                // Get user awards
-		$db_legacy->select('awardid, dateissued')
-		          ->from('phpvms_awardsgranted')
-		          ->where('pilotid', $this->id);
-		
-		$query = $db_legacy->get();
-		
-		if ($query->num_rows() > 0)
-		{
-			foreach ($query->result() as $row)
-			{
-                            $award = new User_award($this->id);
-                            $award->award_id = $row->awardid;
-                            $award->created = $row->dateissued;
-                            $award->save();
-			}
-		}
+		}                             
 		
 		// Get IP Board user ID
 		$db_legacy->select('member_id');

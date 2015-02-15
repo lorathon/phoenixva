@@ -96,6 +96,7 @@ class PVA_Model extends CI_Model
     		// Prep the data
     		$parms = $this->_prep_data();
     		
+                
     		if (count($parms) == 0)
     		{
     			// Nothing to find
@@ -156,11 +157,12 @@ class PVA_Model extends CI_Model
     	// Prep the data
     	$parms = $this->_prep_data();
     	
+        /*
     	if (count($parms) == 0)
     	{
     		// Nothing to find
     		return FALSE;
-    	}
+    	}*/
 
     	// Build the query
     	$this->db->select()

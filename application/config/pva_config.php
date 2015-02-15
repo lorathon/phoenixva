@@ -1,25 +1,15 @@
 <?php
-
 $config['site_name'] = 'Phoenix Virtual Airways';
-
 $config['site_description'] = 'Phoenix Virtual Airways is the largest virtual airline.';
-
 $config['webmaster_email']  = 'helpdesk@phoenixva.org';
-
 /* mi = miles | km = kilometers */
 $config['units_distance'] = 'km';
-
 /* lb = pounds | kg = kilograms */
 $config['units_fuel'] = 'lb';
-
 /* lb = pounds | kg = kilograms */
 $config['units_weight'] = 'kg';
-
 /* ft = feet | m = meter */
 $config['units_altitude'] = 'ft';
-
-
-
 /* Create random pricing based on a
  * min and max price range.  Price is based on
  * distance of the schedule.
@@ -27,8 +17,6 @@ $config['units_altitude'] = 'ft';
  * FALSE = Manual entry of price will need to be done
 */
 $config['setting_random_price'] = TRUE;
-
-
 /* Image Folders */
 $config['img_folder_aircraft'] = 'images/aircraft';    
 $config['img_folder_rank'] = 'images/rank';
@@ -37,7 +25,6 @@ $config['img_folder_airline'] = 'images/airline';
 $config['img_folder_regional'] = 'images/regional';
 $config['img_folder_avatar'] = 'images/avatar';
 $config['img_folder_award'] = 'images/award';
-
 $config['img_folders'] = array (
     'Aircraft'  => './images/aircraft/',
     'Airline'   => './images/airline/',
@@ -46,7 +33,6 @@ $config['img_folders'] = array (
     'Badges'    => './images/badge/',
     'Rank'      => './images/rank/', 
 );
-
 $config['user_status'] = array (
 		'0' => 'Waiting Activation',
     	'1' => 'New Registration',          // Activated, no PIREPs
@@ -57,14 +43,12 @@ $config['user_status'] = array (
     	'6' => 'Rejected',
     	'7' => 'Banned',
 );
-
 $config['pirep_status'] = array (
     '0' => 'Unapproved',
     '1' => 'Approved',
     '2' => 'Rejected',
     '3' => 'Holding',
 );
-
 $config['aircraft_cat'] = array(
     '1' => 'A',
     '2' => 'B',
@@ -74,7 +58,6 @@ $config['aircraft_cat'] = array(
     '6' => 'F',
     '7' => 'G'
 );
-
 $config['days_of_week'] = array(
     '0' => 'SUN',
     '1' => 'MON',
@@ -84,12 +67,10 @@ $config['days_of_week'] = array(
     '5' => 'FRI',
     '6' => 'SAT'
 );
-
 $config['flight_type'] = array(
     'P' => 'Passenger',
     'C' => 'Cargo'
 );
-
 $config['countries'] = array(    
     "US" => "United States",
     "GB" => "United Kingdom",
@@ -331,7 +312,6 @@ $config['countries'] = array(
     "ZM" => "Zambia",
     "ZW" => "Zimbabwe"
 );
-
 $config['fuel_discount'] = array(
     "1.0" => "0%",
     ".99" => "1%",
@@ -360,7 +340,6 @@ $config['fuel_discount'] = array(
     ".76" => "24%",
     ".75" => "25%",    
 );
-
 $config['pireps_fees_types'] = array(
     "0"     => "Per Flight",
     "1"     => "Fuel Used",
@@ -369,7 +348,6 @@ $config['pireps_fees_types'] = array(
     "4"     => "Per Cargo Unit",
     "5"     => "Per Ticket Price",
 );
-
 $config['units'] = array(
     "mi"    => "mile",
     "km"    => "kilometer",

@@ -54,8 +54,8 @@
 
                                     <td><?php echo img($image_properties) ?></td>                                    
                                     <td align="center">
-                                        <a href="<?php echo site_url('admin/awards/create_award/' . $award->id) ?>" class="fa fa-pencil"></a>
-                                        <a href="#" class="fa fa-trash-o"></a>
+                                        <?php echo anchor('admin/ranks/create_award/' . $award->id,'<i class="fa fa-pencil"></i> Edit', button('info')); ?>
+                                        <?php echo anchor('admin/ranks/delete_award/' . $award->id,'<i class="fa fa-trash"></i> Delete', button('danger')); ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

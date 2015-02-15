@@ -54,8 +54,8 @@
 
                                     <td><?php echo img($image_properties) ?></td>                                    
                                     <td align="center">
-                                        <a href="<?php echo site_url('admin/ranks/create_rank/' . $rank->id) ?>" class="fa fa-pencil"></a>
-                                        <a href="#" class="fa fa-trash-o"></a>
+                                        <?php echo anchor('admin/ranks/create_rank/' . $rank->id,'<i class="fa fa-pencil"></i> Edit', button('info')); ?>
+                                        <?php echo anchor('admin/ranks/delete_rank/' . $rank->id,'<i class="fa fa-trash"></i> Delete', button('danger')); ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
