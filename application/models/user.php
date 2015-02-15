@@ -62,7 +62,7 @@ class User extends PVA_Model {
 		// Create empty related objects
 		$this->_user_profile = new User_profile();
 		$this->_user_stats   = new User_stats();
-                $this->_user_awards = new User_awards();
+                $this->_user_awards = new User_award();
 		
 		// Set default order
 		$this->_order_by = 'name asc';
@@ -131,7 +131,7 @@ class User extends PVA_Model {
 		{          
                         // Populate User Awrds
                         // Thank you Chuck for helping me out :)
-                        $awards = new User_awards($this->id);
+                        $awards = new User_award($this->id);
                         $this->_user_awards = $awards->find_all();
 		}
 		return $this->_user_awards;
@@ -314,6 +314,24 @@ class User extends PVA_Model {
 				$note->private_note = $row->staff;
 				
 				$note->save();
+			}
+		}
+                
+                // Get user awards
+		$db_legacy->select('awardid, dateissued')
+		          ->from('phpvms_awardsgranted')
+		          ->where('pilotid', $this->id);
+		
+		$query = $db_legacy->get();
+		
+		if ($query->num_rows() > 0)
+		{
+			foreach ($query->result() as $row)
+			{
+                            $award = new User_award($this->id);
+                            $award->award_id = $row->awardid;
+                            $award->created = $row->dateissued;
+                            $award->save();
 			}
 		}
 		
@@ -917,14 +935,12 @@ class User_stats extends PVA_Model {
  * @author Jeff
  *
  */
-class User_awards extends PVA_Model {
+class User_award extends PVA_Model {
 	
 	/* Default Properties */
 	public $user_id     = NULL;
 	public $award_id    = NULL;
 	public $created     = NULL;
-        
-        public $award;
 	
 	function __construct($user_id = NULL)
 	{
@@ -932,16 +948,7 @@ class User_awards extends PVA_Model {
                 $this->_table_name = 'user_awards';
                 $this->_order_by = 'created desc';
 		$this->user_id = $user_id;
-	}      
-        
-        function get_award()
-	{
-		if (is_null($this->award))
-		{
-			$this->award = new Award($this->award_id);
-		}
-		return $this->award;
-	}
+	} 
         
         function grant_award()
         {

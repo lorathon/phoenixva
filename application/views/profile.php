@@ -311,7 +311,7 @@
                                                         
                                                         <?php
                                                             $image_properties = array(
-                                                                'src' => $paths['Award'] . $award->award->award_image,
+                                                                'src' => $paths['Award'] . $award->award_image,
                                                                 //'class' => 'post_images',
                                                                 'width' => '55',
                                                                 //'height' => '200',
@@ -319,8 +319,8 @@
                                                         ?>
                                                         
                                                         <td><?php echo img($image_properties) ?></td>
-                                                        <td><?php echo $award->award->name; ?></td>
-                                                        <td><?php echo $award->award->descrip; ?></td>
+                                                        <td><?php echo $award->name; ?></td>
+                                                        <td><?php echo $award->descrip; ?></td>
 							<td><?php echo $award->created; ?></td>
                                                     </tr>
 							<?php endforeach; ?>
