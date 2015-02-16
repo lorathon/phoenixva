@@ -26,7 +26,7 @@
             </header>
             <div class="panel-body">
                 <div class="table-responsive">
-                    <table class="table mb-none">
+                    <table class="table table-hover mb-none">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -56,8 +56,8 @@
 
                                     <td><?php echo img($image_properties) ?></td>                                    
                                     <td align="center">
-                                        <?php echo anchor('admin/ranks/create_award/' . $award->id,'<i class="fa fa-pencil"></i> Edit', button('info')); ?>
-                                        <?php echo anchor('admin/ranks/delete_award/' . $award->id,'<i class="fa fa-trash"></i> Delete', button('danger')); ?>
+                                        <?php echo anchor('admin/awards/create_award/' . $award->id,'<i class="fa fa-pencil"></i> Edit', button('info')); ?>
+                                        <?php echo anchor('admin/awards/delete_award/' . $award->id,'<i class="fa fa-trash"></i> Delete', button('danger')); ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

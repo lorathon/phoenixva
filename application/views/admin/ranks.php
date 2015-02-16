@@ -26,7 +26,7 @@
             </header>
             <div class="panel-body">
                 <div class="table-responsive">
-                    <table class="table mb-none">
+                    <table class="table table-hover mb-none">
                         <thead>
                             <tr>
                                 <th>ID</th>
