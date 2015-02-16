@@ -4,7 +4,7 @@
 
 <!-- start: page -->
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-12">
 
         <?php if ($alert) : ?>
             <div class="alert alert-<?php echo $alert_type ?>">            
@@ -16,8 +16,10 @@
             <header class="panel-heading">
                 <div class="panel-actions">
                     <a href="<?php echo site_url('admin/ranks/create_rank/') ?>" class="fa fa-plus-square"></a>
+                    <!--
                     <a href="#" class="fa fa-caret-down"></a>
                     <a href="#" class="fa fa-times"></a>
+                    -->
                 </div>
 
                 <h2 class="panel-title">View All Ranks</h2>

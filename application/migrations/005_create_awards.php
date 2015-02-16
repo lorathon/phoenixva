@@ -25,18 +25,24 @@ class Migration_Create_awards extends CI_Migration {
          // User Awards table
         $this->dbforge->add_field(array(
             'id'            => $field_config['id_field'],
-            'user_id'       => $field_config['id_field'],
-            'award_id'      => $field_config['id_field'],
+            'user_id'       => $field_config['is_field_no_ai'],
+            'award_id'      => $field_config['id_field_no_ai'],
             'created'       => $field_config['timestamp_field'],
         ));
 
         $this->dbforge->add_key('id', TRUE);
         $this->dbforge->create_table('user_awards');
+        
+        // Update User_aircraft
+        $this->dbforge->add_column('user_aircraft', array(
+            'total_flights' =>$field_config['counter_field'],
+        ));
     }
 
     public function down()
     {
         $this->dbforge->drop_table('awards');
         $this->dbforge->drop_table('user_awards');
+        $this->dbforge->drop_column('user_aircraft', 'total_flights');
     }
 }

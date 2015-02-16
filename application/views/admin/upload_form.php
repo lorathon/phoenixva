@@ -50,6 +50,7 @@ $upload_path = array(
 	</div>
     
         <div class="form-group">	
+            <?php echo form_label('Choose File', '', $label_attributes); ?>
             <div class="col-sm-2"><input type="file" name="userfile" size="60" /></div>        
         </div>
     

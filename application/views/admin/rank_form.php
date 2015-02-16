@@ -1,11 +1,11 @@
 <?php
 $form_attributes = array(
-    'class' => 'form-horizontal',
+    'class' => 'form-horizontal form-bordered',
     'role'  => 'form',
 );
 
 $label_attributes = array(
-    'class' => 'col-sm-1 control-label',
+    'class' => 'col-md-3 control-label',
 ); 
 
 $field_class = 'form-control';
@@ -55,92 +55,67 @@ $short = array(
 ?>
 
 <div class="container">
-    
-    <?php if ($errors):?>
+
+    <?php if ($errors): ?>
         <div class="alert alert-danger">            
             <p><?php echo $errors; ?></p>
-	</div>
-    <?php endif; ?>     
-    
-    <?php echo form_open_multipart('admin/ranks/create_rank', $form_attributes); ?>
-    
-        <?php echo form_hidden('id', $record->id); ?>
-    
-        <div class="form-group">
-            <?php echo form_label('Rank Name', $rank['id'], $label_attributes); ?>
-            <div class="col-sm-2"><?php echo form_input($rank); ?></div>
-	</div>
-    
-        <div class="form-group">
-            <?php echo form_label('Rank Image', $rank_image['id'], $label_attributes); ?>
-            <div class="col-sm-2"><?php echo form_input($rank_image); ?></div>
-	</div>
-    
-        <div class="form-group">
-            <?php echo form_label('Min Hours', $min_hours['id'], $label_attributes); ?>
-            <div class="col-sm-2"><?php echo form_input($min_hours); ?></div>
-	</div>
-    
-        <div class="form-group">
-            <?php echo form_label('Pay Rate', $pay_rate['id'], $label_attributes); ?>
-            <div class="col-sm-2"><?php echo form_input($pay_rate); ?></div>
-	</div>
-    
-        <div class="form-group">
-            <?php echo form_label('Short', $short['id'], $label_attributes); ?>
-            <div class="col-sm-2"><?php echo form_input($short); ?></div>
-	</div>        
-    
-        <div class="form-group">
-            <div class="col-sm-3">
-                <?php echo form_submit('save', 'Save / Edit', 'class = "btn btn-primary btn-block"'); ?>
-            </div>
         </div>
+    <?php endif; ?>    
+    <div class="row">
+        <div class="col-md-4">
+            <section class="panel">
+                <header class="panel-heading">
+                    <!--
+                    <div class="panel-actions">
+                        <a href="#" class="fa fa-caret-down"></a>
+                        <a href="#" class="fa fa-times"></a>
+                    </div>
+                    -->
 
-    <?php echo form_close(); ?>
+                    <h2 class="panel-title">Rank Form</h2>
+                </header>
+                <div class="panel-body">
+
+                    <?php echo form_open_multipart('admin/ranks/create_rank', $form_attributes); ?>
+
+                    <?php echo form_hidden('id', $record->id); ?>
+
+                    <div class="form-group">
+                        <?php echo form_label('Rank Name', $rank['id'], $label_attributes); ?>
+                        <div class="col-md-6"><?php echo form_input($rank); ?></div>
+                    </div>
+
+                    <div class="form-group">
+                        <?php echo form_label('Rank Image', $rank_image['id'], $label_attributes); ?>
+                        <div class="col-md-6"><?php echo form_input($rank_image); ?></div>
+                    </div>
+
+                    <div class="form-group">
+                        <?php echo form_label('Min Hours', $min_hours['id'], $label_attributes); ?>
+                        <div class="col-md-6"><?php echo form_input($min_hours); ?></div>
+                    </div>
+
+                    <div class="form-group">
+                        <?php echo form_label('Pay Rate', $pay_rate['id'], $label_attributes); ?>
+                        <div class="col-md-6"><?php echo form_input($pay_rate); ?></div>
+                    </div>
+
+                    <div class="form-group">
+                        <?php echo form_label('Short', $short['id'], $label_attributes); ?>
+                        <div class="col-md-6"><?php echo form_input($short); ?></div>
+                    </div>        
+
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <?php echo form_submit('save', 'Save / Edit', 'class = "btn btn-primary btn-block"'); ?>
+                        </div>
+                    </div>
+
+                    <?php echo form_close(); ?>
+                </div>
+            </section>
+        </div>
+    </div>
 </div>
 
-<div id="modalForm" class="modal-block modal-block-primary mfp-hide">
-    <section class="panel">
-        <header class="panel-heading">
-            <h2 class="panel-title">Registration Form</h2>
-        </header>
-        <div class="panel-body">
-            <form id="demo-form" class="form-horizontal mb-lg" novalidate="novalidate">
-                <div class="form-group mt-lg">
-                    <label class="col-sm-3 control-label">Name</label>
-                    <div class="col-sm-9">
-                        <input type="text" name="name" class="form-control" placeholder="Type your name..." required/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">Email</label>
-                    <div class="col-sm-9">
-                        <input type="email" name="email" class="form-control" placeholder="Type your email..." required/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">URL</label>
-                    <div class="col-sm-9">
-                        <input type="url" name="url" class="form-control" placeholder="Type an URL..." />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">Comment</label>
-                    <div class="col-sm-9">
-                        <textarea rows="5" class="form-control" placeholder="Type your comment..." required></textarea>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <footer class="panel-footer">
-            <div class="row">
-                <div class="col-md-12 text-right">
-                    <button class="btn btn-primary modal-confirm">Submit</button>
-                    <button class="btn btn-default modal-dismiss">Cancel</button>
-                </div>
-            </div>
-        </footer>
-    </section>
-</div>
 
