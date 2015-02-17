@@ -8,13 +8,6 @@ $config['id_field'] = array(
 		'auto_increment' => TRUE,
 );
 
-/* Definition for id (int) fields. No Auto Increment */
-$config['id_field_no_ai'] = array(
-		'type'           => 'INT',
-		'constraint'     => 10,
-		'unsigned'       => TRUE,
-);
-
 /* Definition for foreign key fields */
 $config['fk_field'] = array(
 		'type'           => 'INT',

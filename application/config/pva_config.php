@@ -17,14 +17,8 @@ $config['units_altitude'] = 'ft';
  * FALSE = Manual entry of price will need to be done
 */
 $config['setting_random_price'] = TRUE;
+
 /* Image Folders */
-$config['img_folder_aircraft'] = 'images/aircraft';    
-$config['img_folder_rank'] = 'images/rank';
-$config['img_folder_icons'] = 'images/icons';
-$config['img_folder_airline'] = 'images/airline';
-$config['img_folder_regional'] = 'images/regional';
-$config['img_folder_avatar'] = 'images/avatar';
-$config['img_folder_award'] = 'images/award';
 $config['img_folders'] = array (
     'Aircraft'  => './images/aircraft/',
     'Airline'   => './images/airline/',
@@ -33,6 +27,7 @@ $config['img_folders'] = array (
     'Badges'    => './images/badge/',
     'Rank'      => './images/rank/', 
 );
+
 $config['user_status'] = array (
 		'0' => 'Waiting Activation',
     	'1' => 'New Registration',          // Activated, no PIREPs

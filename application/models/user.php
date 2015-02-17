@@ -103,7 +103,7 @@ class User extends PVA_Model {
 	 */
 	function get_user_stats()
 	{
-		if ( ! is_null($this->id) && is_null($this->_user_stats->user_id))
+		if ( ! is_null($this->id))
 		{
 			// Populate user stats object
 			$this->_user_stats->user_id = $this->id;
@@ -113,7 +113,7 @@ class User extends PVA_Model {
 	}
         
         /**
-	 * Gets the user stats associated with this user object.
+	 * Gets the user awards associated with this user object.
 	 * 
 	 * The user object must be populated separately. Normal usage would be:
 	 * $user = new User();
@@ -121,9 +121,7 @@ class User extends PVA_Model {
 	 * $user->find();
 	 * $user->get_user_awards();
 	 * 
-	 * @return object User_stats object for the populated user
-         * @date 02/13/2015
-         * @author Jeff
+	 * @return object User_awards object for the populated user
 	 */
 	function get_user_awards()
 	{

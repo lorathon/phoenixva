@@ -5,12 +5,10 @@
 <!-- start: page -->
 <div class="row">
     <div class="col-md-12">
-
-        <?php if ($alert) : ?>
-            <div class="alert alert-<?php echo $alert_type ?>">            
-                <p><?php echo $alert_message ?></p>
+        
+            <div class="alert alert-<?php echo $msg_type ?>">            
+                <p><?php echo $message ?></p>
             </div>
-        <?php endif; ?>
 
         <section class="panel">
             <header class="panel-heading">

@@ -91,13 +91,7 @@ class Profile extends PVA_Controller {
 			$this->data['landing_danger'] = 0;
 			$this->data['landing_warning'] = 0;
 			$this->data['landing_success'] = 0;
-                                                
-                        /**
-                         * Retrieve user awards for profile
-                         * 
-                         * @date 02/13/2015
-                         * @author Jeff
-                         */
+                                                                        
                         // Populate user awards
                         $this->data['awards'] = array();
 			$user_awards = $user->get_user_awards();

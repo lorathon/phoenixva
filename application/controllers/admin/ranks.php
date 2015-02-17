@@ -6,9 +6,7 @@ class Ranks extends PVA_Controller
     
     public function __construct()
     {
-        parent::__construct();
-        $this->load->model('rank');
-        
+        parent::__construct();        
         $this->load->helper(array('form', 'url', 'html'));
 	$this->load->library('form_validation');        
     }
@@ -26,11 +24,6 @@ class Ranks extends PVA_Controller
     {
         $rank = New Rank($id);
         
-        if(! is_null($id))
-        {
-            $rank->find();     
-        }
-        
         $this->form_validation->set_rules('id', 'ID', '');
         $this->form_validation->set_rules('rank', 'Rank', 'trim|required|xss_clean');
         $this->form_validation->set_rules('rank_image', 'Rank Image', 'trim|required|xss_clean');
@@ -46,7 +39,7 @@ class Ranks extends PVA_Controller
 	}
 	else
 	{
-            $rank->id           = $this->input->post('id');
+            $rank->id           = $this->input->post('id', TRUE);
             $rank->rank         = $this->form_validation->set_value('rank');
             $rank->rank_image   = $this->form_validation->set_value('rank_image');
             $rank->min_hours    = $this->form_validation->set_value('min_hours');
@@ -54,8 +47,7 @@ class Ranks extends PVA_Controller
             $rank->short        = $this->form_validation->set_value('short');
                 
             $rank->save();
-            $this->session->set_flashdata('alert_type', 'success');
-            $this->session->set_flashdata('alert_message', 'Record Saved');
+            $this->_flash_message('success', 'Rank', 'Record Saved');
             redirect('admin/ranks');
 	}        
     }

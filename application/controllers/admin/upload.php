@@ -103,7 +103,7 @@ class Upload extends PVA_Controller {
                 $this->_render('admin/upload_form');
 	}
         
-        public function get_paths()
+        private function get_paths()
         {
             $paths = config_item('img_folders');
             if ($paths)
@@ -118,6 +118,8 @@ class Upload extends PVA_Controller {
 
 	function do_upload()
 	{
+                $this->data['errors'] = array();
+                
 		$config['upload_path']      = $this->upload_path;
 		$config['allowed_types']    = $this->allowed_types;
                 $config['file_name']        = $this->file_name;
@@ -143,7 +145,6 @@ class Upload extends PVA_Controller {
 		else
 		{                    
 			$this->data['upload_data'] = $this->upload->data();
-                        $this->data['errors'] = NULL;
                         $this->_render('admin/upload_success');
 		}
 	}
