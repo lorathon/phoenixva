@@ -5,11 +5,6 @@
 <!-- start: page -->
 <div class="row">
     <div class="col-md-12">
-        
-            <div class="alert alert-<?php echo $msg_type ?>">            
-                <p><?php echo $message ?></p>
-            </div>
-
         <section class="panel">
             <header class="panel-heading">
                 <div class="panel-actions">

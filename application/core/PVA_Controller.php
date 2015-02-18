@@ -108,9 +108,6 @@ class PVA_Controller extends CI_Controller {
 				$this->data['alert'] = FALSE;
 			}
                         
-                        $this->data['msg_type'] = $this->session->flashdata('msg_type');
-                        $this->data['title'] = $this->session->flashdata('title');
-                        $this->data['message'] = $this->session->flashdata('message');
 		}
 
 		if ($access == 'admin')
