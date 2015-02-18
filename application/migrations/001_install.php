@@ -146,7 +146,7 @@ class Migration_Install extends CI_Migration {
 				'user_id'        => $field_config['fk_field'],
 				'airline_id'     => $field_config['fk_field'],
 				'total_hours'    => $field_config['counter_field'],
-                                'total_flights' =>$field_config['counter_field'],
+                                'total_flights'  => $field_config['counter_field'],
 				'total_landings' => $field_config['calculated_field'],
 				'total_gross'    => $field_config['money_field'],
 				'total_expenses' => $field_config['money_field'],

@@ -103,7 +103,7 @@ class User extends PVA_Model {
 	 */
 	function get_user_stats()
 	{
-		if ( ! is_null($this->id))
+		if ( ! is_null($this->id)&& is_null($this->_user_stats->user_id))
 		{
 			// Populate user stats object
 			$this->_user_stats->user_id = $this->id;
@@ -125,7 +125,7 @@ class User extends PVA_Model {
 	 */
 	function get_user_awards()
 	{
-		if ( ! is_null($this->id) && is_null($this->_user_awards->user_id))
+		if ( ! is_null($this->id))
 		{          
                         // Populate User Awrds
                         // Thank you Chuck for helping me out :)
