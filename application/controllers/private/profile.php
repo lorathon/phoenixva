@@ -88,6 +88,9 @@ class Profile extends PVA_Controller {
 			$this->data['landing_danger'] = 0;
 			$this->data['landing_warning'] = 0;
 			$this->data['landing_success'] = 0;
+			
+			//$user_awards = $user->get_user_awards();
+			$this->data['awards'] = $user_awards;
 				
 			if ($user_stats->total_flights() > 0)
 			{

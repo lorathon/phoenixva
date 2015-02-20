@@ -12,7 +12,7 @@
 			</p>
 			<p>Click on a crew center to learn more about it.</p>
 			<?php foreach ($hubs as $hub): ?>
-				<p><?php echo $hub->name; ?></p>
+				<p><?php echo $hub; ?></p>
 			<?php endforeach; ?>
 		</div>
 	</div>
