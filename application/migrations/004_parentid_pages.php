@@ -18,6 +18,6 @@ class Migration_Parentid_pages extends CI_Migration {
 
 	public function down()
 	{
-		$this->dbforge->drop_solumn('pages', 'parent_id');
+		$this->dbforge->drop_column('pages', 'parent_id');
 	}
 }

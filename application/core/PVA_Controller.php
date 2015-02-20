@@ -92,7 +92,7 @@ class PVA_Controller extends CI_Controller {
 			 * OPTIONS:
 			 * $this->session->set_flashdata('success', 'MESSAGE'); Green
 			 * $this->session->set_flashdata('warning', 'MESSAGE'); Amber
-			 * $this->session->set_flashdata('error', 'MESSAGE'); Red
+			 * $this->session->set_flashdata('danger', 'MESSAGE'); Red
 			 * $this->session->set_flashdata('info', 'MESSAGE'); Blue
 			 */
 
@@ -107,6 +107,7 @@ class PVA_Controller extends CI_Controller {
 			{
 				$this->data['alert'] = FALSE;
 			}
+                        
 		}
 
 		if ($access == 'admin')

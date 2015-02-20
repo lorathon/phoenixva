@@ -43,6 +43,9 @@ class Profile extends PVA_Controller {
 			$this->load->helper('html');
 			$this->load->helper('url');
 			
+                        //Load Config
+                        $this->data['paths'] = config_item('img_folders');
+                        
 			// Populate user info
 			$this->data['user_id'] = $user->id;
 			$this->data['name'] = pva_id($user).' '.$user->name;
@@ -88,6 +91,22 @@ class Profile extends PVA_Controller {
 			$this->data['landing_danger'] = 0;
 			$this->data['landing_warning'] = 0;
 			$this->data['landing_success'] = 0;
+                                                                        
+                        // Populate user awards
+                        $this->data['awards'] = array();
+			$user_awards = $user->get_user_awards();
+                        
+                        if ($user_awards)
+			{
+				foreach ($user_awards as $user_award)
+				{
+                                    $award = new Award($user_award->award_id);
+                                    $user_award->award_image = $award->award_image;
+                                    $user_award->name = $award->name;
+                                    $user_award->descrip = $award->descrip;
+                                    $this->data['awards'][] = $user_award;
+				}
+			}
 				
 			if ($user_stats->total_flights() > 0)
 			{

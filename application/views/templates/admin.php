@@ -145,7 +145,10 @@
 												<?php echo anchor('admin/users/inactive','Inactive Pilots'); ?>
 											</li>
                                                                                         <li>
-												<?php echo anchor('admin/users/ranks','Pilot Ranks'); ?>
+												<?php echo anchor('admin/ranks','Pilot Ranks'); ?>
+											</li>
+                                                                                        <li>
+												<?php echo anchor('admin/awards','Pilot Awards'); ?>
 											</li>
 										</ul>
 									</li>
@@ -245,6 +248,23 @@
 				<!-- end: sidebar -->
                                 
                                 <section role="main" class="content-body">
+                                    
+                                    <?php if (isset($this->session) && $this->session->flashdata('title')): ?>
+					<div class="container">
+						<div class="row">
+							<div class="col-md-offset-3 col-md-6">
+								<div class="panel panel-<?php echo $this->session->flashdata('msg_type'); ?>">
+									<div class="panel-heading">
+										<?php echo $this->session->flashdata('title'); ?>
+									</div>
+									<div class="panel-body">
+										<?php echo $this->session->flashdata('message'); ?>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+                                    <?php endif;?>
 
 				<?php echo $view_output; ?>
 

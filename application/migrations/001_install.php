@@ -146,6 +146,7 @@ class Migration_Install extends CI_Migration {
 				'user_id'        => $field_config['fk_field'],
 				'airline_id'     => $field_config['fk_field'],
 				'total_hours'    => $field_config['counter_field'],
+                                'total_flights'  => $field_config['counter_field'],
 				'total_landings' => $field_config['calculated_field'],
 				'total_gross'    => $field_config['money_field'],
 				'total_expenses' => $field_config['money_field'],
@@ -333,7 +334,30 @@ class Migration_Install extends CI_Migration {
 				));
 		$this->dbforge->add_key('id', TRUE);
 		$this->dbforge->create_table('articles');
-	}
+                
+                // Awards table
+                $this->dbforge->add_field(array(
+                                'id'            => $field_config['id_field'],
+                                'type'          => $field_config['status_field'],
+                                'name'          => $field_config['input_field'],
+                                'descrip'       => $field_config['input_field'],
+                                'award_image'   => $field_config['short_input_field'],
+                                ));
+
+                $this->dbforge->add_key('id', TRUE);
+                $this->dbforge->create_table('awards');
+
+                 // User Awards table
+                $this->dbforge->add_field(array(
+                                'id'            => $field_config['id_field'],
+                                'user_id'       => $field_config['fk_field'],
+                                'award_id'      => $field_config['fk_field'],
+                                'created'       => $field_config['timestamp_field'],
+                            ));
+
+                $this->dbforge->add_key('id', TRUE);
+                $this->dbforge->create_table('user_awards');
+        }
 	
 	public function down()
 	{
@@ -348,5 +372,7 @@ class Migration_Install extends CI_Migration {
 		$this->dbforge->drop_table('user_airlines');
 		$this->dbforge->drop_table('user_profiles');
 		$this->dbforge->drop_table('users');
+                $this->dbforge->drop_table('awards');
+                $this->dbforge->drop_table('user_awards');
 	}
 }

@@ -46,6 +46,7 @@ class User extends PVA_Model {
 	/* Related objects */
 	protected $_user_profile = NULL;
 	protected $_user_stats   = NULL;
+        protected $_user_awards  = NULL;
 	
 	/* Derived properties */
 	private $_is_premium = NULL;
@@ -61,6 +62,7 @@ class User extends PVA_Model {
 		// Create empty related objects
 		$this->_user_profile = new User_profile();
 		$this->_user_stats   = new User_stats();
+                $this->_user_awards = new User_award();
 		
 		// Set default order
 		$this->_order_by = 'name asc';
@@ -101,7 +103,7 @@ class User extends PVA_Model {
 	 */
 	function get_user_stats()
 	{
-		if ( ! is_null($this->id) && is_null($this->_user_stats->user_id))
+		if ( ! is_null($this->id)&& is_null($this->_user_stats->user_id))
 		{
 			// Populate user stats object
 			$this->_user_stats->user_id = $this->id;
@@ -109,7 +111,30 @@ class User extends PVA_Model {
 		}
 		return $this->_user_stats;
 	}
-	
+        
+        /**
+	 * Gets the user awards associated with this user object.
+	 * 
+	 * The user object must be populated separately. Normal usage would be:
+	 * $user = new User();
+	 * $user->id = 123;
+	 * $user->find();
+	 * $user->get_user_awards();
+	 * 
+	 * @return object User_awards object for the populated user
+	 */
+	function get_user_awards()
+	{
+		if ( ! is_null($this->id))
+		{          
+                        // Populate User Awrds
+                        // Thank you Chuck for helping me out :)
+                        $awards = new User_award($this->id);
+                        $this->_user_awards = $awards->find_all();
+		}
+		return $this->_user_awards;
+	}
+                
 	/**
 	 * Populates user object based on legacy data
 	 * 
@@ -265,6 +290,24 @@ class User extends PVA_Model {
 			$row = $query->row();
 			$this->_user_stats->flights_rejected = $row->flights;
 		}
+                
+                // Get user awards
+		$db_legacy->select('awardid, dateissued')
+		          ->from('phpvms_awardsgranted')
+		          ->where('pilotid', $this->id);
+		
+		$query = $db_legacy->get();
+		
+		if ($query->num_rows() > 0)
+		{
+			foreach ($query->result() as $row)
+			{
+                            $award = new User_award($this->id);
+                            $award->award_id = $row->awardid;
+                            $award->created = $row->dateissued;
+                            $award->save();
+			}
+		}
 		
 		// Get user comments
 		$db_legacy->select('adminid, comment, date, staff')
@@ -288,7 +331,7 @@ class User extends PVA_Model {
 				
 				$note->save();
 			}
-		}
+		}                             
 		
 		// Get IP Board user ID
 		$db_legacy->select('member_id');
@@ -880,4 +923,89 @@ class User_stats extends PVA_Model {
 				$this->hours_type_rating,				
 				));
 	}
+}
+
+/**
+ * User_awards object is essentially a sub of the User model.
+ * 
+ * The user awards contains all awards granted to the user.
+ * @date 02/15/2015
+ * @author Jeff
+ *
+ */
+class User_award extends PVA_Model {
+	
+	/* Default Properties */
+	public $user_id     = NULL;
+	public $award_id    = NULL;
+	public $created     = NULL;
+	
+	function __construct($user_id = NULL)
+	{
+		parent::__construct();
+                $this->_table_name = 'user_awards';
+                $this->_order_by = 'created desc';
+		$this->user_id = $user_id;
+	} 
+        
+        /*Override save to ensure no double rows (WIP)
+        * See if row exists with user_id and award_id
+        * if it exists return FALSE
+        * if not create new user award row
+        */
+        function save()
+        {            
+            $user_award = new User_award();
+            $user_award->user_id = $this->user_id;
+            $user_award->award_id = $this->award_id;
+            
+            if(! $user_award->find())
+            {
+                parent::save();
+            } 
+        }
+        
+        function grant_award()
+        {
+            
+        }
+        
+        function forfeit_award()
+        {
+            
+        }
+}
+
+/**
+ * User_aircraft object is essentially a sub of the User model.
+ * 
+ * The user aircraft contains all aircraft flown by the user.
+ * @date 02/15/2015
+ * @author Jeff
+ *
+ */
+class User_aircraft extends PVA_Model {
+	
+	/* Default Properties */
+	public $user_id         = NULL;
+	public $aircraft_id     = NULL;
+        public $total_flights   = NULL;
+	public $total_hours     = NULL;
+        public $total_landings  = NULL;
+        public $totsal_gross    = NULL;
+        public $total_expenses  = NULL;
+        public $total_pay       = NULL;
+        public $flights_early   = NULL;
+        public $flights_ontime  = NULL;
+        public $flights_late    = NULL;
+        public $flights_manual  = NULL;
+        public $fuel_used       = NULL;
+	
+	function __construct($user_id = NULL)
+	{
+		parent::__construct();
+                $this->_table_name = 'user_aircraft';
+		$this->user_id = $user_id;
+	} 
+        
 }
