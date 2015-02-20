@@ -91,6 +91,22 @@ class Profile extends PVA_Controller {
 			
 			//$user_awards = $user->get_user_awards();
 			$this->data['awards'] = $user_awards;
+                                                                        
+                        // Populate user awards
+                        $this->data['awards'] = array();
+			$user_awards = $user->get_user_awards();
+                        
+                        if ($user_awards)
+			{
+				foreach ($user_awards as $user_award)
+				{
+                                    $award = new Award($user_award->award_id);
+                                    $user_award->award_image = $award->award_image;
+                                    $user_award->name = $award->name;
+                                    $user_award->descrip = $award->descrip;
+                                    $this->data['awards'][] = $user_award;
+				}
+			}
 				
 			if ($user_stats->total_flights() > 0)
 			{

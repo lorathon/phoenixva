@@ -100,6 +100,7 @@ class PVA_Model extends CI_Model
     		// Prep the data
     		$parms = $this->_prep_data();
     		
+                
     		if (count($parms) == 0)
     		{
     			// Nothing to find
@@ -159,12 +160,6 @@ class PVA_Model extends CI_Model
     	
     	// Prep the data
     	$parms = $this->_prep_data();
-    	
-    	if (count($parms) == 0)
-    	{
-    		// Nothing to find
-    		return FALSE;
-    	}
 
     	// Build the query
     	$this->db->select()
@@ -217,9 +212,14 @@ class PVA_Model extends CI_Model
             }
             $this->modified = $now;
         }
-        
+                
+        /*
+         * Addition of the '' check.
+         * 02/13/2015
+         * @ Jeff
+         */
         // Insert or update
-        if (is_null($this->id))
+        if (is_null($this->id) || ($this->id == ''))
         {
         	// Insert if id is NOT passed
             $this->db->insert($this->_table_name,$this);
