@@ -246,6 +246,7 @@ class Migration_Install extends CI_Migration {
 				'arr_gate'        => $field_config['short_input_field'],
 				'downline_apt'	  => $field_config['icao_field'],
 				'downline_fltId'  => $field_config['short_input_field'],
+                                'version'         => $field_config['icao_field'],
 				'source_date'	  => $field_config['timestamp_field'],	
 				));
 		$this->dbforge->add_key('id', TRUE);
