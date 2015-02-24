@@ -36,12 +36,13 @@ $description = array(
     'id'	    => 'description',
     'value'	    => set_value('description', $record->description),
     'class'         => $field_class,
+    'rows'          => 4,
 );
 
-$type = array(
-    'name'	    => 'type',
-    'id'	    => 'type',
-    'value'	    => set_value('type', $record->type),
+$award_type_id = array(
+    'name'	    => 'award_type_id',
+    'id'	    => 'award_type_id',
+    'value'	    => set_value('award_type_id', $record->award_type_id),
     'class'         => $field_class,
 );
 
@@ -85,13 +86,13 @@ $type = array(
 
                     <div class="form-group">
                         <?php echo form_label('Description', $description['id'], $label_attributes); ?>
-                        <div class="col-md-6"><?php echo form_input($description); ?></div>
+                        <div class="col-md-6"><?php echo form_textarea($description); ?></div>
                     </div>
-
+                    
                     <div class="form-group">
-                        <?php echo form_label('Award Type', $type['id'], $label_attributes); ?>
+                        <?php echo form_label('Award Type', $award_type_id['id'], $label_attributes); ?>
                         <div class="col-md-6">
-                            <?php echo form_dropdown('type', $types, set_value('type'), "class='{$field_class}'"); ?>
+                            <?php echo form_dropdown('award_type_id', $award_types, $award_type_id['value'], "class='{$field_class}'"); ?>
                         </div>
                     </div>
 
@@ -107,4 +108,3 @@ $type = array(
         </div>
     </div>
 </div>
-

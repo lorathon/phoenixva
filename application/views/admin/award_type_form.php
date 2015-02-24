@@ -29,23 +29,24 @@ $description = array(
     'id'	    => 'description',
     'value'	    => set_value('description', $record->description),
     'class'         => $field_class,
+    'rows'          => 4,
 );
 
-$type = array(
+$img_folder = array(
     'name'	    => 'img_folder',
     'id'	    => 'img_folder',
-    'value'	    => set_value('img_folder', $record->folder),
+    'value'	    => set_value('img_folder', $record->img_folder),
     'class'         => $field_class,
 );
 
-$type = array(
+$img_width = array(
     'name'	    => 'img_width',
     'id'	    => 'img_width',
     'value'	    => set_value('img_width', $record->img_width),
     'class'         => $field_class,
 );
 
-$type = array(
+$img_height = array(
     'name'	    => 'img_height',
     'id'	    => 'img_height',
     'value'	    => set_value('img_height', $record->img_height),
@@ -69,7 +70,7 @@ $type = array(
                 </header>
                 <div class="panel-body">
 
-                    <?php echo form_open_multipart('admin/awards/create_award_type', $form_attributes); ?>
+                    <?php echo form_open_multipart('admin/award_types/create_award_type', $form_attributes); ?>
 
                     <?php echo form_hidden('id', $record->id); ?>
 
@@ -80,7 +81,7 @@ $type = array(
 
                     <div class="form-group">
                         <?php echo form_label('Description', $description['id'], $label_attributes); ?>
-                        <div class="col-md-6"><?php echo form_input($description); ?></div>
+                        <div class="col-md-6"><?php echo form_textarea($description); ?></div>
                     </div>
                     
                     <div class="form-group">

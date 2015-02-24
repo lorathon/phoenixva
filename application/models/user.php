@@ -302,10 +302,25 @@ class User extends PVA_Model {
 		{
 			foreach ($query->result() as $row)
 			{
+                            /* Change to search by name */
                             $award = new User_award($this->id);
                             $award->award_id = $row->awardid;
                             $award->created = $row->dateissued;
                             $award->save();
+                            
+                            
+                            /* Search for award by name (WIP) */
+                            /*
+                            $award = new Award();
+                            $award->name = $row->name;
+                            $aw = $award->find();
+                            
+                            $user_award = new User_award($this->id);
+                            $user_award->award_id = $aw->id;
+                            $user_award->created = $row->dateissued;
+                            $user_award->save();
+                            */
+                            
 			}
 		}
 		

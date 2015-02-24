@@ -9,18 +9,7 @@
  *
  */
 class Award extends PVA_Model {	
-	       
-        /**
-	 * The type of the award. (from admin_config)
-         * '1'  => 'Manually Granted',
-         * '2'  => 'Flight # Award',
-         * '3'  => 'Flight Hours Award',
-         * '4'  => 'Time in Service Award'
-	 * 
-	 * @var number
-	 */
-	public $type            = NULL;
-        
+	             
         /**
 	 * The type of the award. (from award_types table)
 	 * 
@@ -48,38 +37,17 @@ class Award extends PVA_Model {
 	 * @var url
 	 */
 	public $award_image     = NULL;	
-        
-        
-        protected $_award_types = NULL;
-	
+        	
 	
 	function __construct($id = NULL)
 	{
 		parent::__construct($id);
-                $this->_award_types = new Award_type();
-	}
+	} 
         
-        function get_award_types()
-        {            
-            $this->_award_types->find_all();
-            return $this->_award_types;
+        function get_all()
+        {
+            $this->_limit = 300;
+            return parent::find_all();
         }
-        
 }
 
-class Award_type extends PVA_Model {
-    
-        public $name            = NULL;
-        public $description     = NULL;
-        public $img_folder      = NULL;
-        public $img_width       = NULL;
-        public $img_height      = NULL;
-        public $created         = NULL;
-        public $modified        = NULL;
-        
-        function __construct($id = NULL)
-	{
-		parent::__construct($id);
-                $this->_table_name = 'award_types';
-	} 
-}

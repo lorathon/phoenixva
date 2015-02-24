@@ -36,11 +36,11 @@
                                     <td><?php echo $award->id ?></td>
                                     <td><?php echo $award->name ?></td>
                                     <td><?php echo $award->description ?></td>
-                                    <td><?php echo $types[$award->type] ?></td>
+                                    <td><?php echo $award->type ?></td>
 
                                     <?php
                                     $image_properties = array(
-                                        'src' => $paths['Award'] . $award->award_image,
+                                        'src' => $award->img_folder . $award->award_image,
                                         //'class' => 'post_images',
                                         'width' => '55',
                                             //'height' => '200',

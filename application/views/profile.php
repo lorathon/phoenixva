@@ -296,9 +296,9 @@
                                                         
                                                         <?php
                                                             $image_properties = array(
-                                                                'src' => $paths['Award'] . $award->award_image,
+                                                                'src' => $award->img_folder . $award->award_image,
                                                                 //'class' => 'post_images',
-                                                                'width' => '55',
+                                                                'width' => $award->img_width,
                                                                 //'height' => '200',
                                                             );
                                                         ?>

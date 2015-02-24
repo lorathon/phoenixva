@@ -8,7 +8,7 @@
         <section class="panel">
             <header class="panel-heading">
                 <div class="panel-actions">
-                    <a href="<?php echo site_url('admin/awards/create_award_type/') ?>" class="fa fa-plus-square"></a>
+                    <a href="<?php echo site_url('admin/award_types/create_award_type/') ?>" class="fa fa-plus-square"></a>
                     <!--
                     <a href="#" class="fa fa-caret-down"></a>
                     <a href="#" class="fa fa-times"></a>
@@ -32,7 +32,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($award_types as $type): ?>
+                            <?php foreach ($types as $type): ?>
                                 <tr>
                                     <td><?php echo $type->id ?></td>
                                     <td><?php echo $type->name ?></td>
@@ -41,8 +41,8 @@
                                     <td><?php echo $type->img_width ?></td>      
                                     <td><?php echo $type->img_height ?></td>
                                     <td align="center">
-                                        <?php echo anchor('admin/awards/create_award_type/' . $award->id,'<i class="fa fa-pencil"></i> Edit', button('info')); ?>
-                                        <?php echo anchor('admin/awards/delete_award_type/' . $award->id,'<i class="fa fa-trash"></i> Delete', button('danger')); ?>
+                                        <?php echo anchor('admin/award_types/create_award_type/' . $type->id,'<i class="fa fa-pencil"></i> Edit', button('info')); ?>
+                                        <?php echo anchor('admin/award_types/delete_award_type/' . $type->id,'<i class="fa fa-trash"></i> Delete', button('danger')); ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

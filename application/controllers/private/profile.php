@@ -42,10 +42,7 @@ class Profile extends PVA_Controller {
 			// Load helpers
 			$this->load->helper('html');
 			$this->load->helper('url');
-			
-                        //Load Config
-                        $this->data['paths'] = config_item('img_folders');
-                        
+			                        
 			// Populate user info
 			$this->data['user_id'] = $user->id;
 			$this->data['name'] = pva_id($user).' '.$user->name;
@@ -100,11 +97,17 @@ class Profile extends PVA_Controller {
 			{
 				foreach ($user_awards as $user_award)
 				{
-                                    $award = new Award($user_award->award_id);
-                                    $user_award->award_image = $award->award_image;
-                                    $user_award->name = $award->name;
-                                    $user_award->description = $award->description;
-                                    $this->data['awards'][] = $user_award;
+                                    $award  = new Award($user_award->award_id);
+                                    $type   = new Award_type($award->award_type_id);
+                                    
+                                    $user_award->award_image    = $award->award_image;
+                                    $user_award->name           = $award->name;
+                                    $user_award->description    = $award->description;
+                                    $user_award->img_folder     = $type->img_folder;
+                                    $user_award->img_width      = $type->img_width;
+                                    $user_award->img_height     = $type->img_height;
+                                    
+                                    $this->data['awards'][]     = $user_award;
 				}
 			}
 				
