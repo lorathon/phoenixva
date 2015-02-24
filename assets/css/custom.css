@@ -1,10 +1,3 @@
-﻿/* Sticky header */
-body.boxed.sticky-menu-active #header {
-	width: auto;
-	top: -64px;
-}
-
-
 /* rev-slider, additional caption colors */
 .tp-caption.modern_med_redbg {
 position:absolute;
@@ -67,6 +60,7 @@ border-style:none;
 	border-color: rgb(255, 214, 88);
 	border-style: none;
 }
+
 .tp-caption.medium_text_ltred {
 	position: absolute;
 	color: #FF0000;
@@ -79,11 +73,6 @@ border-style:none;
 	border-style: none;
 	white-space: nowrap;
 	text-shadow: 0px 0px 2px rgba(255, 255, 255, 1);
-}
-
-/* gray boxed body background */
-body {
-	background-image: url('../img/bg.png')	
 }
 
 /* Twitter Typeahead styling */
@@ -164,18 +153,6 @@ body {
 	float: right;
 }
 
-
-
-/* Panel Boxes (from admin) */
-
-.panel-featured-info {
-	border-color: #0088cc;
-}
-
-.panel-featured-info .panel-title {
-	color: #0088cc;
-}
-
 /* Progress bar light style */
 .progress.light {
 	background: #f6f7f8;
@@ -207,4 +184,49 @@ body {
 
 .progress .progress-bar-dark {
 	background-color: #171717;
+}
+
+/* Profile box blue */
+
+.featured-box-secundary h2 {
+    color: #0088cc;
+    font-size: 28px;
+    line-height: 28px;
+}
+
+/* Profile box green */
+
+.featured-box-green h2 {
+    color: #47a447;
+    font-size: 28px;
+    line-height: 28px;
+}
+
+.featured-box-green .box-content {
+    border-top-color: #47a447;
+}
+
+/* Profile box red */
+
+.featured-box-red h2 {
+    color: #d2322d;
+    font-size: 28px;
+    line-height: 28px;
+
+}
+
+.featured-box-red .box-content {
+    border-top-color: #d2322d;
+}
+
+/* Profile box orange */
+
+.featured-box-orange h2 {
+    color: #ed9c28;
+    font-size: 28px;
+    line-height: 28px;
+}
+
+.featured-box-orange .box-content {
+    border-top-color: #ed9c28;
 }
