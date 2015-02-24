@@ -24,13 +24,6 @@ $name = array(
     'class'         => $field_class,
 );
 
-$award_image = array(
-    'name'	    => 'award_image',
-    'id'	    => 'award_image',
-    'value'	    => set_value('award_image', $record->award_image),
-    'class'         => $field_class,
-);
-
 $description = array(
     'name'	    => 'description',
     'id'	    => 'description',
@@ -39,9 +32,23 @@ $description = array(
 );
 
 $type = array(
-    'name'	    => 'type',
-    'id'	    => 'type',
-    'value'	    => set_value('type', $record->type),
+    'name'	    => 'img_folder',
+    'id'	    => 'img_folder',
+    'value'	    => set_value('img_folder', $record->folder),
+    'class'         => $field_class,
+);
+
+$type = array(
+    'name'	    => 'img_width',
+    'id'	    => 'img_width',
+    'value'	    => set_value('img_width', $record->img_width),
+    'class'         => $field_class,
+);
+
+$type = array(
+    'name'	    => 'img_height',
+    'id'	    => 'img_height',
+    'value'	    => set_value('img_height', $record->img_height),
     'class'         => $field_class,
 );
 
@@ -58,18 +65,11 @@ $type = array(
         <div class="col-md-4">
             <section class="panel">
                 <header class="panel-heading">
-                    <!--
-                    <div class="panel-actions">
-                        <a href="#" class="fa fa-caret-down"></a>
-                        <a href="#" class="fa fa-times"></a>
-                    </div>
-                    -->
-
-                    <h2 class="panel-title">Award Form</h2>
+                    <h2 class="panel-title">Award Type Form</h2>
                 </header>
                 <div class="panel-body">
 
-                    <?php echo form_open_multipart('admin/awards/create_award', $form_attributes); ?>
+                    <?php echo form_open_multipart('admin/awards/create_award_type', $form_attributes); ?>
 
                     <?php echo form_hidden('id', $record->id); ?>
 
@@ -79,20 +79,23 @@ $type = array(
                     </div>
 
                     <div class="form-group">
-                        <?php echo form_label('Award Image', $award_image['id'], $label_attributes); ?>
-                        <div class="col-md-6"><?php echo form_input($award_image); ?></div>
-                    </div>
-
-                    <div class="form-group">
                         <?php echo form_label('Description', $description['id'], $label_attributes); ?>
                         <div class="col-md-6"><?php echo form_input($description); ?></div>
                     </div>
-
+                    
                     <div class="form-group">
-                        <?php echo form_label('Award Type', $type['id'], $label_attributes); ?>
-                        <div class="col-md-6">
-                            <?php echo form_dropdown('type', $types, set_value('type'), "class='{$field_class}'"); ?>
-                        </div>
+                        <?php echo form_label('Image Folder', $img_folder['id'], $label_attributes); ?>
+                        <div class="col-md-6"><?php echo form_input($img_folder); ?></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <?php echo form_label('Image Width', $img_width['id'], $label_attributes); ?>
+                        <div class="col-md-6"><?php echo form_input($img_width); ?></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <?php echo form_label('Image Height', $img_height['id'], $label_attributes); ?>
+                        <div class="col-md-6"><?php echo form_input($img_height); ?></div>
                     </div>
 
                     <div class="form-group">

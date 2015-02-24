@@ -305,7 +305,7 @@
                                                         
                                                         <td><?php echo img($image_properties) ?></td>
                                                         <td><?php echo $award->name; ?></td>
-                                                        <td><?php echo $award->descrip; ?></td>
+                                                        <td><?php echo $award->description; ?></td>
 							<td><?php echo $award->created; ?></td>
                                                     </tr>
 							<?php endforeach; ?>

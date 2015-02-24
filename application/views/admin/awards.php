@@ -35,7 +35,7 @@
                                 <tr>
                                     <td><?php echo $award->id ?></td>
                                     <td><?php echo $award->name ?></td>
-                                    <td><?php echo $award->descrip ?></td>
+                                    <td><?php echo $award->description ?></td>
                                     <td><?php echo $types[$award->type] ?></td>
 
                                     <?php

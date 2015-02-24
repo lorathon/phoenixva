@@ -336,12 +336,28 @@ class Migration_Install extends CI_Migration {
 		$this->dbforge->add_key('id', TRUE);
 		$this->dbforge->create_table('articles');
                 
+                // Award_types table
+                $this->dbforge->add_field(array(
+                                'id'            => $field_config['id_field'],
+                                'name'          => $field_config['input_field'],
+                                'description'   => $field_config['input_field'],
+                                'img_folder'    => $field_config['input_field'],
+                                'img_width'     => $field_config['altitude_field'],
+                                'img_height'    => $field_config['altitude_field'],
+                                'created'       => $field_config['timestamp_field'],
+                                'modified'      => $field_config['timestamp_field']
+                                ));
+
+                $this->dbforge->add_key('id', TRUE);
+                $this->dbforge->create_table('award_types');
+                
                 // Awards table
                 $this->dbforge->add_field(array(
                                 'id'            => $field_config['id_field'],
                                 'type'          => $field_config['status_field'],
+                                'award_type_id' => $field_config['fk_field'],
                                 'name'          => $field_config['input_field'],
-                                'descrip'       => $field_config['input_field'],
+                                'description'   => $field_config['input_field'],
                                 'award_image'   => $field_config['short_input_field'],
                                 ));
 
@@ -374,6 +390,7 @@ class Migration_Install extends CI_Migration {
 		$this->dbforge->drop_table('user_profiles');		
                 $this->dbforge->drop_table('user_awards');
                 $this->dbforge->drop_table('awards');
+                $this->dbforge->drop_table('award_types');
                 $this->dbforge->drop_table('users');
                 
 	}

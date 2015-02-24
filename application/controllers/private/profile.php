@@ -103,7 +103,7 @@ class Profile extends PVA_Controller {
                                     $award = new Award($user_award->award_id);
                                     $user_award->award_image = $award->award_image;
                                     $user_award->name = $award->name;
-                                    $user_award->descrip = $award->descrip;
+                                    $user_award->description = $award->description;
                                     $this->data['awards'][] = $user_award;
 				}
 			}
