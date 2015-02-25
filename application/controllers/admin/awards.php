@@ -64,4 +64,12 @@ class Awards extends PVA_Controller
             redirect('admin/awards');
 	}        
     }
+    
+    public function delete_award($id)
+    {
+        // Delete record
+        
+        $this->_flash_message('info', 'Award', 'Record Deleted');
+        redirect('admin/awards');
+    }
 }

@@ -38,6 +38,29 @@ function button($type)
 }
 
 /**
+ * Returns button attributes for an anchor link.
+ * Includes a confirmation window.  Used for deleteing records.
+ * 
+ * @param string $type The button type to create
+ * @return array Associative array suitable for use in anchor().
+ */
+function button_delete($type)
+{
+    $class      = 'btn btn-'.$type;
+    $role       = 'button';
+    $onclick    = "return confirm('You are about to delete a record. This can not be undone!  Are you sure you wish to continue?')";
+    
+    $btn_array = array(
+            'class'     => $class,
+            'role'      => $role,
+            'onclick'   => $onclick,
+            );
+    
+    return $btn_array;
+}
+
+
+/**
  * Returns the date format used by the system.
  * 
  * @return string

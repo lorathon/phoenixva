@@ -42,7 +42,7 @@
                                     <td><?php echo $type->img_height ?></td>
                                     <td align="center">
                                         <?php echo anchor('admin/award_types/create_award_type/' . $type->id,'<i class="fa fa-pencil"></i> Edit', button('info')); ?>
-                                        <?php echo anchor('admin/award_types/delete_award_type/' . $type->id,'<i class="fa fa-trash"></i> Delete', button('danger')); ?>
+                                        <?php echo anchor('admin/award_types/delete_award_type/' . $type->id,'<i class="fa fa-trash"></i> Delete', button_delete('danger')); ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

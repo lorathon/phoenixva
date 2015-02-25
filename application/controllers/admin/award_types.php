@@ -52,5 +52,13 @@ class Award_types extends PVA_Controller
             redirect('admin/award_types');
 	}        
     }
+    
+    public function delete_award_type()
+    {
+        // Delete record
+        
+        $this->_flash_message('info', 'Award Type', 'Record Deleted');
+        redirect('admin/award_types');
+    }
 }
 
