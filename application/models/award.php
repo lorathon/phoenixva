@@ -37,26 +37,70 @@ class Award extends PVA_Model {
 	 * @var url
 	 */
 	public $award_image     = NULL;	
+        
+        //Award Types
+        public $_award_types    = array();
+        
+        // User Awards
+        private $_user_awards_key     = 'award_id';        
+        private $_user_awards_table  = 'user_awards';        
+        protected $_user_count  = NULL;
         	
 	
 	function __construct($id = NULL)
 	{
 		parent::__construct($id);
+                $this->_award_types = new Award_type();
 	} 
-        /*
-         * Override find_all() to allow
-         * for the joining of tables to reduce
-         * number of queries
-         */
-        function get_all()
+        
+        function get_user_count()
         {
-            $this->_limit = 300;
-            $this->_join = array(
-                'award_types'   => 'award_types.id = awards.award_type_id',
-            );
-            $this->_select = 'awards.*, award_types.img_folder, award_types.img_width, award_types.img_height, award_types.name as type';
-            return parent::find_all_join();
+            if (is_null($this->_user_count))
+            {
+              $this->db->where($this->_user_awards_key, $this->id)
+                       ->from($this->_user_awards_table);
+              $this->_user_count = $this->db->count_all_results();
+            }
+            return $this->_user_count;
         }
         
+}
+
+class Award_type extends PVA_Model {
+    
+        public $name            = NULL;
+        public $description     = NULL;
+        public $img_folder      = NULL;
+        public $img_width       = NULL;
+        public $img_height      = NULL;
+        public $created         = NULL;
+        public $modified        = NULL;
+        
+        public $_award_type_id  = NULL;
+        
+        function __construct($id = NULL)
+	{
+		parent::__construct($id);
+                $this->_timestamps = TRUE;
+                $this->_table_name = "award_types";
+	} 
+        
+        function get_award_type($id)
+        {
+            $this->id = $id;
+            return parent::find();
+        }
+        
+        function get_dropdown()
+        {
+            $types = $this->find_all();
+            
+            $data = array();
+            foreach($types as $type)
+            {
+                $data[$type->id] = $type->name;
+            }            
+            return $data;
+        }
 }
 

@@ -26,6 +26,7 @@
                                 <th>Name</th>
                                 <th>Description</th>
                                 <th>Type</th>
+                                <th>Users</th>
                                 <th>Image</th>
                                 <th>Actions</th>
                             </tr>
@@ -37,6 +38,7 @@
                                     <td><?php echo $award->name ?></td>
                                     <td><?php echo $award->description ?></td>
                                     <td><?php echo $award->type ?></td>
+                                    <td><?php echo $award->users ?></td>
 
                                     <?php
                                     $image_properties = array(

@@ -174,51 +174,7 @@ class PVA_Model extends CI_Model
     	
     	return $this->_get_objects($query);
     }
-    
-    /*
-     * Join tables query. (WIP)
-     */
-    public function find_all_join()
-    {
-    	if (! is_null($this->id))
-    	{
-    		// Improper usage
-    		throw new Exception('Method find_all() cannot be called with id.');
-    	}
-    	
-    	// Prep the data
-    	$parms = $this->_prep_data();
-
-    	// Build the query
-    	$this->db->select($this->_select)
-    	         ->from($this->_table_name)
-    	         ->where($parms)
-    	         ->limit($this->_limit, $this->_offset);
-    	if ( ! is_null($this->_order_by))
-    	{
-    		$this->db->order_by($this->_order_by);
-    	}
         
-        if(count($this->_join) > 0)
-        {
-            foreach($this->_join as $join => $value)
-            {
-                $this->db->join($join, $value);
-            }
-        }
-        
-        /*
-        if( ! is_null($this->_select))
-        {
-            $this->db->select($this->_select);
-        }*/
-    	
-    	// Query the database
-    	$query = $this->db->get();
-    	
-    	return $this->_get_objects($query);
-    }
-    
     /**
      * Allows access to all properties of an object.
      * 
