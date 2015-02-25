@@ -2494,7 +2494,7 @@ window.theme = {};
 					$body.addClass('sticky-menu-active always-sticky').removeClass('sticky-menu-deactive');
 
 					if (self.options.stickyBodyPadding) {
-						$body.css('padding-top', headerHeight + 20);
+						$body.css('padding-top', headerHeight);
 					}
 
 				}
