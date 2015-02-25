@@ -19,13 +19,15 @@ class Awards extends PVA_Controller
         
         foreach($awards as $award)
         {
-            $type = new Award_type($award->award_type_id);
+            // Commented out to allow join function to work
+            /*
+            $type = new Award_type($award->award_type_id);            
             
             $award->type          = $type->name;
             $award->img_folder    = $type->img_folder;
             $award->img_width     = $type->img_width;
             $award->img_height    = $type->img_height;
-            
+            */
             $this->data['awards'][] = $award;
         }
         

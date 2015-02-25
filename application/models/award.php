@@ -43,11 +43,20 @@ class Award extends PVA_Model {
 	{
 		parent::__construct($id);
 	} 
-        
+        /*
+         * Override find_all() to allow
+         * for the joining of tables to reduce
+         * number of queries
+         */
         function get_all()
         {
             $this->_limit = 300;
-            return parent::find_all();
+            $this->_join = array(
+                'award_types'   => 'award_types.id = awards.award_type_id',
+            );
+            $this->_select = 'awards.*, award_types.img_folder, award_types.img_width, award_types.img_height, award_types.name as type';
+            return parent::find_all_join();
         }
+        
 }
 
