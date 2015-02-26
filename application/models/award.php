@@ -83,9 +83,8 @@ class Award_type extends PVA_Model {
         
         function __construct($id = NULL)
 	{
-		parent::__construct($id);
-                $this->_timestamps = TRUE;
-                $this->_table_name = "award_types";
+            $this->_timestamps = TRUE;
+            parent::__construct($id);
 	} 
         
         function get_award_type($id)

@@ -48,5 +48,15 @@ class Testing extends PVA_Controller
             $this->_render('testing');
         }
     }     
+    
+    public function test()
+    {
+        $user = new User(2);
+        $user_award = $user->_user_awards;
+        $user_awards = $user_award->get_not_granted(2);
+        
+        var_dump($user_awards);
+                
+    }
 }
 

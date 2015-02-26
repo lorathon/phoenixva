@@ -984,6 +984,11 @@ class User_award extends PVA_Model {
             } 
         }
         
+        /*
+         * Retrieve user awrds for user based
+         * on award_type.  
+         */
+        
         function get_by_type($user_id, $type_id)
         {
             /* What a mess */
@@ -996,6 +1001,27 @@ class User_award extends PVA_Model {
             
             $query = $this->db->get();  
             return $this->_get_objects($query);
+        }
+        
+        /*
+         * Retrieve all awards that a user has
+         * NOT been granted.  This can be used to 
+         * grant an award to the user.  Awards
+         * can only be granted once
+         * 
+         * return Award Objects
+         */
+        function get_not_granted($user_id)
+        {
+            //SELECT * FROM da05_awards WHERE da05_awards.id NOT IN (SELECT award_id FROM da05_user_awards WHERE user_id = 2)
+            $this->db->select('*')
+                    ->from($this->_awards_table)
+                    ->where($this->_awards_table . '.id NOT IN (SELECT award_id FROM ' . 
+                            $this->db->dbprefix($this->_table_name) . ' WHERE user_id = ' . $user_id.')')
+                ;
+            
+            $query = $this->db->get();
+            return $this->_get_objects($query);            
         }
         
         function grant_award()
