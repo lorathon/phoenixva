@@ -26,6 +26,7 @@ class Airport extends PVA_Model {
 		
 		// Set default order
 		$this->_order_by = 'icao asc';
+		log_message('debug', 'Airport model Initialized');
 	}
 	
 	/**

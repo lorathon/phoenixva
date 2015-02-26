@@ -42,7 +42,7 @@ class Profile extends PVA_Controller {
 			// Load helpers
 			$this->load->helper('html');
 			$this->load->helper('url');
-			                        
+                        
 			// Populate user info
 			$this->data['user_id'] = $user->id;
 			$this->data['name'] = pva_id($user).' '.$user->name;

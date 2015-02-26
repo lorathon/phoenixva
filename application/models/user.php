@@ -339,7 +339,7 @@ class User extends PVA_Model {
 			
 			foreach ($query->result() as $row)
 			{
-				$note->user_id = $row->adminid;
+				$note->user = $row->adminid;
 				$note->note = $row->comment;
 				$note->date = $row->date;
 				$note->private_note = $row->staff;

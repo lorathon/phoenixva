@@ -39,15 +39,18 @@ class PVA_Model extends CI_Model
         
         // Set the object name
         $this->_object_name = strtolower(get_class($this));
+        log_message('debug', 'Object name: '.$this->_object_name);
         
         // Guess the table name
         $this->_table_name = strtolower(get_class($this).'s');
+        log_message('debug', 'Table name: '.$this->_table_name);
         
         // If the id is set, create a populated model (Kohana-esque)
     	if ( ! is_null($id))
 		{
 			if (is_array($id))
 			{
+				log_message('debug', 'Object created with array');
 				// Passing an array of column => values
 				foreach ($id as $field => $value)
 				{
@@ -56,6 +59,7 @@ class PVA_Model extends CI_Model
 			}
 			else
 			{
+				log_message('debug', 'Object created with ID');
 				// Passing the primary key
 				$key = $this->_primary_key;
 				$this->$key = $id;
