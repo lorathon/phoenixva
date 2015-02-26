@@ -36,15 +36,15 @@ class Awards extends PVA_Controller
      public function award_types()
     {   
         $award = New Award();
-        $types = $award->_award_types;
-        $this->data['types'] = $types->find_all();
+        $type = $award->_award_type;
+        $this->data['types'] = $type->find_all();
         $this->_render('admin/award_types');
     }       
     
     public function create_award($id = NULL)
     {
         $award = New Award($id);
-        $types = $award->_award_types;
+        $types = $award->_award_type;
                 
         $this->form_validation->set_rules('id', 'ID', '');
         $this->form_validation->set_rules('name', 'Name', 'alpha-numberic|trim|required|xss_clean');
@@ -52,7 +52,6 @@ class Awards extends PVA_Controller
         $this->form_validation->set_rules('award_image', 'Award Image', 'trim|required|xss_clean');
         $this->form_validation->set_rules('award_type_id', 'Award Type', 'numeric|trim|required|xss_clean');
         
-        //$award_types = $types->find_all();
         $this->data['award_types'] = $types->get_dropdown();
                 
         if ($this->form_validation->run() == FALSE)
@@ -78,11 +77,8 @@ class Awards extends PVA_Controller
     public function create_award_type($id = NULL)
     {
         $award = new Award();
-        $type = $award->_award_types;
-        $award_type = $type->get_award_type($id); 
-        
-        var_dump($award_type);
-        return;
+        $type = $award->_award_type;
+        $award_type = $type->get_award_type($id);
                 
         $this->form_validation->set_rules('id', 'ID', '');
         $this->form_validation->set_rules('name', 'Name', 'alpha-numberic|trim|required|xss_clean');

@@ -98,7 +98,7 @@ class Profile extends PVA_Controller {
 				foreach ($user_awards as $user_award)
 				{
                                     $award  = new Award($user_award->award_id);
-                                    $type   = new Award_type($award->award_type_id);
+                                    $type   = $award->get_award_type();
                                     
                                     $user_award->award_image    = $award->award_image;
                                     $user_award->name           = $award->name;

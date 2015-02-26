@@ -39,7 +39,7 @@ class Award extends PVA_Model {
 	public $award_image     = NULL;	
         
         //Award Types
-        public $_award_types    = array();
+        public $_award_type    = NULL;
         
         // User Awards
         private $_user_awards_key     = 'award_id';        
@@ -50,7 +50,7 @@ class Award extends PVA_Model {
 	function __construct($id = NULL)
 	{
 		parent::__construct($id);
-                $this->_award_types = new Award_type();
+                $this->_award_type = new Award_type();
 	} 
         
         function get_user_count()
@@ -62,6 +62,11 @@ class Award extends PVA_Model {
               $this->_user_count = $this->db->count_all_results();
             }
             return $this->_user_count;
+        }
+        
+        function get_award_type()
+        {
+            return new Award_type($this->award_type_id);
         }
         
 }
@@ -76,8 +81,6 @@ class Award_type extends PVA_Model {
         public $created         = NULL;
         public $modified        = NULL;
         
-        public $_award_type_id  = NULL;
-        
         function __construct($id = NULL)
 	{
 		parent::__construct($id);
@@ -87,8 +90,7 @@ class Award_type extends PVA_Model {
         
         function get_award_type($id)
         {
-            $this->id = $id;
-            return parent::find();
+            return new Award_type($id);
         }
         
         function get_dropdown()
