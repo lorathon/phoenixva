@@ -52,9 +52,9 @@
 
 	</head>
 	<body>
-
+           
 		<div class="body">
-			<header id="header" class="narrow" data-plugin-options='{"alwaysStickyEnabled": true, "stickyEnabled": true, "stickyWithGap": false, "stickyChangeLogoSize": false}'>
+                    <header id="header" class="narrow" data-plugin-options='{"alwaysStickyEnabled": true, "stickyEnabled": true, "stickyWithGap": false, "stickyChangeLogoSize": false}'>
 				<div class="container">
 					<h1 class="logo">
 						<?php echo anchor('','<img alt="Phoenix Virtual Airways" width="180" height="60" src="'.base_url('assets/img/Logo.png').'">','title="Home Page"'); ?>
