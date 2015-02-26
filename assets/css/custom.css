@@ -1,3 +1,7 @@
+body.sticky-menu-active.always-sticky #header nav ul.nav-main {
+	margin: -7px 25px 8px 0;
+}
+
 /* rev-slider, additional caption colors */
 .tp-caption.modern_med_redbg {
 position:absolute;
