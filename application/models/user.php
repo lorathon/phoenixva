@@ -46,7 +46,7 @@ class User extends PVA_Model {
 	/* Related objects */
 	protected $_user_profile = NULL;
 	protected $_user_stats   = NULL;
-        protected $_user_awards  = NULL;
+        public $_user_awards  = NULL;
 	
 	/* Derived properties */
 	private $_is_premium = NULL;
@@ -958,8 +958,8 @@ class User_award extends PVA_Model {
         protected $_order_by    = 'created desc';
         
         protected $_awards_table    = 'awards';
-        protected $_join            = 'awards on awards.award_id = user_awards.award_id';
-        protected $_awards_key      = 'awards.id';
+        protected $_join            = 'awards.id = user_awards.award_id';
+        protected $_awards_key      = 'awards.award_type_id';
 	
 	function __construct($user_id = NULL)
 	{
@@ -990,11 +990,12 @@ class User_award extends PVA_Model {
             $this->db->select('*, awards.award_type_id')
                     ->from($this->_table_name)
                     ->join($this->_awards_table, $this->_join)
-                    ->where($this->award_id, $this->_award_key)
+                    ->where($this->_awards_key, $type_id)
                     ->where('user_id', $user_id)
                 ;
             
-            $this->db->get();                     
+            $query = $this->db->get();  
+            return $this->_get_objects($query);
         }
         
         function grant_award()
