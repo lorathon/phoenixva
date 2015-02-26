@@ -231,27 +231,47 @@ class PVA_Controller extends CI_Controller {
 	 * PVA Application autoloader
 	 *
 	 * Allows calling objects without having to load models first.
-	 * XXX Not sure this is the best way to do this.
 	 * @param string $class The class name to load.
 	 */
 	protected function _autoload($class)
 	{
-		if (substr($class,0,3) != 'CI_')
+		if (substr($class,0,4) == 'PVA_')
+		{
+			log_message('debug', 'Autoloading PVA core class '.$class);
+			$file = APPPATH.'core/'.$class.'.php';
+			$this->load_file($file);
+		}
+		elseif (substr($class,0,3) != 'CI_')
 		{
 			log_message('debug', 'Autoloading '.$class);
-			$path = array('models','libraries','core');
+			$path = array('models','libraries');
 			foreach ($path as $dir)
 			{
 				$file = APPPATH.$dir.'/'.strtolower($class).'.php';
 				log_message('debug', 'Looking for file '.$file);
-				if(file_exists($file) && is_file($file))
+				if($this->load_file($file))
 				{
-					log_message('debug', 'Autoloading file '.$file);
-					@include_once($file);
 					break;
 				}
 			}
 		}
+		else 
+		{
+			log_message('debug', 'Autoloading CI core class '.$class);
+			$file = BASEPATH.'core/'.substr($class,3).'.php';
+			$this->load_file($file);
+		}
+	}
+	
+	private function load_file($file)
+	{
+		if (file_exists($file) && is_file($file))
+		{
+			log_message('debug', 'Autoloading file '.$file);
+			@include_once($file);
+			return TRUE;
+		}
+		return FALSE;
 	}
 	
 	/**

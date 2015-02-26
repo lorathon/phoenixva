@@ -4,3 +4,4 @@
 /system
 /.travis.yml
 /.externalToolBuilders/
+/localdev.cache

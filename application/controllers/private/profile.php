@@ -43,9 +43,6 @@ class Profile extends PVA_Controller {
 			$this->load->helper('html');
 			$this->load->helper('url');
 			
-                        //Load Config
-                        $this->data['paths'] = config_item('img_folders');
-                        
 			// Populate user info
 			$this->data['user_id'] = $user->id;
 			$this->data['name'] = pva_id($user).' '.$user->name;
@@ -91,6 +88,9 @@ class Profile extends PVA_Controller {
 			$this->data['landing_danger'] = 0;
 			$this->data['landing_warning'] = 0;
 			$this->data['landing_success'] = 0;
+			
+			//$user_awards = $user->get_user_awards();
+			$this->data['awards'] = $user_awards;
                                                                         
                         // Populate user awards
                         $this->data['awards'] = array();
