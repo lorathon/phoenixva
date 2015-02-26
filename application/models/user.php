@@ -954,13 +954,17 @@ class User_award extends PVA_Model {
 	public $user_id     = NULL;
 	public $award_id    = NULL;
 	public $created     = NULL;
+        
+        protected $_order_by    = 'created desc';
+        
+        protected $_awards_table    = 'awards';
+        protected $_join            = 'awards on awards.award_id = user_awards.award_id';
+        protected $_awards_key      = 'awards.id';
 	
 	function __construct($user_id = NULL)
 	{
-		parent::__construct();
-                $this->_table_name = 'user_awards';
-                $this->_order_by = 'created desc';
-		$this->user_id = $user_id;
+            $this->user_id = $user_id;
+            parent::__construct();
 	} 
         
         /*Override save to ensure no double rows (WIP)
@@ -978,6 +982,19 @@ class User_award extends PVA_Model {
             {
                 parent::save();
             } 
+        }
+        
+        function get_by_type($user_id, $type_id)
+        {
+            /* What a mess */
+            $this->db->select('*, awards.award_type_id')
+                    ->from($this->_table_name)
+                    ->join($this->_awards_table, $this->_join)
+                    ->where($this->award_id, $this->_award_key)
+                    ->where('user_id', $user_id)
+                ;
+            
+            $this->db->get();                     
         }
         
         function grant_award()
