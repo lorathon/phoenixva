@@ -43,6 +43,10 @@ $route['admin'] = "admin/dashboard";
 // Remove controller action for pages calls
 $route['pages/(:any)'] = "pages/view/$1";
 
+// Route all hub related stuff
+$route['admin/hubs/create-page/(:any)'] = "hubs/create_page/$1";
+$route['hubs/(:any)'] = "hubs/view/$1";
+
 // Default route
 $route['default_controller'] = 'pages/view';
 
