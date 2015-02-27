@@ -2,8 +2,6 @@
 
 class Awards extends PVA_Controller
 {
-    protected $_table_name = 'awards';
-    protected $_order_by = 'id';
     
     public function __construct()
     {
@@ -19,28 +17,24 @@ class Awards extends PVA_Controller
         
         foreach($awards as $award)
         {            
-            $award->_award_type->id = $award->award_type_id;
-            $award->_award_type->find();
+            $award_type = $award->get_award_type();
             
-            $award->type          = $award->_award_type->name;
-            $award->img_folder    = $award->_award_type->img_folder;
-            $award->img_width     = $award->_award_type->img_width;
-            $award->img_height    = $award->_award_type->img_height;
-            $award->users         = $award->get_user_count($award->id);
+            $award->type          = $award_type->name;
+            $award->img_folder    = $award_type->img_folder;
+            $award->img_width     = $award_type->img_width;
+            $award->img_height    = $award_type->img_height;
+            $award->users         = $award->get_user_count();
             
             $this->data['awards'][] = $award;
         }
-        
-        //var_dump($this->data['awards']);
-        //return;
         
         $this->_render('admin/awards');
     }    
     
      public function award_types()
     {   
-        $award = New Award();
-        $this->data['types'] = $award->_award_type->find_all();
+        $award_type = New Award_type();
+        $this->data['types'] = $award_type->find_all();
         $this->_render('admin/award_types');
     }       
     
@@ -54,7 +48,8 @@ class Awards extends PVA_Controller
         $this->form_validation->set_rules('award_image', 'Award Image', 'trim|required|xss_clean');
         $this->form_validation->set_rules('award_type_id', 'Award Type', 'numeric|trim|required|xss_clean');
         
-        $this->data['award_types'] = $award->_award_type->get_dropdown();
+        $award_type = new Award_type();
+        $this->data['award_types'] = $award_type->get_dropdown();
                 
         if ($this->form_validation->run() == FALSE)
 	{             
@@ -78,10 +73,7 @@ class Awards extends PVA_Controller
     
     public function create_award_type($id = NULL)
     {
-        $award = new Award();        
-        $award->_award_type->id = $id;
-        $award->_award_type->find();
-        $award_type = $award->_award_type;
+        $award_type = new Award_type($id); 
                 
         $this->form_validation->set_rules('id', 'ID', '');
         $this->form_validation->set_rules('name', 'Name', 'alpha-numberic|trim|required|xss_clean');
