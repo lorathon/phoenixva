@@ -28,7 +28,6 @@ class Testing extends PVA_Controller
                 foreach ($user_awards as $user_award) {
 
                     $award = new Award($user_award->award_id);
-                    //$type = $award->get_award_type();
 
                     $user_award->award_image    = $award->award_image;
                     $user_award->name           = $award->name;
@@ -37,10 +36,15 @@ class Testing extends PVA_Controller
                     $user_award->img_width      = $type->img_width;
                     $user_award->img_height     = $type->img_height;
 
-                    $this->data['awards'][] = $user_award;
-                    
+                    $this->data['awards'][$type->name][] = $user_award;
                 }
             }
+            
+            foreach($this->data['award'] as $key => $value)
+            {
+                echo $key . ' - '. $value . '<br><br>';
+            }
+            return;
             
             $this->data['heading'] = $type->name;
             $this->_render('testing');

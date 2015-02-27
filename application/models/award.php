@@ -126,7 +126,6 @@ class User_award extends PVA_Model {
 	
 	function __construct($id = NULL)
 	{
-            $this->_timestamps = TRUE;
             parent::__construct($id);
 	} 
         
@@ -143,6 +142,11 @@ class User_award extends PVA_Model {
             
             if(! $user_award->find())
             {
+                $now = date('Y-m-d H:i:s');
+                if(is_null($this->created)) 
+                {
+                    $this->created = $now;
+                }
                 parent::save();
             } 
         }

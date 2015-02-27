@@ -111,19 +111,30 @@ class Awards extends PVA_Controller
 	}        
     }
     
-    public function delete_award($id)
+    public function delete_award($id = NULL)
     {
         // Delete record
+        if(is_null($id)) return FALSE;
+        
+        $award = new Award($id);
+        $award->delete();
         
         $this->_flash_message('info', 'Award', 'Record Deleted');
         redirect('admin/awards');
     }
     
-    public function delete_award_type()
+    public function delete_award_type($id = NULL)
     {
         // Delete record
+        if(is_null($id)) return FALSE;
+        
+        $award = new Award();
+        
+        $award->_award_type->id = $id;
+        $award->_award_type->delete();
         
         $this->_flash_message('info', 'Award Type', 'Record Deleted');
         redirect('admin/awards/award_types');
-    }    
+    }   
+    
 }

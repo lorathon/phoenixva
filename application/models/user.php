@@ -302,18 +302,40 @@ class User extends PVA_Model {
 		if ($query->num_rows() > 0)
 		{
 			foreach ($query->result() as $row)
-			{
-                            
-                            /* Search for award by name (WIP) */                            
+			{                            
+                            /* Search for award by name */                            
                             $award = new Award();
                             $award->name = $row->name;
                             $award->find();
                             
-                            $user_award = $award->_user_award;
-                            $user_award->user_id    = $this->id;
-                            $user_award->award_id   = $award->id;
-                            $user_award->created    = $row->dateissued;
-                            $user_award->save();                            
+                            $award->_user_award->user_id    = $this->id;
+                            $award->_user_award->award_id   = $award->id;
+                            $award->_user_award->created    = $row->dateissued;
+                            $award->_user_award->save();               
+			}
+		}
+                
+                // Get user badges
+		$db_legacy->select('name, dateissued')
+		          ->from('phpvms_badgesgranted')
+                          ->join('phpvms_badges', 'phpvms_badges.badgeid = phpvms_badgesgranted.badgeid')
+		          ->where('pilotid', $this->id);
+		
+		$query = $db_legacy->get();
+		
+		if ($query->num_rows() > 0)
+		{
+			foreach ($query->result() as $row)
+			{                            
+                            /* Search for award by name */                            
+                            $award = new Award();
+                            $award->name = $row->name;
+                            $award->find();
+                            
+                            $award->_user_award->user_id    = $this->id;
+                            $award->_user_award->award_id   = $award->id;
+                            $award->_user_award->created    = $row->dateissued;
+                            $award->_user_award->save();                              
 			}
 		}
 		
