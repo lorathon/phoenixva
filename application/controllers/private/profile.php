@@ -93,19 +93,21 @@ class Profile extends PVA_Controller {
                         $this->data['awards'] = array();
 			$user_awards = $user->get_user_awards();
                         
+                        
                         if ($user_awards)
 			{
 				foreach ($user_awards as $user_award)
 				{
                                     $award  = new Award($user_award->award_id);
-                                    $type   = $award->get_award_type();
+                                    $award->_award_type->id = $award->award_type_id;
+                                    $award->_award_type->find();
                                     
                                     $user_award->award_image    = $award->award_image;
                                     $user_award->name           = $award->name;
                                     $user_award->description    = $award->description;
-                                    $user_award->img_folder     = $type->img_folder;
-                                    $user_award->img_width      = $type->img_width;
-                                    $user_award->img_height     = $type->img_height;
+                                    $user_award->img_folder     = $award->_award_type->img_folder;
+                                    $user_award->img_width      = $award->_award_type->img_width;
+                                    $user_award->img_height     = $award->_award_type->img_height;
                                     
                                     $this->data['awards'][]     = $user_award;
 				}

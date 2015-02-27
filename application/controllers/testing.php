@@ -15,15 +15,13 @@ class Testing extends PVA_Controller
 	$this->load->helper('url');
                         
         $award      = new Award();
-        $type       = $award->_award_type;
-        $types      = $type->find_all();
+        $types      = $award->_award_type->find_all();
         
         foreach ($types as $type) {
+            
             $user_awards = array();
             $this->data['awards'] = array();
-            $user = new User(2);
-            $user_award = $user->_user_awards;
-            $user_awards = $user_award->get_by_type(2, $type->id);
+            $user_awards = $award->_user_award->get_by_type(2, $type->id);
 
             if ($user_awards) {
 
@@ -49,12 +47,11 @@ class Testing extends PVA_Controller
         }
     }     
     
-    public function test()
+    public function test($user_id = NULL)
     {
-        $user = new User(2);
-        $user_award = $user->_user_awards;
-        $user_awards = $user_award->get_not_granted(2);
-        
+        $user_id = 2;
+        $award = new Award();        
+        $user_awards = $award->_user_award->get_not_granted($user_id);        
         var_dump($user_awards);
                 
     }
