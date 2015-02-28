@@ -25,7 +25,7 @@ class Article extends PVA_Model {
 	 * 
 	 * @see PVA_Model::save()
 	 */
-	function save()
+	public function save()
 	{
 		$parser = new JBBCode\Parser();
 		$parser->addCodeDefinitionSet(new JBBCode\DefaultCodeDefinitionSet());

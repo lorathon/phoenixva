@@ -11,7 +11,7 @@ class Hubs extends PVA_Controller {
 	/**
 	 * Displays list of hub airports
 	 */
-	function index()
+	public function index()
 	{
 		log_message('debug', 'Hub index called');
 		$this->data['meta_title'] = 'Phoenix Virtual Airways Crew Centers';
@@ -38,7 +38,7 @@ class Hubs extends PVA_Controller {
 	/**
 	 * Displays the requested hub page
 	 */
-	function view($icao)
+	public function view($icao)
 	{
 		log_message('debug', 'Hub page called');
 		
@@ -60,7 +60,6 @@ class Hubs extends PVA_Controller {
 		$user->hub = $airport->id;
 		$this->data['pilots'] = $user->find_all();
 		
-		
 		$this->_render();
 	}
 	
@@ -69,8 +68,22 @@ class Hubs extends PVA_Controller {
 	 * 
 	 * Hubs can have multiple pages.
 	 */
-	function create_page()
+	public function create_page()
 	{
 		log_message('debug', 'Hub page create called');
+	}
+	
+	/**
+	 * Returns an array of articles for the selected hub.
+	 * 
+	 * @param string $icao of the hub to search
+	 * @return array of Article objects
+	 */
+	protected function _hub_navigation($icao)
+	{
+		log_message('debug', 'Creating hub navigation for '.$icao);
+		$article = new Article();
+		$article->slug = $icao;
+		return $article->find_all(TRUE);
 	}
 }
