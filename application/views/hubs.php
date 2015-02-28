@@ -11,9 +11,11 @@
 				contests and events. 
 			</p>
 			<p>Click on a crew center to learn more about it.</p>
-			<?php foreach ($hubs as $hub): ?>
-				<p><?php echo $hub; ?></p>
-			<?php endforeach; ?>
+			<ul>
+				<?php foreach ($hubs as $key => $value): ?>
+					<li><?php echo anchor('hubs/'.$key, $value); ?></li>
+				<?php endforeach; ?>
+			</ul>
 		</div>
 	</div>
 </div>

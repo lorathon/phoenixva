@@ -53,4 +53,14 @@ class Airport extends PVA_Model {
 	{
 		return ($this->hub == 1);
 	}
+	
+	/**
+	 * Returns the full name of the airport with ICAO
+	 * 
+	 * @return string
+	 */
+	function get_full_name()
+	{
+		return $this->icao.' - '.$this->name;
+	}
 }
