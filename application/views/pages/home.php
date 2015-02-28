@@ -1,143 +1,45 @@
-			<div role="main" class="main">
 				<div class="slider-container">
-					<div class="slider" id="revolutionSlider">
+					<div class="slider" id="revolutionSlider" data-plugin-revolution-slider data-plugin-options='{"startheight": 700}'>
 						<ul>
-							<li data-transition="fade" data-slotamount="8" data-masterspeed="300" >
+							<li data-transition="fade" data-slotamount="6" data-masterspeed="300" >
 				
-								<img src="<?php echo base_url('assets/img/slides/slide_01.jpg');?>" data-bgfit="cover" data-bgposition="left top" data-bgrepeat="no-repeat">
-				
-								<div class="tp-caption sft stb visible-lg"
-									 data-x="center"
-									 data-y="center"
-									 data-speed="300"
-									 data-start="6000"
-									 data-easing="easeOutExpo"><img src="<?php echo base_url('assets/img/slides/slide_02.jpg');?>" data-bgrepeat="no-repeat" data-bgfit="cover" data-bgposition="center center"></div>
-								
-								<div class="tp-caption sft stb visible-lg"
-									 data-x="center"
-									 data-y="center"
-									 data-speed="300"
-									 data-start="11000"
-									 data-easing="easeOutExpo"><img src="<?php echo base_url('assets/img/slides/slide_03.jpg');?>" data-bgrepeat="no-repeat" data-bgfit="cover" data-bgposition="center center"></div>
-
+								<img src="<?php echo base_url('assets/img/slides/slide_08.jpg');?>" data-bgfit="cover" data-bgposition="left top" data-bgrepeat="no-repeat">
+                                                                                                          
 								<div class="tp-caption top-label lfl stl"
-									 data-x="700"
-									 data-y="80"
+									 data-x="250"
+									 data-y="270"
 									 data-speed="300"
 									 data-start="500"
 									 data-easing="easeOutExpo">FLY FOR OVER</div>
 									 
 								<div class="tp-caption sft stb visible-lg"
-									 data-x="650"
-									 data-y="80"
+									 data-x="200"
+									 data-y="270"
 									 data-speed="300"
 									 data-start="1000"
 									 data-easing="easeOutExpo"><img src="<?php echo base_url('assets/img/slides/slide-title-border.png');?>" alt=""></div>
 
 								<div class="tp-caption sft stb visible-lg"
-									 data-x="868"
-									 data-y="80"
+									 data-x="418"
+									 data-y="270"
 									 data-speed="300"
 									 data-start="1000"
 									 data-easing="easeOutExpo"><img src="<?php echo base_url('assets/img/slides/slide-title-border.png');?>" alt=""></div>
 				
 								<div class="tp-caption main-label sft stb"
-									 data-x="535"
-									 data-y="110"
+									 data-x="100"
+									 data-y="300"
 									 data-speed="300"
 									 data-start="1500"
 									 data-easing="easeOutExpo">1,200 AIRLINES</div>
 				
 								<div class="tp-caption medium_orange sft stb"
-									 data-x="620"
-									 data-y="180"
+									 data-x="170"
+									 data-y="370"
 									 data-speed="500"
 									 data-start="2000"
 									 data-easing="easeOutExpo">From Seaplanes to Wide-Body Jets</div>
 							
-							</li>
-
-							<li data-transition="fade" data-slotamount="1" data-masterspeed="300" >
-				
-								<img src="<?php echo base_url('assets/img/slides/slide_04.jpg');?>" data-bgfit="cover" data-bgposition="left top" data-bgrepeat="no-repeat">
-								
-								<div class="tp-caption sft stb visible-lg"
-									 data-x="center"
-									 data-y="center"
-									 data-speed="300"
-									 data-start="6000"
-									 data-easing="easeOutExpo"><img src="<?php echo base_url('assets/img/slides/slide_05.jpg');?>" data-bgrepeat="no-repeat" data-bgfit="cover" data-bgposition="center center"></div>
-								
-								<div class="tp-caption sft stb visible-lg"
-									 data-x="center"
-									 data-y="center"
-									 data-speed="300"
-									 data-start="11000"
-									 data-easing="easeOutExpo"><img src="<?php echo base_url('assets/img/slides/slide_06.jpg');?>" data-bgrepeat="no-repeat" data-bgfit="cover" data-bgposition="center center"></div>
-
-
-								<div class="tp-caption medium_thin_green sft stb"
-									 data-x="110"
-									 data-y="290"
-									 data-speed="300"
-									 data-start="1500"
-									 data-easing="easeOutExpo"><i>Over 4,700</i></div>
-			
-								<div class="tp-caption main-label sft stb"
-									 data-x="5"
-									 data-y="340"
-									 data-speed="500"
-									 data-start="2000"
-									 data-easing="easeOutExpo">DESTINATIONS</div>
-									 
-								<div class="tp-caption modern_med_redbg sft stb"
-									 data-x="73"
-									 data-y="410"
-									 data-speed="500"
-									 data-start="2500"
-									 data-easing="easeOutExpo"><i>Where will your journey take you?</i></div>
-
-								
-							</li>
-							<li data-transition="fade" data-slotamount="6" data-masterspeed="300" >
-				
-								<img src="<?php echo base_url('assets/img/slides/slide_07.jpg');?>" data-bgfit="cover" data-bgposition="left top" data-bgrepeat="no-repeat">
-								
-								<div class="tp-caption sft stb visible-lg"
-									 data-x="center"
-									 data-y="center"
-									 data-speed="300"
-									 data-start="6000"
-									 data-easing="easeOutExpo"><img src="<?php echo base_url('assets/img/slides/slide_08.jpg');?>" data-bgrepeat="no-repeat" data-bgfit="cover" data-bgposition="center center"></div>
-								
-								<div class="tp-caption sft stb visible-lg"
-									 data-x="center"
-									 data-y="center"
-									 data-speed="300"
-									 data-start="11000"
-									 data-easing="easeOutExpo"><img src="<?php echo base_url('assets/img/slides/slide_09.jpg');?>" data-bgrepeat="no-repeat" data-bgfit="cover" data-bgposition="center center"></div>
-
-								<div class="tp-caption modern_med_bluebg sft stb"
-										 data-x="80"
-										 data-y="250"
-										 data-speed="300"
-										 data-start="500"
-										 data-easing="easeOutExpo"><i>Explore the</i></div>
-				
-									<div class="tp-caption main-label sft stb"
-										 data-x="20"
-										 data-y="280"
-										 data-speed="500"
-										 data-start="1000"
-										 data-easing="easeOutExpo">Caribbean</div>
-									
-									<div class="tp-caption medium_text_ltred sft stb"
-										 data-x="115"
-										 data-y="340"
-										 data-speed="500"
-										 data-start="1500"
-										 data-easing="easeOutExpo"><i>and it's beautiful beaches</i></div>
-
 							</li>
 						</ul>
 					</div>
