@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="boxed">
+<html>
 	<head>
 
 		<!-- Basic -->
@@ -52,82 +52,62 @@
 
 	</head>
 	<body>
-
+           
 		<div class="body">
-			<header id="header">
+                    <header id="header" class="narrow" data-plugin-options='{"alwaysStickyEnabled": true, "stickyEnabled": true, "stickyWithGap": false, "stickyChangeLogoSize": false}'>
 				<div class="container">
 					<h1 class="logo">
-						<?php echo anchor('','<img alt="Phoenix Virtual Airways" 
-								width="225" height="75" 
-								data-sticky-width="180" data-sticky-height="60" 
-								src="'.base_url('assets/img/Logo.png').'">','title="Home Page"'); ?>
+						<?php echo anchor('','<img alt="Phoenix Virtual Airways" width="180" height="60" src="'.base_url('assets/img/Logo.png').'">','title="Home Page"'); ?>
 					</h1>
-					<div class="search"></div>
-					<ul class="social-icons">
-						<li class="facebook"><a href="http://www.facebook.com/phoenixairways" target="_blank" title="Facebook">Facebook</a></li>
-						<li class="twitter"><a href="http://www.twitter.com/" target="_blank" title="Twitter">Twitter</a></li>
-					</ul>
-					<nav>
-						<ul class="nav nav-pills nav-top">
-							<?php if (isset($userdata['name'])): ?>
-                                                                <li>
-									<?php echo anchor('http://www.phoenixva.org/forums/index.php?app=members&module=messaging','<i class="fa fa-inbox fa-lg"></i>','title="Messenger"'); ?>
-								</li>
-								<li>
-									<?php echo anchor('http://helpdesk.phoenixva.org/','<i class="fa fa-life-ring fa-lg"></i>','title="Help Desk"'); ?>
-								</li>
-							<?php else: ?>
-								<li>
-									<?php echo anchor('auth/register','<i class="fa fa-angle-right fa-lg"></i>Join PVA'); ?>
-								</li>
-							<?php endif; ?>
-						</ul>
-					</nav>
 					<button class="btn btn-responsive-nav btn-inverse" data-toggle="collapse" data-target=".nav-main-collapse">
 						<i class="fa fa-bars"></i>
 					</button>
 				</div>
-				
-                                <div class="navbar-collapse nav-main-collapse collapse">
+				<div class="navbar-collapse nav-main-collapse collapse">
 					<div class="container">
+						<ul class="social-icons">
+                                                    <?php if (isset($userdata['name'])): ?>
+                                                        <li class="digg"><?php echo anchor('http://www.phoenixva.org/forums/index.php?app=members&module=messaging','title="Messenger"'); ?></li>
+							<li class="dribbble"><?php echo anchor('http://helpdesk.phoenixva.org/','title="Help Desk"'); ?></li>
+                                                    <?php endif; ?>
+                                                        <li class="twitter"><?php echo anchor('http://www.facebook.com/phoenixairways','title="Facebook"'); ?></li>
+							<li class="facebook"><?php echo anchor('http://www.twitter.com/','title="Twitter"'); ?></li>
+						</ul>
 						<nav class="nav-main mega-menu">
 							<ul class="nav nav-pills nav-main" id="mainMenu">
-                                                                <li><?php echo anchor('live','Live Ops'); ?></li>
-                                                                
+								<li><?php echo anchor('live','Live Ops'); ?></li>
+								
                                                                 <!-- if not logged in, show about us and public FAQ page on bar -->
                                                                 <?php if ( ! isset($userdata['name'])): ?>
                                                                     <li><?php echo anchor('pages/about','About Us'); ?></li>
                                                                     <li><?php echo anchor('pages/faq-public','FAQ\'s'); ?></li>
                                                                 <?php endif; ?>
                                                                         
-									<li class="dropdown">
-										<a class="dropdown-toggle" data-toggle="dropdown">
-											General Info <span class="caret"></span>
-										</a>
-										<ul class="dropdown-menu" role="menu">
-                                                                                <?php if (isset($userdata['name'])): ?>                    
-                                                                                    <li><?php echo anchor('pages/about','About Us'); ?></li>
-                                                                                    <li><?php echo anchor('pages/faq-crew','Crew FAQ\'s'); ?></li>
-                                                                                <?php endif; ?>			
-											
-                                                                                    <li><?php echo anchor('pages/airports','Destinations'); ?></li>
-                                                                                    <li><?php echo anchor('pages/typeahead','Airlines'); ?></li>
-                                                                                    <li><?php echo anchor('aircraft','Aircraft Fleet'); ?></li>
-                                                                                    <li><?php echo anchor('hubs','Crew Centers'); ?></li>
-                                                                                    <li><?php echo anchor('pages/achievements','Achievements'); ?></li>
-										</ul>
-									</li>
-									                                                                        
-									<li><?php echo anchor('http://phoenixva.org/forums/','Forums'); ?></li>
-                                                                        
-									<?php if (isset($userdata['name']) && $userdata['is_admin']): ?>
-										<li><?php echo anchor('admin','Admin'); ?>
-									<?php endif; // Admin ?>
+                                                                <li class="dropdown">
+                                                                        <a class="dropdown-toggle" data-toggle="dropdown">
+                                                                                General Info<span class="caret"></span>
+                                                                        </a>
+                                                                        <ul class="dropdown-menu" role="menu">
+                                                                        <?php if (isset($userdata['name'])): ?>                    
+                                                                            <li><?php echo anchor('pages/about','About Us'); ?></li>
+                                                                            <li><?php echo anchor('pages/faq-crew','Crew FAQ\'s'); ?></li>
+                                                                        <?php endif; ?>			
+
+                                                                            <li><?php echo anchor('pages/airports','Destinations'); ?></li>
+                                                                            <li><?php echo anchor('pages/typeahead','Airlines'); ?></li>
+                                                                            <li><?php echo anchor('aircraft','Aircraft Fleet'); ?></li>
+                                                                            <li><?php echo anchor('hubs','Crew Centers'); ?></li>
+                                                                            <li><?php echo anchor('pages/achievements','Achievements'); ?></li>
+                                                                        </ul>
+                                                                </li>
+
+                                                                <li><?php echo anchor('http://phoenixva.org/forums/','Forums'); ?></li>
+
+                                                                <?php if (isset($userdata['name']) && $userdata['is_admin']): ?>
+                                                                        <li><?php echo anchor('admin','Admin'); ?>
+                                                                <?php endif; // Admin ?>
 								
-                                                                
-                                                                
-                                                                                    
-                                                                                    
+                                                               
                                                                 <!-- PILOT PROFILE DROPDOWN -->
                                                                 
                                                                 <?php if (isset($userdata['name'])): //Logged In?>
@@ -307,11 +287,7 @@
 						</nav>
 					</div>
 				</div>
-                            
-                            
-                            
-                            
-			</header>
+                        </header>
 
 			<div role="main" class="main">
 					
