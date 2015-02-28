@@ -24,7 +24,7 @@ class Hubs extends PVA_Controller {
 				
 			foreach ($hubs as $hub)
 			{
-				$this->data['hubs'][$hub->id] = $hub->get_full_name();
+				$this->data['hubs'][$hub->icao] = $hub->get_full_name();
 			}
 		}
 		$count = count($this->data['hubs']);
@@ -38,24 +38,26 @@ class Hubs extends PVA_Controller {
 	/**
 	 * Displays the requested hub page
 	 */
-	function view($id)
+	function view($icao)
 	{
 		log_message('debug', 'Hub page called');
 		
-		if (is_null($id))
+		if (is_null($icao))
 		{
 			// Hub is required
 			log_message('debug', 'No hub provided, redirecting.');
 			redirect('/hubs');
 		}
 		
-		$airport = new Airport($id);
+		$airport = new Airport();
+		$airport->icao = $icao;
+		$airport->find();
 		
 		$this->data['meta_title'] = 'Phoenix Virtual Airways Crew Centers: '.$airport->get_full_name();
 		$this->data['title'] = $airport->get_full_name();
 		
 		$user = new User();
-		$user->hub = $id;
+		$user->hub = $airport->id;
 		$this->data['pilots'] = $user->find_all();
 		
 		
