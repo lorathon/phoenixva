@@ -102,7 +102,7 @@ class Awards extends PVA_Controller
             redirect('admin/awards/award_types');
 	}        
     }
-    
+       
     public function delete_award($id = NULL)
     {
         // Delete record
