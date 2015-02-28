@@ -10,22 +10,25 @@
  */
 class PVA_Model extends CI_Model
 {
-    protected $_table_name = '';
-    protected $_object_name = '';
-    protected $_primary_key = 'id';
-    protected $_primary_filter = 'intval';
-    protected $_order_by = NULL;
-    public $_rules = array();
-    protected $_timestamps = FALSE;
+    protected $_table_name      = '';
+    protected $_object_name     = '';
+    protected $_primary_key     = 'id';
+    protected $_primary_filter  = 'intval';
+    protected $_order_by        = NULL;
+    public $_rules              = array();
+    protected $_timestamps      = FALSE;
     
     // ID
-    public $id = NULL;
+    public $id                  = NULL;
     
     // Default offset
-    protected $_offset = 0;
+    protected $_offset          = 0;
     
     // Default limit
-    protected $_limit = 25;
+    protected $_limit           = 25;
+    
+    protected $_join            = array();
+    protected $_select          = NULL;
     
     function __construct($id = NULL)
     {
@@ -98,8 +101,7 @@ class PVA_Model extends CI_Model
     		// Searching with parameters
     		
     		// Prep the data
-    		$parms = $this->_prep_data();
-    		
+    		$parms = $this->_prep_data();    		
                 
     		if (count($parms) == 0)
     		{
@@ -176,7 +178,7 @@ class PVA_Model extends CI_Model
     	
     	return $this->_get_objects($query);
     }
-    
+        
     /**
      * Allows access to all properties of an object.
      * 
@@ -206,7 +208,7 @@ class PVA_Model extends CI_Model
         {
             // If TRUE create timestamps
             $now = date('Y-m-d H:i:s');
-            if (is_null($this->id))
+            if (is_null($this->id) || $this->id == '')
             {
             	$this->created = $now;
             }
@@ -221,16 +223,16 @@ class PVA_Model extends CI_Model
         // Insert or update
         if (is_null($this->id) || ($this->id == ''))
         {
-        	// Insert if id is NOT passed
+            // Insert if id is NOT passed
+            $this->id = NULL;  // ensure that id is NULL for insert
             $this->db->insert($this->_table_name,$this);
             $this->id = $this->db->insert_id();
         }
         else
         {
-        	// Update if id is passed
-        	$this->db->where($this->_primary_key, $this->id);
-            $this->db->update($this->_table_name, $this->_prep_data());
-            
+            // Update if id is passed
+            $this->db->where($this->_primary_key, $this->id);
+            $this->db->update($this->_table_name, $this->_prep_data());            
         }
     }
         

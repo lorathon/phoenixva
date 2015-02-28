@@ -44,9 +44,9 @@ class User extends PVA_Model {
 	public $ipbuser_id             = NULL;
 	
 	/* Related objects */
-	protected $_user_profile = NULL;
-	protected $_user_stats   = NULL;
-        protected $_user_awards  = NULL;
+	protected $_user_profile        = NULL;
+	protected $_user_stats          = NULL;
+        protected $_user_awards         = NULL;
 	
 	/* Derived properties */
 	private $_is_premium = NULL;
@@ -124,16 +124,43 @@ class User extends PVA_Model {
 	 * @return object User_awards object for the populated user
 	 */
 	function get_user_awards()
-	{
-		if ( ! is_null($this->id))
-		{          
-                        // Populate User Awrds
-                        // Thank you Chuck for helping me out :)
-                        $awards = new User_award($this->id);
-                        $this->_user_awards = $awards->find_all();
-		}
-		return $this->_user_awards;
+	{    
+            $this->_user_awards->user_id = $this->id;                    
+            $this->_user_awards = $this->_user_awards->find_all();
+		                
+            return $this->_user_awards;
 	}
+        
+        function get_user_awards_by_type($type_id = NULL)
+        {
+            if(is_null($type_id)) return array();
+                 
+            $this->_user_awards->user_id = $this->id;       
+            return $this->_user_awards->get_by_type($type_id);
+        }
+        
+        function get_awards_not_granted()
+        {
+            $this->_user_awards->user_id = $this->id;
+            return $this->_user_awards->get_not_granted();
+        }
+        
+        function get_awards_not_granted_dropdown()
+        {
+            $this->_user_awards->user_id = $this->id;
+            return $this->_user_awards->get_dropdown();
+        }
+        
+        function grant_award($award_id = NULL)
+        {
+            if( is_null($award_id)) 
+                return FALSE;
+            
+            $user_award = new User_award();
+            $user_award->user_id = $this->id;
+            $user_award->award_id = $award_id;            
+            $user_award->save();
+        }
                 
 	/**
 	 * Populates user object based on legacy data
@@ -292,8 +319,9 @@ class User extends PVA_Model {
 		}
                 
                 // Get user awards
-		$db_legacy->select('awardid, dateissued')
+		$db_legacy->select('name, dateissued')
 		          ->from('phpvms_awardsgranted')
+                          ->join('phpvms_awards', 'phpvms_awards.awardid = phpvms_awardsgranted.awardid')
 		          ->where('pilotid', $this->id);
 		
 		$query = $db_legacy->get();
@@ -301,11 +329,44 @@ class User extends PVA_Model {
 		if ($query->num_rows() > 0)
 		{
 			foreach ($query->result() as $row)
-			{
-                            $award = new User_award($this->id);
-                            $award->award_id = $row->awardid;
-                            $award->created = $row->dateissued;
-                            $award->save();
+			{                            
+                            /* Search for award by name */                            
+                            $award = new Award();
+                            $award->name = $row->name;
+                            $award->find();
+                            
+                            $user_award = new User_award();
+                            
+                            $user_award->user_id    = $this->id;
+                            $user_award->award_id   = $award->id;
+                            $user_award->created    = $row->dateissued;
+                            $user_award->save();               
+			}
+		}
+                
+                // Get user badges
+		$db_legacy->select('name, dateissued')
+		          ->from('phpvms_badgesgranted')
+                          ->join('phpvms_badges', 'phpvms_badges.badgeid = phpvms_badgesgranted.badgeid')
+		          ->where('pilotid', $this->id);
+		
+		$query = $db_legacy->get();
+		
+		if ($query->num_rows() > 0)
+		{
+			foreach ($query->result() as $row)
+			{                            
+                            /* Search for award by name */                            
+                            $award = new Award();
+                            $award->name = $row->name;
+                            $award->find();
+                            
+                            $user_award = new User_award();
+                            
+                            $user_award->user_id    = $this->id;
+                            $user_award->award_id   = $award->id;
+                            $user_award->created    = $row->dateissued;
+                            $user_award->save();                               
 			}
 		}
 		
@@ -937,15 +998,20 @@ class User_award extends PVA_Model {
 	
 	/* Default Properties */
 	public $user_id     = NULL;
+        
 	public $award_id    = NULL;
+        
 	public $created     = NULL;
+        
+        protected $_order_by    = 'created desc';
+        
+        protected $_awards_table    = 'awards';
+        protected $_join            = 'awards.id = user_awards.award_id';
+        protected $_awards_key      = 'awards.award_type_id';
 	
-	function __construct($user_id = NULL)
+	function __construct($id = NULL)
 	{
-		parent::__construct();
-                $this->_table_name = 'user_awards';
-                $this->_order_by = 'created desc';
-		$this->user_id = $user_id;
+            parent::__construct($id);
 	} 
         
         /*Override save to ensure no double rows (WIP)
@@ -961,19 +1027,66 @@ class User_award extends PVA_Model {
             
             if(! $user_award->find())
             {
+                $now = date('Y-m-d H:i:s');
+                if(is_null($this->created)) 
+                {
+                    $this->created = $now;
+                }
                 parent::save();
             } 
         }
         
-        function grant_award()
+        /*
+         * Retrieve user awrds for user based
+         * on award_type.  
+         */
+        
+        function get_by_type($type_id)
         {
+            $this->db->select('*, awards.award_type_id')
+                    ->from($this->_table_name)
+                    ->join($this->_awards_table, $this->_join)
+                    ->where($this->_awards_key, $type_id)
+                    ->where('user_id', $this->user_id)
+                ;
             
+            $query = $this->db->get();  
+            return $this->_get_objects($query);
         }
         
-        function forfeit_award()
+        /*
+         * Retrieve all awards that a user has
+         * NOT been granted.  This can be used to 
+         * grant an award to the user.  Awards
+         * can only be granted once
+         * 
+         * return Award Objects
+         */
+        function get_not_granted()
         {
+            //SELECT * FROM da05_awards WHERE da05_awards.id NOT IN (SELECT award_id FROM da05_user_awards WHERE user_id = 2)
+            $this->db->select('*')
+                    ->from($this->_awards_table)
+                    ->where($this->_awards_table . '.id NOT IN (SELECT award_id FROM ' . 
+                            $this->db->dbprefix($this->_table_name) . ' WHERE user_id = ' . $this->user_id.')')
+                ;
             
+            $query = $this->db->get();
+            return $this->_get_objects($query);            
+        }       
+        
+        function get_dropdown()
+        {
+            $awards = $this->get_not_granted();
+            
+            $data = array();
+            foreach($awards as $award)
+            {
+                $data[$award->id] = $award->name;
+            }            
+            return $data;
         }
+        
 }
 
 /**

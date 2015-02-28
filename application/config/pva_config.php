@@ -18,13 +18,10 @@ $config['units_altitude'] = 'ft';
 */
 $config['setting_random_price'] = TRUE;
 
-/* Image Folders */
 $config['img_folders'] = array (
     'Aircraft'  => './images/aircraft/',
     'Airline'   => './images/airline/',
     'Avatar'    => './images/avatar/',
-    'Award'     => './images/award/',
-    'Badges'    => './images/badge/',
     'Rank'      => './images/rank/', 
 );
 

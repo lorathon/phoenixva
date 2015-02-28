@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE buildfile>
-<project name="316tech" default="deploy" basedir=".">
+<project name="PVA" default="deploy" basedir=".">
 	<target name="deploy" description="FTPing to server">
 		<scp todir="${username}:${password}@${server}:${remote}"
 		     trust="true"
