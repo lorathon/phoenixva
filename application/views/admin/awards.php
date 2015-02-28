@@ -26,6 +26,7 @@
                                 <th>Name</th>
                                 <th>Description</th>
                                 <th>Type</th>
+                                <th>Users</th>
                                 <th>Image</th>
                                 <th>Actions</th>
                             </tr>
@@ -35,12 +36,13 @@
                                 <tr>
                                     <td><?php echo $award->id ?></td>
                                     <td><?php echo $award->name ?></td>
-                                    <td><?php echo $award->descrip ?></td>
-                                    <td><?php echo $types[$award->type] ?></td>
+                                    <td><?php echo $award->description ?></td>
+                                    <td><?php echo $award->type ?></td>
+                                    <td><?php echo $award->users ?></td>
 
                                     <?php
                                     $image_properties = array(
-                                        'src' => $paths['Award'] . $award->award_image,
+                                        'src' => $award->img_folder . $award->award_image,
                                         //'class' => 'post_images',
                                         'width' => '55',
                                             //'height' => '200',
@@ -50,7 +52,7 @@
                                     <td><?php echo img($image_properties) ?></td>                                    
                                     <td align="center">
                                         <?php echo anchor('admin/awards/create_award/' . $award->id,'<i class="fa fa-pencil"></i> Edit', button('info')); ?>
-                                        <?php echo anchor('admin/awards/delete_award/' . $award->id,'<i class="fa fa-trash"></i> Delete', button('danger')); ?>
+                                        <?php echo anchor('admin/awards/delete_award/' . $award->id,'<i class="fa fa-trash"></i> Delete', button_delete('danger')); ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

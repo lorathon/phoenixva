@@ -147,8 +147,20 @@
                                                                                         <li>
 												<?php echo anchor('admin/ranks','Pilot Ranks'); ?>
 											</li>
+										</ul>
+									</li>
+                                                                        
+                                                                        <li class="nav-parent">
+										<a>
+											<i class="fa fa-flag-checkered" aria-hidden="true"></i>
+											<span>Awards</span>
+										</a>
+										<ul class="nav nav-children">
                                                                                         <li>
-												<?php echo anchor('admin/awards','Pilot Awards'); ?>
+												<?php echo anchor('admin/awards','All Awards'); ?>
+											</li>
+                                                                                        <li>
+												<?php echo anchor('admin/awards/award_types','Award Types'); ?>
 											</li>
 										</ul>
 									</li>

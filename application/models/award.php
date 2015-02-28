@@ -9,17 +9,13 @@
  *
  */
 class Award extends PVA_Model {	
-	       
+	             
         /**
-	 * The type of the award. (from admin_config)
-         * '1'  => 'Manually Granted',
-         * '2'  => 'Flight # Award',
-         * '3'  => 'Flight Hours Award',
-         * '4'  => 'Time in Service Award'
+	 * The type of the award. (from award_types table)
 	 * 
-	 * @var number
+	 * @var fk int
 	 */
-	public $type            = NULL;
+	public $award_type_id   = NULL;
         
         /**
 	 * The name of the award.
@@ -33,7 +29,7 @@ class Award extends PVA_Model {
 	 * 
 	 * @var string
 	 */
-	public $descrip         = NULL;
+	public $description     = NULL;
         
         /**
 	 * The image link.
@@ -41,11 +37,40 @@ class Award extends PVA_Model {
 	 * @var url
 	 */
 	public $award_image     = NULL;	
-	
+        
+        //Award Types
+        private $_award_type     = NULL;
+        
+        //User award table
+        private $_user_award_table = 'user_awards';
+        
+        //Count of users with award
+        private $_user_count    = NULL;
+        	
 	
 	function __construct($id = NULL)
 	{
-		parent::__construct($id);
-	}
+            parent::__construct($id);
+	} 
+        
+        function get_award_type() 
+        {                
+            if (is_null($this->_award_type)) {
+                $this->_award_type = new Award_type($this->award_type_id);
+            }            
+            return $this->_award_type;
+        }        
+        
+        function get_user_count()
+        {       
+            if(is_null($this->_user_count))
+            {
+                $this->db->where('award_id', $this->id)
+                           ->from($this->_user_award_table);
+                $this->_user_count = $this->db->count_all_results();
+            }
+            return $this->_user_count;
+        }
+        
         
 }

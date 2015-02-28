@@ -24,13 +24,6 @@ $name = array(
     'class'         => $field_class,
 );
 
-$award_image = array(
-    'name'	    => 'award_image',
-    'id'	    => 'award_image',
-    'value'	    => set_value('award_image', $record->award_image),
-    'class'         => $field_class,
-);
-
 $description = array(
     'name'	    => 'description',
     'id'	    => 'description',
@@ -39,10 +32,24 @@ $description = array(
     'rows'          => 4,
 );
 
-$award_type_id = array(
-    'name'	    => 'award_type_id',
-    'id'	    => 'award_type_id',
-    'value'	    => set_value('award_type_id', $record->award_type_id),
+$img_folder = array(
+    'name'	    => 'img_folder',
+    'id'	    => 'img_folder',
+    'value'	    => set_value('img_folder', $record->img_folder),
+    'class'         => $field_class,
+);
+
+$img_width = array(
+    'name'	    => 'img_width',
+    'id'	    => 'img_width',
+    'value'	    => set_value('img_width', $record->img_width),
+    'class'         => $field_class,
+);
+
+$img_height = array(
+    'name'	    => 'img_height',
+    'id'	    => 'img_height',
+    'value'	    => set_value('img_height', $record->img_height),
     'class'         => $field_class,
 );
 
@@ -59,18 +66,11 @@ $award_type_id = array(
         <div class="col-md-4">
             <section class="panel">
                 <header class="panel-heading">
-                    <!--
-                    <div class="panel-actions">
-                        <a href="#" class="fa fa-caret-down"></a>
-                        <a href="#" class="fa fa-times"></a>
-                    </div>
-                    -->
-
-                    <h2 class="panel-title">Award Form</h2>
+                    <h2 class="panel-title">Award Type Form</h2>
                 </header>
                 <div class="panel-body">
 
-                    <?php echo form_open_multipart('admin/awards/create_award', $form_attributes); ?>
+                    <?php echo form_open_multipart('admin/awards/create_award_type', $form_attributes); ?>
 
                     <?php echo form_hidden('id', $record->id); ?>
 
@@ -80,20 +80,23 @@ $award_type_id = array(
                     </div>
 
                     <div class="form-group">
-                        <?php echo form_label('Award Image', $award_image['id'], $label_attributes); ?>
-                        <div class="col-md-6"><?php echo form_input($award_image); ?></div>
-                    </div>
-
-                    <div class="form-group">
                         <?php echo form_label('Description', $description['id'], $label_attributes); ?>
                         <div class="col-md-6"><?php echo form_textarea($description); ?></div>
                     </div>
                     
                     <div class="form-group">
-                        <?php echo form_label('Award Type', $award_type_id['id'], $label_attributes); ?>
-                        <div class="col-md-6">
-                            <?php echo form_dropdown('award_type_id', $award_types, $award_type_id['value'], "class='{$field_class}'"); ?>
-                        </div>
+                        <?php echo form_label('Image Folder', $img_folder['id'], $label_attributes); ?>
+                        <div class="col-md-6"><?php echo form_input($img_folder); ?></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <?php echo form_label('Image Width', $img_width['id'], $label_attributes); ?>
+                        <div class="col-md-6"><?php echo form_input($img_width); ?></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <?php echo form_label('Image Height', $img_height['id'], $label_attributes); ?>
+                        <div class="col-md-6"><?php echo form_input($img_height); ?></div>
                     </div>
 
                     <div class="form-group">
@@ -108,3 +111,4 @@ $award_type_id = array(
         </div>
     </div>
 </div>
+
