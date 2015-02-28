@@ -14,10 +14,11 @@
 
                 
                 <!-- Awards row -->
+                <?php foreach ($types as $type => $awards) : ?>
 		<div class="row">
 			<div class="col-xs-12">
 				<div class="panel panel-info">
-					<div class="panel-heading"><?php echo $heading ?> Awards</div>
+					<div class="panel-heading"><?php echo $type ?> Awards</div>
 					<div class="panel-body">
                                             <table class="table mb-none">
                                                 <thead>
@@ -30,9 +31,10 @@
                                                 </thead>
                                                 <tbody>
                                                     <?php foreach ($awards as $award): ?>
+                                                    <?php if(!is_object($award)) continue; ?>
                                                     <tr>
                                                         
-                                                        <?php
+                                                        <?php                                                            
                                                             $image_properties = array(
                                                                 'src' => $award->img_folder . $award->award_image,
                                                                 //'class' => 'post_images',
@@ -52,7 +54,8 @@
 					</div>
 				</div>
 			</div>
-		</div><!-- End Awards row -->                
+		</div><!-- End Awards row -->  
+                <?php endforeach; ?>
                                 
 
 	<?php endif; ?>
