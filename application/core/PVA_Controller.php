@@ -55,7 +55,11 @@ class PVA_Controller extends CI_Controller {
 
 		// Load PVA config file XXX This should probably not be loaded here.
 		$this->load->config('pva_config');
-
+		
+		// Session required for all admin/private pages
+		$this->load->library('session');
+		$this->data['userdata'] = $this->session->all_userdata();
+		
 		// Holds errors for display by the view
 		$this->data['errors'] = array();
 		
@@ -68,10 +72,7 @@ class PVA_Controller extends CI_Controller {
 		$access = $this->uri->segment(1);
 
 		if ($access == 'admin' OR $access == 'private')
-		{
-			// Session required for all admin/private pages
-			$this->load->library('session');
-			
+		{			
 			// Verify user logged in
 			$this->load->library('tank_auth');
 
@@ -82,8 +83,6 @@ class PVA_Controller extends CI_Controller {
 				$this->session->set_flashdata('return_url',uri_string());
 				redirect('/auth/login/');
 			}
-
-			$this->data['userdata'] = $this->session->all_userdata();
 
 			/* XXX Is this even used?
 			 * FRONT END ALERT
