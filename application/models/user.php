@@ -138,6 +138,29 @@ class User extends PVA_Model {
             $this->_user_awards->user_id = $this->id;       
             return $this->_user_awards->get_by_type($type_id);
         }
+        
+        function get_awards_not_granted()
+        {
+            $this->_user_awards->user_id = $this->id;
+            return $this->_user_awards->get_not_granted();
+        }
+        
+        function get_awards_not_granted_dropdown()
+        {
+            $this->_user_awards->user_id = $this->id;
+            return $this->_user_awards->get_dropdown();
+        }
+        
+        function grant_award($award_id = NULL)
+        {
+            if( is_null($award_id)) 
+                return FALSE;
+            
+            $user_award = new User_award();
+            $user_award->user_id = $this->id;
+            $user_award->award_id = $award_id;            
+            $user_award->save();
+        }
                 
 	/**
 	 * Populates user object based on legacy data
@@ -1039,18 +1062,30 @@ class User_award extends PVA_Model {
          * 
          * return Award Objects
          */
-        function get_not_granted($user_id)
+        function get_not_granted()
         {
             //SELECT * FROM da05_awards WHERE da05_awards.id NOT IN (SELECT award_id FROM da05_user_awards WHERE user_id = 2)
             $this->db->select('*')
                     ->from($this->_awards_table)
                     ->where($this->_awards_table . '.id NOT IN (SELECT award_id FROM ' . 
-                            $this->db->dbprefix($this->_table_name) . ' WHERE user_id = ' . $user_id.')')
+                            $this->db->dbprefix($this->_table_name) . ' WHERE user_id = ' . $this->user_id.')')
                 ;
             
             $query = $this->db->get();
             return $this->_get_objects($query);            
         }       
+        
+        function get_dropdown()
+        {
+            $awards = $this->get_not_granted();
+            
+            $data = array();
+            foreach($awards as $award)
+            {
+                $data[$award->id] = $award->name;
+            }            
+            return $data;
+        }
         
 }
 
