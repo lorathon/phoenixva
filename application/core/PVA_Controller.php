@@ -56,7 +56,7 @@ class PVA_Controller extends CI_Controller {
 		// Load PVA config file XXX This should probably not be loaded here.
 		$this->load->config('pva_config');
 		
-		// Session required for all admin/private pages
+		// Session required
 		$this->load->library('session');
 		$this->data['userdata'] = $this->session->all_userdata();
 		
@@ -111,12 +111,7 @@ class PVA_Controller extends CI_Controller {
 
 		if ($access == 'admin')
 		{
-			if( ! $this->data['userdata']['is_admin'])
-			{
-				// NO admin Credentials found.  Redirect to UNAUTH page
-				$this->load->helper('url');
-				redirect('/auth/unauth/');
-			}
+			$this->_check_access($access);
 
 			// Load Admin config file
 			$this->load->config('admin/admin_config');
@@ -130,6 +125,23 @@ class PVA_Controller extends CI_Controller {
 		{
 			// Any common stuff for private access goes here.
 			$this->_access = 'private';
+		}
+	}
+	
+	/**
+	 * Checks that the user has sufficient privileges
+	 * 
+	 * Redirects to the unauthorized screen if they don't.
+	 * @param string $access the minimum level required.
+	 */
+	protected function _check_access($access)
+	{
+		$access = 'is_'.$access; 
+		if( ! $this->data['userdata'][$access])
+		{
+			// NO admin Credentials found.  Redirect to UNAUTH page
+			$this->load->helper('url');
+			redirect('/auth/unauth/');
 		}
 	}
 
@@ -150,10 +162,6 @@ class PVA_Controller extends CI_Controller {
 		
 		// Load helpers
 		$this->load->helper('url');
-		
-		// Load session
-		$this->load->library('session');
-		$this->data['userdata'] = $this->session->all_userdata();
 		
 		// No cacheing
 		$this->_no_cache();
@@ -248,7 +256,7 @@ class PVA_Controller extends CI_Controller {
 			{
 				$file = APPPATH.$dir.'/'.strtolower($class).'.php';
 				log_message('debug', 'Looking for file '.$file);
-				if($this->load_file($file))
+				if ($this->load_file($file))
 				{
 					break;
 				}
