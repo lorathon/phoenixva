@@ -329,6 +329,24 @@
 						</div>
 					</div>
 				<?php endif;?>
+				<?php if ($errors):?>
+					<div class="container">
+						<div class="row">
+							<div class="col-md-offset-3 col-md-6">
+								<div class="panel panel-danger">
+									<div class="panel-heading">
+										Errors
+									</div>
+									<div class="panel-body">
+										<?php foreach ($errors as $error): ?>
+											<p><?php echo $error; ?></p>
+										<?php endforeach; ?>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				<?php endif; ?>
 	
 				<?php echo $view_output; ?>
 			
