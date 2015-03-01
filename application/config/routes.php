@@ -44,7 +44,8 @@ $route['admin'] = "admin/dashboard";
 $route['pages/(:any)'] = "pages/view/$1";
 
 // Route all hub related stuff
-$route['admin/hubs/create-page/(:any)'] = "hubs/create_page/$1";
+$route['private/hubs/create-page/(:any)'] = "hubs/create_page/$1";
+$route['private/hubs/edit-page/(:any)'] = "hubs/edit_page/$1";
 $route['hubs/(:any)'] = "hubs/view/$1";
 
 // Default route
