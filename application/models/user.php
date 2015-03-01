@@ -1043,7 +1043,7 @@ class User_award extends PVA_Model {
         
         function get_by_type($type_id)
         {
-            $this->db->select('*, awards.award_type_id')
+            $this->db->select($this->_table_name . '.*, awards.award_type_id')
                     ->from($this->_table_name)
                     ->join($this->_awards_table, $this->_join)
                     ->where($this->_awards_key, $type_id)
