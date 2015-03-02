@@ -148,11 +148,12 @@ class PVA_Model extends CI_Model
      * that object to return an array of populated objects of the same type. This
      * method is subject to limit and offset settings.
      * 
+     * @param boolean TRUE to perform a LIKE search. Defaults to WHERE clause.
      * @throws Exception if the object id is populated.
      * @return array |boolean Array of populated objects if found or FALSE if no
      * records were found. 
      */
-    public function find_all()
+    public function find_all($search = FALSE)
     {
     	if (! is_null($this->id))
     	{
@@ -165,9 +166,20 @@ class PVA_Model extends CI_Model
 
     	// Build the query
     	$this->db->select()
-    	         ->from($this->_table_name)
-    	         ->where($parms)
-    	         ->limit($this->_limit, $this->_offset);
+    	         ->from($this->_table_name);
+    	
+    	// Search allows a LIKE. Default is a WHERE.
+    	if ($search)
+    	{
+    		$this->db->like($parms);
+    	}
+    	else 
+    	{
+    		$this->db->where($parms);
+    	}
+    	
+    	$this->db->limit($this->_limit, $this->_offset);
+    	
     	if ( ! is_null($this->_order_by))
     	{
     		$this->db->order_by($this->_order_by);

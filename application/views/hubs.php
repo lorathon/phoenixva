@@ -1,4 +1,82 @@
 <div class="container">
+	<?php if (isset($body)): ?>
+	<div class="row">
+		<ul class="nav nav-tabs">
+			<li role="presentation" 
+				<?php if (uri_string() == 'hubs/'.$icao): ?>
+					class="active"
+				<?php endif; ?>
+			>
+				<?php echo anchor('/hubs/'.$icao, 'Crew Center Home'); ?>
+			</li>
+			<?php foreach ($pages as $slug => $page): ?>
+				<li role="presentation"
+					<?php if (uri_string() == 'hubs/'.$slug):?>
+						class="active"
+					<?php endif;?>
+				>
+					<?php echo anchor('/hubs/'.$slug, $page); ?>
+				</li>
+			<?php endforeach; ?>
+		</ul>
+	</div>
+	<div class="row">
+		<div class="col-md-8">
+			<?php echo $body; ?>
+		</div>
+		<div class="col-md-4">
+			<?php if (isset($userdata['name']) && $userdata['is_manager']): ?>
+			<div class="featured-box featured-box-red">
+				<div class="box-content">
+					<h2>Hub Admin</h2>
+					<ul class="nav nav-pills">
+						<li role="presentation">
+							<?php echo anchor('/private/hubs/edit_page', 'Edit This Page'); ?>
+						</li>
+						<li role="presentation">
+							<?php echo anchor('/private/hubs/create_page', 'Add New Page'); ?>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<?php endif; ?>
+			<div class="featured-box featured-box-green">
+				<div class="box-content">
+					<h2>Pilots</h2>
+					<?php if (!$pilots): ?>
+						<p>This crew center has no pilots.</p>
+					<?php else: ?>
+						<table class="table table-hover table-condensed">
+							<thead>
+								<tr>
+									<td>ID</td>
+									<td>Name</td>
+									<td>Flights</td>
+								</tr>
+							</thead>
+							<tbody>
+								<?php foreach ($pilots as $pilot): ?>
+								<tr>
+									<td><?php echo $pilot->id; ?></td>
+									<td>
+									<?php echo anchor('/private/profile/view/'.$pilot->id, $pilot->name); ?>
+									<?php if ($pilot->is_premium()): ?>
+											<i class="fa fa-star" title="Premium Member"></i>
+									<?php endif; ?>
+									</td>
+									<td>
+										<?php echo $pilot->get_user_stats()->total_flights(); ?>
+									</td>
+								</tr>
+								<?php endforeach; ?>
+							</tbody>
+						</table>
+					<?php endif; ?>
+				</div>
+			</div>
+		</div>
+	</div>
+	<?php else: ?>
 	<div class="row">
 		<div class="col-md-12">
 			<p class="lead">
@@ -18,4 +96,5 @@
 			</ul>
 		</div>
 	</div>
+	<?php endif; ?>
 </div>
