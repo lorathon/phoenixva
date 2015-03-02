@@ -67,7 +67,7 @@ class Awards extends PVA_Controller
                 
             $award->save();
             $this->_flash_message('success', 'Award', 'Record Saved');
-            redirect('admin/awards');
+            $this->index();
 	}        
     }
     
@@ -99,7 +99,8 @@ class Awards extends PVA_Controller
                 
             $award_type->save();
             $this->_flash_message('success', 'Award Type', 'Record Saved');
-            redirect('admin/awards/award_types');
+            
+            $this->award_types();
 	}        
     }
        
@@ -112,7 +113,7 @@ class Awards extends PVA_Controller
         $award->delete();
         
         $this->_flash_message('info', 'Award', 'Record Deleted');
-        redirect('admin/awards');
+        $this->index();
     }
     
     public function delete_award_type($id = NULL)
@@ -126,7 +127,7 @@ class Awards extends PVA_Controller
         $award->_award_type->delete();
         
         $this->_flash_message('info', 'Award Type', 'Record Deleted');
-        redirect('admin/awards/award_types');
+        $this->award_types();
     }   
     
 }

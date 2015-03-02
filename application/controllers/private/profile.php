@@ -254,6 +254,7 @@ class Profile extends PVA_Controller
             foreach ($award_types as $type)
             {
                 $user_awards = $user->get_user_awards_by_type($type->id);
+                
                 if (!$user_awards)
                 {
                     $user_awards = array();
@@ -263,12 +264,13 @@ class Profile extends PVA_Controller
                 foreach ($user_awards as $user_award)
                 {
                     $award = new Award($user_award->award_id);
-                    $user_award->award_image = $award->award_image;
-                    $user_award->name = $award->name;
-                    $user_award->description = $award->description;
-                    $user_award->img_folder = $type->img_folder;
-                    $user_award->img_width = $type->img_width;
-                    $user_award->img_height = $type->img_height;
+                    
+                    $user_award->award_image    = $award->award_image;
+                    $user_award->name           = $award->name;
+                    $user_award->description    = $award->description;
+                    $user_award->img_folder     = $type->img_folder;
+                    $user_award->img_width      = $type->img_width;
+                    $user_award->img_height     = $type->img_height;
                     $this->data['types'][$type->name][] = $user_award;
                 }
             }
@@ -288,9 +290,22 @@ class Profile extends PVA_Controller
         $award_id = $this->input->post('award_id', TRUE);
         
         $user = new User($user_id);
+        $user->grant_award($award_id);
         
         $this->_flash_message('success', 'User Award', 'Award Granted');        
         redirect('private/profile/view_awards/' . $user_id);
+    }
+    
+    function revoke_award()
+    {
+        $user_award_id  =  $this->uri->segment(4);
+        $user_id        =  $this->uri->segment(5);
+        
+        $user = new User($user_id);
+        $user->revoke_award($user_award_id);
+        
+        $this->_flash_message('success', 'User Award', 'Award Revoked');
+        $this->view_awards($user_id);
     }
 
 }
