@@ -25,6 +25,21 @@
 			<?php echo $body; ?>
 		</div>
 		<div class="col-md-4">
+			<?php if (isset($userdata['name']) && $userdata['is_manager']): ?>
+			<div class="featured-box featured-box-red">
+				<div class="box-content">
+					<h2>Hub Admin</h2>
+					<ul class="nav nav-pills">
+						<li role="presentation">
+							<?php echo anchor('/private/hubs/edit_page', 'Edit This Page'); ?>
+						</li>
+						<li role="presentation">
+							<?php echo anchor('/private/hubs/create_page', 'Add New Page'); ?>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<?php endif; ?>
 			<div class="featured-box featured-box-green">
 				<div class="box-content">
 					<h2>Pilots</h2>
