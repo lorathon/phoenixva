@@ -298,6 +298,11 @@
 							<div class="col-md-12">
 								<ul class="breadcrumb">
 									<li><?php echo anchor('','Home'); ?></li>
+									<?php if (isset($breadcrumb)): ?>
+										<?php foreach ($breadcrumb as $link => $page): ?>
+											<li><?php echo anchor($link, $page); ?></li>
+										<?php endforeach; ?>
+									<?php endif; ?>
 								</ul>
 							</div>
 						</div>

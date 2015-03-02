@@ -63,6 +63,7 @@ class Hubs extends PVA_Controller {
 		$this->data['meta_title'] = 'PVA Crew Centers: '.$airport->get_full_name();
 		$this->data['icao'] = $icao;
 		$this->data['pages'] = $this->_hub_navigation($icao);
+		$this->data['breadcrumb']['hubs'] = 'Crew Centers';
 
 		$user = new User();
 		$user->hub = $airport->id;
