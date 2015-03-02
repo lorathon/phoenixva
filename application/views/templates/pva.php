@@ -112,10 +112,10 @@
                                                                 
                                                                 <?php if (isset($userdata['name'])): //Logged In?>
                                                                 <li class="dropdown mega-menu-item mega-menu-signin signin logged" id="headerAccount">
-									<a class="dropdown-toggle" href="private/profile">
-										<i class="fa fa-user fa-lg"></i> <?php echo $userdata['rank_short'] . ' ' . $userdata['name']; ?>
-										<i class="fa fa-angle-down"></i>
-									</a>
+									<?php echo anchor('private/profile',
+											'<i class="fa fa-user fa-lg"></i> '
+											.$userdata['rank_short'] . ' ' . $userdata['name']
+											.'<i class="fa fa-angle-down"></i>','class="dropdown-toggle"'); ?>
 									<ul class="dropdown-menu">
 										<li>
 											<div class="mega-menu-content">
