@@ -161,6 +161,15 @@ class User extends PVA_Model {
             $user_award->award_id = $award_id;            
             $user_award->save();
         }
+        
+        function revoke_award($user_award_id = NULL)
+        {
+            if( is_null($user_award_id))
+                return FALSE;
+            
+            $user_award = new User_award($user_award_id);
+            $user_award->delete();            
+        }
                 
 	/**
 	 * Populates user object based on legacy data

@@ -290,16 +290,22 @@ class Profile extends PVA_Controller
         $award_id = $this->input->post('award_id', TRUE);
         
         $user = new User($user_id);
+        $user->grant_award($award_id);
         
         $this->_flash_message('success', 'User Award', 'Award Granted');        
         redirect('private/profile/view_awards/' . $user_id);
     }
     
-    function revoke_award($user_award_id = NULL)
+    function revoke_award()
     {
-        //$user = new User($id);        
-        $this->_flash_message('success', 'User Award' . $user_award_id, 'Award Revoked');        
-        redirect('private/profile/view_awards/');
+        $user_award_id  =  $this->uri->segment(4);
+        $user_id        =  $this->uri->segment(5);
+        
+        $user = new User($user_id);
+        $user->revoke_award($user_award_id);
+        
+        $this->_flash_message('success', 'User Award', 'Award Revoked');
+        $this->view_awards($user_id);
     }
 
 }

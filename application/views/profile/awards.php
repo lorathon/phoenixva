@@ -107,7 +107,7 @@ $award = array(
                                             <td><?php echo $award->description; ?></td>
                                             <td><?php echo $award->created; ?></td>
                                             <?php if ($userdata['is_admin']) : ?>
-                                            <td><?php echo anchor('private/profile/revoke_award/' . $award->id,'<i class="fa fa-trash"></i> Revoke', button_delete('danger')); ?></td>
+                                            <td><?php echo anchor('private/profile/revoke_award/' . $award->id . '/' . $this->data['user_id'],'<i class="fa fa-trash"></i> Revoke', button_delete('danger')); ?></td>
                                             <?php endif; ?>
                                         </tr>
                                     <?php endforeach; ?>
