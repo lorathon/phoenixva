@@ -43,7 +43,7 @@
 							</dd>
 							<?php if ($raw_status < 4): ?>
 								<dt>Valid Thru</dt>
-								<dd>2015-09-22</dd>
+								<dd><?php echo $retire_date; ?></dd>
 							<?php endif; ?>
 						</dl>
                                                 <hr />
