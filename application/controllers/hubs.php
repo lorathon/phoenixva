@@ -11,7 +11,7 @@ class Hubs extends PVA_Controller {
 	/**
 	 * Displays list of hub airports
 	 */
-	function index()
+	public function index()
 	{
 		log_message('debug', 'Hub index called');
 		$this->data['meta_title'] = 'Phoenix Virtual Airways Crew Centers';
@@ -24,7 +24,7 @@ class Hubs extends PVA_Controller {
 				
 			foreach ($hubs as $hub)
 			{
-				$this->data['hubs'][$hub->id] = $hub->get_full_name();
+				$this->data['hubs'][$hub->icao] = $hub->get_full_name();
 			}
 		}
 		$count = count($this->data['hubs']);
@@ -38,26 +38,58 @@ class Hubs extends PVA_Controller {
 	/**
 	 * Displays the requested hub page
 	 */
-	function view($id)
+	public function view($icao, $page = NULL)
 	{
 		log_message('debug', 'Hub page called');
 		
-		if (is_null($id))
+		if (is_null($icao))
 		{
 			// Hub is required
 			log_message('debug', 'No hub provided, redirecting.');
-			redirect('/hubs');
+			$this->index();
 		}
 		
-		$airport = new Airport($id);
+		$airport = new Airport();
+		$airport->icao = $icao;
+		$airport->find();
 		
-		$this->data['meta_title'] = 'Phoenix Virtual Airways Crew Centers: '.$airport->get_full_name();
-		$this->data['title'] = $airport->get_full_name();
+		if (!$airport->is_hub())
+		{
+			$this->data['errors'][] = $airport->name.' ('.$airport->icao.') is not a crew center.';
+			$this->index();
+			return FALSE;
+		}
 		
+		$this->data['meta_title'] = 'PVA Crew Centers: '.$airport->get_full_name();
+		$this->data['icao'] = $icao;
+		$this->data['pages'] = $this->_hub_navigation($icao);
+		$this->data['breadcrumb']['hubs'] = 'Crew Centers';
+
 		$user = new User();
-		$user->hub = $id;
+		$user->hub = $airport->id;
 		$this->data['pilots'] = $user->find_all();
+
+		$article = new Article();
+		$article->slug = $this->_build_slug($icao, $page);
+		$article->find();
 		
+		if (is_null($article->title))
+		{
+			$this->data['title'] = $airport->get_full_name();
+		}
+		else 
+		{
+			$this->data['title'] = $airport->icao.': '.$article->title;
+		}
+		
+		if (is_null($article->body))
+		{
+			$this->data['body'] = 'This page has not been written.';
+		}
+		else 
+		{
+			$this->data['body'] = $article->body;
+		}
 		
 		$this->_render();
 	}
@@ -67,8 +99,49 @@ class Hubs extends PVA_Controller {
 	 * 
 	 * Hubs can have multiple pages.
 	 */
-	function create_page()
+	public function create_page()
 	{
 		log_message('debug', 'Hub page create called');
+		$this->_check_access('manager');
+	}
+	
+	public function edit_page($icao, $page)
+	{
+		log_message('debug', 'Hub page edit called');
+		$this->_check_access('manager');
+	}
+	
+	/**
+	 * Returns an array of article links for the selected hub.
+	 * 
+	 * @param string $icao of the hub to search
+	 * @return array of Article objects
+	 */
+	protected function _hub_navigation($icao)
+	{
+		log_message('debug', 'Creating hub navigation for '.$icao);
+		$navigation = array();
+		
+		$article = new Article();
+		$article->slug = $this->_build_slug($icao);
+		$nav_list = $article->find_all(TRUE);
+		if ($nav_list)
+		{
+			foreach ($nav_list as $item)
+			{
+				$navigation[$item->slug] = $item->title;
+			}
+		}
+		return $navigation;
+	}
+	
+	protected function _build_slug($icao, $page = NULL)
+	{
+		$slug = 'hub-'.$icao;
+		if (!is_null($page))
+		{
+			$slug .= '-'.$page;
+		}
+		return $slug;
 	}
 }

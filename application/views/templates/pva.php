@@ -112,10 +112,10 @@
                                                                 
                                                                 <?php if (isset($userdata['name'])): //Logged In?>
                                                                 <li class="dropdown mega-menu-item mega-menu-signin signin logged" id="headerAccount">
-									<a class="dropdown-toggle" href="private/profile">
-										<i class="fa fa-user fa-lg"></i> <?php echo $userdata['rank_short'] . ' ' . $userdata['name']; ?>
-										<i class="fa fa-angle-down"></i>
-									</a>
+									<?php echo anchor('private/profile',
+											'<i class="fa fa-user fa-lg"></i> '
+											.$userdata['rank_short'] . ' ' . $userdata['name']
+											.'<i class="fa fa-angle-down"></i>','class="dropdown-toggle"'); ?>
 									<ul class="dropdown-menu">
 										<li>
 											<div class="mega-menu-content">
@@ -298,6 +298,11 @@
 							<div class="col-md-12">
 								<ul class="breadcrumb">
 									<li><?php echo anchor('','Home'); ?></li>
+									<?php if (isset($breadcrumb)): ?>
+										<?php foreach ($breadcrumb as $link => $page): ?>
+											<li><?php echo anchor($link, $page); ?></li>
+										<?php endforeach; ?>
+									<?php endif; ?>
 								</ul>
 							</div>
 						</div>
@@ -329,6 +334,24 @@
 						</div>
 					</div>
 				<?php endif;?>
+				<?php if ($errors):?>
+					<div class="container">
+						<div class="row">
+							<div class="col-md-offset-3 col-md-6">
+								<div class="panel panel-danger">
+									<div class="panel-heading">
+										Errors
+									</div>
+									<div class="panel-body">
+										<?php foreach ($errors as $error): ?>
+											<p><?php echo $error; ?></p>
+										<?php endforeach; ?>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				<?php endif; ?>
 	
 				<?php echo $view_output; ?>
 			
