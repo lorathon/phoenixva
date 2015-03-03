@@ -1,3 +1,8 @@
+/* space navbar and icons */
+#header .social-icons {
+margin-left: 25px;
+}
+
 /* rev-slider, additional caption colors */
 .tp-caption.modern_med_redbg {
 position:absolute;

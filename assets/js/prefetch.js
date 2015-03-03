@@ -2,7 +2,7 @@
 		  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('typeAhead'),
 		  queryTokenizer: Bloodhound.tokenizers.whitespace,
 		  limit: 10,
-		  prefetch: 'assets/data/airports.json'
+		  prefetch: '../assets/data/airports.json'
 		});
 		 
 		 
@@ -23,7 +23,7 @@
 		  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('typeAhead'),
 		  queryTokenizer: Bloodhound.tokenizers.whitespace,
 		  limit: 10,
-		  prefetch: 'assets/data/airlines.json'
+		  prefetch: '../assets/data/airlines.json'
 		});
 		 
 		 
