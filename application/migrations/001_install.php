@@ -364,7 +364,7 @@ class Migration_Install extends CI_Migration {
                 $this->dbforge->add_key('id', TRUE);
                 $this->dbforge->create_table('awards');
 
-                 // User Awards table
+                // User Awards table
                 $this->dbforge->add_field(array(
                                 'id'            => $field_config['id_field'],
                                 'user_id'       => $field_config['fk_field'],
@@ -374,6 +374,52 @@ class Migration_Install extends CI_Migration {
 
                 $this->dbforge->add_key('id', TRUE);
                 $this->dbforge->create_table('user_awards');
+		
+		// Event_types table
+                $this->dbforge->add_field(array(
+                                'id'            => $field_config['id_field'],
+                                'name'          => $field_config['input_field'],
+                                'description'   => $field_config['input_field'],
+				'color'		=> $field_config['fk_field'],
+                                'created'       => $field_config['timestamp_field'],
+                                'modified'      => $field_config['timestamp_field']
+                                ));
+
+                $this->dbforge->add_key('id', TRUE);
+                $this->dbforge->create_table('event_types');
+		
+		// Events table
+                $this->dbforge->add_field(array(
+                                'id'		    => $field_config['id_field'],
+                                'event_type_id'	    => $field_config['fk_field'],
+                                'name'		    => $field_config['input_field'],
+                                'description'       => $field_config['input_field'],
+				'time_start'	    => $field_config['timestamp_field'],
+				'time_end'	    => $field_config['timestamp_field'],
+				'waiver_js'	    => $field_config['boolean_field'],
+				'waiver_cat'	    => $field_config['boolean_field'],
+				'airline_id'	    => $field_config['fk_field'],
+				'airport_id'	    => $field_config['fk_field'],
+				'aircraft_cat_id'   => $field_config['fk_field'],
+				'landing_rate'	    => $field_config['landingrate_field'],
+				'flight_time'	    => $field_config['counter_field'],
+				'total_flights'	    => $field_config['status_field'],
+				'bonus_1'	    => $field_config['status_field'],
+				'bonus_2'	    => $field_config['status_field'],
+				'bonus_3'	    => $field_config['status_field'],
+				'award_id_winner'   => $field_config['fk_field'],
+				'award_id_particapant'	=> $field_config['fk_field'],
+				'enabled'	    => $field_config['boolean_field'],
+				'completed'	    => $field_config['boolean_field'],
+				'user_id_1'	    => $field_config['fk_field'],
+				'user_id_2'	    => $field_config['fk_field'],
+				'user_id_3'	    => $field_config['fk_field'],
+				'created'	    => $field_config['timestamp_field'],
+				'modified'	    => $field_config['timestamp_field'],		    
+                            ));
+
+                $this->dbforge->add_key('id', TRUE);
+                $this->dbforge->create_table('events');		
         }
 	
 	public function down()
@@ -391,7 +437,8 @@ class Migration_Install extends CI_Migration {
                 $this->dbforge->drop_table('user_awards');
                 $this->dbforge->drop_table('awards');
                 $this->dbforge->drop_table('award_types');
-                $this->dbforge->drop_table('users');
-                
+		$this->dbforge->drop_table('events');
+                $this->dbforge->drop_table('event_types');
+                $this->dbforge->drop_table('users');                
 	}
 }
