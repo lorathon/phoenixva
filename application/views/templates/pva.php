@@ -17,7 +17,7 @@
                 
 		<!-- Vendor CSS -->
                 
-		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/bootstrap/bootstrap.css');?>">
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/owlcarousel/owl.carousel.css');?>" media="screen">
 		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/owlcarousel/owl.theme.css');?>" media="screen">
 		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/magnific-popup/magnific-popup.css');?>" media="screen">
@@ -418,7 +418,7 @@
 		<script src="<?php echo base_url('assets/vendor/jquery.appear/jquery.appear.js');?>"></script>
 		<script src="<?php echo base_url('assets/vendor/jquery.easing/jquery.easing.js');?>"></script>
 		<script src="<?php echo base_url('assets/vendor/jquery-cookie/jquery-cookie.js');?>"></script>
-		<script src="<?php echo base_url('assets/vendor/bootstrap/bootstrap.js');?>"></script>
+                <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js">
 		<script src="<?php echo base_url('assets/vendor/common/common.js');?>"></script>
 		<script src="<?php echo base_url('assets/vendor/jquery.validation/jquery.validation.js');?>"></script>
 		<script src="<?php echo base_url('assets/vendor/jquery.stellar/jquery.stellar.js');?>"></script>
