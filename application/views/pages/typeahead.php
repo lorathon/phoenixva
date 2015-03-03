@@ -1,7 +1,17 @@
 				<div class="container">
 
 				<form name="typeahead_search" id="typeahead_search" action="/zz_staging_ci/index.php/typeahead_results" method="post">
-	
+                                        
+                                        <div class="row">
+						<div class="col-md-12">
+							<div class="summernote" data-plugin-summernote data-plugin-options='{ "height": 200, "codemirror": { "theme": "ambiance" } }'></div>
+						</div>
+					</div>
+                                    
+                                        <div class="row">
+						<div class="col-md-12">&nbsp;</div>
+					</div>
+                                    
 					<div class="row">
 						<div class="col-md-4" align="right">
 							<h2><strong>Departure</strong> Airport</h2>					
@@ -32,14 +42,9 @@
 							  <input class="typeahead" name="airlines" type="text" placeholder="Search for Airline">
 							</div>
 						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-12" align="center">
-							<button type="submit" class="btn btn-primary btn-lg">Submit Search</button>
-						</div>
-					</div>
-
-
+                                        </div>
+                                    
+                                                                       
 				</form>
 				
 				</div>
