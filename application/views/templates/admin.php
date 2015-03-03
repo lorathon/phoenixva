@@ -149,21 +149,31 @@
 											</li>
 										</ul>
 									</li>
-                                                                        
-                                                                        <li class="nav-parent">
+									
+									<!-- Start Awards Nav -->
+									<li class="nav-parent">
 										<a>
 											<i class="fa fa-flag-checkered" aria-hidden="true"></i>
 											<span>Awards</span>
 										</a>
 										<ul class="nav nav-children">
-                                                                                        <li>
-												<?php echo anchor('admin/awards','All Awards'); ?>
+											<li>
+												<?php echo anchor('admin/awards', 'All Awards'); ?>
 											</li>
-                                                                                        <li>
-												<?php echo anchor('admin/awards/award_types','Award Types'); ?>
+											<li class="nav-parent">
+												<a>Tools</a>
+												<ul class="nav nav-children">													
+													<li>
+														<?php echo anchor('admin/awards/award_types', 'Award Types'); ?>
+													</li>
+													<li>
+														<a>Second Level Link #2</a>
+													</li>
+												</ul>
 											</li>
 										</ul>
-									</li>
+									</li> 
+									<!-- End Awards Nav -->
                                                                         
                                                                         <li class="nav-parent">
 										<a>
