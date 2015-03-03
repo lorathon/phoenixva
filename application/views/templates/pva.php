@@ -414,7 +414,8 @@
 			</footer>
 		</div>
 
-                <script src="<?php echo base_url('assets/vendor/jquery/jquery.js');?>"></script>
+                <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+                <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 		<script src="<?php echo base_url('assets/vendor/jquery.appear/jquery.appear.js');?>"></script>
 		<script src="<?php echo base_url('assets/vendor/jquery.easing/jquery.easing.js');?>"></script>
 		<script src="<?php echo base_url('assets/vendor/jquery-cookie/jquery-cookie.js');?>"></script>
