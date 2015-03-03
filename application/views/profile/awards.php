@@ -76,7 +76,7 @@ $award = array(
 	<?php endif ?>
         <!-- End Award Modal Form -->
 
-        <!-- Awards row -->
+        <!-- Start Awards row -->
 	<?php foreach ($types as $type => $awards) : ?>
 	    <div class="row">
 		<div class="col-xs-12">
