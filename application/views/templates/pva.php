@@ -13,11 +13,11 @@
 		<!-- Web Fonts  -->
                 
 		<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800%7CShadows+Into+Light" rel="stylesheet" type="text/css">
-                <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+                <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
                 
 		<!-- Vendor CSS -->
                 
-		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/bootstrap/bootstrap.css');?>">
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/owlcarousel/owl.carousel.css');?>" media="screen">
 		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/owlcarousel/owl.theme.css');?>" media="screen">
 		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/magnific-popup/magnific-popup.css');?>" media="screen">
@@ -414,11 +414,12 @@
 			</footer>
 		</div>
 
-                <script src="<?php echo base_url('assets/vendor/jquery/jquery.js');?>"></script>
+                <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+                <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 		<script src="<?php echo base_url('assets/vendor/jquery.appear/jquery.appear.js');?>"></script>
 		<script src="<?php echo base_url('assets/vendor/jquery.easing/jquery.easing.js');?>"></script>
 		<script src="<?php echo base_url('assets/vendor/jquery-cookie/jquery-cookie.js');?>"></script>
-		<script src="<?php echo base_url('assets/vendor/bootstrap/bootstrap.js');?>"></script>
+                <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js">
 		<script src="<?php echo base_url('assets/vendor/common/common.js');?>"></script>
 		<script src="<?php echo base_url('assets/vendor/jquery.validation/jquery.validation.js');?>"></script>
 		<script src="<?php echo base_url('assets/vendor/jquery.stellar/jquery.stellar.js');?>"></script>

@@ -1,7 +1,7 @@
-﻿var airports = new Bloodhound({
+var airports = new Bloodhound({
 		  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('typeAhead'),
 		  queryTokenizer: Bloodhound.tokenizers.whitespace,
-		  limit: 10,
+		  limit: 15,
 		  prefetch: '../assets/data/airports.json'
 		});
 		 
@@ -19,10 +19,10 @@
 		  source: airports.ttAdapter(),
 		});
 		
-		var airlines = new Bloodhound({
+var airlines = new Bloodhound({
 		  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('typeAhead'),
 		  queryTokenizer: Bloodhound.tokenizers.whitespace,
-		  limit: 10,
+		  limit: 15,
 		  prefetch: '../assets/data/airlines.json'
 		});
 		 
