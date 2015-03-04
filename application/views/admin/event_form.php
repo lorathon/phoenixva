@@ -56,17 +56,17 @@ $event_type_id = array(
 $waiver_js = array(
     'name'	    => 'waiver_js',
     'id'	    => 'waiver_js',
-    'value'	    => set_value('waiver_js', $record->event_type_id),
-    'checked'	    => FALSE,
-    'class'	    =>$field_class,
+    'value'	    => TRUE,
+    'checked'	    => $record->waiver_js ? TRUE : FALSE,
+    'class'	    => $field_class,
 );
 
 $waiver_cat = array(
     'name'	    => 'waiver_cat',
     'id'	    => 'waiver_cat',
-    'value'	    => set_value('waiver_cat', $record->event_type_id),
-    'checked'	    => FALSE,
-    'class'	    =>$field_class,
+    'value'	    => TRUE,
+    'checked'	    => $record->waiver_cat ? TRUE : FALSE,
+    'class'	    => $field_class,
 );
 
 $airline_id = array(
@@ -81,6 +81,77 @@ $airport_id = array(
     'id'	    => 'airport_id',
     'value'	    => set_value('airport_id', $record->airport_id),
     'class'         => $field_class,
+);
+
+$aircraft_cat_id = array(
+    'name'	    => 'aircraft_cat_id',
+    'id'	    => 'aircraft_cat_id',
+    'value'	    => set_value('aircraft_cat_id', $record->aircraft_cat_id),
+    'class'         => $field_class,
+);
+
+$landing_rate = array(
+    'name'	    => 'landing_rate',
+    'id'	    => 'landing_rate',
+    'value'	    => set_value('landing_rate', $record->landing_rate),
+    'class'         => $field_class,
+);
+
+$flight_time = array(
+    'name'	    => 'flight_time',
+    'id'	    => 'flight_time',
+    'value'	    => set_value('flight_time', $record->flight_time),
+    'class'         => $field_class,
+);
+
+$total_flights = array(
+    'name'	    => 'total_flights',
+    'id'	    => 'total_flights',
+    'value'	    => set_value('total_flights', $record->total_flights),
+    'class'         => $field_class,
+);
+
+$bonus_1 = array(
+    'name'	    => 'bonus_1',
+    'id'	    => 'bonus_1',
+    'value'	    => set_value('bonus_1', $record->bonus_1),
+    'class'         => $field_class,
+);
+
+$bonus_2 = array(
+    'name'	    => 'bonus_2',
+    'id'	    => 'bonus_2',
+    'value'	    => set_value('bonus_2', $record->bonus_2),
+    'class'         => $field_class,
+);
+
+$bonus_3 = array(
+    'name'	    => 'bonus_3',
+    'id'	    => 'bonus_3',
+    'value'	    => set_value('bonus_3', $record->bonus_3),
+    'class'         => $field_class,
+);
+
+$award_id_winner = array(
+    'name'	    => 'award_id_winner',
+    'id'	    => 'award_id_winner',
+    'value'	    => set_value('award_id_winner', $record->award_id_winner),
+    'class'         => $field_class,
+);
+
+$award_id_participant = array(
+    'name'	    => 'award_id_participant',
+    'id'	    => 'award_id_participant',
+    'value'	    => set_value('award_id_participant', $record->award_id_participant),
+    'class'         => $field_class,
+);
+
+$enabled = array(
+    'name'	    => 'enabled',
+    'id'	    => 'enabled',
+    'value'	    => TRUE,
+    'checked'	    => $record->enabled ? TRUE : FALSE,
+    'class'	    => $field_class,
 );
 
 ?>
@@ -123,7 +194,7 @@ $airport_id = array(
 		    <div class="form-group">				
 			<?php echo form_label('End Time', $time_end['id'], $label_attributes); ?>
 			<div class="col-md-6"><input type="text" name="time_end" id="time_end" value="<?php echo $record->time_end; ?>" data-plugin-datepicker class="form-control"></div>
-		    </div>
+		    </div>		    
 		    
                     <div class="form-group">
                         <?php echo form_label('Event Type', $event_type_id['id'], $label_attributes); ?>
@@ -154,6 +225,70 @@ $airport_id = array(
                         <div class="col-md-6">
                             <?php echo form_dropdown('airport_id', $airports, $airport_id['value'], "class='{$field_class}'"); ?>
                         </div>
+                    </div>
+		    
+		    <div class="form-group">
+                        <?php echo form_label('Aircraft Category', $aircraft_cat_id['id'], $label_attributes); ?>
+                        <div class="col-md-6">
+                            <?php echo form_dropdown('aircraft_cat_id', $aircraft_cats, $aircraft_cat_id['value'], "class='{$field_class}'"); ?>
+                        </div>
+                    </div>
+		    
+		    <div class="form-group">
+                        <?php echo form_label('Target Landing Rate', $landing_rate['id'], $label_attributes); ?>
+                        <div class="col-md-6"><?php echo form_input($landing_rate); ?></div>
+                    </div>
+		    
+		    <div class="form-group">
+			<?php echo form_label('Traget Flight Time', $flight_time['id'], $label_attributes); ?>
+			<div class="col-md-6"><input type="text" name="Flight_time" id="flight_time" value="<?php echo $record->flight_time; ?>" data-plugin-timepicker class="form-control" data-plugin-options='{ "showMeridian": false }'></div>
+		    </div>	
+
+		    <div class="form-group">
+                        <?php echo form_label('Minimum Flights', $total_flights['id'], $label_attributes); ?>
+                        <div class="col-md-6">
+                            <?php echo form_dropdown('total_flights', $zero_to_ten, $total_flights['value'], "class='{$field_class}'"); ?>
+                        </div>
+                    </div>
+		    
+		    <div class="form-group">
+                        <?php echo form_label('1st Place Bonus Hours', $bonus_1['id'], $label_attributes); ?>
+                        <div class="col-md-6">
+                            <?php echo form_dropdown('bonus_1', $zero_to_ten, $bonus_1['value'], "class='{$field_class}'"); ?>
+                        </div>
+                    </div>
+		    
+		    <div class="form-group">
+                        <?php echo form_label('2nd Place Bonus Hours', $bonus_2['id'], $label_attributes); ?>
+                        <div class="col-md-6">
+                            <?php echo form_dropdown('bonus_2', $zero_to_ten, $bonus_2['value'], "class='{$field_class}'"); ?>
+                        </div>
+                    </div>
+		    
+		    <div class="form-group">
+                        <?php echo form_label('3rd Place Bonus Hours', $bonus_3['id'], $label_attributes); ?>
+                        <div class="col-md-6">
+                            <?php echo form_dropdown('bonus_3', $zero_to_ten, $bonus_3['value'], "class='{$field_class}'"); ?>
+                        </div>
+                    </div>
+		    
+		    <div class="form-group">
+                        <?php echo form_label('Winner Award', $award_id_winner['id'], $label_attributes); ?>
+                        <div class="col-md-6">
+                            <?php echo form_dropdown('award_id_winner', $awards, $award_id_winner['value'], "class='{$field_class}'"); ?>
+                        </div>
+                    </div>
+		    
+		    <div class="form-group">
+                        <?php echo form_label('Participant Award', $award_id_participant['id'], $label_attributes); ?>
+                        <div class="col-md-6">
+                            <?php echo form_dropdown('award_id_pareticipant', $awards, $award_id_participant['value'], "class='{$field_class}'"); ?>
+                        </div>
+                    </div>
+		    
+		    <div class="form-group">
+                        <?php echo form_label('Enabled', $enabled['id'], $label_attributes); ?>
+                        <div class="col-md-6"><?php echo form_checkbox($enabled); ?></div>
                     </div>
 
                     <div class="form-group">

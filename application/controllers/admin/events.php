@@ -25,7 +25,7 @@ class Events extends PVA_Controller
         {            
             $event_type = $event->get_event_type();            
             $event->type	= $event_type->name;
-            $event->color_id	= $event_type->img_folder;            
+            $event->color_id	= $event_type->color_id;            
             $this->data['events'][] = $event;
         }
         
@@ -56,6 +56,7 @@ class Events extends PVA_Controller
         $this->form_validation->set_rules('name', 'Name', 'alpha-numberic|trim|required|xss_clean');
         $this->form_validation->set_rules('description', 'Description', 'alpha-numberic|trim|required|xss_clean');
         $this->form_validation->set_rules('event_type_id', 'Event Type', 'numeric|trim|required|xss_clean');
+	$this->form_validation->set_rules('landing_rate', 'Landing Rate', 'numeric|trim|xss_clean');
         
         $event_type = new Event_type();
         $this->data['event_types'] = $event_type->get_dropdown();
@@ -65,6 +66,13 @@ class Events extends PVA_Controller
 	
 	$airport = new Airport();
 	$this->data['airports'] = $airport->get_dropdown();
+	
+	$this->data['aircraft_cats'] = array();
+	
+	$this->data['zero_to_ten'] = array(0,1,2,3,4,5,6,7,8,9);
+	
+	$award = new Award();
+	$this->data['awards'] = $award->get_dropdown();
                 
         if ($this->form_validation->run() == FALSE)
 	{             
@@ -73,7 +81,7 @@ class Events extends PVA_Controller
             $this->_render('admin/event_form');
 	}
 	else
-	{	    
+	{	
 	    $_time_start = strtotime($this->input->post('time_start', TRUE));
 	    $_time_start = date("Y-m-d H:i:s", $_time_start);
 	    
@@ -86,11 +94,19 @@ class Events extends PVA_Controller
 	    $event->time_start	    = $_time_start;
 	    $event->time_end	    = $_time_end;
 	    $event->event_type_id   = $this->form_validation->set_value('event_type_id');
-	    $event->waiver_js	    = $this->input->post('waiver_js', TRUE);
+	    $event->waiver_js	    = $this->input->post('waiver_js', TRUE); 
 	    $event->waiver_cat	    = $this->input->post('waiver_cat', TRUE);
-	    $event->airline_id	    = $this->input->post('airline_id', TRUE);
-	    $event->airport_id	    = $this->input->post('airport_id', TRUE);
-	    
+	    $event->airline_id	    = intval($this->input->post('airline_id', TRUE));
+	    $event->airport_id	    = intval($this->input->post('airport_id', TRUE));
+	    $event->aircraft_cat_id = intval($this->input->post('aircraft_cat_id', TRUE));
+	    $event->landing_rate    = $this->form_validation->set_value('landing_rate');
+	    $event->flight_time	    = intval($this->input->post('flight_time', TRUE));
+	    $event->bonus_1	    = intval($this->input->post('bonus_1', TRUE));
+	    $event->bonus_3	    = intval($this->input->post('bonus_2', TRUE));
+	    $event->bonus_1	    = intval($this->input->post('bonus_3', TRUE));
+	    $event->award_id_winner = intval($this->input->post('award_id_winner', TRUE));
+	    $event->award_id_participant    = intval($this->input->post('award_id_participant', TRUE));
+	    $event->enabled	    = $this->input->post('enabled', TRUE);  
                 
             $event->save();
             $this->_flash_message('success', 'Event', 'Record Saved');
