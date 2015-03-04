@@ -55,11 +55,16 @@ class Events extends PVA_Controller
         $this->form_validation->set_rules('id', 'ID', '');
         $this->form_validation->set_rules('name', 'Name', 'alpha-numberic|trim|required|xss_clean');
         $this->form_validation->set_rules('description', 'Description', 'alpha-numberic|trim|required|xss_clean');
-        $this->form_validation->set_rules('event_image', 'Event Image', 'trim|required|xss_clean');
         $this->form_validation->set_rules('event_type_id', 'Event Type', 'numeric|trim|required|xss_clean');
         
         $event_type = new Event_type();
         $this->data['event_types'] = $event_type->get_dropdown();
+	
+	$airline = new Airline();
+	$this->data['airlines'] = $airline->get_dropdown();
+	
+	$airport = new Airport();
+	$this->data['airports'] = $airport->get_dropdown();
                 
         if ($this->form_validation->run() == FALSE)
 	{             
@@ -68,12 +73,24 @@ class Events extends PVA_Controller
             $this->_render('admin/event_form');
 	}
 	else
-	{
+	{	    
+	    $_time_start = strtotime($this->input->post('time_start', TRUE));
+	    $_time_start = date("Y-m-d H:i:s", $_time_start);
+	    
+	    $_time_end = strtotime($this->input->post('time_end', TRUE));
+	    $_time_end = date("Y-m-d H:i:s", $_time_end);
+	    
             $event->id              = $this->input->post('id', TRUE);
-            $event->name            = $this->form_validation->set_value('name');
-            $event->event_type_id   = $this->form_validation->set_value('event_type_id');
+            $event->name            = $this->form_validation->set_value('name');            
             $event->description     = $this->form_validation->set_value('description');
-            $event->event_image     = $this->form_validation->set_value('event_image');
+	    $event->time_start	    = $_time_start;
+	    $event->time_end	    = $_time_end;
+	    $event->event_type_id   = $this->form_validation->set_value('event_type_id');
+	    $event->waiver_js	    = $this->input->post('waiver_js', TRUE);
+	    $event->waiver_cat	    = $this->input->post('waiver_cat', TRUE);
+	    $event->airline_id	    = $this->input->post('airline_id', TRUE);
+	    $event->airport_id	    = $this->input->post('airport_id', TRUE);
+	    
                 
             $event->save();
             $this->_flash_message('success', 'Event', 'Record Saved');

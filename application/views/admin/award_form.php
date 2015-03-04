@@ -59,13 +59,6 @@ $award_type_id = array(
         <div class="col-md-4">
             <section class="panel">
                 <header class="panel-heading">
-                    <!--
-                    <div class="panel-actions">
-                        <a href="#" class="fa fa-caret-down"></a>
-                        <a href="#" class="fa fa-times"></a>
-                    </div>
-                    -->
-
                     <h2 class="panel-title">Award Form</h2>
                 </header>
                 <div class="panel-body">

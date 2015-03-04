@@ -178,7 +178,8 @@ class PVA_Model extends CI_Model
     		$this->db->where($parms);
     	}
     	
-    	$this->db->limit($this->_limit, $this->_offset);
+	if (! is_null($this->_limit) )
+	    $this->db->limit($this->_limit, $this->_offset);
     	
     	if ( ! is_null($this->_order_by))
     	{

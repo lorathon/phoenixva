@@ -31,7 +31,7 @@
                                     <td><?php echo $type->id ?></td>
                                     <td><?php echo $type->name ?></td>
                                     <td><?php echo $type->description ?></td>
-                                    <td><?php echo $type->color_id ?></td>
+                                    <td><div class="text-<?php echo $calendar_colors[$type->color_id]; ?>"><?php echo ucfirst($calendar_colors[$type->color_id]); ?></div></td>
                                     <td align="center">
                                         <?php echo anchor('admin/events/create_event_type/' . $type->id,'<i class="fa fa-pencil"></i> Edit', button('info')); ?>
                                         <?php echo anchor('admin/events/delete_event_type/' . $type->id,'<i class="fa fa-trash"></i> Delete', button_delete('danger')); ?>

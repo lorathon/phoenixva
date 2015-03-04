@@ -25,7 +25,7 @@ class Event_type extends PVA_Model {
 	} 
         
         function get_dropdown()
-        {
+        {	    
             $types = $this->find_all();
             
             $data = array();
