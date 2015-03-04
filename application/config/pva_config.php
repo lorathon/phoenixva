@@ -64,13 +64,13 @@ $config['flight_type'] = array(
     'C' => 'Cargo'
 );
 $config['calendar_colors'] = array(
-    '0' => 'fc-event-default',
-    '1' => 'fc-event-primary',
-    '2' => 'fc-event-success',
-    '3' => 'fc-event-warning',
-    '4' => 'fc-event-info',
-    '5' => 'fc-event-danger',
-    '6' => 'fc-event-dark',
+    '0' => 'default',
+    '1' => 'primary',
+    '2' => 'success',
+    '3' => 'warning',
+    '4' => 'info',
+    '5' => 'danger',
+    '6' => 'dark',
     
 );
 $config['countries'] = array(    

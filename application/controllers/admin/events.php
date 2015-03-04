@@ -102,7 +102,7 @@ class Events extends PVA_Controller
             $event_type->id		= $this->input->post('id', TRUE);
             $event_type->name		= $this->form_validation->set_value('name');
             $event_type->description	= $this->form_validation->set_value('description');
-            $event_type->color_id	= $this->form_validation->set_value('color_id');
+            $event_type->color_id	= $this->input->post('color_id', TRUE);
                 
             $event_type->save();
             $this->_flash_message('success', 'Event Type', 'Record Saved');

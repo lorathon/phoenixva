@@ -69,11 +69,24 @@ $color_id = array(
                         <?php echo form_label('Description', $description['id'], $label_attributes); ?>
                         <div class="col-md-6"><?php echo form_textarea($description); ?></div>
                     </div>
-		    
-		    <div class="form-group">
-                        <?php echo form_label('Calendar Color', $color_id['id'], $label_attributes); ?>
+                    
+                    <div class="form-group">
+                        <?php echo form_label('Calendar Color', 'color_id', $label_attributes); ?>
                         <div class="col-md-6">
-                            <?php echo form_dropdown('color_id', $calendar_colors, $color_id['value'], "class='{$field_class}'"); ?>
+                            <?php 
+                            foreach($calendar_colors as $key => $value) 
+                            { 
+                                echo '<div class="radio-custom radio-' . $value . '">';
+                                $data = array(
+                                    'name'        => 'color_id',
+                                    'id'          => 'color_id',
+                                    'value'       => $key,
+                                    'checked'     => ($key == $record->color_id) ? TRUE : FALSE,
+                                    );
+                                echo form_radio($data);
+                                echo '<label for="color_id" class="text-' . $value .'">' . ucfirst($value) . '</label></div>';
+                            }
+                            ?>
                         </div>
                     </div>
 
