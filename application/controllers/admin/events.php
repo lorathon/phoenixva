@@ -100,13 +100,19 @@ class Events extends PVA_Controller
 	    $event->airport_id	    = intval($this->input->post('airport_id', TRUE));
 	    $event->aircraft_cat_id = intval($this->input->post('aircraft_cat_id', TRUE));
 	    $event->landing_rate    = $this->form_validation->set_value('landing_rate');
-	    $event->flight_time	    = intval($this->input->post('flight_time', TRUE));
+	    $event->total_flights   = intval($this->input->post('total_flights', TRUE));
+	    $event->flight_time	    = $this->input->post('flight_time', TRUE);
 	    $event->bonus_1	    = intval($this->input->post('bonus_1', TRUE));
-	    $event->bonus_3	    = intval($this->input->post('bonus_2', TRUE));
-	    $event->bonus_1	    = intval($this->input->post('bonus_3', TRUE));
+	    $event->bonus_2	    = intval($this->input->post('bonus_2', TRUE));
+	    $event->bonus_3	    = intval($this->input->post('bonus_3', TRUE));
 	    $event->award_id_winner = intval($this->input->post('award_id_winner', TRUE));
 	    $event->award_id_participant    = intval($this->input->post('award_id_participant', TRUE));
-	    $event->enabled	    = $this->input->post('enabled', TRUE);  
+	    $event->enabled	    = $this->input->post('enabled', TRUE); 
+	    
+	    $event->completed	    = $event->completed == NULL ? 0 : $event->completed;
+	    $event->user_id_1	    = $event->user_id_1 == NULL ? 0 : $event->user_id_1;
+	    $event->user_id_2	    = $event->user_id_2 == NULL ? 0 : $event->user_id_2;
+	    $event->user_id_3	    = $event->user_id_3 == NULL ? 0 : $event->user_id_3;
                 
             $event->save();
             $this->_flash_message('success', 'Event', 'Record Saved');

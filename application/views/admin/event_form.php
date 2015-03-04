@@ -241,7 +241,7 @@ $enabled = array(
 		    
 		    <div class="form-group">
 			<?php echo form_label('Traget Flight Time', $flight_time['id'], $label_attributes); ?>
-			<div class="col-md-6"><input type="text" name="Flight_time" id="flight_time" value="<?php echo $record->flight_time; ?>" data-plugin-timepicker class="form-control" data-plugin-options='{ "showMeridian": false }'></div>
+			<div class="col-md-6"><input type="text" name="flight_time" id="flight_time" value="<?php echo $record->flight_time; ?>" data-plugin-timepicker class="form-control" data-plugin-options='{ "showMeridian": false }'></div>
 		    </div>	
 
 		    <div class="form-group">
@@ -282,7 +282,7 @@ $enabled = array(
 		    <div class="form-group">
                         <?php echo form_label('Participant Award', $award_id_participant['id'], $label_attributes); ?>
                         <div class="col-md-6">
-                            <?php echo form_dropdown('award_id_pareticipant', $awards, $award_id_participant['value'], "class='{$field_class}'"); ?>
+                            <?php echo form_dropdown('award_id_participant', $awards, $award_id_participant['value'], "class='{$field_class}'"); ?>
                         </div>
                     </div>
 		    
