@@ -374,6 +374,20 @@ class Migration_Install extends CI_Migration {
 
                 $this->dbforge->add_key('id', TRUE);
                 $this->dbforge->create_table('user_awards');
+		
+		// Aircraft table
+                $this->dbforge->add_field(array(
+                                'id'		    => $field_config['id_field'],
+                                'equip'		    => $field_config['icao_field'],
+                                'category'	    => $field_config['fk_field'],
+				'carrier_count'	    => $field_config['counter_field'],
+                                'operator_count'    => $field_config['counter_field'],
+                                'flight_count'      => $field_config['counter_field']
+                                ));
+
+                $this->dbforge->add_key('id', TRUE);
+                $this->dbforge->create_table('aircrafts');
+
         }
 	
 	public function down()
