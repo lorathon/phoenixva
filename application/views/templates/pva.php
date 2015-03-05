@@ -432,7 +432,7 @@
 		<script src="<?php echo base_url('assets/vendor/vide/vide.js');?>"></script>
                 <script src="<?php echo base_url('assets/vendor/rs-plugin/js/jquery.themepunch.tools.min.js');?>"></script>
 		<script src="<?php echo base_url('assets/vendor/rs-plugin/js/jquery.themepunch.revolution.min.js');?>"></script>
-		
+                                         
 		<!-- Theme Base, Components and Settings -->
 		<script src="<?php echo base_url('assets/js/theme.js');?>"></script>
 
@@ -458,9 +458,23 @@
 		<script src="<?php echo base_url('assets/admin/vendor/codemirror/mode/xml/xml.js');?>"></script>
 		<script src="<?php echo base_url('assets/admin/vendor/codemirror/mode/htmlmixed/htmlmixed.js');?>"></script>
 		<script src="<?php echo base_url('assets/admin/vendor/codemirror/mode/css/css.js');?>"></script>
-		<script src="<?php echo base_url('assets/admin/vendor/summernote/summernote.js');?>"></script>
 		<script src="<?php echo base_url('assets/admin/vendor/bootstrap-maxlength/bootstrap-maxlength.js');?>"></script>
 		<script src="<?php echo base_url('assets/admin/vendor/ios7-switch/ios7-switch.js');?>"></script>
+                
+                <!-- load page specific scripts -->
+                <?php if (isset($scripts)) : // if page scripts are needed 
+
+                    // if they are listed in an array
+                    if (is_array($scripts)) : 
+                        foreach ($scripts as $row): ?>
+                            <script src="<?=$row; ?>"></script>
+                        <?php endforeach;
+
+                    // if they are listed in an array
+                    else: ?>
+                        <script src="<?=$scripts;?>"></script>
+                    <?php endif; 
+                endif; ?>
 
 		<!-- Admin Extension -->
 		<script src="<?php echo base_url('assets/admin/javascripts/theme.admin.extension.js');?>"></script>
@@ -470,8 +484,6 @@
 		
 		<!-- Theme Custom -->
 		<script src="<?php echo base_url('assets/js/custom.js');?>"></script>
-                <script src="<?php echo base_url('assets/js/typeahead.bundle.js');?>"></script>
-                <script src="<?php echo base_url('assets/js/prefetch.js');?>"></script>
 		
 		<!-- Theme Initialization Files -->
 		<script src="<?php echo base_url('assets/js/theme.init.js');?>"></script>

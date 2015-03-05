@@ -35,9 +35,13 @@ class Pages extends PVA_Controller {
 		if ($page == 'typeahead')
 		{
 			$this->load->helper('url');
+                        $this->data['stylesheets'] = array();
+                        $this->data['stylesheets'][] = base_url('assets/js/typeahead.bundle.js');
+                        
 			$this->data['scripts'] = array();
-			$this->data['scripts'][] = '<script src="'.base_url('assets/js/typeahead.bundle.js').'"></script>';
-			$this->data['scripts'][] = '<script src="'.base_url('assets/js/prefetch.js').'"></script>';
+			$this->data['scripts'][] = base_url('assets/js/typeahead.bundle.js');
+			$this->data['scripts'][] = base_url('assets/js/prefetch.js');
+                        $this->data['scripts'][] = base_url('assets/admin/vendor/summernote/summernote.js');
 		}		
 		
 		$this->data['title'] = ucwords($page);
