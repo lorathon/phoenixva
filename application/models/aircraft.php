@@ -3,18 +3,39 @@
 class Aircraft extends PVA_model
 {    
     public $equip		= NULL;
+    public $aircraft_sub_id	= NULL;
+    public $name		= NULL;
     public $category		= NULL;
+    public $pax_first		= NULL;
+    public $pax_business	= NULL;
+    public $pax_economy		= NULL;
+    public $cargo		= NULL;
+    public $range		= NULL;
+    public $oew			= NULL;
+    public $mzfw		= NULL;
+    public $mlw			= NULL;
+    public $mtow		= NULL;    
     public $carrier_count	= NULL;
     public $operator_count	= NULL;
     public $flight_count	= NULL;
+    public $total_pireps	= NULL;
+    public $total_hours		= NULL;
+    public $total_distance	= NULL;
     
     private $_schedules_table = 'schedules';
     
-    public function __construct()
+    public function __construct($id = NULL)
     {
-        parent::__construct();
+        parent::__construct($id);
     }
-    
+        
+    /**
+     * Retrieve aircraft data from schedules.
+     * Build the aircraft table.  Ebnsure that
+     * an aircraft does not already exist with
+     * the same equip.  If it does not exist
+     * be sure to set the default data.
+     */
     public function create_equip()
     {	
 	$this->db->select('equip')
@@ -35,10 +56,32 @@ class Aircraft extends PVA_model
 		$aircraft = new Aircraft();
 		$aircraft->equip = $row->equip;
 		$aircraft->find();
+		
+		// If aircraft not found then set default data
+		if(is_null($aircraft->id))
+		{
+		    $aircraft->aircraft_sub_id	= 0;
+		    $aircraft->category		= 0;
+		    $aircraft->name	    = '';
+		    $aircraft->pax_first    = 0;
+		    $aircraft->pax_business = 0;
+		    $aircraft->pax_economy  = 0;
+		    $aircraft->cargo	    = 0;
+		    $aircraft->range	    = 0;
+		    $aircraft->oew	    = 0;
+		    $aircraft->mzfw	    = 0;
+		    $aircraft->mlw	    = 0;
+		    $aircraft->mtow	    = 0;
+		    $aircraft->total_pireps = 0;
+		    $aircraft->total_hours  = 0;
+		    $aircraft->total_distance = 0;
+		}
+		
+		// Set data gathered from schedule scan.
 		$aircraft->carrier_count = $row->carrier_count;
 		$aircraft->flight_count = $row->flight_count;
 		$aircraft->operator_count = $row->operator_count;
-		$aircraft->category = 0;
+		
 		$aircraft->save();
 	    }
 	}

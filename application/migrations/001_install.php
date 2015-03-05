@@ -379,10 +379,24 @@ class Migration_Install extends CI_Migration {
                 $this->dbforge->add_field(array(
                                 'id'		    => $field_config['id_field'],
                                 'equip'		    => $field_config['icao_field'],
+				'aircraft_sub_id'   => $field_config['fk_field'],
+				'name'		    => $field_config['input_field'],
                                 'category'	    => $field_config['fk_field'],
+				'pax_first'	    => $field_config['altitude_field'],
+				'pax_business'	    => $field_config['altitude_field'],
+				'pax_economy'	    => $field_config['altitude_field'],
+				'cargo'		    => $field_config['counter_field'],
+				'range'		    => $field_config['altitude_field'],
+				'oew'		    => $field_config['counter_field'],
+				'mzfw'		    => $field_config['counter_field'],
+				'mlw'		    => $field_config['counter_field'],
+				'mtow'		    => $field_config['counter_field'],				
 				'carrier_count'	    => $field_config['counter_field'],
                                 'operator_count'    => $field_config['counter_field'],
-                                'flight_count'      => $field_config['counter_field']
+                                'flight_count'      => $field_config['counter_field'],
+				'total_pireps'	    => $field_config['counter_field'],
+				'total_hours'	    => $field_config['counter_field'],
+				'total_distance'    => $field_config['counter_field'],
                                 ));
 
                 $this->dbforge->add_key('id', TRUE);
