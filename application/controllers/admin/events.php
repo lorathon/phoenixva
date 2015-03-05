@@ -67,7 +67,7 @@ class Events extends PVA_Controller
 	$airport = new Airport();
 	$this->data['airports'] = $airport->get_dropdown();
 	
-	$this->data['aircraft_cats'] = array();
+	$this->data['aircraft_cats'] = $this->config->item('aircraft_cat');
 	
 	$this->data['zero_to_ten'] = array(0,1,2,3,4,5,6,7,8,9);
 	

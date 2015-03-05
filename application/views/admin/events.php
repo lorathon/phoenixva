@@ -35,8 +35,8 @@
                                     <td><?php echo $event->name ?></td>
                                     <td><?php echo $event->description ?></td>
                                     <td><?php echo $event->type ?></td>
-                                    <td><?php echo $event->time_start ?></td>
-				    <td><?php echo $event->time_end ?></td>                                   
+				    <td><?php echo date("Y-m-d", strtotime($event->time_start)) ?></td>
+				    <td><?php echo date("Y-m-d", strtotime($event->time_end)) ?></td>        
                                     <td align="center">
                                         <?php echo anchor('admin/events/create_event/' . $event->id,'<i class="fa fa-pencil"></i> Edit', button('info')); ?>
                                         <?php echo anchor('admin/events/delete_event/' . $event->id,'<i class="fa fa-trash"></i> Delete', button_delete('danger')); ?>

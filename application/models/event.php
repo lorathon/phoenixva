@@ -55,18 +55,6 @@ class Event extends PVA_Model
     {
 	$this->_timestamps = TRUE;
 	parent::__construct($id);
-	
-	$this->_event_type  = new Event_type();
-	
-	$this->_airline	    = new Airline();
-	$this->_airport	    = new Airport();
-	
-	$this->_award_winner	    = new Award();
-	$this->_award_participant   = new Award();
-	
-	$this->_user_1	    = new User();
-	$this->_user_2	    = new User();
-	$this->_user_3	    = new User();
     }
     
     function get_event_type()

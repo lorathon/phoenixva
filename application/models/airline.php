@@ -9,12 +9,12 @@ class Airline extends PVA_Model {
 	public $name		= NULL;
 	public $active		= NULL;
 	public $category	= NULL;
-	public $fuel_discount	= 0;
+	public $fuel_discount	= NULL;
 	public $airline_image	= NULL;
-	public $total_schedules	= 0;
-	public $total_pireps	= 0;
-	public $total_hours	= 0;
-	public $regional	= 0;	
+	public $total_schedules	= NULL;
+	public $total_pireps	= NULL;
+	public $total_hours	= NULL;
+	public $regional	= NULL;	
 	
 	function __construct($id = NULL)
 	{
