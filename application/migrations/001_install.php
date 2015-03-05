@@ -405,6 +405,7 @@ class Migration_Install extends CI_Migration {
                 $this->dbforge->drop_table('user_awards');
                 $this->dbforge->drop_table('awards');
                 $this->dbforge->drop_table('award_types');
+		$this->dbforge->drop_table('aircrafts');
                 $this->dbforge->drop_table('users');
                 
 	}
