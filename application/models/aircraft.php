@@ -60,8 +60,6 @@ class Aircraft extends PVA_model
 		// If aircraft not found then set default data
 		if(is_null($aircraft->id))
 		{
-		    $aircraft->aircraft_sub_id	= 0;
-		    $aircraft->category		= 0;
 		    $aircraft->name	    = '';
 		    $aircraft->pax_first    = 0;
 		    $aircraft->pax_business = 0;
@@ -75,6 +73,26 @@ class Aircraft extends PVA_model
 		    $aircraft->total_pireps = 0;
 		    $aircraft->total_hours  = 0;
 		    $aircraft->total_distance = 0;
+		}
+		
+		// Find CAT based on equip
+		// check for a LIKE %equip% in
+		// sub table 
+		$subs = new Aircraft_sub();
+		$subs->equips = $aircraft->equip;
+		$sub = $subs->find_all(TRUE);
+		
+		// If sub row is not found set defaults
+		if(! $sub)
+		{
+		    $aircraft->aircraft_sub_id	= 0;
+		    $aircraft->category		= 0;
+		}
+		// If sub is found set id and cat from sub
+		else
+		{
+		    $aircraft->aircraft_sub_id  = $sub[0]->id;
+		    $aircraft->category		= $sub[0]->category;
 		}
 		
 		// Set data gathered from schedule scan.

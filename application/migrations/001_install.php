@@ -364,7 +364,7 @@ class Migration_Install extends CI_Migration {
                 $this->dbforge->add_key('id', TRUE);
                 $this->dbforge->create_table('awards');
 
-                 // User Awards table
+                // User Awards table
                 $this->dbforge->add_field(array(
                                 'id'            => $field_config['id_field'],
                                 'user_id'       => $field_config['fk_field'],
@@ -401,6 +401,19 @@ class Migration_Install extends CI_Migration {
 
                 $this->dbforge->add_key('id', TRUE);
                 $this->dbforge->create_table('aircrafts');
+		
+		// Aircraft Substitution table
+                $this->dbforge->add_field(array(
+                                'id'		=> $field_config['id_field'],
+                                'designation'	=> $field_config['input_field'],
+                                'manufacturer'	=> $field_config['input_field'],
+                                'equips'	=> $field_config['input_field'],
+				'hours_needed'	=> $field_config['status_field'],
+				'category'	=> $field_config['status_field'],
+                            ));
+
+                $this->dbforge->add_key('id', TRUE);
+                $this->dbforge->create_table('aircraft_subs');
 
         }
 	
@@ -420,6 +433,7 @@ class Migration_Install extends CI_Migration {
                 $this->dbforge->drop_table('awards');
                 $this->dbforge->drop_table('award_types');
 		$this->dbforge->drop_table('aircrafts');
+		$this->dbforge->drop_table('aircraft_subs');
                 $this->dbforge->drop_table('users');
                 
 	}

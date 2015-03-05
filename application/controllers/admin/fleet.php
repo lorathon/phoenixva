@@ -12,9 +12,12 @@ class Fleet extends PVA_Controller
     
     public function index()
     {        
-	$aircraft = new Aircraft();	
-	$this->data['fleet'] = $aircraft->find_all();
+	$aircraft = new Aircraft();
+	$aircraft->create_equip();
 	
-	$this->_render('admin/fleet');
+	
+	//$this->data['fleet'] = $aircraft->find_all();
+	
+	//$this->_render('admin/fleet');
     }     
 }
