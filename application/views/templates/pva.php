@@ -11,47 +11,37 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 		<!-- Web Fonts  -->
-                
 		<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800%7CShadows+Into+Light" rel="stylesheet" type="text/css">
                 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
                 
-		<!-- Vendor CSS -->
-                
+		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/owlcarousel/owl.carousel.css');?>" media="screen">
-		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/owlcarousel/owl.theme.css');?>" media="screen">
-		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/magnific-popup/magnific-popup.css');?>" media="screen">
-
-                <!-- Admin Extension Specific Page Vendor CSS -->
-                
-		<link rel="stylesheet" href="<?php echo base_url('assets/admin/vendor/bootstrap-datepicker/css/datepicker3.css');?>">
-		<link rel="stylesheet" href="<?php echo base_url('assets/admin/vendor/jquery-ui/css/ui-lightness/jquery-ui-1.10.4.custom.css');?>">
-		<link rel="stylesheet" href="<?php echo base_url('assets/admin/vendor/select2/select2.css');?>">
-		<link rel="stylesheet" href="<?php echo base_url('assets/admin/vendor/bootstrap-multiselect/bootstrap-multiselect.css');?>">
-		<link rel="stylesheet" href="<?php echo base_url('assets/admin/vendor/bootstrap-tagsinput/bootstrap-tagsinput.css');?>">
-		<link rel="stylesheet" href="<?php echo base_url('assets/admin/vendor/bootstrap-colorpicker/css/bootstrap-colorpicker.css');?>">
-		<link rel="stylesheet" href="<?php echo base_url('assets/admin/vendor/bootstrap-timepicker/css/bootstrap-timepicker.css');?>">
-		<link rel="stylesheet" href="<?php echo base_url('assets/admin/vendor/dropzone/css/basic.css');?>">
-		<link rel="stylesheet" href="<?php echo base_url('assets/admin/vendor/dropzone/css/dropzone.css');?>">
-		<link rel="stylesheet" href="<?php echo base_url('assets/admin/vendor/bootstrap-markdown/css/bootstrap-markdown.min.css');?>">
-		<link rel="stylesheet" href="<?php echo base_url('assets/admin/vendor/summernote/summernote.css');?>">
-		<link rel="stylesheet" href="<?php echo base_url('assets/admin/vendor/codemirror/lib/codemirror.css');?>">
-		<link rel="stylesheet" href="<?php echo base_url('assets/admin/vendor/codemirror/theme/monokai.css');?>">
                 
                 <!-- Theme CSS -->
-                
 		<link rel="stylesheet" href="<?php echo base_url('assets/css/theme.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/css/theme-elements.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/css/theme-animate.css');?>">
-		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/rs-plugin/css/settings.css');?>" media="screen">
-		<link rel="stylesheet" href="<?php echo base_url('assets/vendor/circle-flip-slideshow/css/component.css');?>" media="screen">
-                <link rel="stylesheet" href="<?php echo base_url('assets/admin/stylesheets/theme-admin-extension.css');?>">
                 
-		<!-- Skin CSS -->
-		<link rel="stylesheet" href="<?php echo base_url('assets/css/skins/default.css');?>">
+                <!-- Admin Extension -->
+                <link rel="stylesheet" href="<?php echo base_url('assets/admin/stylesheets/theme-admin-extension.css');?>">
                 <link rel="stylesheet" href="<?php echo base_url('assets/admin/stylesheets/skins/extension.css');?>">
+                
+                <!-- load page specific CSS -->
+                <?php if (isset($stylesheets)) : // if page CSS are needed 
 
-		<!-- Theme Custom CSS -->
+                    // if they are listed in an array
+                    if (is_array($stylesheets)) : 
+                        foreach ($stylesheets as $row): ?>
+                            <link rel="stylesheet" href="<?=$row; ?>">
+                        <?php endforeach;
+
+                    // if there is only one
+                    else: ?>
+                        <link rel="stylesheet" href="<?=$stylesheets;?>">
+                    <?php endif; 
+                endif; ?>
+
+		<!-- Custom CSS -->
 		<link rel="stylesheet" href="<?php echo base_url('assets/css/custom.css');?>">
 
 		<!-- Head Libs -->
@@ -413,53 +403,20 @@
 				</div>
 			</footer>
 		</div>
-
+                
+                <!-- Jquery -->
                 <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
                 <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 		<script src="<?php echo base_url('assets/vendor/jquery.appear/jquery.appear.js');?>"></script>
 		<script src="<?php echo base_url('assets/vendor/jquery.easing/jquery.easing.js');?>"></script>
 		<script src="<?php echo base_url('assets/vendor/jquery-cookie/jquery-cookie.js');?>"></script>
-                <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js">
-		<script src="<?php echo base_url('assets/vendor/common/common.js');?>"></script>
 		<script src="<?php echo base_url('assets/vendor/jquery.validation/jquery.validation.js');?>"></script>
-		<script src="<?php echo base_url('assets/vendor/jquery.stellar/jquery.stellar.js');?>"></script>
-		<script src="<?php echo base_url('assets/vendor/jquery.easy-pie-chart/jquery.easy-pie-chart.js');?>"></script>
-		<script src="<?php echo base_url('assets/vendor/jquery.gmap/jquery.gmap.js');?>"></script>
-		<script src="<?php echo base_url('assets/vendor/isotope/jquery.isotope.js');?>"></script>
-		<script src="<?php echo base_url('assets/vendor/owlcarousel/owl.carousel.js');?>"></script>
-		<script src="<?php echo base_url('assets/vendor/jflickrfeed/jflickrfeed.js');?>"></script>
-		<script src="<?php echo base_url('assets/vendor/magnific-popup/jquery.magnific-popup.js');?>"></script>
-		<script src="<?php echo base_url('assets/vendor/vide/vide.js');?>"></script>
-                <script src="<?php echo base_url('assets/vendor/rs-plugin/js/jquery.themepunch.tools.min.js');?>"></script>
-		<script src="<?php echo base_url('assets/vendor/rs-plugin/js/jquery.themepunch.revolution.min.js');?>"></script>
+                
+                <!-- bootstrap -->
+		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
                                          
 		<!-- Theme Base, Components and Settings -->
 		<script src="<?php echo base_url('assets/js/theme.js');?>"></script>
-
-		<!-- Admin Extension Specific Page Vendor -->
-		<script src="<?php echo base_url('assets/admin/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js');?>"></script>
-		<script src="<?php echo base_url('assets/admin/vendor/jquery-ui/js/jquery-ui-1.10.4.custom.js');?>"></script>
-		<script src="<?php echo base_url('assets/admin/vendor/jquery-ui-touch-punch/jquery.ui.touch-punch.js');?>"></script>
-		<script src="<?php echo base_url('assets/admin/vendor/select2/select2.js');?>"></script>
-		<script src="<?php echo base_url('assets/admin/vendor/bootstrap-multiselect/bootstrap-multiselect.js');?>"></script>
-		<script src="<?php echo base_url('assets/admin/vendor/jquery-maskedinput/jquery.maskedinput.js');?>"></script>
-		<script src="<?php echo base_url('assets/admin/vendor/bootstrap-tagsinput/bootstrap-tagsinput.js');?>"></script>
-		<script src="<?php echo base_url('assets/admin/vendor/bootstrap-colorpicker/js/bootstrap-colorpicker.js');?>"></script>
-		<script src="<?php echo base_url('assets/admin/vendor/bootstrap-timepicker/js/bootstrap-timepicker.js');?>"></script>
-		<script src="<?php echo base_url('assets/admin/vendor/fuelux/js/spinner.js');?>"></script>
-		<script src="<?php echo base_url('assets/admin/vendor/dropzone/dropzone.js');?>"></script>
-		<script src="<?php echo base_url('assets/admin/vendor/bootstrap-markdown/js/markdown.js');?>"></script>
-		<script src="<?php echo base_url('assets/admin/vendor/bootstrap-markdown/js/to-markdown.js');?>"></script>
-		<script src="<?php echo base_url('assets/admin/vendor/bootstrap-markdown/js/bootstrap-markdown.js');?>"></script>
-		<script src="<?php echo base_url('assets/admin/vendor/codemirror/lib/codemirror.js');?>"></script>
-		<script src="<?php echo base_url('assets/admin/vendor/codemirror/addon/selection/active-line.js');?>"></script>
-		<script src="<?php echo base_url('assets/admin/vendor/codemirror/addon/edit/matchbrackets.js');?>"></script>
-		<script src="<?php echo base_url('assets/admin/vendor/codemirror/mode/javascript/javascript.js');?>"></script>
-		<script src="<?php echo base_url('assets/admin/vendor/codemirror/mode/xml/xml.js');?>"></script>
-		<script src="<?php echo base_url('assets/admin/vendor/codemirror/mode/htmlmixed/htmlmixed.js');?>"></script>
-		<script src="<?php echo base_url('assets/admin/vendor/codemirror/mode/css/css.js');?>"></script>
-		<script src="<?php echo base_url('assets/admin/vendor/bootstrap-maxlength/bootstrap-maxlength.js');?>"></script>
-		<script src="<?php echo base_url('assets/admin/vendor/ios7-switch/ios7-switch.js');?>"></script>
                 
                 <!-- load page specific scripts -->
                 <?php if (isset($scripts)) : // if page scripts are needed 
@@ -470,7 +427,7 @@
                             <script src="<?=$row; ?>"></script>
                         <?php endforeach;
 
-                    // if they are listed in an array
+                    // if there is only one
                     else: ?>
                         <script src="<?=$scripts;?>"></script>
                     <?php endif; 
@@ -478,11 +435,8 @@
 
 		<!-- Admin Extension -->
 		<script src="<?php echo base_url('assets/admin/javascripts/theme.admin.extension.js');?>"></script>
-
-		<!-- Admin Extension Examples -->
-		<script src="<?php echo base_url('assets/admin/javascripts/forms/examples.advanced.form.js');?>"></script>
 		
-		<!-- Theme Custom -->
+		<!-- Custom -->
 		<script src="<?php echo base_url('assets/js/custom.js');?>"></script>
 		
 		<!-- Theme Initialization Files -->
