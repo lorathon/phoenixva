@@ -204,9 +204,20 @@
 											</li>
                                                                                         <li>
 												<?php echo anchor('admin/airline','View Airlines'); ?>
-											</li>
-                                                                                        <li>
-												<?php echo anchor('admin/aircraft','View Aircraft'); ?>
+											</li>                                                                                        
+											<li class="nav-parent">
+												<a>Fleet </a>
+												<ul class="nav nav-children">
+													<li>
+														<?php echo anchor('admin/fleet','View Fleet'); ?>
+													</li>
+													<li>
+														<?php echo anchor('admin/fleet/substitutions', 'Fleet Substituions'); ?>
+													</li>
+													<li>
+														<?php echo anchor('admin/fleet/build_fleet', 'Build Fleet'); ?>
+													</li>
+												</ul>
 											</li>
                                                                                         <li>
 												<?php echo anchor('admin/schedules','View Schedules'); ?>
@@ -287,6 +298,18 @@
 						</div>
 					</div>
                                     <?php endif;?>
+				    
+				    <?php if ($errors): ?>
+					<div class="alert alert-danger">            
+					    <p><?php echo $errors; ?></p>
+					</div>
+				    <?php endif; ?>
+				    
+				    <?php if ($alert): ?>
+					<div class="alert alert-<?php echo $alert['type'] ?>">            
+					    <p><?php echo $alert['msg']; ?></p>
+					</div>
+				    <?php endif; ?>
 
 				<?php echo $view_output; ?>
 

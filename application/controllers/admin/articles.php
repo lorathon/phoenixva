@@ -1,10 +1,7 @@
 <?php
 
-class Article extends PVA_Controller
-{
-    protected $_table_name = 'articles';
-    protected $_order_by = 'id';
-    
+class Articles extends PVA_Controller
+{    
     public function __construct()
     {
         parent::__construct();

@@ -408,8 +408,9 @@ class Migration_Install extends CI_Migration {
                                 'designation'	=> $field_config['input_field'],
                                 'manufacturer'	=> $field_config['input_field'],
                                 'equips'	=> $field_config['input_field'],
-				'hours_needed'	=> $field_config['status_field'],
+				'hours_needed'	=> $field_config['altitude_field'],
 				'category'	=> $field_config['status_field'],
+				'rated'		=> $field_config['boolean_field']
                             ));
 
                 $this->dbforge->add_key('id', TRUE);

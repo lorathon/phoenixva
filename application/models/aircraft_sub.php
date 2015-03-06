@@ -7,6 +7,7 @@ class Aircraft_sub extends PVA_model
     public $equips		= NULL;
     public $hours_needed	= NULL;
     public $category		= NULL;
+    public $rated		= NULL;
     
     public function __construct($id = NULL)
     {

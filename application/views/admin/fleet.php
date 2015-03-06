@@ -24,21 +24,21 @@
                                 <th>Carrier Count</th>
                                 <th>Operator Count</th>
                                 <th>Total Flight Count</th>
-                                <th>Actions</th>
+                                <!--<th>Actions</th>-->
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($fleet as $aircraft): ?>
+                            <?php foreach ($rows as $row): ?>
                                 <tr>
-                                    <td><?php echo $aircraft->id ?></td>
-                                    <td><?php echo $aircraft->equip ?></td>
-                                    <td><?php echo $aircraft->category ?></td>
-                                    <td><?php echo $aircraft->carrier_count ?></td>
-                                    <td><?php echo $aircraft->operator_count ?></td>				    
-				    <td><?php echo $aircraft->flight_count ?></td>                           
-                                    <td align="center">
-                                        <?php echo anchor('admin/fleet/create_aircraft/' . $aircraft->id,'<i class="fa fa-pencil"></i> Edit', button('info')); ?>
-                                    </td>
+                                    <td><?php echo $row->id ?></td>
+                                    <td><?php echo $row->equip ?></td>
+                                    <td><?php echo $row->category ?></td>
+                                    <td><?php echo $row->carrier_count ?></td>
+                                    <td><?php echo $row->operator_count ?></td>				    
+				    <td><?php echo $row->flight_count ?></td>                           
+                                    <!--<td align="center">
+                                        <?php echo anchor('admin/fleet/create_aircraft/' . $row->id,'<i class="fa fa-pencil"></i> Edit', button('info')); ?>
+                                    </td>-->
                                 </tr>
                             <?php endforeach; ?>
 

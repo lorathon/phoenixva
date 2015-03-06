@@ -15,7 +15,7 @@ $config['fk_field'] = array(
 		'unsigned'       => TRUE,
 );
 
-/* Definition for status fields */
+/* Definition for status fields (up tp 255)*/
 $config['status_field'] = array(
 		'type'       => 'TINYINT',
 		'constraint' => 3,
