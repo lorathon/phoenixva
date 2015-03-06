@@ -115,7 +115,7 @@ class Events extends PVA_Controller
 	    $event->user_id_3	    = $event->user_id_3 == NULL ? 0 : $event->user_id_3;
                 
             $event->save();
-            $this->_flash_message('success', 'Event', 'Record Saved');
+	    $this->_alert_message('success', 'Event - Record Saved');
             $this->index();
 	}        
     }
@@ -144,8 +144,7 @@ class Events extends PVA_Controller
             $event_type->color_id	= $this->input->post('color_id', TRUE);
                 
             $event_type->save();
-            $this->_flash_message('success', 'Event Type', 'Record Saved');
-            
+            $this->_alert_message('success', 'Event Type - Record Saved');
             $this->event_types();
 	}        
     }

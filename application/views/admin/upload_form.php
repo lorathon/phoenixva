@@ -29,12 +29,6 @@ $upload_path = array(
 
 <div class="container">
     
-    <?php if ($errors):?>
-        <div class="alert alert-danger">            
-            <p><?php echo $errors; ?></p>
-	</div>
-    <?php endif; ?> 
-    
     <?php echo form_open_multipart('admin/upload/do_upload', $form_attributes); ?>
     
         <div class="form-group">

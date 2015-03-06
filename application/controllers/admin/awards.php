@@ -66,7 +66,7 @@ class Awards extends PVA_Controller
             $award->award_image     = $this->form_validation->set_value('award_image');
                 
             $award->save();
-            $this->_flash_message('success', 'Award', 'Record Saved');
+	    $this->_alert_message('success', 'Award - Record Saved');
             $this->index();
 	}        
     }
@@ -98,8 +98,7 @@ class Awards extends PVA_Controller
             $award_type->img_height      = $this->form_validation->set_value('img_height');
                 
             $award_type->save();
-            $this->_flash_message('success', 'Award Type', 'Record Saved');
-            
+            $this->_alert_message('success', 'Award Type - Record Saved');
             $this->award_types();
 	}        
     }
@@ -107,26 +106,28 @@ class Awards extends PVA_Controller
     public function delete_award($id = NULL)
     {
         // Delete record
-        if(is_null($id)) return FALSE;
+        if(is_null($id)) 
+	    return FALSE;
         
         $award = new Award($id);
         $award->delete();
         
-        $this->_flash_message('info', 'Award', 'Record Deleted');
+	$this->_alert_message('info', 'Award - Record Deleted');
         $this->index();
     }
     
     public function delete_award_type($id = NULL)
     {
         // Delete record
-        if(is_null($id)) return FALSE;
+        if(is_null($id)) 
+	    return FALSE;
         
         $award = new Award();
         
         $award->_award_type->id = $id;
         $award->_award_type->delete();
         
-        $this->_flash_message('info', 'Award Type', 'Record Deleted');
+	$this->_alert_message('info', 'Award Type - Record Deleted');
         $this->award_types();
     }   
     

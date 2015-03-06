@@ -63,6 +63,9 @@ class PVA_Controller extends CI_Controller {
 		// Holds errors for display by the view
 		$this->data['errors'] = array();
 		
+		// holds alerts for display by the view (inner method)
+		$this->data['alert'] = array();
+		
 		// Set defaults so controllers can override later
 		$this->data['site_name'] = config_item('site_name');
 		$this->data['meta_title'] = config_item('site_name');
@@ -293,6 +296,18 @@ class PVA_Controller extends CI_Controller {
 		$this->session->set_flashdata('msg_type', $type);
 		$this->session->set_flashdata('title', $title);
 		$this->session->set_flashdata('message', $msg);
+	}
+	
+	/**
+	 * Creates data for inner controller messaging in a consistent format.
+	 * 
+	 * @param string $type Type of message: info (default), primary, success, warning, danger
+	 * @param string $msg The message itself
+	 */
+	protected function _alert_message($type = 'info', $msg = '')
+	{
+		$this->data['alert']['type'] = $type;
+		$this->data['alert']['msg'] = $msg;
 	}
 }
 

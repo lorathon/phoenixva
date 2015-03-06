@@ -157,12 +157,6 @@ $enabled = array(
 ?>
 
 <div class="container">
-
-    <?php if ($errors): ?>
-        <div class="alert alert-danger">            
-            <p><?php echo $errors; ?></p>
-        </div>
-    <?php endif; ?>
     <div class="row">
         <div class="col-md-4">
             <section class="panel">
