@@ -21,9 +21,10 @@
 		<link rel="stylesheet" href="<?php echo base_url('assets/css/theme.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/css/theme-elements.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/css/theme-animate.css');?>">
-                
-                <!-- Admin Extension -->
                 <link rel="stylesheet" href="<?php echo base_url('assets/admin/stylesheets/theme-admin-extension.css');?>">
+                
+                <!-- Skin CSS -->
+		<link rel="stylesheet" href="<?php echo base_url('assets/css/skins/default.css');?>">
                 <link rel="stylesheet" href="<?php echo base_url('assets/admin/stylesheets/skins/extension.css');?>">
                 
                 <!-- load page specific CSS -->
