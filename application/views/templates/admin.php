@@ -153,7 +153,7 @@
 									<!-- Start Awards Nav -->
 									<li class="nav-parent">
 										<a>
-											<i class="fa fa-flag-checkered" aria-hidden="true"></i>
+											<i class="fa fa-trophy" aria-hidden="true"></i>
 											<span>Awards</span>
 										</a>
 										<ul class="nav nav-children">

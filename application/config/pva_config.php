@@ -63,6 +63,16 @@ $config['flight_type'] = array(
     'P' => 'Passenger',
     'C' => 'Cargo'
 );
+$config['calendar_colors'] = array(
+    '0' => 'default',
+    '1' => 'primary',
+    '2' => 'success',
+    '3' => 'warning',
+    '4' => 'info',
+    '5' => 'danger',
+    '6' => 'dark',
+    
+);
 $config['countries'] = array(    
     "US" => "United States",
     "GB" => "United Kingdom",
