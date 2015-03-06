@@ -48,7 +48,7 @@ class Ranks extends PVA_Controller
                 
             $rank->save();
 	    $this->_alert_message('success', 'Rank - Record Saved');
-            redirect('admin/ranks');
+	    $this->index();
 	}        
     }
 }

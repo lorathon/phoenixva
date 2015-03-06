@@ -62,6 +62,13 @@ $config['tiny_int'] = array(
 		'default'    => 0,
 );
 
+/* Definition for boolean (FALSE?TRUE) */
+$config['boolean_field'] = array(
+		'type'       => 'TINYINT',
+		'constraint' => 1,
+		'default'    => 0,
+);
+
 /* Definition for calculated fields */
 $config['calculated_field'] = array(
 		'type'    => 'FLOAT',
@@ -106,6 +113,13 @@ $config['icao_field'] = array(
 $config['location_field'] = array(
 		'type'       => 'FLOAT',
 		'constraint' => '10,6',
+		'null'       => TRUE,
+);
+
+/* Definition for landing rate (-100.00) */
+$config['landingrate_field'] = array(
+		'type'       => 'FLOAT',
+		'constraint' => '10,2',
 		'null'       => TRUE,
 );
 

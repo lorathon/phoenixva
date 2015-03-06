@@ -32,7 +32,7 @@ $award = array(
 	<?php endif; ?>        
 
         <!-- Start Award Modal Form -->
-	<?php if ($userdata['is_admin']) : ?>
+	<?php if ($userdata['is_manager']) : ?>
 	    <div class="row">
 		<div class="col-md-4 col-md-offset-5">
 
@@ -113,7 +113,7 @@ $award = array(
 	    				<td><?php echo $award->name; ?></td>
 	    				<td><?php echo $award->description; ?></td>
 	    				<td><?php echo $award->created; ?></td>
-					    <?php if ($userdata['is_admin']) : ?>
+					    <?php if ($userdata['is_manager']) : ?>
 						<td><?php echo anchor('private/profile/revoke_award/' . $award->id . '/' . $this->data['user_id'], '<i class="fa fa-trash"></i> Revoke', button_delete('danger')); ?></td>
 					    <?php endif; ?>
 	    			    </tr>

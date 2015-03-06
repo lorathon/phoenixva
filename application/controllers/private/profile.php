@@ -286,6 +286,8 @@ class Profile extends PVA_Controller
     
     function grant_award()
     {
+	$this->_check_access('manager');
+	
         $user_id = $this->input->post('user_id', TRUE);
         $award_id = $this->input->post('award_id', TRUE);
         
@@ -298,6 +300,8 @@ class Profile extends PVA_Controller
     
     function revoke_award()
     {
+	$this->_check_access('manager');
+	
         $user_award_id  =  $this->uri->segment(4);
         $user_id        =  $this->uri->segment(5);
         

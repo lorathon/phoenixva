@@ -9,10 +9,6 @@
             <header class="panel-heading">
                 <div class="panel-actions">
                     <a href="<?php echo site_url('admin/awards/create_award/') ?>" class="fa fa-plus-square"></a>
-                    <!--
-                    <a href="#" class="fa fa-caret-down"></a>
-                    <a href="#" class="fa fa-times"></a>
-                    -->
                 </div>
 
                 <h2 class="panel-title">View All Awards</h2>
@@ -52,7 +48,7 @@
                                     <td><?php echo img($image_properties) ?></td>                                    
                                     <td align="center">
                                         <?php echo anchor('admin/awards/create_award/' . $award->id,'<i class="fa fa-pencil"></i> Edit', button('info')); ?>
-                                        <?php echo anchor('admin/awards/delete_award/' . $award->id,'<i class="fa fa-trash"></i> Delete', button_delete('danger')); ?>
+                                        <!--<?php echo anchor('admin/awards/delete_award/' . $award->id,'<i class="fa fa-trash"></i> Delete', button_delete('danger')); ?>-->
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

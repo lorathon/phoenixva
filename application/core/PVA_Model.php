@@ -178,7 +178,13 @@ class PVA_Model extends CI_Model
     		$this->db->where($parms);
     	}
     	
-    	$this->db->limit($this->_limit, $this->_offset);
+        /* 
+         * Added NULL check to allow for ALL records to be found
+         * 03/04/2015
+         * JFK
+         */        
+	if (! is_null($this->_limit) )
+	    $this->db->limit($this->_limit, $this->_offset);
     	
     	if ( ! is_null($this->_order_by))
     	{
@@ -230,7 +236,7 @@ class PVA_Model extends CI_Model
         /*
          * Addition of the '' check.
          * 02/13/2015
-         * @ Jeff
+         * JFK
          */
         // Insert or update
         if (is_null($this->id) || ($this->id == ''))

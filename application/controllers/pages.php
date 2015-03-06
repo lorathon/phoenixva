@@ -18,6 +18,8 @@ class Pages extends PVA_Controller {
 	 */
 	public function view($page = 'home')
 	{
+                $this->load->helper('url');
+                
 		log_message('debug','Pages Controller viewing '.$page);
 		
 		// Load the session
@@ -32,15 +34,45 @@ class Pages extends PVA_Controller {
 			show_404();
 		}
 		
-		if ($page == 'typeahead')
-		{
-			$this->load->helper('url');
+                // default page title
+                $this->data['title'] = ucwords($page);
+                
+		
+                if ($page == 'home')
+		{                        
+                        // page specific stylesheets
+                        $this->data['stylesheets'] = array();
+                        $this->data['stylesheets'][] = base_url('assets/vendor/owlcarousel/owl.carousel.css');
+                        $this->data['stylesheets'][] = base_url('assets/vendor/owlcarousel/owl.theme.css');
+                        $this->data['stylesheets'][] = base_url('assets/vendor/rs-plugin/css/settings.css');
+                        $this->data['stylesheets'][] = base_url('assets/vendor/circle-flip-slideshow/css/component.css');
+                        
+                        
+                        // page specific javascripts
 			$this->data['scripts'] = array();
-			$this->data['scripts'][] = '<script src="'.base_url('assets/js/typeahead.bundle.js').'"></script>';
-			$this->data['scripts'][] = '<script src="'.base_url('assets/js/prefetch.js').'"></script>';
+			$this->data['scripts'][] = base_url('assets/vendor/owlcarousel/owl.carousel.js');
+                        $this->data['scripts'][] = base_url('assets/vendor/owlcarousel/owl.carousel.js');
+                        $this->data['scripts'][] = base_url('assets/vendor/rs-plugin/js/jquery.themepunch.revolution.min.js');
+                        $this->data['scripts'][] = base_url('assets/vendor/rs-plugin/js/jquery.themepunch.tools.min.js');
+                        $this->data['scripts'][] = base_url('assets/vendor/jflickrfeed/jflickrfeed.js');
+		}
+                
+                if ($page == 'typeahead')
+		{
+                        // custom page title
+                        $this->data['title'] = "Type Ahead";
+                        
+                        // page specific stylesheets
+                        $this->data['stylesheets'] = array();
+                        $this->data['stylesheets'][] = base_url('assets/admin/vendor/summernote/summernote.css');
+                        
+                        // page specific javascripts
+			$this->data['scripts'] = array();
+			$this->data['scripts'][] = base_url('assets/js/typeahead.bundle.js');
+			$this->data['scripts'][] = base_url('assets/js/prefetch.js');
+                        $this->data['scripts'][] = base_url('assets/admin/vendor/summernote/summernote.js');
 		}		
 		
-		$this->data['title'] = ucwords($page);
 		$this->_render('pages/'.$page);
 	}
 }
