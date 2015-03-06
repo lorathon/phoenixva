@@ -45,8 +45,7 @@ class Pages extends PVA_Controller {
                         $this->data['stylesheets'][] = base_url('assets/vendor/owlcarousel/owl.carousel.css');
                         $this->data['stylesheets'][] = base_url('assets/vendor/owlcarousel/owl.theme.css');
                         $this->data['stylesheets'][] = base_url('assets/vendor/rs-plugin/css/settings.css');
-                        $this->data['stylesheets'][] = base_url('assets/vendor/circle-flip-slideshow/css/component.css');
-                        
+                        $this->data['stylesheets'][] = base_url('assets/vendor/circle-flip-slideshow/css/component.css');                        
                         
                         // page specific javascripts
 			$this->data['scripts'] = array();
@@ -55,6 +54,10 @@ class Pages extends PVA_Controller {
                         $this->data['scripts'][] = base_url('assets/vendor/rs-plugin/js/jquery.themepunch.revolution.min.js');
                         $this->data['scripts'][] = base_url('assets/vendor/rs-plugin/js/jquery.themepunch.tools.min.js');
                         $this->data['scripts'][] = base_url('assets/vendor/jflickrfeed/jflickrfeed.js');
+                        $this->data['scripts'][] = base_url('assets/vendor/jquery.appear/jquery.appear.js');
+                        $this->data['scripts'][] = base_url('assets/vendor/jquery.easing/jquery.easing.js');
+                        $this->data['scripts'][] = base_url('assets/vendor/jquery-cookie/jquery-cookie.js');
+                        $this->data['scripts'][] = base_url('assets/vendor/jquery.validation/jquery.validation.js');
 		}
                 
                 if ($page == 'typeahead')
