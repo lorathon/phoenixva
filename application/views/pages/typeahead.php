@@ -12,6 +12,18 @@
 						<div class="col-md-12">&nbsp;</div>
 					</div>
                                     
+                                        <div class="row">
+                                                <div class="col-md-4" align="right">
+                                                    <h2>Time Picker</h2>
+                                                </div>
+                                                <div class="col-md-2 input-group">
+                                                        <span class="input-group-addon">
+                                                                <i class="fa fa-clock-o"></i>
+                                                        </span>
+                                                        <input type="text" data-plugin-timepicker="" class="form-control input-lg" data-plugin-options='{ "showMeridian": false }'>
+                                                </div>
+                                        </div>
+                                                                                                               
 					<div class="row">
 						<div class="col-md-4" align="right">
 							<h2><strong>Departure</strong> Airport</h2>					
