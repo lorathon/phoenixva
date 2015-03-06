@@ -408,10 +408,6 @@
                 <!-- Jquery -->
                 <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
                 <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-		<script src="<?php echo base_url('assets/vendor/jquery.appear/jquery.appear.js');?>"></script>
-		<script src="<?php echo base_url('assets/vendor/jquery.easing/jquery.easing.js');?>"></script>
-		<script src="<?php echo base_url('assets/vendor/jquery-cookie/jquery-cookie.js');?>"></script>
-		<script src="<?php echo base_url('assets/vendor/jquery.validation/jquery.validation.js');?>"></script>
                 
                 <!-- bootstrap -->
 		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
