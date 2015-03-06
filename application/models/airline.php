@@ -16,9 +16,22 @@ class Airline extends PVA_Model {
 	public $total_hours	= NULL;
 	public $regional	= NULL;	
 	
+	protected $_cat		= NULL;
+	
 	function __construct($id = NULL)
 	{
 		parent::__construct($id);
+	}
+	
+	function get_category()
+	{
+	    if(is_null($this->_cat))
+	    {
+		$this->_cat = new Airline_category();
+		$this->_cat->value = $this->category;
+		$this->_cat->find();
+	    }
+	    return $this->_cat;
 	}
 	
 	function get_dropdown()
@@ -36,4 +49,19 @@ class Airline extends PVA_Model {
             }      
             return $data;
         }
+}
+
+class Airline_category extends PVA_Model {
+    
+	public $value	    = NULL;
+	public $description = NULL;
+	public $passenger   = NULL;
+	public $cargo	    = NULL;
+	
+	function __construct($id = NULL)
+	{	    
+	    parent::__construct($id);
+	    $this->_table_name = 'airlines_categories';
+	}
+	
 }
