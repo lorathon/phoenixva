@@ -14,9 +14,20 @@ class Fleet extends PVA_Controller
     {        
 	$obj = new Aircraft();
 	$this->data['rows'] = $obj->find_all();
+	$this->data['title'] = 'All Aircraft';
 	$this->data['aircraft_cat'] = $this->config->item('aircraft_cat');
         $this->_render('admin/fleet');
     }  
+    
+    public function missing_sub()
+    {
+	$obj = new Aircraft();
+	$obj->aircraft_sub_id = 0;
+	$this->data['rows'] = $obj->find_all();
+	$this->data['title'] = 'Aircraft Missing Substitution Entry';
+	$this->data['aircraft_cat'] = $this->config->item('aircraft_cat');
+        $this->_render('admin/fleet');
+    }
     
     public function substitutions()
     {        
@@ -63,11 +74,12 @@ class Fleet extends PVA_Controller
             $obj->manufacturer	= $this->form_validation->set_value('manufacturer');
             $obj->equips	= strtoupper($this->form_validation->set_value('equips'));
             $obj->hours_needed	= $this->form_validation->set_value('hours_needed');
+	    $obj->category	= intval($this->input->post('category', TRUE));
 	    $obj->rated		= intval($this->input->post('rated', TRUE));
                 
             $obj->save();
 	    $this->_alert_message('success', 'Aircraft Substituion - Record Saved');
-            $this->index();
+            $this->substitutions();
 	}        
     }
 }

@@ -212,6 +212,9 @@
 														<?php echo anchor('admin/fleet/substitutions', 'Fleet Substituions'); ?>
 													</li>
 													<li>
+														<?php echo anchor('admin/fleet/missing_sub', 'Missing Substituions'); ?>
+													</li>
+													<li>
 														<?php echo anchor('admin/fleet/build_fleet', 'Build Fleet'); ?>
 													</li>
 												</ul>

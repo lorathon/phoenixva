@@ -11,7 +11,7 @@
                     <a href="<?php echo site_url('admin/fleet/create_sub/') ?>" class="fa fa-plus-square"></a>
                 </div>
 
-                <h2 class="panel-title">View All Awards</h2>
+                <h2 class="panel-title">View All Aircraft Substitutions</h2>
             </header>
             <div class="panel-body">
                 <div class="table-responsive">

@@ -8,10 +8,10 @@
         <section class="panel">
             <header class="panel-heading">
                 <div class="panel-actions">
-                    <a href="<?php echo site_url('admin/fleet/create_aircraft/') ?>" class="fa fa-plus-square"></a>
+                    <!--<a href="<?php echo site_url('admin/fleet/create_aircraft/') ?>" class="fa fa-plus-square"></a>-->
                 </div>
 
-                <h2 class="panel-title">View All Aircraft</h2>
+                <h2 class="panel-title"><?php echo $title?></h2>
             </header>
             <div class="panel-body">
                 <div class="table-responsive">
