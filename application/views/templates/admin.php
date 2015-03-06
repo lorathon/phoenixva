@@ -165,10 +165,7 @@
 												<ul class="nav nav-children">													
 													<li>
 														<?php echo anchor('admin/awards/award_types', 'Award Types'); ?>
-													</li>
-													<li>
-														<a>Second Level Link #2</a>
-													</li>
+													</li>													
 												</ul>
 											</li>
 										</ul>
@@ -225,6 +222,7 @@
 										</ul>
 									</li>
                                                                         
+									<!-- Start Event Nav -->
                                                                         <li class="nav-parent">
 										<a>
 											<i class="fa fa-cubes" aria-hidden="true"></i>
@@ -232,22 +230,19 @@
 										</a>
 										<ul class="nav nav-children">
 											<li>
-												<?php echo anchor('admin/events/special','Special Events'); ?>
+												<?php echo anchor('admin/events', 'All Events'); ?>
 											</li>
-                                                                                        <li>
-												<?php echo anchor('admin/events/waiver','Waiver Events'); ?>
-											</li>
-											<li>
-												<?php echo anchor('admin/events/missions','Missions'); ?>
-											</li>
-                                                                                        <li>
-												<?php echo anchor('admin/events/landingcomp','Landing Competitions'); ?>
-											</li>
-                                                                                        <li>
-												<?php echo anchor('admin/events/aotm','Airport of the Month'); ?>
+											<li class="nav-parent">
+												<a>Tools</a>
+												<ul class="nav nav-children">													
+													<li>
+														<?php echo anchor('admin/events/event_types', 'Event Types'); ?>
+													</li>													
+												</ul>
 											</li>
 										</ul>
 									</li>
+									<!-- End Event Nav -->
                                                                         
                                                                         <li class="nav-parent">
 										<a>
