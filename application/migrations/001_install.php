@@ -419,7 +419,45 @@ class Migration_Install extends CI_Migration {
                             ));
 
                 $this->dbforge->add_key('id', TRUE);
-                $this->dbforge->create_table('events');		
+                $this->dbforge->create_table('events');	
+		
+		// Aircraft table
+                $this->dbforge->add_field(array(
+                                'id'		    => $field_config['id_field'],
+                                'equip'		    => $field_config['icao_field'],
+				'aircraft_sub_id'   => $field_config['fk_field'],
+				'name'		    => $field_config['input_field'],
+                                'category'	    => $field_config['fk_field'],
+				'pax_first'	    => $field_config['altitude_field'],
+				'pax_business'	    => $field_config['altitude_field'],
+				'pax_economy'	    => $field_config['altitude_field'],
+				'cargo'		    => $field_config['counter_field'],
+				'range'		    => $field_config['altitude_field'],
+				'oew'		    => $field_config['counter_field'],
+				'mzfw'		    => $field_config['counter_field'],
+				'mlw'		    => $field_config['counter_field'],
+				'mtow'		    => $field_config['counter_field'],				
+				'carrier_count'	    => $field_config['counter_field'],
+                                'operator_count'    => $field_config['counter_field'],
+                                'flight_count'      => $field_config['counter_field'],
+				'total_pireps'	    => $field_config['counter_field'],
+				'total_hours'	    => $field_config['counter_field'],
+				'total_distance'    => $field_config['counter_field'],
+                                ));
+                $this->dbforge->add_key('id', TRUE);
+                $this->dbforge->create_table('aircrafts');
+		
+		// Aircraft Substitution table
+                $this->dbforge->add_field(array(
+                                'id'		=> $field_config['id_field'],
+                                'designation'	=> $field_config['input_field'],
+                                'manufacturer'	=> $field_config['input_field'],
+                                'equips'	=> $field_config['input_field'],
+				'hours_needed'	=> $field_config['status_field'],
+				'category'	=> $field_config['status_field'],
+                            ));
+                $this->dbforge->add_key('id', TRUE);
+                $this->dbforge->create_table('aircraft_subs');
         }
 	
 	public function down()
@@ -438,7 +476,10 @@ class Migration_Install extends CI_Migration {
                 $this->dbforge->drop_table('awards');
                 $this->dbforge->drop_table('award_types');
 		$this->dbforge->drop_table('events');
-                $this->dbforge->drop_table('event_types');
-                $this->dbforge->drop_table('users');                
+                $this->dbforge->drop_table('event_types');         
+		$this->dbforge->drop_table('aircrafts');
+		$this->dbforge->drop_table('aircraft_subs');
+                $this->dbforge->drop_table('users');
+                
 	}
 }

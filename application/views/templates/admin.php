@@ -165,10 +165,7 @@
 												<ul class="nav nav-children">													
 													<li>
 														<?php echo anchor('admin/awards/award_types', 'Award Types'); ?>
-													</li>
-													<li>
-														<a>Second Level Link #2</a>
-													</li>
+													</li>													
 												</ul>
 											</li>
 										</ul>
@@ -204,9 +201,23 @@
 											</li>
                                                                                         <li>
 												<?php echo anchor('admin/airline','View Airlines'); ?>
-											</li>
-                                                                                        <li>
-												<?php echo anchor('admin/aircraft','View Aircraft'); ?>
+											</li>                                                                                        
+											<li class="nav-parent">
+												<a>Fleet </a>
+												<ul class="nav nav-children">
+													<li>
+														<?php echo anchor('admin/fleet','View Fleet'); ?>
+													</li>
+													<li>
+														<?php echo anchor('admin/fleet/substitutions', 'Fleet Substituions'); ?>
+													</li>
+													<li>
+														<?php echo anchor('admin/fleet/missing_sub', 'Missing Substituions'); ?>
+													</li>
+													<li>
+														<?php echo anchor('admin/fleet/build_fleet', 'Build Fleet'); ?>
+													</li>
+												</ul>
 											</li>
                                                                                         <li>
 												<?php echo anchor('admin/schedules','View Schedules'); ?>
@@ -214,6 +225,7 @@
 										</ul>
 									</li>
                                                                         
+									<!-- Start Event Nav -->
                                                                         <li class="nav-parent">
 										<a>
 											<i class="fa fa-cubes" aria-hidden="true"></i>
@@ -221,22 +233,19 @@
 										</a>
 										<ul class="nav nav-children">
 											<li>
-												<?php echo anchor('admin/events/special','Special Events'); ?>
+												<?php echo anchor('admin/events', 'All Events'); ?>
 											</li>
-                                                                                        <li>
-												<?php echo anchor('admin/events/waiver','Waiver Events'); ?>
-											</li>
-											<li>
-												<?php echo anchor('admin/events/missions','Missions'); ?>
-											</li>
-                                                                                        <li>
-												<?php echo anchor('admin/events/landingcomp','Landing Competitions'); ?>
-											</li>
-                                                                                        <li>
-												<?php echo anchor('admin/events/aotm','Airport of the Month'); ?>
+											<li class="nav-parent">
+												<a>Tools</a>
+												<ul class="nav nav-children">													
+													<li>
+														<?php echo anchor('admin/events/event_types', 'Event Types'); ?>
+													</li>													
+												</ul>
 											</li>
 										</ul>
 									</li>
+									<!-- End Event Nav -->
                                                                         
                                                                         <li class="nav-parent">
 										<a>
@@ -287,6 +296,18 @@
 						</div>
 					</div>
                                     <?php endif;?>
+				    
+				    <?php if ($errors): ?>
+					<div class="alert alert-danger">            
+					    <p><?php echo $errors; ?></p>
+					</div>
+				    <?php endif; ?>
+				    
+				    <?php if ($alert): ?>
+					<div class="alert alert-<?php echo $alert['type'] ?>">            
+					    <p><?php echo $alert['msg']; ?></p>
+					</div>
+				    <?php endif; ?>
 
 				<?php echo $view_output; ?>
 

@@ -47,7 +47,7 @@ class Ranks extends PVA_Controller
             $rank->short        = $this->form_validation->set_value('short');
                 
             $rank->save();
-            $this->_flash_message('success', 'Rank', 'Record Saved');
+	    $this->_alert_message('success', 'Rank - Record Saved');
 	    $this->index();
 	}        
     }
