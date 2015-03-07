@@ -84,7 +84,7 @@ class Hubs extends PVA_Controller {
 		
 		if (is_null($article->body))
 		{
-			$this->data['body'] = 'This page has not been written.';
+			$this->data['body'] = 'This page has no content.';
 		}
 		else 
 		{
@@ -95,20 +95,17 @@ class Hubs extends PVA_Controller {
 	}
 	
 	/**
-	 * Creates a new page for a hub
+	 * Edits a new page for a hub
 	 * 
 	 * Hubs can have multiple pages.
 	 */
-	public function create_page()
-	{
-		log_message('debug', 'Hub page create called');
-		$this->_check_access('manager');
-	}
-	
-	public function edit_page($icao, $page)
+	public function edit_page($icao, $page = NULL)
 	{
 		log_message('debug', 'Hub page edit called');
 		$this->_check_access('manager');
+		$this->data['scripts'][] = base_url('assets/sceditor/jquery.sceditor.bbcode.min.js');
+		$this->data['slug'] = $this->_build_slug($icao, $page);
+		$this->_render('admin/page_form');
 	}
 	
 	/**
