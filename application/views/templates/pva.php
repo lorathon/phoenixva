@@ -28,19 +28,9 @@
                 <link rel="stylesheet" href="<?php echo base_url('assets/admin/stylesheets/skins/extension.css');?>">
                 
                 <!-- load page specific CSS -->
-                <?php if (isset($stylesheets)) : // if page CSS are needed 
-
-                    // if they are listed in an array
-                    if (is_array($stylesheets)) : 
-                        foreach ($stylesheets as $row): ?>
+     			<?php foreach ($stylesheets as $row): ?>
                             <link rel="stylesheet" href="<?=$row; ?>">
-                        <?php endforeach;
-
-                    // if there is only one
-                    else: ?>
-                        <link rel="stylesheet" href="<?=$stylesheets;?>">
-                    <?php endif; 
-                endif; ?>
+                        <?php endforeach; ?>
 
 		<!-- Custom CSS -->
 		<link rel="stylesheet" href="<?php echo base_url('assets/css/custom.css');?>">
@@ -416,19 +406,9 @@
 		<script src="<?php echo base_url('assets/js/theme.js');?>"></script>
                 
                 <!-- load page specific scripts -->
-                <?php if (isset($scripts)) : // if page scripts are needed 
-
-                    // if they are listed in an array
-                    if (is_array($scripts)) : 
-                        foreach ($scripts as $row): ?>
+                <?php foreach ($scripts as $row): ?>
                             <script src="<?=$row; ?>"></script>
-                        <?php endforeach;
-
-                    // if there is only one
-                    else: ?>
-                        <script src="<?=$scripts;?>"></script>
-                    <?php endif; 
-                endif; ?>
+                        <?php endforeach; ?>
 
 		<!-- Admin Extension -->
 		<script src="<?php echo base_url('assets/admin/javascripts/theme.admin.extension.js');?>"></script>
