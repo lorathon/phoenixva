@@ -31,10 +31,10 @@
 					<h2>Hub Admin</h2>
 					<ul class="nav nav-pills">
 						<li role="presentation">
-							<?php echo anchor('/private/hubs/edit_page', 'Edit This Page'); ?>
+							<?php echo anchor("/private/hubs/edit-page/{$icao}/{$page}", 'Edit This Page'); ?>
 						</li>
 						<li role="presentation">
-							<?php echo anchor('/private/hubs/create_page', 'Add New Page'); ?>
+							<?php echo anchor("/private/hubs/create-page/{$icao}", 'Add New Page'); ?>
 						</li>
 					</ul>
 				</div>

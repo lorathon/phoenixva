@@ -1,4 +1,6 @@
 <?php
+$this->load->helper('form');
+
 $form_attributes = array(
 		'class' => 'form-horizontal',
 		'role'  => 'form',
@@ -25,9 +27,11 @@ $slug = array(
 );
 
 $body = array(
-		'name'  => 'body',
-		'id'    => 'body',
+		'name'  => 'pagebody',
+		'id'    => 'pagebody',
 		'value' => set_value('body'),
+		'rows'  => '40',
+		'cols'  => '100',
 );
 
 ?>
@@ -48,12 +52,13 @@ $body = array(
 			<div><?php echo form_textarea($body); ?></div>
 		</div>
 		<script>
-		$(function() {
-			$("#body").sceditor({
-				plugins: "bbcode",
-				style: "minified/jquery.sceditor.default.min.css"
+		document.addEventListener("load", function() {
+				$("#<?php echo $body['id']; ?>").sceditor({
+					plugins: "bbcode",
+					style: "<?php echo base_url('assets/sceditor/jquery.sceditor.default.min.css'); ?>"
+				});
+				alert('loaded');
 			});
-		});
 		</script>
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">

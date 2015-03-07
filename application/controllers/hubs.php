@@ -62,6 +62,7 @@ class Hubs extends PVA_Controller {
 		
 		$this->data['meta_title'] = 'PVA Crew Centers: '.$airport->get_full_name();
 		$this->data['icao'] = $icao;
+		$this->data['page'] = $page;
 		$this->data['pages'] = $this->_hub_navigation($icao);
 		$this->data['breadcrumb']['hubs'] = 'Crew Centers';
 
@@ -103,8 +104,15 @@ class Hubs extends PVA_Controller {
 	{
 		log_message('debug', 'Hub page edit called');
 		$this->_check_access('manager');
+		
+		$this->data['title'] = 'Create/Edit Hub Page';
+		
+		$this->load->helper('url');
 		$this->data['scripts'][] = base_url('assets/sceditor/jquery.sceditor.bbcode.min.js');
+		$this->data['stylesheets'][] = base_url('assets/sceditor/themes/default.min.css');
+		
 		$this->data['slug'] = $this->_build_slug($icao, $page);
+		
 		$this->_render('admin/page_form');
 	}
 	
