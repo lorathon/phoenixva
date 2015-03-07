@@ -20,7 +20,7 @@ class Pages extends PVA_Controller {
 	{
                 $this->load->helper('url');
                 
-		log_message('debug','Pages Controller viewing '.$page);
+                log_message('debug','Pages Controller viewing '.$page);
 		
 		// Load the session
 		$this->load->library('session');
@@ -41,14 +41,12 @@ class Pages extends PVA_Controller {
                 if ($page == 'home')
 		{                        
                         // page specific stylesheets
-                        $this->data['stylesheets'] = array();
                         $this->data['stylesheets'][] = base_url('assets/vendor/owlcarousel/owl.carousel.css');
                         $this->data['stylesheets'][] = base_url('assets/vendor/owlcarousel/owl.theme.css');
                         $this->data['stylesheets'][] = base_url('assets/vendor/rs-plugin/css/settings.css');
                         $this->data['stylesheets'][] = base_url('assets/vendor/circle-flip-slideshow/css/component.css');                        
                         
                         // page specific javascripts
-			$this->data['scripts'] = array();
 			$this->data['scripts'][] = base_url('assets/vendor/owlcarousel/owl.carousel.js');
                         $this->data['scripts'][] = base_url('assets/vendor/owlcarousel/owl.carousel.js');
                         $this->data['scripts'][] = base_url('assets/vendor/rs-plugin/js/jquery.themepunch.revolution.min.js');
@@ -66,12 +64,10 @@ class Pages extends PVA_Controller {
                         $this->data['title'] = "Type Ahead";
                         
                         // page specific stylesheets
-                        $this->data['stylesheets'] = array();
                         $this->data['stylesheets'][] = base_url('assets/admin/vendor/summernote/summernote.css');
                         $this->data['stylesheets'][] = base_url('assets/admin/vendor/bootstrap-timepicker/css/bootstrap-timepicker.css');
                         
                         // page specific javascripts
-			$this->data['scripts'] = array();
 			$this->data['scripts'][] = base_url('assets/js/typeahead.bundle.js');
 			$this->data['scripts'][] = base_url('assets/js/prefetch.js');
                         $this->data['scripts'][] = base_url('assets/admin/vendor/summernote/summernote.js');
