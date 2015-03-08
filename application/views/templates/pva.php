@@ -405,10 +405,10 @@
 		<!-- Theme Base, Components and Settings -->
 		<script src="<?php echo base_url('assets/js/theme.js');?>"></script>
                 
-                <!-- load page specific scripts -->
-                <?php foreach ($scripts as $row): ?>
-                            <script src="<?=$row; ?>"></script>
-                        <?php endforeach; ?>
+        <!-- load page specific scripts -->
+        <?php foreach ($scripts as $row): ?>
+        	<script src="<?=$row; ?>"></script>
+        <?php endforeach; ?>
 
 		<!-- Admin Extension -->
 		<script src="<?php echo base_url('assets/admin/javascripts/theme.admin.extension.js');?>"></script>
@@ -418,6 +418,13 @@
 		
 		<!-- Theme Initialization Files -->
 		<script src="<?php echo base_url('assets/js/theme.init.js');?>"></script>
+		
+		<?php if (isset($GLOBALS['page_script'])): ?>
+			<!-- Page specific customizations -->
+			<script>
+				<?php echo $GLOBALS['page_script']; ?>
+			</script>
+		<?php endif; ?>
                 
                	<!-- Google Analytics: Change UA-XXXXX-X to be your site's ID. Go to http://www.google.com/analytics/ for more information.
 		<script type="text/javascript">

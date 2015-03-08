@@ -31,8 +31,19 @@ $body = array(
 		'id'    => 'pagebody',
 		'value' => set_value('body'),
 		'rows'  => '40',
-		'cols'  => '100',
+		'cols'  => '80',
 );
+
+// Set up the editor using jQuery
+$id = $body['id'];
+$style = base_url('assets/sceditor/jquery.sceditor.default.min.css');
+$GLOBALS['page_script'] = 
+		"$(function() {
+			$('#{$id}').sceditor({
+				plugins: 'bbcode',
+				style: '{$style}'
+			});
+		});";
 
 ?>
 <div class="container">
@@ -51,15 +62,6 @@ $body = array(
 			<?php echo form_label('Content', $body['id']); ?>
 			<div><?php echo form_textarea($body); ?></div>
 		</div>
-		<script>
-		document.addEventListener("load", function() {
-				$("#<?php echo $body['id']; ?>").sceditor({
-					plugins: "bbcode",
-					style: "<?php echo base_url('assets/sceditor/jquery.sceditor.default.min.css'); ?>"
-				});
-				alert('loaded');
-			});
-		</script>
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
 				<?php echo form_submit('submit', 'Save Page', 'class = "btn btn-primary btn-block"'); ?>
