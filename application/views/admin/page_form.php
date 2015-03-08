@@ -41,7 +41,8 @@ $GLOBALS['page_script'] =
 		"$(function() {
 			$('#{$id}').sceditor({
 				plugins: 'bbcode',
-				style: '{$style}'
+				style: '{$style}',
+				toolbar: 'bold,italic,underline,strike,subscript,superscript|left,center,right,justify|color,removeformat|bulletlist,orderedlist,indent,outdent|code,quote|horizontalrule,image,link,unlink|date,time|maximize,source',
 			});
 		});";
 

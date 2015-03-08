@@ -76,12 +76,7 @@ class Hubs extends PVA_Controller {
 		$article = new Article();
 		$article->slug = $this->_build_slug($icao, $page);
 		$article->find();
-		
-		if ($article->title)
-		{
-			$this->data['title'] = $airport->icao.': '.$article->title;
-		}
-		
+				
 		if ($article->body)
 		{
 			$this->data['body'] = $article->body;
