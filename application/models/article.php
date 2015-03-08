@@ -23,14 +23,44 @@ class Article extends PVA_Model {
 	/**
 	 * Override parent save method to support BBCode
 	 * 
+	 * Article is stored in the database in HTML format so the parsing hit is
+	 * only needed when actually saving and editing.
+	 * 
 	 * @see PVA_Model::save()
 	 */
 	public function save()
 	{
-		$parser = new JBBCode\Parser();
-		$parser->addCodeDefinitionSet(new JBBCode\DefaultCodeDefinitionSet());
-		$html = $parser->parse($this->body);
+		// Support updates
+		$article = new Article();
+		$article->slug = $this->slug;
+		$article->find();
+		$this->id = $article->id;
+		
+		$parser = $this->_prep_body();
 		$this->body = $parser->getAsHTML();
 		parent::save();
+	}
+	
+	/**
+	 * Change HTML to BBCode
+	 * 
+	 * This is intended for editing the page. Articles are stored in HTML format
+	 * for performance.
+	 * 
+	 * @return string
+	 */
+	public function to_bbcode()
+	{
+		$parser = $this->_prep_body();		
+		return $parser->getAsBBCode();
+	}
+	
+	private function _prep_body()
+	{
+		require_once APPPATH.'/libraries/JBBCode/Parser.php';
+		$parser = new JBBCode\Parser();
+		$parser->addCodeDefinitionSet(new JBBCode\DefaultCodeDefinitionSet());		
+		$parser->parse($this->body);		
+		return $parser;
 	}
 }

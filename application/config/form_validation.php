@@ -1,6 +1,23 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 $config = array(
+		'articles/edit' => array(
+				array(
+						'field' => 'pagetitle',
+						'label' => 'Page Title',
+						'rules' => 'trim|required|xss_clean',
+						),
+				array(
+						'field' => 'slug',
+						'label' => 'URL Slug',
+						'rules' => 'trim|required|xss_clean'
+						),
+				array(
+						'field' => 'pagebody',
+						'label' => 'Content',
+						'rules' => 'trim|required|xss_clean'
+						),
+				),
 		'auth/change_email' => array(
 				array(
 						'field' => 'password',
