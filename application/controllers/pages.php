@@ -25,6 +25,12 @@ class Pages extends PVA_Controller {
 		// Load the session
 		$this->load->library('session');
 		
+		// Handle special pages
+		if (substr($page, 0, 4) == 'hub-')
+		{
+			redirect("hubs/{$page}");
+		}
+		
 		// File or database
 		if ( ! file_exists(APPPATH.'/views/pages/'.$page.'.php'))
 		{

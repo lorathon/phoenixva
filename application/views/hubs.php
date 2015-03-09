@@ -22,7 +22,7 @@
 			</li>
 			<?php foreach ($pages as $slug => $page): ?>
 				<li role="presentation"
-					<?php if (uri_string() == 'hubs/'.$slug):?>
+					<?php if (uri_string() == "hubs/{$icao}/".substr($slug,9)):?>
 						class="active"
 					<?php endif;?>
 				>

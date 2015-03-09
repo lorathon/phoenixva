@@ -49,6 +49,24 @@ class Hubs extends PVA_Controller {
 			$this->index();
 		}
 		
+		if (strlen($icao) > 4)
+		{
+			// Handle slug being passed in
+			$parts = explode('-', $icao, 3);
+			$icao = $parts[1];
+			if (count($parts) > 2)
+			{
+				$page = $parts[2];
+			}
+			log_message('debug', 'Splitting hub slug');
+			log_message('debug', 'ICAO = '.$icao);
+			log_message('debug', 'Page = '.$page);
+			
+			// Redirect to keep out duplicate content
+			$this->load->helper('url');
+			redirect("hubs/{$icao}/{$page}");
+		}
+		
 		$airport = new Airport();
 		$airport->icao = $icao;
 		$airport->find();
@@ -180,7 +198,11 @@ class Hubs extends PVA_Controller {
 		{
 			foreach ($nav_list as $item)
 			{
-				$navigation[$item->slug] = $item->title;
+				// Don't include default pages
+				if (!strstr($item->slug, 'logbook'))
+				{
+					$navigation[$item->slug] = $item->title;
+				}
 			}
 		}
 		return $navigation;
