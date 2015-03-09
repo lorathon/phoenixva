@@ -25,13 +25,35 @@ class Pages extends PVA_Controller {
 		// Load the session
 		$this->load->library('session');
 		
+		// Handle special pages
+		if (substr($page, 0, 4) == 'hub-')
+		{
+			redirect("hubs/{$page}");
+		}
+		
 		// File or database
 		if ( ! file_exists(APPPATH.'/views/pages/'.$page.'.php'))
 		{
 			// Try to get page from database
-			log_message('debug','Getting page from database.');
-			// No page in database, no page exists
-			show_404();
+			log_message('debug','Getting page from database: '.$page);
+			
+			$article = new Article();
+			$article->slug = $page;
+			$article->find();
+			
+			if ($article->title)
+			{
+				$this->data['title'] = $article->title;
+				$this->data['body'] = $article->body;
+				$this->data['pubdate'] = $article->pubdate;
+				$this->_render('article');
+				return FALSE;
+			}
+			else 
+			{
+				// No page in database, no page exists
+				show_404();
+			}
 		}
 		
                 // default page title
