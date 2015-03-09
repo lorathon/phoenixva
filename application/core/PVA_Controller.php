@@ -60,6 +60,12 @@ class PVA_Controller extends CI_Controller {
 		$this->load->library('session');
 		$this->data['userdata'] = $this->session->all_userdata();
 		
+		// Holds view specific css
+		$this->data['stylesheets'] = array();
+		
+		// Holds view specific javascripts 
+		$this->data['scripts'] = array();
+		
 		// Holds errors for display by the view
 		$this->data['errors'] = array();
 		
