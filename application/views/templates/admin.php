@@ -197,10 +197,10 @@
 										</a>
 										<ul class="nav nav-children">
 											<li>
-												<?php echo anchor('admin/airport','View Airports'); ?>
+												<?php echo anchor('admin/airports','View Airports'); ?>
 											</li>
                                                                                         <li>
-												<?php echo anchor('admin/airline','View Airlines'); ?>
+												<?php echo anchor('admin/airlines','View Airlines'); ?>
 											</li>                                                                                        
 											<li class="nav-parent">
 												<a>Fleet </a>
