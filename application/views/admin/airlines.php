@@ -8,7 +8,6 @@
         <section class="panel">
             <header class="panel-heading">
                 <div class="panel-actions">
-                    <!--<a href="<?php echo site_url('admin/airlines/create_airline/') ?>" class="fa fa-plus-square"></a>-->
                 </div>
 
                 <h2 class="panel-title"><?php echo $title?></h2>
@@ -23,7 +22,6 @@
 				<th>IATA</th>
                                 <th>Name</th>
 				<th>Category</th>
-                                <!--<th>Actions</th>-->
                             </tr>
                         </thead>
                         <tbody>
@@ -33,10 +31,7 @@
                                     <td><?php echo $row->icao ?></td>
                                     <td><?php echo $row->iata ?></td>
                                     <td><?php echo $row->name ?></td>
-                                    <td><?php echo $row->category_name ?></td>                          
-                                    <!--<td align="center">
-                                        <?php echo anchor('admin/airlines/create_airline/' . $row->id,'<i class="fa fa-pencil"></i> Edit', button('info')); ?>
-                                    </td>-->
+                                    <td><?php echo $row->category_name ?></td> 
                                 </tr>
                             <?php endforeach; ?>
 

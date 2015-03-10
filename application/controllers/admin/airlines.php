@@ -5,12 +5,10 @@ class Airlines extends PVA_Controller
     public function __construct()
     {
         parent::__construct();
-	$this->load->helper(array('form', 'url', 'html'));
-	$this->load->library('form_validation'); 
     }
     
     public function index()
-    {        
+    {        	
 	$obj = new Airline();
 	$this->data['title'] = 'View All Airlines';
 	$airlines = $obj->find_all();
