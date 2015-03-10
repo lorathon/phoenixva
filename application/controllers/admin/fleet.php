@@ -6,12 +6,12 @@ class Fleet extends PVA_Controller
     public function __construct()
     {
         parent::__construct();
-	$this->load->helper(array('form', 'url', 'html'));
-	$this->load->library('form_validation'); 
     }
     
     public function index()
     {        
+	$this->load->helper('html');
+	
 	$obj = new Aircraft();
 	$this->data['rows'] = $obj->find_all();
 	$this->data['title'] = 'All Aircraft';
@@ -21,6 +21,8 @@ class Fleet extends PVA_Controller
     
     public function missing_sub()
     {
+	$this->load->helper('html');
+	
 	$obj = new Aircraft();
 	$obj->aircraft_sub_id = 0;
 	$this->data['rows'] = $obj->find_all();
@@ -31,6 +33,8 @@ class Fleet extends PVA_Controller
     
     public function substitutions()
     {        
+	$this->load->helper('html');
+	
 	$obj = new Aircraft_sub();
 	$this->data['rows'] = $obj->find_all();
 	$this->data['aircraft_cat'] = $this->config->item('aircraft_cat');
@@ -41,6 +45,9 @@ class Fleet extends PVA_Controller
     {
 	$obj = new Aircraft();
 	$obj->create_equip();
+	
+	$this->_alert_message('success', 'Aircraft Fleet Built');
+        $this->index();
     }
     
     public function create_aircraft()
@@ -51,6 +58,8 @@ class Fleet extends PVA_Controller
     public function create_sub($id = NULL)
     {
 	$obj = New Aircraft_sub($id);
+	
+	$this->load->library('form_validation'); 
                 
         $this->form_validation->set_rules('id', 'ID', '');
         $this->form_validation->set_rules('designation', 'Designation', 'alpha-numberic|trim|required|xss_clean');

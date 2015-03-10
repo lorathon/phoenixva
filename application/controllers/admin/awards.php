@@ -5,13 +5,13 @@ class Awards extends PVA_Controller
     
     public function __construct()
     {
-        parent::__construct();        
-        $this->load->helper(array('form', 'url', 'html'));
-	$this->load->library('form_validation'); 
+        parent::__construct(); 
     }
     
     public function index()
     {   
+	$this->load->helper('html');	
+	
         $award = New Award();
         $awards = $award->find_all();
         
@@ -33,6 +33,8 @@ class Awards extends PVA_Controller
     
      public function award_types()
     {   
+	$this->load->helper('html');	
+	
         $award_type = New Award_type();
         $this->data['types'] = $award_type->find_all();
         $this->_render('admin/award_types');
@@ -40,6 +42,8 @@ class Awards extends PVA_Controller
     
     public function create_award($id = NULL)
     {
+	$this->load->library('form_validation');
+	
         $award = New Award($id);
                 
         $this->form_validation->set_rules('id', 'ID', '');
@@ -73,7 +77,9 @@ class Awards extends PVA_Controller
     
     public function create_award_type($id = NULL)
     {
-        $award_type = new Award_type($id); 
+	$this->load->library('form_validation'); 
+	
+        $award_type = new Award_type($id);
                 
         $this->form_validation->set_rules('id', 'ID', '');
         $this->form_validation->set_rules('name', 'Name', 'alpha-numberic|trim|required|xss_clean');

@@ -5,13 +5,13 @@ class Events extends PVA_Controller
     
     public function __construct()
     {
-        parent::__construct();        
-        $this->load->helper(array('form', 'url', 'html'));
-	$this->load->library('form_validation'); 
+        parent::__construct(); 
     }
     
     public function index()
     {   
+	$this->load->helper('html');
+	
         $event = New Event();
         $events = $event->find_all();
         
@@ -34,6 +34,8 @@ class Events extends PVA_Controller
     
     public function event_types()
     {
+	$this->load->helper('html');
+	
 	$event_type = New Event_type();
 	$event_types = $event_type->find_all();
 	
@@ -51,6 +53,8 @@ class Events extends PVA_Controller
     public function create_event($id = NULL)
     {
         $event = New Event($id);
+	
+	$this->load->library('form_validation'); 
                 
         $this->form_validation->set_rules('id', 'ID', '');
         $this->form_validation->set_rules('name', 'Name', 'alpha-numberic|trim|required|xss_clean');
@@ -123,6 +127,8 @@ class Events extends PVA_Controller
     public function create_event_type($id = NULL)
     {
         $event_type = new Event_type($id); 
+	
+	$this->load->library('form_validation'); 
                 
         $this->form_validation->set_rules('id', 'ID', '');
         $this->form_validation->set_rules('name', 'Name', 'alpha-numberic|trim|required|xss_clean');

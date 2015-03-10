@@ -2,17 +2,17 @@
 
 class Ranks extends PVA_Controller
 {
-    protected $_table_name = 'ranks';
     
     public function __construct()
     {
-        parent::__construct();        
-        $this->load->helper(array('form', 'url', 'html'));
-	$this->load->library('form_validation');        
+        parent::__construct();       
+        
     }
     
     public function index()
     {            
+	$this->load->helper('html');
+	
         $rank = New Rank();
         $ranks = $rank->find_all();
         $this->data['ranks'] = $ranks;
@@ -23,6 +23,8 @@ class Ranks extends PVA_Controller
     public function create_rank($id = NULL)
     {
         $rank = New Rank($id);
+	
+	$this->load->library('form_validation'); 
         
         $this->form_validation->set_rules('id', 'ID', '');
         $this->form_validation->set_rules('rank', 'Rank', 'trim|required|xss_clean');
