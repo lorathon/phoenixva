@@ -66,13 +66,31 @@ class Event extends PVA_Model
 	return $this->_event_type;
     }
     
+    function get_type_name()
+    {
+	if( is_null($this->_event_type) )
+	{
+	    $this->get_event_type();
+	}
+	return $this->_event_type->name;
+    }
+    
     function get_airline()
     {
 	if ( is_null($this->_airline) )
 	{
-	    $this->airline = new Airline($this->airline_id);
+	    $this->_airline = new Airline($this->airline_id);
+	}		
+	return $this->_airline;	
+    }
+    
+    function get_airline_name()
+    {
+	if ( is_null($this->_airline) )
+	{
+	    $this->get_airline();
 	}
-	return $this->_airline;
+	return $this->_airline->name;
     }
     
     function get_airport()
@@ -82,6 +100,15 @@ class Event extends PVA_Model
 	    $this->_airport = new Airport($this->airport_id);
 	}
 	return $this->_airport;
+    }
+    
+    function get_airport_name()
+    {
+	if ( is_null($this->_airport) )
+	{
+	    $this->get_airport();
+	}
+	return $this->_airport->iata . ' - ' . $this->_airport->name;
     }
     
     function get_aircraft_list()

@@ -48,6 +48,12 @@ $route['private/hubs/create-page/(:any)'] = "hubs/create_page/$1";
 $route['private/hubs/edit-page/(:any)'] = "hubs/edit_page/$1";
 $route['hubs/(:any)'] = "hubs/view/$1";
 
+// Route all hub related stuff
+$route['private/events/create-page/(:any)'] = "events/create_page/$1";
+$route['private/events/create-event/(:any)'] = "events/create_event/$1";
+$route['private/events/edit-page/(:any)'] = "events/edit_page/$1";
+$route['events/(:any)'] = "events/view/$1";
+
 // Default route
 $route['default_controller'] = 'pages/view';
 

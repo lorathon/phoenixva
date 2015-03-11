@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Events extends PVA_Controller
+class Events_XXX extends PVA_Controller
 {
     
     public function __construct()
