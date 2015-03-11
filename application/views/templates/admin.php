@@ -233,15 +233,7 @@
 										</a>
 										<ul class="nav nav-children">
 											<li>
-												<?php echo anchor('admin/events', 'All Events'); ?>
-											</li>
-											<li class="nav-parent">
-												<a>Tools</a>
-												<ul class="nav nav-children">													
-													<li>
-														<?php echo anchor('admin/events/event_types', 'Event Types'); ?>
-													</li>													
-												</ul>
+                                                                                                <?php echo anchor('admin/event_types', 'Event Types'); ?>
 											</li>
 										</ul>
 									</li>

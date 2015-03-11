@@ -95,6 +95,7 @@
                                                                             <li><?php echo anchor('pages/typeahead','Airlines'); ?></li>
                                                                             <li><?php echo anchor('aircraft','Aircraft Fleet'); ?></li>
                                                                             <li><?php echo anchor('hubs','Crew Centers'); ?></li>
+                                                                            <li><?php echo anchor('events','Events'); ?></li>
                                                                             <li><?php echo anchor('pages/achievements','Achievements'); ?></li>
                                                                         </ul>
                                                                 </li>

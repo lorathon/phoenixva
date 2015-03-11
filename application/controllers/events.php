@@ -91,10 +91,19 @@ class Events extends PVA_Controller
     }
     
     public function create_event($id = NULL)
-    {
+    {    
+        $this->_check_access('manager');
+	$this->data['title'] = 'Create Event';
+        
         $event = New Event($id);
+        
+        if($event)
+        {
+            $this->data['title'] = 'Edit Event';
+        }
 	
 	$this->load->library('form_validation'); 
+        $this->load->helper('url');
                 
         $this->form_validation->set_rules('id', 'ID', '');
         $this->form_validation->set_rules('name', 'Name', 'alpha-numberic|trim|required|xss_clean');
@@ -117,6 +126,8 @@ class Events extends PVA_Controller
 	
 	$award = new Award();
 	$this->data['awards'] = $award->get_dropdown();
+        
+        $this->data['scripts'][] = base_url('assets/admin/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js');
                 
         if ($this->form_validation->run() == FALSE)
 	{             

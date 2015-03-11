@@ -158,7 +158,7 @@ $enabled = array(
 
 <div class="container">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-8">
             <section class="panel">
                 <header class="panel-heading">
 
@@ -166,7 +166,7 @@ $enabled = array(
                 </header>
                 <div class="panel-body">
 
-                    <?php echo form_open_multipart('admin/events/create_event', $form_attributes); ?>
+                    <?php echo form_open_multipart('private/events/create-event', $form_attributes); ?>
 
                     <?php echo form_hidden('id', $record->id); ?>
 
@@ -182,12 +182,12 @@ $enabled = array(
 		    
 		    <div class="form-group">				
 			<?php echo form_label('Start Time', $time_start['id'], $label_attributes); ?>
-			<div class="col-md-6"><input type="text" name="time_start" id="time_start" value="<?php echo $record->time_start; ?>" data-plugin-datepicker class="form-control"></div>
+			<div class="col-md-6"><input type="text" name="time_start" id="time_start" value="<?php echo date("m/d/Y", strtotime($record->time_start)); ?>" data-plugin-datepicker class="form-control"></div>
 		    </div>
                     
 		    <div class="form-group">				
 			<?php echo form_label('End Time', $time_end['id'], $label_attributes); ?>
-			<div class="col-md-6"><input type="text" name="time_end" id="time_end" value="<?php echo $record->time_end; ?>" data-plugin-datepicker class="form-control"></div>
+			<div class="col-md-6"><input type="text" name="time_end" id="time_end" value="<?php echo date("m/d/Y", strtotime($record->time_end)); ?>" data-plugin-datepicker class="form-control"></div>
 		    </div>		    
 		    
                     <div class="form-group">

@@ -51,6 +51,7 @@ $route['hubs/(:any)'] = "hubs/view/$1";
 // Route all hub related stuff
 $route['private/events/create-page/(:any)'] = "events/create_page/$1";
 $route['private/events/create-event/(:any)'] = "events/create_event/$1";
+$route['private/events/create-event'] = "events/create_event";
 $route['private/events/edit-page/(:any)'] = "events/edit_page/$1";
 $route['events/(:any)'] = "events/view/$1";
 
