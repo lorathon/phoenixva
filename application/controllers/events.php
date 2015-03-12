@@ -156,7 +156,7 @@ class Events extends PVA_Controller
 	    $_time_start = date("Y-m-d H:i:s", $_time_start);
 	    
 	    $_time_end = strtotime($this->input->post('time_end', TRUE));
-	    $_time_end = date("Y-m-d H:i:s", $_time_end);
+	    $_time_end = date("Y-m-d 23:59:59", $_time_end);
 	    
             $event->id              = $this->input->post('id', TRUE);
             $event->name            = $this->form_validation->set_value('name');            
@@ -314,13 +314,15 @@ class Events extends PVA_Controller
 		
 	foreach($events as $ev)
 	{
+	    $start_date = new DateTime($ev->time_start);
+	    $end_date = new DateTime($ev->time_end);	    
+	    
 	    $link["id"]		= $ev->id;
 	    $link["title"]	= $ev->name;
-	    $link["start"]	= date("Y, m, d", strtotime($ev->time_start));
-	    $link["end"]	= date("Y, m, d", strtotime($ev->time_end));
+	    $link["start"]	= $start_date->format(DateTime::ISO8601);
+	    $link["end"]	= $end_date->format(DateTime::ISO8601);
 	    $link["url"]	= base_url() . 'events/' . $ev->id;
 	    $link["className"]	= 'fc-event-' . $colors[$ev->get_color_id()];
-	    $link["allDay"]	= true;
 	    array_push($linklist,$link);
 	}
 	echo json_encode($linklist);

@@ -72,6 +72,7 @@ $config['calendar_colors'] = array(
     '4' => 'info',
     '5' => 'danger',
     '6' => 'dark',
+    '7' => 'data',
     
 );
 $config['countries'] = array(    
