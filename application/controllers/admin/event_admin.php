@@ -1,14 +1,38 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Event_types extends PVA_Controller
+class Event_admin extends PVA_Controller
 {
     
     public function __construct()
     {
         parent::__construct(); 
     }
-        
+    
     public function index()
+    {   
+	$this->load->helper('html');
+	
+        $event = New Event();
+        $events = $event->find_all();
+        
+	if(! $events)
+	{
+	    $events = array();
+	    $this->data['events'] = $events;
+	}
+	
+        foreach($events as $event)
+        {            
+            $event_type = $event->get_event_type();            
+            $event->type	= $event_type->name;
+            $event->color_id	= $event_type->color_id;            
+            $this->data['events'][] = $event;
+        }
+        $this->session->set_flashdata('return_url','admin/event_admin');
+        $this->_render('admin/events');
+    }    
+        
+    public function event_types()
     {
 	$this->load->helper('html');
 	
@@ -53,8 +77,21 @@ class Event_types extends PVA_Controller
                 
             $event_type->save();
             $this->_alert_message('success', 'Event Type - Record Saved');
-            $this->index();
+            $this->event_types();
 	}        
+    }
+    
+    public function delete_event($id = NULL)
+    {
+        // Delete record
+        if ( is_null($id) )
+	    return FALSE;
+        
+        $event = new Event($id);
+        $event->delete();
+        
+        $this->_flash_message('info', 'Event', 'Record Deleted');
+        $this->index();
     }
     
     public function delete_event_type($id = NULL)
@@ -69,7 +106,7 @@ class Event_types extends PVA_Controller
         $event->_event_type->delete();
         
         $this->_flash_message('info', 'Event Type', 'Record Deleted');
-        $this->index();
+        $this->event_types();
     }   
     
 }

@@ -31,6 +31,11 @@ class Pages extends PVA_Controller {
 			redirect("hubs/{$page}");
 		}
 		
+		if (substr($page, 0, 6) == 'event-')
+		{
+			redirect("events/{$page}");
+		}
+		
 		// File or database
 		if ( ! file_exists(APPPATH.'/views/pages/'.$page.'.php'))
 		{

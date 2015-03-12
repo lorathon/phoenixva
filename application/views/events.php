@@ -154,6 +154,20 @@ $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
                                     <td><?php echo $event->flight_time; ?> Hours</td>
                                 </tr>
                             <?php endif; ?>
+				
+			    <?php if ($event->award_id_winner) : ?>
+                                <tr>
+                                    <td>Award: </td>
+                                    <td><?php echo $award_1->name; ?></td>
+                                </tr>
+                            <?php endif; ?>
+				
+			    <?php if ($event->award_id_participant) : ?>
+                                <tr>
+                                    <td>Participant Award: </td>
+                                    <td><?php echo $award_2->name; ?></td>
+                                </tr>
+                            <?php endif; ?>
 
                             <?php if ($event->bonus_1) : ?>
                                 <tr>

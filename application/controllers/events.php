@@ -64,6 +64,8 @@ class Events extends PVA_Controller
 	$this->data['airline'] = $event->get_airline_name();
 	$this->data['airport'] = $event->get_airport_name();
 	$this->data['aircraft'] = $this->config->item('aircraft_cat');
+	$this->data['award_1'] = new Award($event->award_id_winner);
+	$this->data['award_2'] = new Award($event->award_id_participant);
 	$this->data['user_1'] = new User($event->user_id_1);
 	$this->data['user_2'] = new User($event->user_id_2);
 	$this->data['user_3'] = new User($event->user_id_3);
@@ -87,6 +89,7 @@ class Events extends PVA_Controller
 	    $this->data['body'] .= '<p>Logbook not yet implemented</p>';
 	}
 	
+	$this->session->set_flashdata('return_url','events/'.$id);	
 	$this->_render();
     }
     
@@ -128,11 +131,14 @@ class Events extends PVA_Controller
 	$this->data['awards'] = $award->get_dropdown();
         
         $this->data['scripts'][] = base_url('assets/admin/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js');
+	$this->data['scripts'][] = base_url('assets/js/typeahead.bundle.js');
+	$this->data['scripts'][] = base_url('assets/js/prefetch.js');
                 
         if ($this->form_validation->run() == FALSE)
 	{             
             $this->data['errors'] = validation_errors();;  
             $this->data['record'] = $event;
+	    $this->session->keep_flashdata('return_url');
             $this->_render('admin/event_form');
 	}
 	else
@@ -170,8 +176,10 @@ class Events extends PVA_Controller
 	    $event->user_id_3	    = $event->user_id_3 == NULL ? 0 : $event->user_id_3;
                 
             $event->save();
-	    $this->_alert_message('success', 'Event - Record Saved');
-            $this->view($id);
+	    $this->_flash_message('success', 'Event', 'Event - Record Saved');
+	    
+	    redirect($this->session->flashdata('return_url'));
+	    //$this->view($id);
 	}        
     }
 

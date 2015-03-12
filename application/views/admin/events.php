@@ -8,7 +8,7 @@
         <section class="panel">
             <header class="panel-heading">
                 <div class="panel-actions">
-                    <a href="<?php echo site_url('admin/events/create_event/') ?>" class="fa fa-plus-square"></a>
+                    <a href="<?php echo site_url('admin/events/create-event/') ?>" class="fa fa-plus-square"></a>
                 </div>
 
                 <h2 class="panel-title">View All Events</h2>
@@ -38,7 +38,7 @@
 				    <td><?php echo date("Y-m-d", strtotime($event->time_start)) ?></td>
 				    <td><?php echo date("Y-m-d", strtotime($event->time_end)) ?></td>        
                                     <td align="center">
-                                        <?php echo anchor('admin/events/create_event/' . $event->id,'<i class="fa fa-pencil"></i> Edit', button('info')); ?>
+                                        <?php echo anchor('admin/events/create-event/' . $event->id,'<i class="fa fa-pencil"></i> Edit', button('info')); ?>
                                         <?php echo anchor('admin/events/delete_event/' . $event->id,'<i class="fa fa-trash"></i> Delete', button_delete('danger')); ?>
                                     </td>
                                 </tr>

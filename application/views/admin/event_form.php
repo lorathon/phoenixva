@@ -222,6 +222,15 @@ $enabled = array(
                     </div>
 		    
 		    <div class="form-group">
+                        <?php echo form_label('Airport', $airport_id['id'], $label_attributes); ?>
+                        <div class="col-md-6">
+			    <div id="airports">
+                            <input class="typeahead" name="airport" type="text" placeholder="Search for Airport">
+			    </div>
+                        </div>
+                    </div>		    
+		    
+		    <div class="form-group">
                         <?php echo form_label('Aircraft Category', $aircraft_cat_id['id'], $label_attributes); ?>
                         <div class="col-md-6">
                             <?php echo form_dropdown('aircraft_cat_id', $aircraft_cats, $aircraft_cat_id['value'], "class='{$field_class}'"); ?>
