@@ -280,6 +280,7 @@
                                 
                                 <section role="main" class="content-body">                                    
 				    
+				    <!--
                                     <?php if (isset($this->session) && $this->session->flashdata('title')): ?>
 					<div class="container">
 						<div class="row">
@@ -295,7 +296,7 @@
 							</div>
 						</div>
 					</div>
-                                    <?php endif;?>
+                                    <?php endif;?>-->
 				    
 				    <?php if (isset($this->session) && $this->session->flashdata('title')): ?>
 					<div class="alert alert-<?php echo $this->session->flashdata('msg_type'); ?>">            

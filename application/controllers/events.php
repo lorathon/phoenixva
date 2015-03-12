@@ -9,6 +9,16 @@ class Events extends PVA_Controller
 	
 	$this->data['events'] = array();
 	
+	$this->load->helper('url');
+	
+	$this->data['stylesheets'][] = base_url('assets/admin/vendor/fullcalendar/fullcalendar.css');
+	$this->data['stylesheets'][] = base_url('assets/css/calendar.css');
+	
+	$this->data['scripts'][] = base_url('assets/vendor/jquery/jquery.js');
+	$this->data['scripts'][] = base_url('assets/admin/vendor/fullcalendar/lib/moment.min.js');
+	$this->data['scripts'][] = base_url('assets/admin/vendor/fullcalendar/fullcalendar.js');
+	$this->data['scripts'][] = base_url('assets/js/events.calendar.js');
+	
 	$event = new Event();
 	
 	if ($events = $event->find_all())
@@ -73,7 +83,6 @@ class Events extends PVA_Controller
 	
 	// fill with pilots who are participating ?
 	$this->data['pilots'] = array();
-
 
 	$article = new Article();
 	$article->slug = $this->_build_slug($id, $page);
@@ -289,6 +298,32 @@ class Events extends PVA_Controller
 	    $slug .= '-' . $page;
 	}
 	return $slug;
+    }
+    
+    public function get_json()
+    {
+	$this->load->helper('url');
+	
+	$event = new Event();
+	$events = $event->find_all();
+	
+	$linklist=array();
+	$link=array();
+	
+	$colors = $this->config->item('calendar_colors');
+		
+	foreach($events as $ev)
+	{
+	    $link["id"]		= $ev->id;
+	    $link["title"]	= $ev->name;
+	    $link["start"]	= date("Y, m, d", strtotime($ev->time_start));
+	    $link["end"]	= date("Y, m, d", strtotime($ev->time_end));
+	    $link["url"]	= base_url() . 'events/' . $ev->id;
+	    $link["className"]	= 'fc-event-' . $colors[$ev->get_color_id()];
+	    $link["allDay"]	= true;
+	    array_push($linklist,$link);
+	}
+	echo json_encode($linklist);
     }
 
 }

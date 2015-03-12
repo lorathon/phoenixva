@@ -75,6 +75,15 @@ class Event extends PVA_Model
 	return $this->_event_type->name;
     }
     
+    function get_color_id()
+    {
+	if( is_null($this->_event_type) )
+	{
+	    $this->get_event_type();
+	}
+	return $this->_event_type->color_id;
+    }
+    
     function get_airline()
     {
 	if ( is_null($this->_airline) )

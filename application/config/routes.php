@@ -54,6 +54,7 @@ $route['private/events/create-event/(:any)'] = "events/create_event/$1";
 $route['private/events/create-event'] = "events/create_event";
 $route['private/events/edit-page/(:any)'] = "events/edit_page/$1";
 $route['events/(:any)'] = "events/view/$1";
+$route['private/events/get-json'] = "events/get_json";
 $route['admin/events'] = "admin/event_admin";
 $route['admin/event-types'] = "admin/event_admin/event_types";
 $route['admin/events/create-event/(:any)'] = "events/create_event/$1";

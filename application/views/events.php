@@ -268,5 +268,10 @@ $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
             </div>
             
         </div>
+    <div class="row">
+	<div class="col-md-12">
+	    <div id="calendar"></div>
+	</div>
+    </div>
     <?php endif; ?>
 </div>
