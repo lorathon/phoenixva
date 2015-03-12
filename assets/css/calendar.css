@@ -1,0 +1,148 @@
+/* Fullcalendar - Event States */
+/* Buttons - States */
+.fc-event.fc-event-default {
+	background: #cccccc;
+	border-color: #cccccc;
+}
+.fc-event.fc-event-default .fc-event-inner {
+	color: black;
+}
+
+a.fc-event.fc-event-default:hover {
+	color: black;
+}
+
+.fc-event.fc-event-primary {
+	background: #0088cc;
+	border-color: #0088cc;
+}
+.fc-event.fc-event-primary .fc-event-inner {
+	color: white;
+}
+
+a.fc-event.fc-event-primary:hover {
+	color: white;
+}
+
+.fc-event.fc-event-success {
+	background: #47a447;
+	border-color: #47a447;
+}
+.fc-event.fc-event-success .fc-event-inner {
+	color: white;
+}
+
+a.fc-event.fc-event-success:hover {
+	color: white;
+}
+
+.fc-event.fc-event-warning {
+	background: #ed9c28;
+	border-color: #ed9c28;
+}
+.fc-event.fc-event-warning .fc-event-inner {
+	color: white;
+}
+
+a.fc-event.fc-event-warning:hover {
+	color: white;
+}
+
+.fc-event.fc-event-danger {
+	background: #d2322d;
+	border-color: #d2322d;
+}
+.fc-event.fc-event-danger .fc-event-inner {
+	color: white;
+}
+
+a.fc-event.fc-event-danger:hover {
+	color: white;
+}
+
+.fc-event.fc-event-info {
+	background: #5bc0de;
+	border-color: #5bc0de;
+}
+.fc-event.fc-event-info .fc-event-inner {
+	color: white;
+}
+
+a.fc-event.fc-event-info:hover {
+	color: white;
+}
+
+.fc-event.fc-event-data {
+	background: #744ba9;
+	border-color: #744ba9;
+}
+.fc-event.fc-event-data .fc-event-inner {
+	color: white;
+}
+
+a.fc-event.fc-event-data:hover {
+	color: white;
+}
+
+.fc-event.fc-event-dark {
+	background: #171717;
+	border-color: #171717;
+}
+.fc-event.fc-event-dark .fc-event-inner {
+	color: white;
+}
+
+a.fc-event.fc-event-dark:hover {
+	color: white;
+}
+
+/* Fullcalendar - External Events */
+.external-event {
+	cursor: move;
+	display: inline-block;
+	font-size: 12px;
+	font-size: 1.2rem;
+	font-weight: normal;
+	margin: 5px;
+	padding: 10px;
+	text-align: left;
+}
+
+@media only screen and (max-width: 400px) {
+	.fc .fc-header-right .btn-group {
+		margin: 10px 0;
+	}
+	.fc .fc-header-right br.hidden {
+		display: block !important;
+	}
+}
+@media only screen and (max-width: 480px) {
+	.fc .fc-header-left,
+	.fc .fc-header-right {
+		display: block;
+		width: 100%;
+	}
+	.fc .fc-header-right {
+		padding: 0 0 15px;
+		text-align: center;
+	}
+}
+@media only screen and (max-width: 991px) {
+	.fc {
+		margin-bottom: 30px;
+	}
+}
+/* dark */
+html.dark .fc .fc-header-title h2 {
+	color: #FFF;
+}
+html.dark .ui-state-highlight.fc-today,
+html.dark .fc .ui-widget-header,
+html.dark .fc-widget-content,
+html.dark .fc-state-disabled,
+html.dark .fc-state-disabled .fc-button-inner {
+	border-color: rgba(0, 0, 0, 0.3);
+}
+html.dark .fc-content .fc-widget-content.fc-today {
+	background: #21262d;
+}
