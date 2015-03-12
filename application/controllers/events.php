@@ -325,6 +325,7 @@ class Events extends PVA_Controller
 	    $link["className"]	= 'fc-event-' . $colors[$ev->get_color_id()];
 	    array_push($linklist,$link);
 	}
+	$this->output->enable_profiler(FALSE);
 	echo json_encode($linklist);
     }
 
