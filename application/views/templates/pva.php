@@ -95,6 +95,7 @@
                                                                             <li><?php echo anchor('pages/typeahead','Airlines'); ?></li>
                                                                             <li><?php echo anchor('aircraft','Aircraft Fleet'); ?></li>
                                                                             <li><?php echo anchor('hubs','Crew Centers'); ?></li>
+                                                                            <li><?php echo anchor('events','Events'); ?></li>
                                                                             <li><?php echo anchor('pages/achievements','Achievements'); ?></li>
                                                                         </ul>
                                                                 </li>
@@ -332,6 +333,19 @@
 						</div>
 					</div>
 				<?php endif;?>
+			    
+				<?php if (isset($this->session) && $this->session->flashdata('title')): ?>
+					<div class="container">
+						<div class="row">
+							<div class="col-md-12">
+							    <div class="alert alert-<?php echo $this->session->flashdata('msg_type'); ?>">            
+								<p><?php echo $this->session->flashdata('message'); ?></p>
+							    </div>
+							</div>
+						</div>
+					</div>			    
+                                <?php endif;?>
+			    
 				<?php if ($errors):?>
 					<div class="container">
 						<div class="row">

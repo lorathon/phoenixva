@@ -1,4 +1,4 @@
-<!doctype html>
+ <!doctype html>
 <html class="fixed">
 	<head>
 
@@ -239,7 +239,7 @@
 												<a>Tools</a>
 												<ul class="nav nav-children">													
 													<li>
-														<?php echo anchor('admin/events/event_types', 'Event Types'); ?>
+														<?php echo anchor('admin/event-types', 'Event Types'); ?>
 													</li>													
 												</ul>
 											</li>
@@ -278,8 +278,9 @@
 				</aside>
 				<!-- end: sidebar -->
                                 
-                                <section role="main" class="content-body">
-                                    
+                                <section role="main" class="content-body">                                    
+				    
+				    <!--
                                     <?php if (isset($this->session) && $this->session->flashdata('title')): ?>
 					<div class="container">
 						<div class="row">
@@ -294,6 +295,12 @@
 								</div>
 							</div>
 						</div>
+					</div>
+                                    <?php endif;?>-->
+				    
+				    <?php if (isset($this->session) && $this->session->flashdata('title')): ?>
+					<div class="alert alert-<?php echo $this->session->flashdata('msg_type'); ?>">            
+					    <p><?php echo $this->session->flashdata('message'); ?></p>
 					</div>
                                     <?php endif;?>
 				    

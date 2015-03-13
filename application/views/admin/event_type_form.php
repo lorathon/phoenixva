@@ -50,7 +50,7 @@ $color_id = array(
                 </header>
                 <div class="panel-body">
 
-                    <?php echo form_open_multipart('admin/events/create_event_type', $form_attributes); ?>
+                    <?php echo form_open_multipart('admin/event_admin/create_event_type', $form_attributes); ?>
 
                     <?php echo form_hidden('id', $record->id); ?>
 

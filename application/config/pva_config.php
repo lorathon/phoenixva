@@ -42,6 +42,7 @@ $config['pirep_status'] = array (
     '3' => 'Holding',
 );
 $config['aircraft_cat'] = array(
+    '0' => 'NONE',
     '1' => 'A',
     '2' => 'B',
     '3' => 'C',
@@ -71,6 +72,7 @@ $config['calendar_colors'] = array(
     '4' => 'info',
     '5' => 'danger',
     '6' => 'dark',
+    '7' => 'data',
     
 );
 $config['countries'] = array(    

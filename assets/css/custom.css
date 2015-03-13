@@ -235,3 +235,7 @@ text-shadow: 0px 0px 2px rgba(255, 255, 255, 1);
 .featured-box-orange .box-content {
     border-top-color: #ed9c28;
 }
+
+.text-data {
+	color: #744ba9;
+}
