@@ -96,7 +96,7 @@
                                                                             <li><?php echo anchor('aircraft','Aircraft Fleet'); ?></li>
                                                                             <li><?php echo anchor('hubs','Crew Centers'); ?></li>
                                                                             <li><?php echo anchor('events','Events'); ?></li>
-                                                                            <li><?php echo anchor('pages/achievements','Achievements'); ?></li>
+                                                                            <li><?php echo anchor('awards','Achievements'); ?></li>
                                                                         </ul>
                                                                 </li>
 

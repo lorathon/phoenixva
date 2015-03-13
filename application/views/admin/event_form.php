@@ -5,7 +5,7 @@ $form_attributes = array(
 );
 
 $label_attributes = array(
-    'class' => 'col-md-3 control-label',
+    'class' => 'col-md-3 control-label',    
 ); 
 
 $field_class = 'form-control';
@@ -22,6 +22,7 @@ $name = array(
     'id'	    => 'name',
     'value'	    => set_value('name', $record->name),
     'class'         => $field_class,
+    'placeholder'   => 'Name of event',
 );
 
 $description = array(
@@ -30,6 +31,7 @@ $description = array(
     'value'	    => set_value('description', $record->description),
     'class'         => $field_class,
     'rows'          => 4,
+    'placeholder'   => 'Brief description of event',
 );
 
 $time_start = array(
@@ -90,12 +92,18 @@ $aircraft_cat_id = array(
     'class'         => $field_class,
 );
 
+if($record->landing_rate == NULL)
+    $record->landing_rate = 0;
+
 $landing_rate = array(
     'name'	    => 'landing_rate',
     'id'	    => 'landing_rate',
     'value'	    => set_value('landing_rate', $record->landing_rate),
     'class'         => $field_class,
 );
+
+if($record->flight_time == NULL)
+    $record->flight_time = 0;
 
 $flight_time = array(
     'name'	    => 'flight_time',
@@ -166,17 +174,17 @@ $enabled = array(
                 </header>
                 <div class="panel-body">
 
-                    <?php echo form_open_multipart('private/events/create-event', $form_attributes); ?>
+                    <?php echo form_open_multipart('admin/event_admin/create_event', $form_attributes); ?>
 
                     <?php echo form_hidden('id', $record->id); ?>
 
                     <div class="form-group">
-                        <?php echo form_label('Name', $name['id'], $label_attributes); ?>
+			<label class="col-md-3 control-label">Name <span class="required">*</span></label>
                         <div class="col-md-6"><?php echo form_input($name); ?></div>
                     </div>
 
                     <div class="form-group">
-                        <?php echo form_label('Description', $description['id'], $label_attributes); ?>
+			<label class="col-md-3 control-label">Description <span class="required">*</span></label>
                         <div class="col-md-6"><?php echo form_textarea($description); ?></div>
                     </div>
 		    

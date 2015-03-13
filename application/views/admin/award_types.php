@@ -8,7 +8,7 @@
         <section class="panel">
             <header class="panel-heading">
                 <div class="panel-actions">
-                    <a href="<?php echo site_url('admin/awards/create_award_type/') ?>" class="fa fa-plus-square"></a>
+                    <a href="<?php echo site_url('admin/award_admin/create_award_type/') ?>" class="fa fa-plus-square"></a>
                 </div>
 
                 <h2 class="panel-title">View All Award Types</h2>
@@ -37,8 +37,7 @@
                                     <td><?php echo $type->img_width ?></td>      
                                     <td><?php echo $type->img_height ?></td>
                                     <td align="center">
-                                        <?php echo anchor('admin/awards/create_award_type/' . $type->id,'<i class="fa fa-pencil"></i> Edit', button('info')); ?>
-                                        <!--<?php echo anchor('admin/awards/delete_award_type/' . $type->id,'<i class="fa fa-trash"></i> Delete', button_delete('danger')); ?>-->
+                                        <?php echo anchor('admin/award_admin/create_award_type/' . $type->id,'<i class="fa fa-pencil"></i> Edit', button('info')); ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

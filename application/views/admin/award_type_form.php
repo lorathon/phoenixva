@@ -57,14 +57,14 @@ $img_height = array(
 
 <div class="container">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-8">
             <section class="panel">
                 <header class="panel-heading">
                     <h2 class="panel-title">Award Type Form</h2>
                 </header>
                 <div class="panel-body">
 
-                    <?php echo form_open_multipart('admin/awards/create_award_type', $form_attributes); ?>
+                    <?php echo form_open_multipart('admin/award_admin/create_award_type', $form_attributes); ?>
 
                     <?php echo form_hidden('id', $record->id); ?>
 

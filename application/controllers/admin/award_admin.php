@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Awards extends PVA_Controller
+class Award_admin extends PVA_Controller
 {
     
     public function __construct()
@@ -43,8 +43,16 @@ class Awards extends PVA_Controller
     public function create_award($id = NULL)
     {
 	$this->load->library('form_validation');
+	$this->load->helper('url');
+	
+	$this->data['title'] = 'Create Award';
 	
         $award = New Award($id);
+	
+	if($award)
+        {
+            $this->data['title'] = 'Edit Award';
+        }
                 
         $this->form_validation->set_rules('id', 'ID', '');
         $this->form_validation->set_rules('name', 'Name', 'alpha-numberic|trim|required|xss_clean');
@@ -59,6 +67,7 @@ class Awards extends PVA_Controller
 	{             
             $this->data['errors'] = validation_errors();;  
             $this->data['record'] = $award;
+	    $this->session->keep_flashdata('return_url');
             $this->_render('admin/award_form');
 	}
 	else
@@ -71,15 +80,32 @@ class Awards extends PVA_Controller
                 
             $award->save();
 	    $this->_alert_message('success', 'Award - Record Saved');
-            $this->index();
+	    
+	    $url = $this->session->flashdata('return_url');	    
+	    if($url)
+	    {
+		redirect($this->session->flashdata('return_url'));
+	    }
+	    else
+	    {
+		$this->index();
+	    }	  
 	}        
     }
     
     public function create_award_type($id = NULL)
     {
 	$this->load->library('form_validation'); 
+	$this->load->helper('url');
+	
+	$this->data['title'] = 'Create Award Type';
 	
         $award_type = new Award_type($id);
+	
+	if($award_type)
+        {
+            $this->data['title'] = 'Edit Award Type';
+        }
                 
         $this->form_validation->set_rules('id', 'ID', '');
         $this->form_validation->set_rules('name', 'Name', 'alpha-numberic|trim|required|xss_clean');
@@ -105,7 +131,7 @@ class Awards extends PVA_Controller
                 
             $award_type->save();
             $this->_alert_message('success', 'Award Type - Record Saved');
-            $this->award_types();
+	    $this->award_types();
 	}        
     }
        

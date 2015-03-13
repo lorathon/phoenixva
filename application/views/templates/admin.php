@@ -158,13 +158,13 @@
 										</a>
 										<ul class="nav nav-children">
 											<li>
-												<?php echo anchor('admin/awards', 'All Awards'); ?>
+												<?php echo anchor('admin/award_admin', 'All Awards'); ?>
 											</li>
 											<li class="nav-parent">
 												<a>Tools</a>
 												<ul class="nav nav-children">													
 													<li>
-														<?php echo anchor('admin/awards/award_types', 'Award Types'); ?>
+														<?php echo anchor('admin/award_admin/award_types', 'Award Types'); ?>
 													</li>													
 												</ul>
 											</li>

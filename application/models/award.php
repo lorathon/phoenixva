@@ -46,8 +46,10 @@ class Award extends PVA_Model {
         
         //Count of users with award
         private $_user_count    = NULL;
-        	
 	
+	private $_users		= NULL;
+        	
+	// array of users with award
 	function __construct($id = NULL)
 	{
             parent::__construct($id);
@@ -59,7 +61,31 @@ class Award extends PVA_Model {
                 $this->_award_type = new Award_type($this->award_type_id);
             }            
             return $this->_award_type;
-        }        
+        }   
+	
+	function get_users()
+	{
+	    if(is_null($this->_users))
+            {
+		$this->db->select('user_id, created');
+                $this->db->where('award_id', $this->id)
+                           ->from($this->_user_award_table);
+                $query = $this->db->get();
+		
+		$awards = $this->_get_objects($query);	
+		
+		if($awards)
+		{
+		    foreach($awards as $award)
+		    {
+			$user = new User($award->user_id);
+			$user->granted = $award->created;
+			$this->_users[] = $user;
+		    }
+		}
+            }
+            return $this->_users;
+	}
         
         function get_user_count()
         {       

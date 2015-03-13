@@ -50,16 +50,25 @@ $route['hubs/(:any)'] = "hubs/view/$1";
 
 // Route all event related stuff
 $route['private/events/create-page/(:any)'] = "events/create_page/$1";
-$route['private/events/create-event/(:any)'] = "events/create_event/$1";
-$route['private/events/create-event'] = "events/create_event";
 $route['private/events/edit-page/(:any)'] = "events/edit_page/$1";
+$route['private/events/create-event/(:any)'] = "admin/event_admin/create_event/$1";
+$route['private/events/create-event'] = "admin/event_admin/create_event";
 $route['events/get-json'] = "events/get_json";
 $route['events/(:any)'] = "events/view/$1";
 $route['private/events/get-json'] = "events/get_json";
-$route['admin/events'] = "admin/event_admin";
-$route['admin/event-types'] = "admin/event_admin/event_types";
-$route['admin/events/create-event/(:any)'] = "events/create_event/$1";
-$route['admin/events/create-event'] = "events/create_event";
+//$route['admin/events'] = "admin/event_admin";
+//$route['admin/event-types'] = "admin/event_admin/event_types";
+//$route['admin/events/create-event/(:any)'] = "events/create_event/$1";
+//$route['admin/events/create-event'] = "events/create_event";
+
+// Route all award related stuff
+$route['awards/'] = "awards/index/0";
+$route['awards/view/(:any)'] = "awards/view/$1";
+$route['awards/(:any)'] = "awards/index/$1";
+$route['private/awards/create-award/(:any)'] = "admin/award_admin/create_award/$1";
+$route['private/awards/create-award'] = "admin/award_admin/create_award";
+$route['private/awards/create-type/(:any)'] = "admin/award_admin/create_award_type/$1";
+$route['private/awards/create-type'] = "admin/award_admin/create_award_type";
 
 // Default route
 $route['default_controller'] = 'pages/view';
