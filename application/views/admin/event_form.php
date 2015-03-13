@@ -2,6 +2,7 @@
 $form_attributes = array(
     'class' => 'form-horizontal form-bordered',
     'role'  => 'form',
+    'id'    => 'form',
 );
 
 $label_attributes = array(
@@ -14,7 +15,7 @@ $id = array(
     'name'	    => 'id',
     'id'	    => 'id',
     'value'	    => set_value($record->id),
-    'class'         => $field_class,
+    'class'         => $field_class,    
 );
 
 $name = array(
@@ -23,6 +24,7 @@ $name = array(
     'value'	    => set_value('name', $record->name),
     'class'         => $field_class,
     'placeholder'   => 'Name of event',
+    'required'      => 'required'
 );
 
 $description = array(
@@ -32,6 +34,7 @@ $description = array(
     'class'         => $field_class,
     'rows'          => 4,
     'placeholder'   => 'Brief description of event',
+    'required'      => 'required'
 );
 
 $time_start = array(
@@ -304,7 +307,7 @@ $enabled = array(
 
                     <div class="form-group">
                         <div class="col-md-12">
-                            <?php echo form_submit('save', 'Save / Edit', 'class = "btn btn-primary btn-block"'); ?>
+                            <?php echo form_submit('submit', 'Save / Edit', 'class = "btn btn-primary btn-block"'); ?>
                         </div>
                     </div>
 

@@ -62,6 +62,9 @@ class Award_admin extends PVA_Controller
         
         $award_type = new Award_type();
         $this->data['award_types'] = $award_type->get_dropdown();
+        
+        $this->data['scripts'][] = base_url('assets/admin/vendor/jquery-validation/jquery.validate.js');
+	$this->data['scripts'][] = base_url('assets/js/forms.validation.js');
                 
         if ($this->form_validation->run() == FALSE)
 	{             
@@ -113,6 +116,9 @@ class Award_admin extends PVA_Controller
         $this->form_validation->set_rules('img_folder', 'Description', 'alpha-numberic|trim|xss_clean');
         $this->form_validation->set_rules('img_width', 'Description', 'numberic|trim|xss_clean');
         $this->form_validation->set_rules('img_height', 'Description', 'numberic|trim|xss_clean');
+        
+        $this->data['scripts'][] = base_url('assets/admin/vendor/jquery-validation/jquery.validate.js');
+	$this->data['scripts'][] = base_url('assets/js/forms.validation.js');
                 
         if ($this->form_validation->run() == FALSE)
 	{             
