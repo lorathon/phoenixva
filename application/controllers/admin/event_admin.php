@@ -91,6 +91,10 @@ class Event_admin extends PVA_Controller
         $this->data['scripts'][] = base_url('assets/admin/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js');
 	$this->data['scripts'][] = base_url('assets/js/typeahead.bundle.js');
 	$this->data['scripts'][] = base_url('assets/js/prefetch.js');
+	
+	$this->data['scripts'][] = base_url('admin/assets/vendor/jquery-validation/jquery.validate.js');
+	$this->data['scripts'][] = base_url('assets/js/forms.validation.js');
+	
                 
         if ($this->form_validation->run() == FALSE)
 	{             
