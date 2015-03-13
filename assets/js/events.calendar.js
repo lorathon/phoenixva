@@ -32,7 +32,7 @@ Theme Version: 	1.3.0
 				next: 'fa fa-caret-right',
 			},
 			
-			events: 'private/events/get-json',
+			events: 'events/get-json',
 		});
 
 		// FIX INPUTS TO BOOTSTRAP VERSIONS
