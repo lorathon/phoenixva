@@ -5,4 +5,3 @@
 /.travis.yml
 /.externalToolBuilders/
 /localdev.cache
-/application/nbproject/private/
