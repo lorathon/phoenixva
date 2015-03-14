@@ -109,6 +109,13 @@ class Hubs extends PVA_Controller {
 		$this->_render();
 	}
 	
+	public function transfer()
+	{
+		log_message('debug', 'Hub transfer called');
+		$this->data['body'] = '<p>Transfer capability not yet implemented.</p>';
+		$this->_render();
+	}
+	
 	/**
 	 * Creates a new page for a hub
 	 * 
