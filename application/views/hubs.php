@@ -20,13 +20,13 @@
 			>
 				<?php echo anchor('/hubs/'.$icao.'/logbook', 'Logbook'); ?>
 			</li>
-			<?php foreach ($pages as $slug => $page): ?>
+			<?php foreach ($pages as $slug => $page_name): ?>
 				<li role="presentation"
 					<?php if (uri_string() == "hubs/{$icao}/".substr($slug,9)):?>
 						class="active"
 					<?php endif;?>
 				>
-					<?php echo anchor('/hubs/'.$slug, $page); ?>
+					<?php echo anchor('/hubs/'.$slug, $page_name); ?>
 				</li>
 			<?php endforeach; ?>
 			<?php if ($show_admin): ?>
@@ -47,7 +47,7 @@
 					<h2>Hub Admin</h2>
 					<ul class="nav nav-pills">
 						<li role="presentation">
-							<?php echo anchor("/private/hubs/edit-page/{$icao}/{$page}", 'Edit This Page'); ?>
+							<?php echo anchor("/private/hubs/edit-page/{$icao}", 'Edit This Page'); ?>
 						</li>
 					</ul>
 				</div>
