@@ -325,15 +325,17 @@ class Migration_Install extends CI_Migration {
 		
 		// Articles table
 		$this->dbforge->add_field(array(
-				'id'       => $field_config['id_field'],
-				'title'    => $field_config['input_field'],
-				'slug'     => $field_config['input_field'],
-				'pubdate'  => $field_config['date_field'],
-				'body'     => $field_config['text_input_field'],
-				'created'  => $field_config['timestamp_field'],
-				'modified' => $field_config['timestamp_field'],
+				'id'          => $field_config['id_field'],
+				'title'       => $field_config['input_field'],
+				'slug'        => $field_config['input_field'],
+				'pubdate'     => $field_config['date_field'],
+				'body_html'   => $field_config['text_input_field'],
+				'body_bbcode' => $field_config['text_input_field'],
+				'created'     => $field_config['timestamp_field'],
+				'modified'    => $field_config['timestamp_field'],
 				));
 		$this->dbforge->add_key('id', TRUE);
+		$this->dbforge->add_key('slug');
 		$this->dbforge->create_table('articles');
                 
                 // Award_types table
