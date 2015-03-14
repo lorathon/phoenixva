@@ -291,8 +291,26 @@ class PVA_Controller extends CI_Controller {
 	}
 	
 	/**
+	 * Creates user alerts in a consistent format.
+	 * 
+	 * @param string $msg The message to display
+	 * @param string $type Type of message: info (default), primary, success, warning, danger
+	 * @param boolean $flash TRUE if the message should persist in the session
+	 */
+	protected function _alert($msg, $type = 'info', $flash = FALSE)
+	{
+		$alert = array('type' => $type, 'msg' => $msg);
+		$this->data['alerts'][] = $alert;
+		if ($flash)
+		{
+			$this->session->set_flashdata('alerts', $this->data['alerts']);
+		}
+	}
+	
+	/**
 	 * Creates flash data for messaging in a consistent format.
 	 * 
+	 * @deprecated Use _alert($msg, $type, $flash) instead
 	 * @param string $type Type of message: info (default), primary, success, warning, danger
 	 * @param string $title Title of the message
 	 * @param string $msg The message itself
@@ -307,6 +325,7 @@ class PVA_Controller extends CI_Controller {
 	/**
 	 * Creates data for inner controller messaging in a consistent format.
 	 * 
+	 * @deprecated Use _alert($msg, $type, $flash) instead
 	 * @param string $type Type of message: info (default), primary, success, warning, danger
 	 * @param string $msg The message itself
 	 */
