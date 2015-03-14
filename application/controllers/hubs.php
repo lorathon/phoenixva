@@ -171,6 +171,19 @@ class Hubs extends PVA_Controller {
 			$this->data['pagetitle'] = $article->title;
 			$this->data['meta_title'] = 'PVA Admin: Edit Hub Page';
 			$this->data['title'] = 'Edit Hub Page';
+			
+			$this->data['notes'] = array();
+			$note_model = new Note('article', $article->id);
+			$notes = $note_model->get_notes();
+			if ($notes)
+			{
+				foreach ($notes as $note)
+				{
+					$note_user = $note->get_user();
+					$note->name = pva_id($note_user->id) . ' ' . $note_user->name;
+					$this->data['notes'][] = $note;
+				}
+			}
 		}
 		if ($article->body_bbcode)
 		{

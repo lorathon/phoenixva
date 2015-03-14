@@ -34,6 +34,13 @@ $body = array(
 		'class' => $field_class,
 );
 
+$edit_note = array(
+		'name'  => 'note',
+		'id'    => 'note',
+		'rows'  => '3',
+		'class' => $field_class,
+);
+
 // Set up the editor using jQuery
 $id = $body['id'];
 $style = base_url('assets/css/sceditor-custom.css');
@@ -58,9 +65,24 @@ $style = base_url('assets/css/sceditor-custom.css');
 	</div>
 	<div class="col-md-4">
 		<div class="form-group">
+			<?php echo form_label('Reason for editing', $edit_note['id']); ?>
+			<div><?php echo form_textarea($edit_note); ?></div>
+		</div>
+		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
 				<?php echo form_submit('submit', 'Save Page', 'class = "btn btn-primary btn-block"'); ?>
 				<?php echo form_reset('reset', 'Reset', 'class = "btn btn-danger btn-block"'); ?>
+			</div>
+		</div>
+		<div class="panel panel-info">
+			<div class="panel-heading">Page History</div>
+			<div class="panel-body">
+				<dl>
+					<?php foreach ($notes as $note): ?>
+						<dt><?php echo $note->name; ?> at <?php echo $note->modified; ?></dt>
+						<dd><?php echo $note->note; ?></dd>
+					<?php endforeach; ?>
+				</dl>
 			</div>
 		</div>
 	</div>

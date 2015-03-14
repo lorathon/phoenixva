@@ -17,6 +17,11 @@ $config = array(
 						'label' => 'Content',
 						'rules' => 'trim|required|xss_clean'
 						),
+				array(
+						'field' => 'note',
+						'label' => 'Edit Note',
+						'rules' => 'trim|xss_clean'
+						),
 				),
 		'auth/change_email' => array(
 				array(

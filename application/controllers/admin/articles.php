@@ -21,7 +21,16 @@ class Articles extends PVA_Controller {
     		$article->body_bbcode = $this->form_validation->set_value('pagebody');
     		$article->save();
     		
-    		$this->_flash_message('success','Article Saved','The article has been saved');
+    		// Make a note of the update
+    		$note = new Note();
+    		$note->entity_type = 'article';
+    		$note->entity_id = $article->id;
+    		$note->user_id = $this->session->userdata('user_id');
+    		$note->note = $this->form_validation->set_value('note');
+    		$note->private_note = TRUE;
+    		$note->save();
+    		
+    		//$this->_alert('The article has been saved','success', TRUE);
     		
     		// Take the user to the page they were editing
     		$this->load->helper('url');
