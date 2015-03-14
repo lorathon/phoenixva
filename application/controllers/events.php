@@ -88,9 +88,9 @@ class Events extends PVA_Controller
 	$article->slug = $this->_build_slug($id, $page);
 	$article->find();
 
-	if ($article->body)
+	if ($article->body_html)
 	{
-	    $this->data['body'] = $article->body;
+	    $this->data['body'] = $article->body_html;
 	}
 
 	if ($page == 'logbook')
@@ -253,9 +253,9 @@ class Events extends PVA_Controller
 	    $this->data['meta_title'] = 'PVA Admin: Edit Event Page';
 	    $this->data['title'] = 'Edit Event Page';
 	}
-	if ($article->body)
+	if ($article->body_html)
 	{
-	    $this->data['pagebody'] = $article->body;
+	    $this->data['pagebody'] = $article->body_html;
 	}
 	$this->session->set_flashdata('return_url', 'events/' . $id);
 

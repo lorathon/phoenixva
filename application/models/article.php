@@ -3,12 +3,13 @@
 class Article extends PVA_Model {
 	
 	/* Article properties */
-	public $title    = NULL;
-	public $slug     = NULL;
-	public $pubdate  = NULL;
-	public $body     = NULL;
-	public $created  = NULL;
-	public $modified = NULL;
+	public $title       = NULL;
+	public $slug        = NULL;
+	public $pubdate     = NULL;
+	public $body_html   = NULL;
+	public $body_bbcode = NULL;
+	public $created     = NULL;
+	public $modified    = NULL;
 	
 	function __construct($id = NULL)
 	{
@@ -37,26 +38,14 @@ class Article extends PVA_Model {
 		$this->id = $article->id;
 		
 		$parser = $this->_prep_body();
-		$this->body = $parser->getAsHTML();
+		$this->body_html = $parser->getAsHTML();
 		parent::save();
 	}
 	
 	/**
-	 * Change HTML to BBCode
-	 * 
-	 * This is intended for editing the page. Articles are stored in HTML format
-	 * for performance.
-	 * 
-	 * @return string
-	 */
-	public function to_bbcode()
-	{
-		$parser = $this->_prep_body();		
-		return $parser->getAsBBCode();
-	}
-	
-	/**
 	 * Parses the BBCode
+	 * 
+	 * Contains all the custom parser definitions.
 	 * 
 	 * @return \JBBCode\Parser
 	 */
@@ -116,7 +105,7 @@ class Article extends PVA_Model {
 				
 		
 		// Parse it
-		$parser->parse($this->body);		
+		$parser->parse($this->body_bbcode);		
 		return $parser;
 	}
 }
