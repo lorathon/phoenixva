@@ -36,19 +36,7 @@ $body = array(
 
 // Set up the editor using jQuery
 $id = $body['id'];
-$style = base_url('assets/sceditor/jquery.sceditor.default.min.css');
-$GLOBALS['page_script'] = 
-		"$(function() {
-			$('#{$id}').sceditor({
-				plugins: 'bbcode',
-				style: '{$style}',
-				toolbar: 'bold,italic,underline,strike,subscript,superscript|left,center,right,justify|color,removeformat|bulletlist,orderedlist,indent,outdent|code,quote|horizontalrule,image,link,unlink|date,time|maximize,source',
-			});
-		});
-		$.sceditor.plugins.bbcode.bbcode
-			.set('b', { tags: { b: null }, format: '[b]{0}[/b]', html: '<strong>{0}</strong>' })
-			.set('center', { tags: { center: null }, format: '[center]{0}[/center]', html: '<p class=\"text-center\">{0}</p>' });
-";
+$style = base_url('assets/css/sceditor-custom.css');
 
 ?>
 <div class="container">

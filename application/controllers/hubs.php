@@ -149,7 +149,9 @@ class Hubs extends PVA_Controller {
 		
 		$this->load->helper('url');
 		$this->data['scripts'][] = base_url('assets/sceditor/jquery.sceditor.bbcode.min.js');
+		$this->data['scripts'][] = base_url('assets/js/custom.sceditor.js');
 		$this->data['stylesheets'][] = base_url('assets/sceditor/themes/default.min.css');
+		$this->data['stylesheets'][] = base_url('assets/css/sceditor-custom.css');
 		
 		$this->data['slug'] = $this->_build_slug($icao, $page);
 		$this->data['edit_mode'] = TRUE; 
