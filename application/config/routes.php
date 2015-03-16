@@ -65,10 +65,10 @@ $route['private/events/get-json'] = "events/get_json";
 $route['awards/'] = "awards/index/0";
 $route['awards/view/(:any)'] = "awards/view/$1";
 $route['awards/(:any)'] = "awards/index/$1";
-$route['private/awards/create-award/(:any)'] = "admin/award_admin/create_award/$1";
-$route['private/awards/create-award'] = "admin/award_admin/create_award";
-$route['private/awards/create-type/(:any)'] = "admin/award_admin/create_award_type/$1";
-$route['private/awards/create-type'] = "admin/award_admin/create_award_type";
+$route['private/awards/create-award/(:any)'] = "awards/create_award/$1";
+$route['private/awards/create-award'] = "awards/create_award";
+$route['private/awards/create-type/(:any)'] = "awards/create_award_type/$1";
+$route['private/awards/create-type'] = "awards/create_award_type";
 
 // Default route
 $route['default_controller'] = 'pages/view';

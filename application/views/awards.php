@@ -1,19 +1,32 @@
 <?php
 $this->load->helper('html');
 $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
+
+$type_id = 0;
+$type_name = NULL;
 ?>
 <div class="container">
     <div class="row">
 	<ul class="nav nav-tabs">
 	    
-	    <?php foreach($award_types as $type) : ?> 
+	    <?php foreach($award_types as $type) : ?> 		
 		<li role="presentation" 
 		<?php if (uri_string() == 'awards/' . $type->id): ?>
 		    class="active"
+		    <?php
+		    $type_id = $type->id;
+		    $type_name = $type->name;
+		    ?>
 		    <?php endif; ?> >
 			<?php echo anchor('/awards/' . $type->id, $type->name); ?> 
 		</li>	    
 	    <?php endforeach; ?>
+		
+	    <?php if ($show_admin): ?>
+		<li role="presentation">
+		    <?php echo anchor("/private/awards/create-type", '<i class="fa fa-plus-square" title="Add Type"></i>'); ?>
+		</li>
+	    <?php endif; ?>
 		
 	</ul>            
     </div>
@@ -74,6 +87,9 @@ $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
                             <ul class="nav nav-pills">
                                 <li role="presentation">
                                     <?php echo anchor("/private/awards/create-award", 'Create Award'); ?>
+                                </li>
+				<li role="presentation">
+                                    <?php echo anchor("/private/awards/create-type/" . $type_id, 'Edit ' . $type_name . ' Type'); ?>
                                 </li>
                             </ul>
                         </div>
