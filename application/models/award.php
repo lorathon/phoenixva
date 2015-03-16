@@ -70,10 +70,11 @@ class Award extends PVA_Model {
 	function get_awards_count()
 	{
 	    if ( is_null($this->_awards_count))
-	    {
-		$this->db->where('award_type_id', $this->award_type_id)
-                           ->from('awards');
-                $this->_awards_count = $this->db->count_all_results();
+	    {		
+		$award = new Award();
+		$award->award_type_id = $this->award_type_id;
+		$awards = $award->find_all();
+		$this->_awards_count = ($awards) ? count($awards) : 0;
 	    }
 	    return $this->_awards_count;
 	}
