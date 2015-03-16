@@ -92,7 +92,7 @@ class Event_admin extends PVA_Controller
 	$this->data['scripts'][] = base_url('assets/js/typeahead.bundle.js');
 	$this->data['scripts'][] = base_url('assets/js/prefetch.js');
 	
-	$this->data['scripts'][] = base_url('admin/assets/vendor/jquery-validation/jquery.validate.js');
+	$this->data['scripts'][] = base_url('assets/admin/vendor/jquery-validation/jquery.validate.js');
 	$this->data['scripts'][] = base_url('assets/js/forms.validation.js');
 	
                 
@@ -156,13 +156,17 @@ class Event_admin extends PVA_Controller
     {
         $event_type = new Event_type($id); 
 	
-	$this->load->library('form_validation'); 
+	$this->load->library('form_validation');
+        $this->load->helper('url');
                 
         $this->form_validation->set_rules('id', 'ID', '');
         $this->form_validation->set_rules('name', 'Name', 'alpha-numberic|trim|required|xss_clean');
         $this->form_validation->set_rules('description', 'Description', 'alpha-numberic|trim|xss_clean');
 	
 	$this->data['calendar_colors'] = $this->config->item('calendar_colors');
+        
+        $this->data['scripts'][] = base_url('assets/admin/vendor/jquery-validation/jquery.validate.js');
+	$this->data['scripts'][] = base_url('assets/js/forms.validation.js');
                 
         if ($this->form_validation->run() == FALSE)
 	{             
