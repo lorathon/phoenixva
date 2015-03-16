@@ -56,19 +56,16 @@ $route['private/events/create-event'] = "admin/event_admin/create_event";
 $route['events/get-json'] = "events/get_json";
 $route['events/(:any)'] = "events/view/$1";
 $route['private/events/get-json'] = "events/get_json";
-//$route['admin/events'] = "admin/event_admin";
-//$route['admin/event-types'] = "admin/event_admin/event_types";
-//$route['admin/events/create-event/(:any)'] = "events/create_event/$1";
-//$route['admin/events/create-event'] = "events/create_event";
 
 // Route all award related stuff
-$route['awards/'] = "awards/index/0";
 $route['awards/view/(:any)'] = "awards/view/$1";
 $route['awards/(:any)'] = "awards/index/$1";
 $route['private/awards/create-award/(:any)'] = "awards/create_award/$1";
 $route['private/awards/create-award'] = "awards/create_award";
 $route['private/awards/create-type/(:any)'] = "awards/create_award_type/$1";
 $route['private/awards/create-type'] = "awards/create_award_type";
+$route['private/awards/delete-award/(:any)'] = "awards/delete_award/$1";
+$route['private/awards/delete-type/(:any)'] = "awards/delete_award_type/$1";
 
 // Default route
 $route['default_controller'] = 'pages/view';

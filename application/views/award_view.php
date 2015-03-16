@@ -1,5 +1,6 @@
 <?php
 $this->load->helper('html');
+$show_admin = (isset($userdata['name']) && $userdata['is_manager']);
 ?>
 
 <div class="container">
@@ -41,7 +42,7 @@ $this->load->helper('html');
 				</td>
 				<?php if ($userdata['is_manager']) : ?>
 				<td>
-				    <?php echo anchor('private/profile/revoke_award/' . $award->id . '/' . $user->id, '<i class="fa fa-trash"></i> Revoke', button_delete('danger')); ?>
+				    <?php echo anchor('private/profile/revoke_award/' . $user->user_award_id . '/' . $user->id, '<i class="fa fa-trash"></i> Revoke', button_delete('danger')); ?>
 				</td>
 				<?php endif; ?>
 			    </tr>
@@ -60,6 +61,25 @@ $this->load->helper('html');
 	    </div>
 	</div>
 	<div class="col-md-4">
+	    
+	    <!-- If user is admin show options -->
+	    <?php if ($show_admin): ?>
+		<div class="featured-box featured-box-red">
+		    <div class="box-content">
+			<h2>Award Admin</h2>
+			<ul class="nav nav-pills">			    
+			    <li role="presentation">
+				<?php echo anchor("/private/awards/create-award/" . $award->id, 'Edit Award'); ?>
+			    </li>
+			    <li role="presentation">
+				<?php echo anchor("/private/awards/delete-award/" . $award->id, 'Delete Award'); ?>
+			    </li>
+			</ul>
+		    </div>
+		</div>
+	    <?php endif; ?>
+	    <!-- end: admin options -->
+	    
 	<div class="featured-box featured-box-blue">
 	    <div class="box-content">
 		<h2>Award Details</h2>

@@ -232,7 +232,7 @@ class Profile extends PVA_Controller
         
         $this->data['user_id'] = $user->id;
         $this->data['awards'] = $user->get_awards_not_granted_dropdown();
-
+	
         if ($id == $this->session->userdata('user_id'))
         {
             $this->data['title'] = 'My Awards';

@@ -91,6 +91,9 @@ $type_name = NULL;
 				<li role="presentation">
                                     <?php echo anchor("/private/awards/create-type/" . $type_id, 'Edit ' . $type_name . ' Type'); ?>
                                 </li>
+				<li role="presentation">
+                                    <?php echo anchor("/private/awards/delete-type/" . $type_id, 'Delete ' . $type_name . ' Type'); ?>
+                                </li>
                             </ul>
                         </div>
                     </div>

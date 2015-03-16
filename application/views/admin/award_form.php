@@ -65,7 +65,7 @@ $award_type_id = array(
                 </header>
                 <div class="panel-body">
 
-                    <?php echo form_open_multipart('admin/award_admin/create_award', $form_attributes); ?>
+                    <?php echo form_open_multipart('private/awards/create-award', $form_attributes); ?>
 
                     <?php echo form_hidden('id', $record->id); ?>
 

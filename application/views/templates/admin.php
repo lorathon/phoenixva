@@ -154,28 +154,6 @@
 											</li>
 										</ul>
 									</li>
-									
-									<!-- Start Awards Nav -->
-									<li class="nav-parent">
-										<a>
-											<i class="fa fa-trophy" aria-hidden="true"></i>
-											<span>Awards</span>
-										</a>
-										<ul class="nav nav-children">
-											<li>
-												<?php echo anchor('admin/award_admin', 'All Awards'); ?>
-											</li>
-											<li class="nav-parent">
-												<a>Tools</a>
-												<ul class="nav nav-children">													
-													<li>
-														<?php echo anchor('admin/award_admin/award_types', 'Award Types'); ?>
-													</li>													
-												</ul>
-											</li>
-										</ul>
-									</li> 
-									<!-- End Awards Nav -->
                                                                         
                                                                         <li class="nav-parent">
 										<a>

@@ -16,10 +16,10 @@ class Awards extends PVA_Controller
 	$this->data['award_types'] = array();
 	$this->data['awards'] = array();
 	
-        $obj = New Award_type();
-        $objs = $obj->find_all();
+        $award_type = New Award_type();
+        $award_types = $award_type->find_all();
 	
-	if($objs)
+	if($award_types)
 	{
 	    $award = new Award();
 	    $award->award_type_id = $id;
@@ -37,7 +37,7 @@ class Awards extends PVA_Controller
 	    }
 	}
 	
-        $this->data['award_types'] = $objs;
+        $this->data['award_types'] = $award_types;
 	$this->session->set_flashdata('return_url','awards/'.$id);
         $this->_render();
     }
@@ -46,6 +46,7 @@ class Awards extends PVA_Controller
     {
 	$this->data['meta_title'] = 'Phoenix Virtual Airways Achievements';
 	$this->data['title'] = 'Achievements';
+	$this->data['breadcrumb']['awards'] = 'Achievements';
 	
 	$award = new Award($id);
 	
@@ -60,6 +61,7 @@ class Awards extends PVA_Controller
 	$this->data['award'] = $award;
 	$this->data['award_type'] = $award_type;
 	$this->data['users'] = $users;
+	$this->session->set_flashdata('return_url','awards/view/'.$id);
 	$this->_render('award_view');	
     }
     
@@ -68,13 +70,14 @@ class Awards extends PVA_Controller
 	$this->load->library('form_validation');
 	$this->load->helper('url');
 	
-	$this->data['title'] = 'Create Award';
+	$this->data['title'] = 'Create Achievement';
+	$this->data['breadcrumb']['awards'] = 'Achievements';
 	
         $award = New Award($id);
 	
-	if($award)
+	if($award->name)
         {
-            $this->data['title'] = 'Edit Award';
+            $this->data['title'] = 'Edit Achievement';
         }
                 
         $this->form_validation->set_rules('id', 'ID', '');
@@ -105,17 +108,9 @@ class Awards extends PVA_Controller
             $award->award_image     = $this->form_validation->set_value('award_image');
                 
             $award->save();
-	    $this->_alert_message('success', 'Award - Record Saved');
 	    
-	    $url = $this->session->flashdata('return_url');	    
-	    if($url)
-	    {
-		redirect($this->session->flashdata('return_url'));
-	    }
-	    else
-	    {
-		$this->index();
-	    }	  
+	    $this->_alert('Achievement - Record Saved', 'success', TRUE);
+	    redirect($this->session->flashdata('return_url'));
 	}        
     }
     
@@ -124,13 +119,14 @@ class Awards extends PVA_Controller
 	$this->load->library('form_validation'); 
 	$this->load->helper('url');
 	
-	$this->data['title'] = 'Create Award Type';
+	$this->data['title'] = 'Create Achievement Type';
+	$this->data['breadcrumb']['awards'] = 'Achievements';
 	
         $award_type = new Award_type($id);
 	
-	if($award_type)
+	if($award_type->name)
         {
-            $this->data['title'] = 'Edit Award Type';
+            $this->data['title'] = 'Edit Achievement Type';
         }
                 
         $this->form_validation->set_rules('id', 'ID', '');
@@ -159,17 +155,9 @@ class Awards extends PVA_Controller
             $award_type->img_height      = $this->form_validation->set_value('img_height');
                 
             $award_type->save();
-            $this->_alert_message('success', 'Award Type - Record Saved');
 	    
-	    $url = $this->session->flashdata('return_url');	    
-	    if($url)
-	    {
-		redirect($this->session->flashdata('return_url'));
-	    }
-	    else
-	    {
-		$this->index();
-	    }	  
+	    $this->_alert('Achievement Type - Record Saved', 'success', FALSE);
+	    $this->index();
 	}        
     }
        
@@ -179,26 +167,52 @@ class Awards extends PVA_Controller
         if(is_null($id)) 
 	    return FALSE;
         
-        $award = new Award($id);
-        $award->delete();
-        
-	$this->_alert_message('info', 'Award - Record Deleted');
-        $this->index();
+	// Determine if there are any user_awards of this award
+        $award = new Award($id);	
+	$users = $award->get_user_count();
+	
+	// If there are not any user_awards then allow deletion of award
+	if($users == 0)
+	{
+	    $award->delete();
+	    $this->_alert('Achievement - Record Deleted', 'info', FALSE);
+	    $this->index();
+	}
+	// If user_awards of this award are found stop deletion and inform user
+        else
+	{
+	    $this->load->helper('url');
+	    $this->_alert('Achievement - All user awards must be deleted first!', 'danger', TRUE);
+	    redirect($this->session->flashdata('return_url'));
+	}
     }
     
     public function delete_award_type($id = NULL)
     {
-        // Delete record
         if(is_null($id)) 
 	    return FALSE;
+	
+	$award_type = new Award_type($id);
         
+	// Determine if there are any awards of this type
         $award = new Award();
-        
-        $award->_award_type->id = $id;
-        $award->_award_type->delete();
-        
-	$this->_alert_message('info', 'Award Type - Record Deleted');
-        $this->index();
+	$award->award_type_id = $id;	
+	$awards = $award->get_awards_count();
+		
+	// If there are not any awards of this type allow deletion of type
+	if($awards == 0)
+	{
+	    $award_type->delete();
+	    $this->_alert('Achievement - Record Deleted', 'info', FALSE);
+	    $this->index();
+	}
+	// If awards of this type are found stop deletion and inform user
+        else
+	{
+	    $this->load->helper('url');
+	    $this->_alert('Achievement - All awards must be deleted first!', 'danger', TRUE);
+	    redirect($this->session->flashdata('return_url'));
+	}
     }   
 
 }
