@@ -160,7 +160,16 @@ class Awards extends PVA_Controller
                 
             $award_type->save();
             $this->_alert_message('success', 'Award Type - Record Saved');
-	    $this->award_types();
+	    
+	    $url = $this->session->flashdata('return_url');	    
+	    if($url)
+	    {
+		redirect($this->session->flashdata('return_url'));
+	    }
+	    else
+	    {
+		$this->index();
+	    }	  
 	}        
     }
        

@@ -15,6 +15,9 @@ $this->load->helper('html');
 				<td>Flights</td>
 				<td>Hours</td>
 				<td>Granted</td>
+				<?php if ($userdata['is_manager']) : ?>
+				<td>Options</td>
+				<?php endif; ?>
 			    </tr>
 			</thead>
 			<tbody>
@@ -36,6 +39,11 @@ $this->load->helper('html');
 				<td>
 				    <?php echo date("m/d/Y", strtotime($user->granted)); ?>
 				</td>
+				<?php if ($userdata['is_manager']) : ?>
+				<td>
+				    <?php echo anchor('private/profile/revoke_award/' . $award->id . '/' . $user->id, '<i class="fa fa-trash"></i> Revoke', button_delete('danger')); ?>
+				</td>
+				<?php endif; ?>
 			    </tr>
 			    <?php endforeach; ?>
 			    <?php else : ?>
