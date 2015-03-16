@@ -4,7 +4,7 @@
 ?>
 <div class="container">
 	<?php if (isset($body)): ?>
-	<div class="row">
+	<div class="row" role="navigation">
 		<ul class="nav nav-tabs">
 			<li role="presentation" 
 				<?php if (uri_string() == 'hubs/'.$icao): ?>
@@ -20,13 +20,13 @@
 			>
 				<?php echo anchor('/hubs/'.$icao.'/logbook', 'Logbook'); ?>
 			</li>
-			<?php foreach ($pages as $slug => $page): ?>
+			<?php foreach ($pages as $slug => $page_name): ?>
 				<li role="presentation"
 					<?php if (uri_string() == "hubs/{$icao}/".substr($slug,9)):?>
 						class="active"
 					<?php endif;?>
 				>
-					<?php echo anchor('/hubs/'.$slug, $page); ?>
+					<?php echo anchor('/hubs/'.$slug, $page_name); ?>
 				</li>
 			<?php endforeach; ?>
 			<?php if ($show_admin): ?>
@@ -38,7 +38,9 @@
 	</div>
 	<div class="row">
 		<div class="col-md-8">
-			<?php echo $body; ?>
+			<div id="page-body">
+				<?php echo $body; ?>
+			</div>
 		</div>
 		<div class="col-md-4">
 			<?php if ($show_admin): ?>

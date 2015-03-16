@@ -95,9 +95,9 @@ class Hubs extends PVA_Controller {
 		$article->slug = $this->_build_slug($icao, $page);
 		$article->find();
 				
-		if ($article->body)
+		if ($article->body_html)
 		{
-			$this->data['body'] = $article->body;
+			$this->data['body'] = $article->body_html;
 		}
 		
 		if ($page == 'logbook')
@@ -170,9 +170,9 @@ class Hubs extends PVA_Controller {
 			$this->data['meta_title'] = 'PVA Admin: Edit Hub Page';
 			$this->data['title'] = 'Edit Hub Page';
 		}
-		if ($article->body)
+		if ($article->body_bbcode)
 		{
-			$this->data['pagebody'] = $article->body;
+			$this->data['pagebody'] = $article->body_bbcode;
 		}
 		$this->session->set_flashdata('return_url','hubs/'.$icao);
 		

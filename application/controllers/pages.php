@@ -49,7 +49,7 @@ class Pages extends PVA_Controller {
 			if ($article->title)
 			{
 				$this->data['title'] = $article->title;
-				$this->data['body'] = $article->body;
+				$this->data['body'] = $article->body_html;
 				$this->data['pubdate'] = $article->pubdate;
 				$this->_render('article');
 				return FALSE;

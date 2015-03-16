@@ -18,7 +18,7 @@ class Articles extends PVA_Controller {
     		$article = new Article();
     		$article->title = $this->form_validation->set_value('pagetitle');
     		$article->slug = $this->form_validation->set_value('slug');
-    		$article->body = $this->form_validation->set_value('pagebody');
+    		$article->body_bbcode = $this->form_validation->set_value('pagebody');
     		$article->save();
     		
     		$this->_flash_message('success','Article Saved','The article has been saved');

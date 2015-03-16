@@ -38,7 +38,7 @@
 							<dd><?php echo $rank; ?></dd>
 							<dt>Crew Center</dt>
 							<dd>
-								<?php echo $hub; ?>
+								<?php echo anchor("hubs/{$hub}", $hub); ?>
 								<?php echo anchor('hubs/transfer','<i class="fa fa-exclamation-circle"></i> Transfer'); ?>
 							</dd>
 							<?php if ($raw_status < 4): ?>
@@ -68,7 +68,7 @@
 									{
 										if ($raw_status >= 4)
 										{
-											echo anchor('auth/return/'.$user_id,'Re-activate', button('success'));
+											echo anchor('auth/reactivate/'.$user_id,'Re-activate', button('success'));
 										}
 										else
 										{
@@ -205,7 +205,7 @@
                                                                      aria-valuemin="0"
                                                                      aria-valuemax="<?php echo $next_rank_hours; ?>">
                                                                     
-                                                                    <?php echo $next_rank_percent; ?>%
+                                                                    <?php echo number_format($next_rank_percent, 2); ?>%
 								</div>
 							</div>
 							

@@ -60,7 +60,6 @@ class Auth extends PVA_Controller
 				else
 					$this->form_validation->set_rules('captcha', 'Confirmation Code', 'trim|xss_clean|required|callback__check_captcha');
 			}
-			$this->data['errors'] = array();
 
 			if ($this->form_validation->run()) 
 			{
@@ -90,7 +89,7 @@ class Auth extends PVA_Controller
 							'hub'          => $user->hub,
 							));
 					
-					$this->_flash_message('success','Welcome','You have successfully logged into your account.');
+					$this->_alert('You have successfully logged into your account.', 'success', TRUE);
 					if ($this->session->flashdata('return_url') != '')
 					{
 						// Take the user to the page they were trying to access
@@ -104,18 +103,17 @@ class Auth extends PVA_Controller
 				} 
 				else 
 				{
-					$errors = array('Unable to log in.');
+					$this->_alert('Unable to log in.', 'danger');
 					
 					if ($user->banned)
 					{
-						$errors[] = 'You are not able to log in at this time.';
+						$this->_alert('You are not able to log in at this time.', 'danger');
 					}
 					
 					if ( ! $user->activated)
 					{
-						$errors[] = 'Login information does not match an activated user.';
+						$this->_alert('Login information does not match an activated user.', 'danger');
 					}
-					$this->data['errors'] = $errors;				
 				}
 			}
 			$this->data['show_captcha'] = FALSE;
@@ -144,7 +142,7 @@ class Auth extends PVA_Controller
 	function logout()
 	{
 		$this->tank_auth->logout();
-		$this->_flash_message('info','Logged Out',$this->lang->line('auth_message_logged_out'));
+		$this->_alert($this->lang->line('auth_message_logged_out', 'info', TRUE));
 		redirect();
 	}
 
@@ -163,7 +161,7 @@ class Auth extends PVA_Controller
 			redirect('/auth/send_again/');
 
 		} elseif (!$this->config->item('allow_registration', 'tank_auth')) {	// registration is off
-			$this->_flash_message('danger', 'Registration Disabled', $this->lang->line('auth_message_registration_disabled'));
+			$this->_alert($this->lang->line('auth_message_registration_disabled'), 'danger', TRUE);
 
 		} else {
 			$use_username = $this->config->item('use_username', 'tank_auth');
@@ -191,7 +189,6 @@ class Auth extends PVA_Controller
 					$this->form_validation->set_rules('captcha', 'Confirmation Code', 'trim|xss_clean|required|callback__check_captcha');
 				}
 			}
-			$this->data['errors'] = array();
 
 			$email_activation = $this->config->item('email_activation', 'tank_auth');
 
@@ -288,13 +285,13 @@ class Auth extends PVA_Controller
 							$this->_send_email('welcome', $user->email, 'Welcome to Phoenix Virtual Airways!', $this->data);
 						}
 
-						$this->_flash_message('info', 'Welcome', $this->lang->line('auth_message_registration_completed_2').' '.anchor('/auth/login/', 'Login'));
+						$this->_alert($this->lang->line('auth_message_registration_completed_2').' '.anchor('/auth/login/', 'Login'), 'info', TRUE);
 					}
 				} 
 				else 
 				{
 					$errors = $this->tank_auth->get_error_message();
-					foreach ($errors as $k => $v)	$this->data['errors'][$k] = $this->lang->line($v);
+					foreach ($errors as $k => $v)	$this->_alert($this->lang->line($v), 'danger');
 				}
 			}
 			if ($captcha_registration) {
@@ -337,7 +334,6 @@ class Auth extends PVA_Controller
 			redirect('/auth/login/');
 
 		} else {
-			$this->data['errors'] = array();
 
 			if ($this->form_validation->run()) {								// validation ok
 				if (!is_null($this->data = $this->tank_auth->change_email(
@@ -348,11 +344,11 @@ class Auth extends PVA_Controller
 
 					$this->_send_email('activate', $this->data['email'], 'Welcome to Phoenix Virtual Airways!', $this->data);
 
-					$this->_flash_message('info', 'Email Sent', sprintf($this->lang->line('auth_message_activation_email_sent'), $this->data['email']));
+					$this->_alert(sprintf($this->lang->line('auth_message_activation_email_sent'), $this->data['email']), 'info', TRUE);
 
 				} else {
 					$errors = $this->tank_auth->get_error_message();
-					foreach ($errors as $k => $v)	$this->data['errors'][$k] = $this->lang->line($v);
+					foreach ($errors as $k => $v)	$this->_alert($this->lang->line($v), 'danger');
 				}
 			}
 			$this->load->view('auth/send_again_form', $this->data);
@@ -386,13 +382,13 @@ class Auth extends PVA_Controller
 			$note->save();
 			
 			$this->tank_auth->logout();
-			$this->_flash_message('success', 'Activation Successful', $this->lang->line('auth_message_activation_completed'));
+			$this->_alert($this->lang->line('auth_message_activation_completed'), 'success', TRUE);
 			redirect('auth/login');
 		} 
 		else 
 		{
 			// fail
-			$this->_flash_message('danger', 'Activation Error', $this->lang->line('auth_message_activation_failed'));
+			$this->_alert($this->lang->line('auth_message_activation_failed'), 'danger', TRUE);
 			redirect('');
 		}
 	}
@@ -411,7 +407,6 @@ class Auth extends PVA_Controller
 			redirect('/auth/send_again/');
 
 		} else {
-			$this->data['errors'] = array();
 
 			if ($this->form_validation->run()) {								// validation ok
 				if (!is_null($this->data = $this->tank_auth->forgot_password(
@@ -422,11 +417,11 @@ class Auth extends PVA_Controller
 					// Send email with password activation link
 					$this->_send_email('forgot_password', $this->data['email'], 'Forgot your password on Phoenix Virtual Airways?', $this->data);
 
-					$this->_show_message('info', $this->lang->line('auth_message_new_password_sent'));
+					$this->_alert($this->lang->line('auth_message_new_password_sent'), 'info');
 
 				} else {
 					$errors = $this->tank_auth->get_error_message();
-					foreach ($errors as $k => $v)	$this->data['errors'][$k] = $this->lang->line($v);
+					foreach ($errors as $k => $v)	$this->_alert($this->lang->line($v), 'danger');
 				}
 			}
 			//$this->load->view('auth/forgot_password_form', $this->data);
@@ -450,8 +445,6 @@ class Auth extends PVA_Controller
 
 		$this->form_validation->set_rules('new_password', 'New Password', 'trim|required|xss_clean|min_length['.$this->config->item('password_min_length', 'tank_auth').']|max_length['.$this->config->item('password_max_length', 'tank_auth').']|alpha_dash');
 		
-		$this->data['errors'] = array();
-
 		if ($this->form_validation->run()) {								// validation ok
 			if (!is_null($this->data = $this->tank_auth->reset_password(
 					$user_id, $new_pass_key,
@@ -519,15 +512,13 @@ class Auth extends PVA_Controller
 				$note->private_note = TRUE;
 				$note->save();
 				
-				$this->_flash_message('danger','UNAUTHORIZED','You are not authorized to perform this function. A formal warning has been issued and recorded on your permanent record.');
+				$this->_alert('You are not authorized to perform this function. A formal warning has been issued and recorded on your permanent record.', 'danger', TRUE);
 				redirect('');
 			}
 			
 			$this->form_validation->set_rules('new_password', 'New Password', 'trim|required|xss_clean|min_length['.$this->config->item('password_min_length', 'tank_auth').']|max_length['.$this->config->item('password_max_length', 'tank_auth').']|alpha_dash');
 			$this->form_validation->set_rules('old_password', 'Old Password', 'trim|required|xss_clean');
 			$this->form_validation->set_rules('confirm_new_password', 'Confirm new Password', 'trim|required|xss_clean|matches[new_password]');
-
-			$this->data['errors'] = array();
 
 			if ($this->form_validation->run()) 
 			{
@@ -540,7 +531,7 @@ class Auth extends PVA_Controller
 					// success
 					log_message('debug','Password changed for user id: '.$user->id);
 					$user->find();
-					$this->_flash_message('success', 'Password Changed', $this->lang->line('auth_message_password_changed'));
+					$this->_alert($this->lang->line('auth_message_password_changed'), 'success', TRUE);
 					$this->data['admin'] = $admin_change;
 					if ($admin_change)
 					{
@@ -557,7 +548,7 @@ class Auth extends PVA_Controller
 				{														
 					// fail
 					log_message('debug','Error changing password for user id: '.$user->id);
-					$this->data['errors'][] = 'An error occurred changing the password.';
+					$this->_alert('An error occurred changing the password.', 'danger');
 				}
 			}
 			
@@ -582,7 +573,6 @@ class Auth extends PVA_Controller
 			redirect('/auth/login/');
 
 		} else {
-			$this->data['errors'] = array();
 
 			if ($this->form_validation->run()) {								// validation ok
 				if (!is_null($this->data = $this->tank_auth->set_new_email(
@@ -594,11 +584,12 @@ class Auth extends PVA_Controller
 					// Send email with new email address and its activation link
 					$this->_send_email('change_email', $this->data['new_email'], 'Your new email address on Phoenix Virtual Airways', $this->data);
 
-					$this->_show_message('info', sprintf($this->lang->line('auth_message_new_email_sent'), $this->data['new_email']));
+					$this->_alert(sprintf($this->lang->line('auth_message_new_email_sent'), $this->data['new_email']), 'info', TRUE);
+					redirect();
 
 				} else {
 					$errors = $this->tank_auth->get_error_message();
-					foreach ($errors as $k => $v)	$this->data['errors'][$k] = $this->lang->line($v);
+					foreach ($errors as $k => $v)	$this->_alert($this->lang->line($v), 'danger');
 				}
 			}
 			$this->load->view('auth/change_email_form', $this->data);
@@ -640,16 +631,15 @@ class Auth extends PVA_Controller
 		} else {
 			$this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean');
 
-			$this->data['errors'] = array();
-
 			if ($this->form_validation->run()) {								// validation ok
 				if ($this->tank_auth->delete_user(
 						$this->form_validation->set_value('password'))) {		// success
-					$this->_show_message('info',$this->lang->line('auth_message_unregistered'));
+					$this->_alert($this->lang->line('auth_message_unregistered'), 'info', TRUE);
+					redirect();
 
 				} else {														// fail
 					$errors = $this->tank_auth->get_error_message();
-					foreach ($errors as $k => $v)	$this->data['errors'][$k] = $this->lang->line($v);
+					foreach ($errors as $k => $v)	$this->_alert($this->lang->line($v), 'danger');
 				}
 			}
 			$this->load->view('auth/unregister_form', $this->data);
@@ -687,7 +677,7 @@ class Auth extends PVA_Controller
 			$note->private_note = TRUE;
 			$note->save();
 	
-			$this->_flash_message('danger','UNAUTHORIZED','You are not authorized to perform this function. A formal warning has been issued and recorded on your permanent record.');
+			$this->_alert('You are not authorized to perform this function. A formal warning has been issued and recorded on your permanent record.', 'danger', TRUE);
 			redirect('');
 		}
 		
@@ -705,7 +695,7 @@ class Auth extends PVA_Controller
 		$note->private_note = FALSE;
 		$note->save();
 		
-		$this->_flash_message('success', 'LOA Processed', 'The pilot has been placed on LOA.');
+		$this->_alert('The pilot has been placed on LOA.', 'success', TRUE);
 		$this->data['admin'] = $admin_change;
 		$this->data['username'] = $user->username;
 		$this->data['email'] = $user->email;
@@ -745,7 +735,7 @@ class Auth extends PVA_Controller
 			$note->private_note = TRUE;
 			$note->save();
 	
-			$this->_flash_message('danger','UNAUTHORIZED','You are not authorized to perform this function. A formal warning has been issued and recorded on your permanent record.');
+			$this->_alert('You are not authorized to perform this function. A formal warning has been issued and recorded on your permanent record.', 'danger', TRUE);
 			redirect('');
 		}
 	
@@ -763,7 +753,7 @@ class Auth extends PVA_Controller
 		$note->private_note = FALSE;
 		$note->save();
 	
-		$this->_flash_message('success', 'Re-activated', 'The pilot has been re-activated.');
+		$this->_alert('The pilot has been re-activated.', 'success', TRUE);
 		$this->data['admin'] = $admin_change;
 		$this->data['username'] = $user->username;
 		$this->data['email'] = $user->email;
@@ -776,7 +766,7 @@ class Auth extends PVA_Controller
 	/**
 	 * Show info message
 	 * 
-	 * @deprecated Use _flash_message() instead
+	 * @deprecated Use _alert() instead
 	 * @param string - success | info | warning | error
 	 * @param	string
 	 * @return	void
