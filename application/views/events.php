@@ -54,6 +54,9 @@ $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
                                 <li role="presentation">
                                     <?php echo anchor("/private/events/edit-page/{$id}/{$page}", 'Edit This Page'); ?>
                                 </li>
+				<li role="presentation">
+                                    <?php echo anchor("/private/events/delete-event/{$id}", 'Delete Event'); ?>
+                                </li>
                             </ul>
                         </div>
                     </div>

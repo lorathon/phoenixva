@@ -1,4 +1,14 @@
 <?php
+if($record->time_start == 0)
+{
+    $record->time_start = date("Y-m-d H:i:s", time());
+}
+
+if($record->time_end == 0)
+{
+    $record->time_end = date("Y-m-d H:i:s", time());
+}
+
 $form_attributes = array(
     'class' => 'form-horizontal form-bordered',
     'role'  => 'form',
