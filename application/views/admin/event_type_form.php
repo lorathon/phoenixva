@@ -2,6 +2,7 @@
 $form_attributes = array(
     'class' => 'form-horizontal form-bordered',
     'role'  => 'form',
+    'id'    => 'form',
 );
 
 $label_attributes = array(
@@ -22,6 +23,8 @@ $name = array(
     'id'	    => 'name',
     'value'	    => set_value('name', $record->name),
     'class'         => $field_class,
+    'placeholder'   => 'Name of event type',
+    'required'      => 'required',
 );
 
 $description = array(
@@ -30,6 +33,8 @@ $description = array(
     'value'	    => set_value('description', $record->description),
     'class'         => $field_class,
     'rows'          => 4,
+    'placeholder'   => 'Brief description of event type',
+    'required'      => 'required',
 );
 
 $color_id = array(
@@ -55,12 +60,12 @@ $color_id = array(
                     <?php echo form_hidden('id', $record->id); ?>
 
                     <div class="form-group">
-                        <?php echo form_label('Name', $name['id'], $label_attributes); ?>
+                        <label class="col-md-3 control-label">Name <span class="required">*</span></label>
                         <div class="col-md-6"><?php echo form_input($name); ?></div>
                     </div>
 
                     <div class="form-group">
-                        <?php echo form_label('Description', $description['id'], $label_attributes); ?>
+                        <label class="col-md-3 control-label">Description <span class="required">*</span></label>
                         <div class="col-md-6"><?php echo form_textarea($description); ?></div>
                     </div>
                     

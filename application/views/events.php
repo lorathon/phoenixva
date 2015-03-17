@@ -158,14 +158,14 @@ $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
 			    <?php if ($event->award_id_winner) : ?>
                                 <tr>
                                     <td>Award: </td>
-                                    <td><?php echo $award_1->name; ?></td>
+				    <td><?php echo anchor('awards/view/' . $award_1->id, $award_1->name); ?></td>
                                 </tr>
                             <?php endif; ?>
 				
 			    <?php if ($event->award_id_participant) : ?>
                                 <tr>
                                     <td>Participant Award: </td>
-                                    <td><?php echo $award_2->name; ?></td>
+				    <td><?php echo anchor('awards/view/' . $award_2->id, $award_2->name); ?></td>
                                 </tr>
                             <?php endif; ?>
 

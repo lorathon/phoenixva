@@ -38,14 +38,20 @@ class Award extends PVA_Model {
 	 */
 	public $award_image     = NULL;	
         
-        //Award Types
+        // Award Types
         private $_award_type     = NULL;
         
-        //User award table
+        // User award table
         private $_user_award_table = 'user_awards';
         
-        //Count of users with award
+        // Count of users with award
         private $_user_count    = NULL;
+	
+	// array of users with award
+	private $_users		= NULL;
+	
+	// Count of awards in type
+	private $_awards_count	= NULL;
         	
 	
 	function __construct($id = NULL)
@@ -59,7 +65,44 @@ class Award extends PVA_Model {
                 $this->_award_type = new Award_type($this->award_type_id);
             }            
             return $this->_award_type;
-        }        
+        }   
+	
+	function get_awards_count()
+	{
+	    if ( is_null($this->_awards_count))
+	    {		
+		$award = new Award();
+		$award->award_type_id = $this->award_type_id;
+		$awards = $award->find_all();
+		$this->_awards_count = ($awards) ? count($awards) : 0;
+	    }
+	    return $this->_awards_count;
+	}
+	
+	function get_users()
+	{
+	    if(is_null($this->_users))
+            {
+		$this->db->select('user_id, created, id as user_award_id');
+                $this->db->where('award_id', $this->id)
+                           ->from($this->_user_award_table);
+                $query = $this->db->get();
+		
+		$awards = $this->_get_objects($query);	
+		
+		if($awards)
+		{
+		    foreach($awards as $award)
+		    {
+			$user = new User($award->user_id);
+			$user->granted = $award->created;
+			$user->user_award_id = $award->user_award_id;
+			$this->_users[] = $user;
+		    }
+		}
+            }
+            return $this->_users;
+	}
         
         function get_user_count()
         {       

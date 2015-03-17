@@ -29,6 +29,11 @@
 
 		<!-- Skin CSS -->
 		<link rel="stylesheet" href="<?php echo base_url('assets/admin/stylesheets/skins/default.css'); ?>" />
+                
+                <!-- load page specific CSS -->
+     			<?php foreach ($stylesheets as $row): ?>
+                            <link rel="stylesheet" href="<?=$row; ?>">
+                        <?php endforeach; ?>
 
 		<!-- Theme Custom CSS -->
 		<link rel="stylesheet" href="<?php echo base_url('assets/admin/stylesheets/theme-custom.css'); ?>">
@@ -149,28 +154,6 @@
 											</li>
 										</ul>
 									</li>
-									
-									<!-- Start Awards Nav -->
-									<li class="nav-parent">
-										<a>
-											<i class="fa fa-trophy" aria-hidden="true"></i>
-											<span>Awards</span>
-										</a>
-										<ul class="nav nav-children">
-											<li>
-												<?php echo anchor('admin/awards', 'All Awards'); ?>
-											</li>
-											<li class="nav-parent">
-												<a>Tools</a>
-												<ul class="nav nav-children">													
-													<li>
-														<?php echo anchor('admin/awards/award_types', 'Award Types'); ?>
-													</li>													
-												</ul>
-											</li>
-										</ul>
-									</li> 
-									<!-- End Awards Nav -->
                                                                         
                                                                         <li class="nav-parent">
 										<a>
@@ -233,13 +216,13 @@
 										</a>
 										<ul class="nav nav-children">
 											<li>
-												<?php echo anchor('admin/events', 'All Events'); ?>
+												<?php echo anchor('admin/event_admin', 'All Events'); ?>
 											</li>
 											<li class="nav-parent">
 												<a>Tools</a>
 												<ul class="nav nav-children">													
 													<li>
-														<?php echo anchor('admin/event-types', 'Event Types'); ?>
+														<?php echo anchor('admin/event_admin/event_types', 'Event Types'); ?>
 													</li>													
 												</ul>
 											</li>
@@ -356,6 +339,11 @@
 
 		<!-- Theme Base, Components and Settings -->
 		<script src="<?php echo base_url('assets/admin/javascripts/theme.js'); ?>"></script>
+                
+                <!-- load page specific scripts -->
+        <?php foreach ($scripts as $row): ?>
+        	<script src="<?=$row; ?>"></script>
+        <?php endforeach; ?>
 		
 		<!-- Theme Custom -->
 		<script src="<?php echo base_url('assets/admin/javascripts/theme.custom.js'); ?>"></script>

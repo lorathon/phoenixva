@@ -232,7 +232,7 @@ class Profile extends PVA_Controller
         
         $this->data['user_id'] = $user->id;
         $this->data['awards'] = $user->get_awards_not_granted_dropdown();
-
+	
         if ($id == $this->session->userdata('user_id'))
         {
             $this->data['title'] = 'My Awards';
@@ -309,7 +309,16 @@ class Profile extends PVA_Controller
         $user->revoke_award($user_award_id);
         
         $this->_flash_message('success', 'User Award', 'Award Revoked');
-        $this->view_awards($user_id);
+	
+	$url = $this->session->flashdata('return_url');	    
+	if($url)
+	{
+	    redirect($this->session->flashdata('return_url'));
+	}
+	else
+	{
+	    $this->view_awards($user_id);
+	} 
     }
 
 }

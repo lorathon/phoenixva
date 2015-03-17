@@ -1,4 +1,8 @@
 <?php
+$this->load->helper('html');
+$show_admin = (isset($userdata['name']) && $userdata['is_manager']);
+$admin_shown = FALSE;
+
 $form_attributes = array(
     'class' => 'form-horizontal form-bordered',
     'role' => 'form',
@@ -18,28 +22,25 @@ $award = array(
 ?>
 
 <div class="container">
-    <?php if ($errors): ?>
-        <div class="alert alert-danger">
-	    <?php foreach ($errors as $error): ?>
-		<p><?php echo $error; ?></p>
-	    <?php endforeach; ?>
-        </div>
-    <?php else: ?>
+    
+	<?php if ($errors): ?>
+	    <div class="alert alert-danger">
+		<?php foreach ($errors as $error): ?>
+		    <p><?php echo $error; ?></p>
+		<?php endforeach; ?>
+	    </div>
+	<?php else: ?>
+    
 	<?php if (isset($help)): ?>
 	    <div class="alert alert-info">
-		<?php echo $help; ?>
+		    <?php echo $help; ?>
 	    </div>
 	<?php endif; ?>        
 
         <!-- Start Award Modal Form -->
 	<?php if ($userdata['is_manager']) : ?>
 	    <div class="row">
-		<div class="col-md-4 col-md-offset-5">
-
-		    <button class="btn btn-primary btn-lg push-top push-bottom" data-toggle="modal" data-target="#myModal">
-			Grant Award
-		    </button>
-
+		<div class="col-md-4 col-md-offset-5">	
 		    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
 			    <div class="modal-content">
@@ -79,10 +80,10 @@ $award = array(
         <!-- Start Awards row -->
 	<?php foreach ($types as $type => $awards) : ?>
 	    <div class="row">
-		<div class="col-xs-12">
-		    <div class="panel panel-info">
-			<div class="panel-heading"><?php echo $type ?> Awards</div>
-			<div class="panel-body">
+		<div class="<?php if ($show_admin) { echo "col-md-8"; } else { echo "col-md-12"; }  ?> >">
+		    <div class="featured-box featured-box-green">
+			<div class="box-content">
+			    <h2><?php echo $type ?> Awards</h2>			
 			    <table class="table mb-none">
 				<thead>
 				    <tr>
@@ -122,6 +123,24 @@ $award = array(
 			    </table>
 			</div>
 		    </div>
+		</div>
+		<div class="col-md-4">
+
+                <!-- If user is admin show options -->
+                <?php if ($show_admin  && !$admin_shown): ?>
+                    <div class="featured-box featured-box-red">
+                        <div class="box-content">
+                            <h2>Award Admin</h2>
+                            <ul class="nav nav-pills">
+                                <li role="presentation">
+				    <a href="#" data-toggle="modal"data-target="#myModal">Grant Award</a>
+				</li>
+                            </ul>
+                        </div>
+                    </div>
+		<?php $admin_shown = TRUE; ?>
+                <?php endif; ?>
+                <!-- end: admin options -->
 		</div>
 	    </div>
 	    <!-- End Awards row --> 
