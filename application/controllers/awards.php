@@ -67,6 +67,7 @@ class Awards extends PVA_Controller
     
     public function create_award($id = NULL)
     {
+	$this->_check_access('manager');
 	$this->load->library('form_validation');
 	$this->load->helper('url');
 	
@@ -116,6 +117,7 @@ class Awards extends PVA_Controller
     
     public function create_award_type($id = NULL)
     {
+	$this->_check_access('manager');
 	$this->load->library('form_validation'); 
 	$this->load->helper('url');
 	
@@ -163,6 +165,7 @@ class Awards extends PVA_Controller
        
     public function delete_award($id = NULL)
     {
+	$this->_check_access('manager');
         // Delete record
         if(is_null($id)) 
 	    return FALSE;
@@ -189,6 +192,7 @@ class Awards extends PVA_Controller
     
     public function delete_award_type($id = NULL)
     {
+	$this->_check_access('manager');
         if(is_null($id)) 
 	    return FALSE;
 	

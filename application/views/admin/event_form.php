@@ -177,7 +177,7 @@ $enabled = array(
                 </header>
                 <div class="panel-body">
 
-                    <?php echo form_open_multipart('admin/event_admin/create_event', $form_attributes); ?>
+                    <?php echo form_open_multipart('private/events/create-event', $form_attributes); ?>
 
                     <?php echo form_hidden('id', $record->id); ?>
 

@@ -260,6 +260,9 @@ $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
                                 <li role="presentation">
                                     <?php echo anchor("/private/events/create-event", 'Create New Event'); ?>
                                 </li>
+				<li role="presentation">
+                                    <?php echo anchor("/private/event-types", 'Event Types'); ?>
+                                </li>
                             </ul>
                         </div>
                     </div>

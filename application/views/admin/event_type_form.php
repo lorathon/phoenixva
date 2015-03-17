@@ -48,14 +48,14 @@ $color_id = array(
 
 <div class="container">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-8">
             <section class="panel">
                 <header class="panel-heading">
                     <h2 class="panel-title">Event Type Form</h2>
                 </header>
                 <div class="panel-body">
 
-                    <?php echo form_open_multipart('admin/event_admin/create_event_type', $form_attributes); ?>
+                    <?php echo form_open_multipart('private/events/create-type', $form_attributes); ?>
 
                     <?php echo form_hidden('id', $record->id); ?>
 
