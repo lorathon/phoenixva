@@ -51,7 +51,7 @@ class Events extends PVA_Controller
 	
 	$this->data['calendar_colors'] = $this->config->item('calendar_colors');
         $this->data['types'] = $event_types;
-        $this->_render('event_types');
+	$this->_render();
     }  
 
     public function view($id, $page = NULL)
