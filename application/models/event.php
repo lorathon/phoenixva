@@ -50,6 +50,8 @@ class Event extends PVA_Model
     protected $_user_1	= NULL;
     protected $_user_2	= NULL;
     protected $_user_3	= NULL;
+    
+    protected $_events_count	= NULL;
 	    
     function __construct($id = NULL)
     {
@@ -207,6 +209,18 @@ class Event extends PVA_Model
 	$this->user_id_2 = NULL;
 	$this->user_id_3 = NULL;
 	$this->save();
+    }
+    
+    function get_events_count()
+    {
+	if (is_null($this->_events_count))
+	{
+	    $event = new Event();
+	    $event->event_type_id = $this->event_type_id;
+	    $events = $event->find_all();
+	    $this->_events_count = ($events) ? count($events) : 0;
+	}
+	return $this->_events_count;
     }
 
 }

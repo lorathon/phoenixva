@@ -72,7 +72,7 @@ $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
 				<?php echo anchor("/private/awards/create-award/" . $award->id, 'Edit Award'); ?>
 			    </li>
 			    <li role="presentation">
-				<?php echo anchor("/private/awards/delete-award/" . $award->id, 'Delete Award'); ?>
+				<?php echo anchor_delete("/private/awards/delete-award/" . $award->id, 'Delete Award'); ?>
 			    </li>
 			</ul>
 		    </div>
