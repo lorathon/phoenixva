@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Aircraft extends PVA_model
+class Aircraft extends PVA_Model
 {    
     public $equip		= NULL;
     public $aircraft_sub_id	= NULL;
@@ -9,8 +9,8 @@ class Aircraft extends PVA_model
     public $pax_first		= NULL;
     public $pax_business	= NULL;
     public $pax_economy		= NULL;
-    public $cargo		= NULL;
-    public $range		= NULL;
+    public $max_cargo		= NULL;
+    public $max_range		= NULL;
     public $oew			= NULL;
     public $mzfw		= NULL;
     public $mlw			= NULL;
@@ -21,6 +21,8 @@ class Aircraft extends PVA_model
     public $total_pireps	= NULL;
     public $total_hours		= NULL;
     public $total_distance	= NULL;
+    
+    protected $_aircraft_sub	= NULL;
     
     private $_schedules_table = 'schedules';
     
@@ -64,8 +66,8 @@ class Aircraft extends PVA_model
 		    $aircraft->pax_first    = 0;
 		    $aircraft->pax_business = 0;
 		    $aircraft->pax_economy  = 0;
-		    $aircraft->cargo	    = 0;
-		    $aircraft->range	    = 0;
+		    $aircraft->max_cargo    = 0;
+		    $aircraft->max_range    = 0;
 		    $aircraft->oew	    = 0;
 		    $aircraft->mzfw	    = 0;
 		    $aircraft->mlw	    = 0;

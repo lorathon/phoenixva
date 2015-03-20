@@ -78,6 +78,12 @@ $route['private/ranks/create-rank/(:any)'] = "ranks/create_rank/$1";
 $route['private/ranks/create-rank'] = "ranks/create_rank";
 $route['private/ranks/delete-rank/(:any)'] = "ranks/delete_rank/$1";
 
+// Route all fleet related stuff
+$route['fleet/view/(:any)'] = "fleet/view/$1";
+$route['fleet/view-sub/(:any)'] = "fleet/view_sub/$1";
+$route['fleet/(:any)'] = "fleet/index/$1";
+$route['private/fleet/edit-aircraft/(:any)'] = "fleet/edit_aircraft/$1";
+
 // Default route
 $route['default_controller'] = 'pages/view';
 

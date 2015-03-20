@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Fleet extends PVA_Controller
+class Fleet_x extends PVA_Controller
 {
     
     public function __construct()
@@ -10,7 +10,7 @@ class Fleet extends PVA_Controller
     
     public function index()
     {        
-	$this->load->helper('html');
+	
 	
 	$obj = new Aircraft();
 	$this->data['rows'] = $obj->find_all();

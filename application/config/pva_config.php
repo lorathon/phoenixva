@@ -41,15 +41,15 @@ $config['pirep_status'] = array (
     '2' => 'Rejected',
     '3' => 'Holding',
 );
-$config['aircraft_cat'] = array(
-    '0' => 'NONE',
+$config['aircraft_cat'] = array(    
     '1' => 'A',
     '2' => 'B',
     '3' => 'C',
     '4' => 'D',
     '5' => 'E',
     '6' => 'F',
-    '7' => 'G'
+    '7' => 'G',
+    '0' => 'NONE',
 );
 $config['days_of_week'] = array(
     '0' => 'SUN',
