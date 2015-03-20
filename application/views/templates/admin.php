@@ -29,6 +29,11 @@
 
 		<!-- Skin CSS -->
 		<link rel="stylesheet" href="<?php echo base_url('assets/admin/stylesheets/skins/default.css'); ?>" />
+                
+                <!-- load page specific CSS -->
+     			<?php foreach ($stylesheets as $row): ?>
+                            <link rel="stylesheet" href="<?=$row; ?>">
+                        <?php endforeach; ?>
 
 		<!-- Theme Custom CSS -->
 		<link rel="stylesheet" href="<?php echo base_url('assets/admin/stylesheets/theme-custom.css'); ?>">
@@ -144,33 +149,8 @@
 											<li>
 												<?php echo anchor('admin/users/inactive','Inactive Pilots'); ?>
 											</li>
-                                                                                        <li>
-												<?php echo anchor('admin/ranks','Pilot Ranks'); ?>
-											</li>
 										</ul>
 									</li>
-									
-									<!-- Start Awards Nav -->
-									<li class="nav-parent">
-										<a>
-											<i class="fa fa-trophy" aria-hidden="true"></i>
-											<span>Awards</span>
-										</a>
-										<ul class="nav nav-children">
-											<li>
-												<?php echo anchor('admin/awards', 'All Awards'); ?>
-											</li>
-											<li class="nav-parent">
-												<a>Tools</a>
-												<ul class="nav nav-children">													
-													<li>
-														<?php echo anchor('admin/awards/award_types', 'Award Types'); ?>
-													</li>													
-												</ul>
-											</li>
-										</ul>
-									</li> 
-									<!-- End Awards Nav -->
                                                                         
                                                                         <li class="nav-parent">
 										<a>
@@ -233,13 +213,13 @@
 										</a>
 										<ul class="nav nav-children">
 											<li>
-												<?php echo anchor('admin/events', 'All Events'); ?>
+												<?php echo anchor('admin/event_admin', 'All Events'); ?>
 											</li>
 											<li class="nav-parent">
 												<a>Tools</a>
 												<ul class="nav nav-children">													
 													<li>
-														<?php echo anchor('admin/event-types', 'Event Types'); ?>
+														<?php echo anchor('admin/event_admin/event_types', 'Event Types'); ?>
 													</li>													
 												</ul>
 											</li>
@@ -279,43 +259,45 @@
 				<!-- end: sidebar -->
                                 
                                 <section role="main" class="content-body">                                    
-				    
-				    <!--
-                                    <?php if (isset($this->session) && $this->session->flashdata('title')): ?>
-					<div class="container">
-						<div class="row">
-							<div class="col-md-offset-3 col-md-6">
-								<div class="panel panel-<?php echo $this->session->flashdata('msg_type'); ?>">
-									<div class="panel-heading">
-										<?php echo $this->session->flashdata('title'); ?>
-									</div>
-									<div class="panel-body">
-										<?php echo $this->session->flashdata('message'); ?>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-                                    <?php endif;?>-->
-				    
+				    				    
 				    <?php if (isset($this->session) && $this->session->flashdata('title')): ?>
 					<div class="alert alert-<?php echo $this->session->flashdata('msg_type'); ?>">            
-					    <p><?php echo $this->session->flashdata('message'); ?></p>
+					    <p>DEPRECATION WARNING<br /><?php echo $this->session->flashdata('message'); ?></p>
 					</div>
                                     <?php endif;?>
 				    
 				    <?php if ($errors): ?>
 					<div class="alert alert-danger">            
-					    <p><?php echo $errors; ?></p>
+					    <p>DEPRECATION WARNING<br /><?php echo $errors; ?></p>
 					</div>
 				    <?php endif; ?>
 				    
 				    <?php if ($alert): ?>
 					<div class="alert alert-<?php echo $alert['type'] ?>">            
-					    <p><?php echo $alert['msg']; ?></p>
+					    <p>DEPRECATION WARNING<br /><?php echo $alert['msg']; ?></p>
 					</div>
 				    <?php endif; ?>
-
+				    
+                <?php
+                	if (isset($this->session) && $this->session->flashdata('alerts'))
+                	{
+                		if (isset($alerts))
+                		{
+                			$alerts = array_merge($this->session->flashdata('alerts'), $alerts);
+                		}
+                		else 
+                		{
+                			$alerts = $this->session->flashdata('alerts');
+                		}
+                	} 
+                	if (isset($alerts)): ?>
+				   	<?php foreach ($alerts as $alert): ?>
+				   		<div class="alert alert-<?php echo $alert['type']; ?>">            
+				    		<p><?php echo $alert['msg']; ?></p>
+						</div>
+				   	<?php endforeach; ?>
+				<?php endif; ?>
+				    				    
 				<?php echo $view_output; ?>
 
 					
@@ -354,6 +336,11 @@
 
 		<!-- Theme Base, Components and Settings -->
 		<script src="<?php echo base_url('assets/admin/javascripts/theme.js'); ?>"></script>
+                
+                <!-- load page specific scripts -->
+        <?php foreach ($scripts as $row): ?>
+        	<script src="<?=$row; ?>"></script>
+        <?php endforeach; ?>
 		
 		<!-- Theme Custom -->
 		<script src="<?php echo base_url('assets/admin/javascripts/theme.custom.js'); ?>"></script>

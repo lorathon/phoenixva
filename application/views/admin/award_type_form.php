@@ -2,6 +2,7 @@
 $form_attributes = array(
     'class' => 'form-horizontal form-bordered',
     'role'  => 'form',
+    'id'    => 'form',
 );
 
 $label_attributes = array(
@@ -21,7 +22,9 @@ $name = array(
     'name'	    => 'name',
     'id'	    => 'name',
     'value'	    => set_value('name', $record->name),
-    'class'         => $field_class,
+    'class'         => $field_class,    
+    'placeholder'   => 'Name of award type',
+    'required'      => 'required',
 );
 
 $description = array(
@@ -30,6 +33,8 @@ $description = array(
     'value'	    => set_value('description', $record->description),
     'class'         => $field_class,
     'rows'          => 4,
+    'placeholder'   => 'Brief description of award type',
+    'required'      => 'required',
 );
 
 $img_folder = array(
@@ -57,24 +62,24 @@ $img_height = array(
 
 <div class="container">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-8">
             <section class="panel">
                 <header class="panel-heading">
                     <h2 class="panel-title">Award Type Form</h2>
                 </header>
                 <div class="panel-body">
 
-                    <?php echo form_open_multipart('admin/awards/create_award_type', $form_attributes); ?>
+                    <?php echo form_open_multipart('private/awards/create-type', $form_attributes); ?>
 
                     <?php echo form_hidden('id', $record->id); ?>
 
                     <div class="form-group">
-                        <?php echo form_label('Name', $name['id'], $label_attributes); ?>
+                        <label class="col-md-3 control-label">Name <span class="required">*</span></label>
                         <div class="col-md-6"><?php echo form_input($name); ?></div>
                     </div>
 
                     <div class="form-group">
-                        <?php echo form_label('Description', $description['id'], $label_attributes); ?>
+                        <label class="col-md-3 control-label">Description <span class="required">*</span></label>
                         <div class="col-md-6"><?php echo form_textarea($description); ?></div>
                     </div>
                     

@@ -59,6 +59,20 @@ function button_delete($type)
     return $btn_array;
 }
 
+/**
+ * Returns anchor attributes for an anchor link.
+ * Includes a confirmation window.  Used for deleteing records.
+ * 
+ * @param string $url The link href
+ * @param string $title The link display name
+ * @return href link
+ */
+function anchor_delete($url, $title)
+{
+    $onclick    = "return confirm('You are about to delete a record. This can not be undone!  Are you sure you wish to continue?')";
+    $anchor = '<a href="' . $url . '" onclick = "' . $onclick .'">' . $title . '</a>';    
+    return $anchor;    
+}
 
 /**
  * Returns the date format used by the system.
