@@ -15,21 +15,21 @@ $field_class = 'form-control';
 $title = array(
 		'name'  => 'pagetitle',
 		'id'    => 'pagetitle',
-		'value' => set_value('pagetitle', $pagetitle),
+		'value' => set_value('pagetitle', @$pagetitle),
 		'class' => $field_class,
 );
 
 $slug = array(
 		'name'  => 'slug',
 		'id'    => 'slug',
-		'value' => set_value('slug', $slug),
+		'value' => set_value('slug', @$slug),
 		'class' => $field_class,
 );
 
 $body = array(
 		'name'  => 'pagebody',
 		'id'    => 'pagebody',
-		'value' => set_value('pagebody', $pagebody),
+		'value' => set_value('pagebody', @$pagebody),
 		'rows'  => '40',
 		'class' => $field_class,
 );

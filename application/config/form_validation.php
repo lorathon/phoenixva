@@ -20,7 +20,7 @@ $config = array(
 				array(
 						'field' => 'note',
 						'label' => 'Edit Note',
-						'rules' => 'trim|xss_clean'
+						'rules' => 'trim|required|xss_clean'
 						),
 				),
 		'auth/change_email' => array(

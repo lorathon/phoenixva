@@ -45,14 +45,21 @@ class Article extends PVA_Model {
 	
 	/**
 	 * Provides a common way to build slugs
+	 * 
+	 * @param string $prefix to use (e.g. 'hub', 'event', etc.)
+	 * @param array $parts to build out the rest of the slug
+	 * @return string containing the resulting slug 
 	 */
-	public function build_slug($prefix, $parts)
+	public static function build_slug($prefix, $parts)
 	{	
 		$slug = $prefix;
 		
 		foreach ($parts as $part)
 		{
-			$slug .= '-'.$part;
+			if (!is_null($part))
+			{
+				$slug .= '-'.$part;
+			}
 		}
 		
 		return $slug;

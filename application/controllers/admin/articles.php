@@ -7,7 +7,7 @@ class Articles extends PVA_Controller {
         
     }
 
-    public function edit()
+    public function edit($slug)
     {
     	log_message('debug','Editing article');
     	
@@ -37,10 +37,8 @@ class Articles extends PVA_Controller {
     		redirect('pages/'.$this->form_validation->set_value('slug'));
     	}
     	
-    	$this->load->helper('url');
-    	$this->data['scripts'][] = base_url('assets/sceditor/jquery.sceditor.bbcode.min.js');
-    	$this->data['stylesheets'][] = base_url('assets/sceditor/themes/default.min.css');
-
+    	$this->_prep_editor();
+    	
     	$this->session->keep_flashdata('return_url');
     	$this->_render('admin/page_form');
     }
@@ -55,22 +53,17 @@ class Articles extends PVA_Controller {
     	log_message('debug', 'Hub page edit called');
     	$this->_check_access('manager');
     
-    	$this->data['meta_title'] = 'PVA Admin: Edit Hub Page';
-    	$this->data['title'] = 'Edit Hub Page';
+    	$this->data['meta_title'] = 'Edit Hub Page';
     
-    	$this->load->helper('url');
-    	$this->data['scripts'][] = base_url('assets/sceditor/jquery.sceditor.bbcode.min.js');
-    	$this->data['scripts'][] = base_url('assets/js/custom.sceditor.js');
-    	$this->data['stylesheets'][] = base_url('assets/sceditor/themes/default.min.css');
-    	$this->data['stylesheets'][] = base_url('assets/css/sceditor-custom.css');
+    	$this->_prep_editor();
     
-    	$this->data['edit_mode'] = TRUE;
     	$this->data['pagetitle'] = 'Crew Center Home';
+    	$this->data['pagebody'] = '';
+    	
     	if ($page == 'logbook')
     	{
     		$this->data['pagetitle'] = 'Logbook';
     	}
-    	$this->data['pagebody'] = '';
     
     	$article = new Article();
     	$article->slug = $article->build_slug('hub', array($icao, $page));
@@ -83,23 +76,7 @@ class Articles extends PVA_Controller {
     		$this->data['meta_title'] = 'PVA Admin: Edit Hub Page';
     		$this->data['title'] = 'Edit Hub Page';
     			
-    		$this->data['notes'] = array();
-    		log_message('debug', 'Retrieving notes for article id: '.$article->id);
-    		$note_model = new Note();
-    		$note_model->entity_type = 'article';
-    		$note_model->entity_id = $article->id;
-    		$note_model->private_note = TRUE;
-    		$notes = $note_model->get_notes();
-    		if ($notes)
-    		{
-    			$this->load->helper('html');
-    			foreach ($notes as $note)
-    			{
-    				$note_user = $note->get_user();
-    				$note->name = pva_id($note_user->id) . ' ' . $note_user->name;
-    				$this->data['notes'][] = $note;
-    			}
-    		}
+    		$this->data['notes'] = $this->_get_notes('article', $article->id, TRUE);
     	}
     	if ($article->body_bbcode)
     	{
@@ -108,5 +85,14 @@ class Articles extends PVA_Controller {
     	$this->session->set_flashdata('return_url','hubs/'.$icao);
     
     	$this->_render('admin/page_form');
+    }
+    
+    private function _prep_editor()
+    {
+    	$this->load->helper('url');
+    	$this->data['scripts'][] = base_url('assets/sceditor/jquery.sceditor.bbcode.min.js');
+    	$this->data['scripts'][] = base_url('assets/js/custom.sceditor.js');
+    	$this->data['stylesheets'][] = base_url('assets/sceditor/themes/default.min.css');
+    	$this->data['stylesheets'][] = base_url('assets/css/sceditor-custom.css');
     }
 }
