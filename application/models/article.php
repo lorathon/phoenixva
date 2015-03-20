@@ -44,6 +44,21 @@ class Article extends PVA_Model {
 	}
 	
 	/**
+	 * Provides a common way to build slugs
+	 */
+	public function build_slug($prefix, $parts)
+	{	
+		$slug = $prefix;
+		
+		foreach ($parts as $part)
+		{
+			$slug .= '-'.$part;
+		}
+		
+		return $slug;
+	}
+	
+	/**
 	 * Parses the BBCode
 	 * 
 	 * Contains all the custom parser definitions.

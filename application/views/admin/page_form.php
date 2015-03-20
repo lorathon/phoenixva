@@ -79,7 +79,7 @@ $style = base_url('assets/css/sceditor-custom.css');
 			<div class="panel-body">
 				<dl>
 					<?php foreach ($notes as $note): ?>
-						<dt><?php echo $note->name; ?> at <?php echo $note->modified; ?></dt>
+						<dt><?php echo $note->name; ?><br /><?php echo $note->modified; ?></dt>
 						<dd><?php echo $note->note; ?></dd>
 					<?php endforeach; ?>
 				</dl>
