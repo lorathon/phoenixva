@@ -97,6 +97,7 @@
                                                                             <li><?php echo anchor('hubs','Crew Centers'); ?></li>
                                                                             <li><?php echo anchor('events','Events'); ?></li>
                                                                             <li><?php echo anchor('awards','Achievements'); ?></li>
+									    <li><?php echo anchor('ranks','Ranks'); ?></li>
                                                                         </ul>
                                                                 </li>
 

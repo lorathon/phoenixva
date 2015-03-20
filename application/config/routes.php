@@ -72,6 +72,12 @@ $route['private/awards/create-type'] = "awards/create_award_type";
 $route['private/awards/delete-award/(:any)'] = "awards/delete_award/$1";
 $route['private/awards/delete-type/(:any)'] = "awards/delete_award_type/$1";
 
+// Route all rank related stuff
+$route['ranks/(:any)'] = "ranks/view/$1";
+$route['private/ranks/create-rank/(:any)'] = "ranks/create_rank/$1";
+$route['private/ranks/create-rank'] = "ranks/create_rank";
+$route['private/ranks/delete-rank/(:any)'] = "ranks/delete_rank/$1";
+
 // Default route
 $route['default_controller'] = 'pages/view';
 
