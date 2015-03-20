@@ -28,7 +28,7 @@ $type_name = NULL;
 		</li>
 	    <?php endif; ?>
 		
-	</ul>            
+	</ul>  
     </div>
     <div class="row">
 	<div class="<?php if ($show_admin) { echo "col-md-8"; } else { echo "col-md-12"; }  ?> >">
