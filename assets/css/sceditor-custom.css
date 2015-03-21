@@ -1,0 +1,15 @@
+@import url(../sceditor/jquery.sceditor.default.min.css);
+
+.sceditor-button-headers div { 
+	background: url('/images/headers-button.png'); 
+}
+.sceditor-header-option {
+	display: block;
+	cursor: pointer;
+	font-size: 14px;
+	text-decoration: none;
+	color: #222;
+}
+.sceditor-header-option:hover { 
+	background: #eee; 
+}

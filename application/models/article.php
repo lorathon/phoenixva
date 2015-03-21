@@ -44,6 +44,28 @@ class Article extends PVA_Model {
 	}
 	
 	/**
+	 * Provides a common way to build slugs
+	 * 
+	 * @param string $prefix to use (e.g. 'hub', 'event', etc.)
+	 * @param array $parts to build out the rest of the slug
+	 * @return string containing the resulting slug 
+	 */
+	public static function build_slug($prefix, $parts)
+	{	
+		$slug = $prefix;
+		
+		foreach ($parts as $part)
+		{
+			if (!is_null($part))
+			{
+				$slug .= '-'.$part;
+			}
+		}
+		
+		return $slug;
+	}
+	
+	/**
 	 * Parses the BBCode
 	 * 
 	 * Contains all the custom parser definitions.
@@ -70,6 +92,30 @@ class Article extends PVA_Model {
 		
 		// Justified text
 		$builder = new JBBCode\CodeDefinitionBuilder('justify', '<p class="text-justify">{param}</p>');
+		$parser->addCodeDefinition($builder->build());
+		
+		// Heading 1
+		$builder = new JBBCode\CodeDefinitionBuilder('h1', '<h1>{param}</h1>');
+		$parser->addCodeDefinition($builder->build());
+		
+		// Heading 2
+		$builder = new JBBCode\CodeDefinitionBuilder('h2', '<h2>{param}</h2>');
+		$parser->addCodeDefinition($builder->build());
+		
+		// Heading 3
+		$builder = new JBBCode\CodeDefinitionBuilder('h3', '<h3>{param}</h3>');
+		$parser->addCodeDefinition($builder->build());
+		
+		// Heading 4
+		$builder = new JBBCode\CodeDefinitionBuilder('h4', '<h4>{param}</h4>');
+		$parser->addCodeDefinition($builder->build());
+		
+		// Heading 5
+		$builder = new JBBCode\CodeDefinitionBuilder('h5', '<h5>{param}</h5>');
+		$parser->addCodeDefinition($builder->build());
+		
+		// Heading 6
+		$builder = new JBBCode\CodeDefinitionBuilder('h6', '<h6>{param}</h6>');
 		$parser->addCodeDefinition($builder->build());
 		
 		// Strikethrough text

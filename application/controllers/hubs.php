@@ -92,7 +92,7 @@ class Hubs extends PVA_Controller {
 		$this->data['pilots'] = $user->find_all();
 
 		$article = new Article();
-		$article->slug = $this->_build_slug($icao, $page);
+		$article->slug = $article->build_slug('hub', array($icao, $page));
 		$article->find();
 				
 		if ($article->body_html)
@@ -138,18 +138,22 @@ class Hubs extends PVA_Controller {
 	 * Edits a page for a hub
 	 * 
 	 * Hubs can have multiple pages.
+	 * 
+	 * @deprecated Use admin/articles/edit_hub instead
 	 */
 	public function edit_page($icao, $page = NULL)
 	{
-		log_message('debug', 'Hub page edit called');
+		log_message('debug', 'DEPRECATED Hub page edit called');
 		$this->_check_access('manager');
 		
-		$this->data['meta_title'] = 'PVA Admin: Edit Hub Page';
-		$this->data['title'] = 'Edit Hub Page';
+		$this->data['meta_title'] = 'DEPRECATED - PVA Admin: Edit Hub Page';
+		$this->data['title'] = 'DEPRECATED - Edit Hub Page';
 		
 		$this->load->helper('url');
 		$this->data['scripts'][] = base_url('assets/sceditor/jquery.sceditor.bbcode.min.js');
+		$this->data['scripts'][] = base_url('assets/js/custom.sceditor.js');
 		$this->data['stylesheets'][] = base_url('assets/sceditor/themes/default.min.css');
+		$this->data['stylesheets'][] = base_url('assets/css/sceditor-custom.css');
 		
 		$this->data['slug'] = $this->_build_slug($icao, $page);
 		$this->data['edit_mode'] = TRUE; 
@@ -169,6 +173,24 @@ class Hubs extends PVA_Controller {
 			$this->data['pagetitle'] = $article->title;
 			$this->data['meta_title'] = 'PVA Admin: Edit Hub Page';
 			$this->data['title'] = 'Edit Hub Page';
+			
+			$this->data['notes'] = array();
+			log_message('debug', 'Retrieving notes for article id: '.$article->id);
+			$note_model = new Note();
+			$note_model->entity_type = 'article';
+			$note_model->entity_id = $article->id;
+			$note_model->private_note = TRUE;
+			$notes = $note_model->get_notes();
+			if ($notes)
+			{
+				$this->load->helper('html');
+				foreach ($notes as $note)
+				{
+					$note_user = $note->get_user();
+					$note->name = pva_id($note_user->id) . ' ' . $note_user->name;
+					$this->data['notes'][] = $note;
+				}
+			}
 		}
 		if ($article->body_bbcode)
 		{
@@ -192,7 +214,7 @@ class Hubs extends PVA_Controller {
 		
 		$article = new Article();
 		// Add the dash at the end so the home page isn't included (it's automatic)
-		$article->slug = $this->_build_slug($icao).'-';
+		$article->slug = "hub-{$icao}-";
 		$nav_list = $article->find_all(TRUE);
 		if ($nav_list)
 		{

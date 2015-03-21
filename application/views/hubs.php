@@ -49,7 +49,7 @@
 					<h2>Hub Admin</h2>
 					<ul class="nav nav-pills">
 						<li role="presentation">
-							<?php echo anchor("/private/hubs/edit-page/{$icao}/{$page}", 'Edit This Page'); ?>
+							<?php echo anchor("/admin/articles/edit_hub/{$icao}/{$page}", 'Edit This Page'); ?>
 						</li>
 					</ul>
 				</div>
