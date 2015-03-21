@@ -106,6 +106,10 @@ class Hubs extends PVA_Controller {
 			$this->data['body'] .= '<p>Logbook not yet implemented</p>';
 		}
 		
+		if (!is_null($page) && $page != 'logbook')
+		{
+			$this->data['article_id'] = $article->id;
+		}
 		
 		$this->_render();
 	}
