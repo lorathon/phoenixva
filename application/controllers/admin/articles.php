@@ -66,6 +66,9 @@ class Articles extends PVA_Controller {
      * Edits a page for a hub
      *
      * Hubs can have multiple pages.
+     * 
+     * @param string $icao of the hub
+     * @param string $page the page being edited
      */
     public function edit_hub($icao, $page = NULL)
     {
@@ -81,6 +84,18 @@ class Articles extends PVA_Controller {
     	$this->session->set_flashdata('return_url', $return_url);
     
     	$this->edit($slug);
+    }
+    
+    /**
+     * Creates a new page for a hub
+     * 
+     * @param string $icao of the hub
+     */
+    public function create_hub($icao)
+    {
+    	log_message('debug', 'Hub page create called');
+    	$this->_check_access('manager');
+    	$this->edit("hub-{$icao}-");   	 
     }
     
     private function _prep_editor()

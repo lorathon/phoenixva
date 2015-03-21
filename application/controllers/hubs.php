@@ -64,6 +64,7 @@ class Hubs extends PVA_Controller {
 			
 			// Redirect to keep out duplicate content
 			$this->load->helper('url');
+			$this->session->keep_flashdata('alerts');
 			redirect("hubs/{$icao}/{$page}");
 		}
 		
@@ -108,99 +109,7 @@ class Hubs extends PVA_Controller {
 		
 		$this->_render();
 	}
-	
-	/**
-	 * Creates a new page for a hub
-	 * 
-	 * @param string $icao of the hub to create a page for
-	 */
-	public function create_page($icao)
-	{
-		log_message('debug', 'Hub page create called');
-		$this->_check_access('manager');
 		
-		$this->data['meta_title'] = 'PVA Admin: Create Hub Page';
-		$this->data['title'] = 'Create Hub Page';
-
-		$this->load->helper('url');
-		$this->data['scripts'][] = base_url('assets/sceditor/jquery.sceditor.bbcode.min.js');
-		$this->data['stylesheets'][] = base_url('assets/sceditor/themes/default.min.css');
-		
-		$this->data['slug'] = 'hub-'.$icao.'-';
-		$this->data['edit_mode'] = FALSE;
-		$this->data['pagetitle'] = '';
-		$this->data['pagebody'] = '';
-		
-		$this->_render('admin/page_form');
-	}
-		
-	/**
-	 * Edits a page for a hub
-	 * 
-	 * Hubs can have multiple pages.
-	 * 
-	 * @deprecated Use admin/articles/edit_hub instead
-	 */
-	public function edit_page($icao, $page = NULL)
-	{
-		log_message('debug', 'DEPRECATED Hub page edit called');
-		$this->_check_access('manager');
-		
-		$this->data['meta_title'] = 'DEPRECATED - PVA Admin: Edit Hub Page';
-		$this->data['title'] = 'DEPRECATED - Edit Hub Page';
-		
-		$this->load->helper('url');
-		$this->data['scripts'][] = base_url('assets/sceditor/jquery.sceditor.bbcode.min.js');
-		$this->data['scripts'][] = base_url('assets/js/custom.sceditor.js');
-		$this->data['stylesheets'][] = base_url('assets/sceditor/themes/default.min.css');
-		$this->data['stylesheets'][] = base_url('assets/css/sceditor-custom.css');
-		
-		$this->data['slug'] = $this->_build_slug($icao, $page);
-		$this->data['edit_mode'] = TRUE; 
-		$this->data['pagetitle'] = 'Crew Center Home';
-		if ($page == 'logbook')
-		{
-			$this->data['pagetitle'] = 'Logbook';
-		}
-		$this->data['pagebody'] = '';
-		
-		$article = new Article();
-		$article->slug = $this->_build_slug($icao, $page);
-		$article->find();
-		
-		if ($article->title)
-		{
-			$this->data['pagetitle'] = $article->title;
-			$this->data['meta_title'] = 'PVA Admin: Edit Hub Page';
-			$this->data['title'] = 'Edit Hub Page';
-			
-			$this->data['notes'] = array();
-			log_message('debug', 'Retrieving notes for article id: '.$article->id);
-			$note_model = new Note();
-			$note_model->entity_type = 'article';
-			$note_model->entity_id = $article->id;
-			$note_model->private_note = TRUE;
-			$notes = $note_model->get_notes();
-			if ($notes)
-			{
-				$this->load->helper('html');
-				foreach ($notes as $note)
-				{
-					$note_user = $note->get_user();
-					$note->name = pva_id($note_user->id) . ' ' . $note_user->name;
-					$this->data['notes'][] = $note;
-				}
-			}
-		}
-		if ($article->body_bbcode)
-		{
-			$this->data['pagebody'] = $article->body_bbcode;
-		}
-		$this->session->set_flashdata('return_url','hubs/'.$icao);
-		
-		$this->_render('admin/page_form');
-	}
-	
 	/**
 	 * Returns an array of article links for the selected hub.
 	 * 
@@ -228,15 +137,5 @@ class Hubs extends PVA_Controller {
 			}
 		}
 		return $navigation;
-	}
-	
-	protected function _build_slug($icao, $page = NULL)
-	{
-		$slug = 'hub-'.$icao;
-		if (!is_null($page))
-		{
-			$slug .= '-'.$page;
-		}
-		return $slug;
 	}
 }
