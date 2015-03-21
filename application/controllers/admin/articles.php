@@ -7,15 +7,15 @@ class Articles extends PVA_Controller {
         
     }
 
-    public function edit($slug)
+    public function edit($slug = NULL)
     {
     	log_message('debug','Editing article');
+    	$article = new Article();
     	
     	$this->load->library('form_validation');
     	
     	if ($this->form_validation->run())
-    	{
-    		$article = new Article();
+    	{    		
     		$article->title = $this->form_validation->set_value('pagetitle');
     		$article->slug = $this->form_validation->set_value('slug');
     		$article->body_bbcode = $this->form_validation->set_value('pagebody');
@@ -30,15 +30,34 @@ class Articles extends PVA_Controller {
     		$note->private_note = TRUE;
     		$note->save();
     		
-    		//$this->_alert('The article has been saved','success', TRUE);
+    		$this->_alert('The article has been saved','success', TRUE);
     		
     		// Take the user to the page they were editing
     		$this->load->helper('url');
     		redirect('pages/'.$this->form_validation->set_value('slug'));
     	}
     	
-    	$this->_prep_editor();
+    	if (is_null($slug))
+    	{
+    		$slug = $this->form_validation->set_value('slug');
+    	}
+    	$this->data['slug'] = $slug;    	
+    	$article->slug = $slug;
+    	$article->find();
     	
+    	if ($article->title)
+    	{
+    		$this->data['pagetitle'] = $article->title;
+    		$this->data['meta_title'] = 'Edit '.$article->title;
+    		 
+    		$this->data['notes'] = $this->_get_notes('article', $article->id, TRUE);
+    	}
+    	if ($article->body_bbcode)
+    	{
+    		$this->data['pagebody'] = $article->body_bbcode;
+    	}
+    	 
+    	$this->_prep_editor();
     	$this->session->keep_flashdata('return_url');
     	$this->_render('admin/page_form');
     }
@@ -52,39 +71,17 @@ class Articles extends PVA_Controller {
     {
     	log_message('debug', 'Hub page edit called');
     	$this->_check_access('manager');
-    
-    	$this->data['meta_title'] = 'Edit Hub Page';
-    
-    	$this->_prep_editor();
-    
-    	$this->data['pagetitle'] = 'Crew Center Home';
-    	$this->data['pagebody'] = '';
-    	
-    	if ($page == 'logbook')
-    	{
-    		$this->data['pagetitle'] = 'Logbook';
-    	}
-    
+        
     	$article = new Article();
-    	$article->slug = $article->build_slug('hub', array($icao, $page));
-    	$this->data['slug'] = $article->slug;
-    	$article->find();
-    
-    	if ($article->title)
+    	$slug = $article->build_slug('hub', array($icao, $page));
+    	$return_url = 'hubs/'.$icao;
+    	if (!is_null($page))
     	{
-    		$this->data['pagetitle'] = $article->title;
-    		$this->data['meta_title'] = 'PVA Admin: Edit Hub Page';
-    		$this->data['title'] = 'Edit Hub Page';
-    			
-    		$this->data['notes'] = $this->_get_notes('article', $article->id, TRUE);
+    		$return_url .= '/'.$page;
     	}
-    	if ($article->body_bbcode)
-    	{
-    		$this->data['pagebody'] = $article->body_bbcode;
-    	}
-    	$this->session->set_flashdata('return_url','hubs/'.$icao);
+    	$this->session->set_flashdata('return_url', $return_url);
     
-    	$this->_render('admin/page_form');
+    	$this->edit($slug);
     }
     
     private function _prep_editor()
