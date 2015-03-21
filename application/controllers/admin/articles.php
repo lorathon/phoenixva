@@ -72,8 +72,7 @@ class Articles extends PVA_Controller {
     	log_message('debug', 'Hub page edit called');
     	$this->_check_access('manager');
         
-    	$article = new Article();
-    	$slug = $article->build_slug('hub', array($icao, $page));
+    	$slug = Article::build_slug('hub', array($icao, $page));
     	$return_url = 'hubs/'.$icao;
     	if (!is_null($page))
     	{
