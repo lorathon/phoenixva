@@ -9,6 +9,9 @@ class Rank extends PVA_Model {
 	public $pay_rate   = NULL;
 	public $short      = NULL;
 	
+	protected $_users	    = NULL;
+	protected $_user_count	    = NULL;
+		
 	function __construct($id = NULL)
 	{
 		parent::__construct($id);
@@ -47,5 +50,28 @@ class Rank extends PVA_Model {
 			return $next_rank;
 		}
 		return FALSE;
+	}
+	
+	function get_users()
+	{
+	    if(is_null($this->_users))
+	    {
+		$user = new User();
+		$user->rank_id = $this->id;
+		$this->_users = $user->find_all();
+	    }	    
+	    return $this->_users;
+	}
+	
+	function get_user_count()
+	{
+	    if ( is_null($this->_user_count))
+	    {		
+		$user = new User();
+		$user->rank_id = $this->id;
+		$users = $user->find_all();
+		$this->_user_count = ($users) ? count($users) : 0;
+	    }
+	    return $this->_user_count;
 	}
 }

@@ -96,7 +96,8 @@
                                                                             <li><?php echo anchor('aircraft','Aircraft Fleet'); ?></li>
                                                                             <li><?php echo anchor('hubs','Crew Centers'); ?></li>
                                                                             <li><?php echo anchor('events','Events'); ?></li>
-                                                                            <li><?php echo anchor('pages/achievements','Achievements'); ?></li>
+                                                                            <li><?php echo anchor('awards','Achievements'); ?></li>
+									    <li><?php echo anchor('ranks','Ranks'); ?></li>
                                                                         </ul>
                                                                 </li>
 
@@ -313,28 +314,10 @@
 					</div>
 				</section>
                             <?php endif; ?>
-                            
-                            
-                            
-				
+                            			    
+                 
 				<?php if (isset($this->session) && $this->session->flashdata('title')): ?>
-					<div class="container">
-						<div class="row">
-							<div class="col-md-offset-3 col-md-6">
-								<div class="panel panel-<?php echo $this->session->flashdata('msg_type'); ?>">
-									<div class="panel-heading">
-										<?php echo $this->session->flashdata('title'); ?>
-									</div>
-									<div class="panel-body">
-										<?php echo $this->session->flashdata('message'); ?>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				<?php endif;?>
-			    
-				<?php if (isset($this->session) && $this->session->flashdata('title')): ?>
+					<!-- _flash_messsage is deprecated. Use _alert() instead
 					<div class="container">
 						<div class="row">
 							<div class="col-md-12">
@@ -343,8 +326,31 @@
 							    </div>
 							</div>
 						</div>
-					</div>			    
-                                <?php endif;?>
+					</div>
+					-->			    
+                <?php endif;?>
+                 
+                
+                <?php
+                	if (isset($this->session) && $this->session->flashdata('alerts'))
+                	{
+                		if (isset($alerts))
+                		{
+                			$alerts = array_merge($this->session->flashdata('alerts'), $alerts);
+                		}
+                		else 
+                		{
+                			$alerts = $this->session->flashdata('alerts');
+                		}
+                	} 
+                	if (isset($alerts)): ?>
+				   	<?php foreach ($alerts as $alert): ?>
+				   		<div class="alert alert-<?php echo $alert['type']; ?>">            
+				    		<p><?php echo $alert['msg']; ?></p>
+						</div>
+				   	<?php endforeach; ?>
+				<?php endif; ?>
+                
 			    
 				<?php if ($errors):?>
 					<div class="container">
@@ -352,7 +358,7 @@
 							<div class="col-md-offset-3 col-md-6">
 								<div class="panel panel-danger">
 									<div class="panel-heading">
-										Errors
+										Errors (DEPRECATED FEATURE, PLEASE NOTIFY HELPDESK)
 									</div>
 									<div class="panel-body">
 										<?php foreach ($errors as $error): ?>

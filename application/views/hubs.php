@@ -31,7 +31,7 @@
 			<?php endforeach; ?>
 			<?php if ($show_admin): ?>
 				<li role="presentation">
-					<?php echo anchor("/private/hubs/create-page/{$icao}", '<i class="fa fa-plus-square" title="Add Page"></i>'); ?>
+					<?php echo anchor("/admin/articles/create_hub/{$icao}", '<i class="fa fa-plus-square" title="Add Page"></i>'); ?>
 				</li>
 			<?php endif; ?>
 		</ul>
@@ -49,7 +49,7 @@
 					<h2>Hub Admin</h2>
 					<ul class="nav nav-pills">
 						<li role="presentation">
-							<?php echo anchor("/private/hubs/edit-page/{$icao}/{$page}", 'Edit This Page'); ?>
+							<?php echo anchor("/admin/articles/edit_hub/{$icao}/{$page}", 'Edit This Page'); ?>
 						</li>
 					</ul>
 				</div>

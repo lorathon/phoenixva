@@ -31,11 +31,31 @@ class Events extends PVA_Controller
 
 	$this->_render();
     }
+    
+    public function event_types()
+    {
+	$this->data['meta_title'] = 'Phoenix Virtual Airways Events';
+	$this->data['title'] = 'Event Types';
+	$this->data['breadcrumb']['events'] = 'Events';
+	
+	$this->load->helper('html');
+	
+	$event_type = New Event_type();
+	$event_types = $event_type->find_all();
+	
+	if(! $event_types)
+	{
+	    $event_types = array();
+	    $this->data['types'] = $event_types;
+	}	
+	
+	$this->data['calendar_colors'] = $this->config->item('calendar_colors');
+        $this->data['types'] = $event_types;
+	$this->_render();
+    }  
 
     public function view($id, $page = NULL)
-    {
-	log_message('debug', 'Event page called');
-	
+    {	
 	if (is_null($id))
 	{
 	    $this->index();
@@ -50,9 +70,6 @@ class Events extends PVA_Controller
 	    {
 		$page = $parts[2];
 	    }
-	    log_message('debug', 'Splitting event slug');
-	    log_message('debug', 'ID = ' . $id);
-	    log_message('debug', 'Page = ' . $page);
 
 	    // Redirect to keep out duplicate content
 	    $this->load->helper('url');
@@ -78,8 +95,7 @@ class Events extends PVA_Controller
 	$this->data['award_2'] = new Award($event->award_id_participant);
 	$this->data['user_1'] = new User($event->user_id_1);
 	$this->data['user_2'] = new User($event->user_id_2);
-	$this->data['user_3'] = new User($event->user_id_3);
-	
+	$this->data['user_3'] = new User($event->user_id_3);	
 	
 	// fill with pilots who are participating ?
 	$this->data['pilots'] = array();
@@ -100,97 +116,7 @@ class Events extends PVA_Controller
 	
 	$this->session->set_flashdata('return_url','events/'.$id);	
 	$this->_render();
-    }
-    
-    public function create_event($id = NULL)
-    {    
-        $this->_check_access('manager');
-	$this->data['title'] = 'Create Event';
-        
-        $event = New Event($id);
-        
-        if($event)
-        {
-            $this->data['title'] = 'Edit Event';
-        }
-	
-	$this->load->library('form_validation'); 
-        $this->load->helper('url');
-                
-        $this->form_validation->set_rules('id', 'ID', '');
-        $this->form_validation->set_rules('name', 'Name', 'alpha-numberic|trim|required|xss_clean');
-        $this->form_validation->set_rules('description', 'Description', 'alpha-numberic|trim|required|xss_clean');
-        $this->form_validation->set_rules('event_type_id', 'Event Type', 'numeric|trim|required|xss_clean');
-	$this->form_validation->set_rules('landing_rate', 'Landing Rate', 'numeric|trim|xss_clean');
-        
-        $event_type = new Event_type();
-        $this->data['event_types'] = $event_type->get_dropdown();
-	
-	$airline = new Airline();
-	$this->data['airlines'] = $airline->get_dropdown();
-	
-	$airport = new Airport();
-	$this->data['airports'] = $airport->get_dropdown();
-	
-	$this->data['aircraft_cats'] = $this->config->item('aircraft_cat');
-	
-	$this->data['zero_to_ten'] = array(0,1,2,3,4,5,6,7,8,9);
-	
-	$award = new Award();
-	$this->data['awards'] = $award->get_dropdown();
-        
-        $this->data['scripts'][] = base_url('assets/admin/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js');
-	$this->data['scripts'][] = base_url('assets/js/typeahead.bundle.js');
-	$this->data['scripts'][] = base_url('assets/js/prefetch.js');
-                
-        if ($this->form_validation->run() == FALSE)
-	{             
-            $this->data['errors'] = validation_errors();;  
-            $this->data['record'] = $event;
-	    $this->session->keep_flashdata('return_url');
-            $this->_render('admin/event_form');
-	}
-	else
-	{	
-	    $_time_start = strtotime($this->input->post('time_start', TRUE));
-	    $_time_start = date("Y-m-d H:i:s", $_time_start);
-	    
-	    $_time_end = strtotime($this->input->post('time_end', TRUE));
-	    $_time_end = date("Y-m-d 23:59:59", $_time_end);
-	    
-            $event->id              = $this->input->post('id', TRUE);
-            $event->name            = $this->form_validation->set_value('name');            
-            $event->description     = $this->form_validation->set_value('description');
-	    $event->time_start	    = $_time_start;
-	    $event->time_end	    = $_time_end;
-	    $event->event_type_id   = $this->form_validation->set_value('event_type_id');
-	    $event->waiver_js	    = $this->input->post('waiver_js', TRUE); 
-	    $event->waiver_cat	    = $this->input->post('waiver_cat', TRUE);
-	    $event->airline_id	    = intval($this->input->post('airline_id', TRUE));
-	    $event->airport_id	    = intval($this->input->post('airport_id', TRUE));
-	    $event->aircraft_cat_id = intval($this->input->post('aircraft_cat_id', TRUE));
-	    $event->landing_rate    = $this->form_validation->set_value('landing_rate');
-	    $event->total_flights   = intval($this->input->post('total_flights', TRUE));
-	    $event->flight_time	    = $this->input->post('flight_time', TRUE);
-	    $event->bonus_1	    = intval($this->input->post('bonus_1', TRUE));
-	    $event->bonus_2	    = intval($this->input->post('bonus_2', TRUE));
-	    $event->bonus_3	    = intval($this->input->post('bonus_3', TRUE));
-	    $event->award_id_winner = intval($this->input->post('award_id_winner', TRUE));
-	    $event->award_id_participant    = intval($this->input->post('award_id_participant', TRUE));
-	    $event->enabled	    = $this->input->post('enabled', TRUE); 
-	    
-	    $event->completed	    = $event->completed == NULL ? 0 : $event->completed;
-	    $event->user_id_1	    = $event->user_id_1 == NULL ? 0 : $event->user_id_1;
-	    $event->user_id_2	    = $event->user_id_2 == NULL ? 0 : $event->user_id_2;
-	    $event->user_id_3	    = $event->user_id_3 == NULL ? 0 : $event->user_id_3;
-                
-            $event->save();
-	    $this->_flash_message('success', 'Event', 'Event - Record Saved');
-	    
-	    redirect($this->session->flashdata('return_url'));
-	    //$this->view($id);
-	}        
-    }
+    }    
 
     /**
      * Creates a new page for an event
@@ -199,11 +125,11 @@ class Events extends PVA_Controller
      */
     public function create_page($id)
     {
-	log_message('debug', 'Events page create called');
 	$this->_check_access('manager');
 
 	$this->data['meta_title'] = 'PVA Admin: Create Event Page';
 	$this->data['title'] = 'Create Event Page';
+	$this->data['breadcrumb']['events'] = 'Events';
 
 	$this->load->helper('url');
 	$this->data['scripts'][] = base_url('assets/sceditor/jquery.sceditor.bbcode.min.js');
@@ -224,11 +150,11 @@ class Events extends PVA_Controller
      */
     public function edit_page($id, $page = NULL)
     {
-	log_message('debug', 'Event page edit called');
 	$this->_check_access('manager');
 
 	$this->data['meta_title'] = 'PVA Admin: Edit Event Page';
 	$this->data['title'] = 'Edit Event Page';
+	$this->data['breadcrumb']['events'] = 'Events';
 
 	$this->load->helper('url');
 	$this->data['scripts'][] = base_url('assets/sceditor/jquery.sceditor.bbcode.min.js');
@@ -299,6 +225,198 @@ class Events extends PVA_Controller
 	}
 	return $slug;
     }
+    
+    public function create_event($id = NULL)
+    {    
+        $this->_check_access('manager');
+	$this->data['title'] = 'Create Event';
+	$this->data['breadcrumb']['events'] = 'Events';
+        
+        $event = New Event($id);
+        
+        if($event->name)
+        {
+            $this->data['title'] = 'Edit Event';
+        }
+	
+	$this->load->library('form_validation'); 
+        $this->load->helper('url');
+                
+        $this->form_validation->set_rules('id', 'ID', '');
+        $this->form_validation->set_rules('name', 'Name', 'alpha-numberic|trim|required|xss_clean');
+        $this->form_validation->set_rules('description', 'Description', 'alpha-numberic|trim|required|xss_clean');
+        $this->form_validation->set_rules('event_type_id', 'Event Type', 'numeric|trim|required|xss_clean');
+	$this->form_validation->set_rules('landing_rate', 'Landing Rate', 'numeric|required|trim|xss_clean');
+	$this->form_validation->set_rules('flight_time', 'Flight Time', 'numeric|required|trim|xss_clean');
+        
+        $event_type = new Event_type();
+        $this->data['event_types'] = $event_type->get_dropdown();
+	
+	$airline = new Airline();
+	$this->data['airlines'] = $airline->get_dropdown();
+	
+	$airport = new Airport();
+	$this->data['airports'] = $airport->get_dropdown();
+	
+	$this->data['aircraft_cats'] = $this->config->item('aircraft_cat');
+	
+	$this->data['zero_to_ten'] = array(0,1,2,3,4,5,6,7,8,9);
+	
+	$award = new Award();
+	$this->data['awards'] = $award->get_dropdown();
+        
+        $this->data['scripts'][] = base_url('assets/admin/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js');
+	$this->data['scripts'][] = base_url('assets/js/typeahead.bundle.js');
+	$this->data['scripts'][] = base_url('assets/js/prefetch.js');
+	
+	$this->data['scripts'][] = base_url('assets/admin/vendor/jquery-validation/jquery.validate.js');
+	$this->data['scripts'][] = base_url('assets/js/forms.validation.js');
+	
+                
+        if ($this->form_validation->run() == FALSE)
+	{             
+            $this->data['errors'] = validation_errors();;  
+            $this->data['record'] = $event;
+	    $this->session->keep_flashdata('return_url');
+            $this->_render('admin/event_form');
+	}
+	else
+	{	
+	    $_time_start = strtotime($this->input->post('time_start', TRUE));
+	    $_time_start = date("Y-m-d H:i:s", $_time_start);
+	    
+	    $_time_end = strtotime($this->input->post('time_end', TRUE));
+	    $_time_end = date("Y-m-d 23:59:59", $_time_end);
+	    
+            $event->id              = $this->input->post('id', TRUE);
+            $event->name            = $this->form_validation->set_value('name');            
+            $event->description     = $this->form_validation->set_value('description');
+	    $event->time_start	    = $_time_start;
+	    $event->time_end	    = $_time_end;
+	    $event->event_type_id   = $this->form_validation->set_value('event_type_id');
+	    $event->waiver_js	    = $this->input->post('waiver_js', TRUE); 
+	    $event->waiver_cat	    = $this->input->post('waiver_cat', TRUE);
+	    $event->airline_id	    = intval($this->input->post('airline_id', TRUE));
+	    $event->airport_id	    = intval($this->input->post('airport_id', TRUE));
+	    $event->aircraft_cat_id = intval($this->input->post('aircraft_cat_id', TRUE));
+	    $event->landing_rate    = $this->form_validation->set_value('landing_rate');
+	    $event->total_flights   = intval($this->input->post('total_flights', TRUE));
+	    $event->flight_time	    = $this->input->post('flight_time', TRUE);
+	    $event->bonus_1	    = intval($this->input->post('bonus_1', TRUE));
+	    $event->bonus_2	    = intval($this->input->post('bonus_2', TRUE));
+	    $event->bonus_3	    = intval($this->input->post('bonus_3', TRUE));
+	    $event->award_id_winner = intval($this->input->post('award_id_winner', TRUE));
+	    $event->award_id_participant    = intval($this->input->post('award_id_participant', TRUE));
+	    $event->enabled	    = $this->input->post('enabled', TRUE); 
+	    
+	    $event->completed	    = $event->completed == NULL ? 0 : $event->completed;
+	    $event->user_id_1	    = $event->user_id_1 == NULL ? 0 : $event->user_id_1;
+	    $event->user_id_2	    = $event->user_id_2 == NULL ? 0 : $event->user_id_2;
+	    $event->user_id_3	    = $event->user_id_3 == NULL ? 0 : $event->user_id_3;
+                
+            $event->save();
+	    $this->_alert('Event - Record Saved', 'success', TRUE);
+	    
+	    $url = $this->session->flashdata('return_url');	    
+	    if($url)
+	    {
+		redirect($this->session->flashdata('return_url'));
+	    }
+	    else
+	    {
+		$this->index();
+	    }	  
+	}        
+    }
+    
+    public function create_event_type($id = NULL)
+    {
+	$this->_check_access('manager');
+	$this->data['title'] = 'Create Event Type';
+	$this->data['breadcrumb']['events'] = 'Events';
+	$this->data['breadcrumb']['private/event-types'] = 'Events Types';
+	
+        $event_type = new Event_type($id); 
+	
+	if($event_type->name)
+        {
+            $this->data['title'] = 'Edit Event Type';
+        }
+	
+	$this->load->library('form_validation');
+        $this->load->helper('url');
+                
+        $this->form_validation->set_rules('id', 'ID', '');
+        $this->form_validation->set_rules('name', 'Name', 'alpha-numberic|trim|required|xss_clean');
+        $this->form_validation->set_rules('description', 'Description', 'alpha-numberic|trim|xss_clean');
+	
+	$this->data['calendar_colors'] = $this->config->item('calendar_colors');
+        
+        $this->data['scripts'][] = base_url('assets/admin/vendor/jquery-validation/jquery.validate.js');
+	$this->data['scripts'][] = base_url('assets/js/forms.validation.js');
+                
+        if ($this->form_validation->run() == FALSE)
+	{             
+            $this->data['errors'] = validation_errors();;  
+            $this->data['record'] = $event_type;
+            $this->_render('admin/event_type_form');
+	}
+	else
+	{
+            $event_type->id		= $this->input->post('id', TRUE);
+            $event_type->name		= $this->form_validation->set_value('name');
+            $event_type->description	= $this->form_validation->set_value('description');
+            $event_type->color_id	= $this->input->post('color_id', TRUE);                
+            $event_type->save();
+	    
+	    $this->_alert('Event Type - Record Saved', 'success', FALSE);
+            $this->index();
+	}        
+    }
+    
+    public function delete_event($id = NULL)
+    {
+	$this->_check_access('manager');
+        // Delete record
+        if ( is_null($id) )
+	    return FALSE;
+        
+        $event = new Event($id);
+        $event->delete();
+	
+	$this->_alert('Event - Record Deleted', 'info', FALSE);
+        $this->index();
+    }
+    
+    public function delete_event_type($id = NULL)
+    {
+	$this->_check_access('manager');
+        // Delete record
+        if ( is_null($id) ) 
+	    return FALSE;
+	
+	$event_type = new Event_type($id);
+        
+	// Determine if there are any awards of this type
+        $event = new Event();
+	$event->event_type_id = $id;
+	$events = $event->get_events_count();
+		
+	// If there are not any events of this type allow deletion of type
+	if($events == 0)
+	{
+	    $event_type->delete();
+	    $this->_alert('Event Type- Record Deleted', 'info', FALSE);
+	    $this->index();
+	}
+	// If events of this type are found stop deletion and inform user
+        else
+	{
+	    $this->load->helper('url');
+	    $this->_alert('Event Type - All awards must be deleted first!', 'danger', TRUE);
+	    redirect($this->session->flashdata('return_url'));
+	}
+    }   
     
     public function get_json()
     {

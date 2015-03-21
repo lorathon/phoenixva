@@ -153,6 +153,35 @@ class PVA_Controller extends CI_Controller {
 			redirect('/auth/unauth/');
 		}
 	}
+	
+	/**
+	 * Gets the notes for the provided entity type and ID.
+	 * 
+	 * @param string $type the entity type (e.g. 'user', 'article', etc.)
+	 * @param number $id the ID of the entity
+	 * @param boolean $private TRUE if private notes should be returned
+	 * @return array of note objects
+	 */
+	protected function _get_notes($type, $id, $private = FALSE)
+	{
+		$out = array();
+		$note_model = new Note();
+		$note_model->entity_type = $type;
+		$note_model->entity_id = $id;
+		$note_model->private_note = $private;
+		$notes = $note_model->get_notes();
+		if ($notes)
+		{
+			$this->load->helper('html');
+			foreach ($notes as $note)
+			{
+				$note_user = $note->get_user();
+				$note->name = pva_id($note_user->id) . ' ' . $note_user->name;
+				$out[] = $note;
+			}
+		}
+		return $out;
+	}
 
 	/**
 	 * Renders HTML views as part of overall template
@@ -291,8 +320,26 @@ class PVA_Controller extends CI_Controller {
 	}
 	
 	/**
+	 * Creates user alerts in a consistent format.
+	 * 
+	 * @param string $msg The message to display
+	 * @param string $type Type of message: info (default), primary, success, warning, danger
+	 * @param boolean $flash TRUE if the message should persist in the session
+	 */
+	protected function _alert($msg, $type = 'info', $flash = FALSE)
+	{
+		$alert = array('type' => $type, 'msg' => $msg);
+		$this->data['alerts'][] = $alert;
+		if ($flash)
+		{
+			$this->session->set_flashdata('alerts', $this->data['alerts']);
+		}
+	}
+	
+	/**
 	 * Creates flash data for messaging in a consistent format.
 	 * 
+	 * @deprecated Use _alert($msg, $type, $flash) instead
 	 * @param string $type Type of message: info (default), primary, success, warning, danger
 	 * @param string $title Title of the message
 	 * @param string $msg The message itself
@@ -307,6 +354,7 @@ class PVA_Controller extends CI_Controller {
 	/**
 	 * Creates data for inner controller messaging in a consistent format.
 	 * 
+	 * @deprecated Use _alert($msg, $type, $flash) instead
 	 * @param string $type Type of message: info (default), primary, success, warning, danger
 	 * @param string $msg The message itself
 	 */
