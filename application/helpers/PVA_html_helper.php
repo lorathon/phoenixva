@@ -106,7 +106,25 @@ function format_hours($hours,$separator = ':')
  */
 function user($user)
 {
-	return anchor('private/profile/view/'.$user->id, pva_id($user->id).' '.$user->name);
+	// Verify user logged in
+	$ci =& get_instance();
+	$ci->load->library('tank_auth');
+	
+	if ( ! $ci->tank_auth->is_logged_in())
+	{
+		// Only display first name and initial if the user is not logged in
+		$parts = explode(' ', $user->name, 2);
+		$name = $parts[0];
+		if (isset($parts[1]))
+		{
+			$name .= ' '.substr($parts[1], 0, 1);
+		}
+	}
+	else
+	{
+		$name = $user->name;
+	}
+	return anchor('private/profile/view/'.$user->id, pva_id($user->id).' '.$name);
 }
 
 /**
