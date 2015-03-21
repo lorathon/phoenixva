@@ -74,17 +74,19 @@ $style = base_url('assets/css/sceditor-custom.css');
 				<?php echo form_reset('reset', 'Reset', 'class = "btn btn-danger btn-block"'); ?>
 			</div>
 		</div>
-		<div class="panel panel-info">
-			<div class="panel-heading">Page History</div>
-			<div class="panel-body">
-				<dl>
-					<?php foreach ($notes as $note): ?>
-						<dt><?php echo $note->name; ?><br /><?php echo $note->modified; ?></dt>
-						<dd><?php echo $note->note; ?></dd>
-					<?php endforeach; ?>
-				</dl>
+		<?php if (isset($notes)): ?>
+			<div class="panel panel-info">
+				<div class="panel-heading">Page History</div>
+				<div class="panel-body">
+					<dl>
+						<?php foreach ($notes as $note): ?>
+							<dt><?php echo $note->name; ?><br /><?php echo $note->modified; ?></dt>
+							<dd><?php echo $note->note; ?></dd>
+						<?php endforeach; ?>
+					</dl>
+				</div>
 			</div>
-		</div>
+		<?php endif; ?>
 	</div>
 	<?php echo form_close(); ?>
 </div>

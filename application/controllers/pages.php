@@ -28,11 +28,13 @@ class Pages extends PVA_Controller {
 		// Handle special pages
 		if (substr($page, 0, 4) == 'hub-')
 		{
+			$this->session->keep_flashdata('alerts');
 			redirect("hubs/{$page}");
 		}
 		
 		if (substr($page, 0, 6) == 'event-')
 		{
+			$this->session->keep_flashdata('alerts');
 			redirect("events/{$page}");
 		}
 		
