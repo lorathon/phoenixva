@@ -53,7 +53,7 @@ $db['default']['username'] = 'phoenix_stage';
 $db['default']['password'] = 'uP2S5zobi8';
 $db['default']['database'] = 'phoenix_stage';
 $db['default']['dbdriver'] = 'mysql';
-$db['default']['dbprefix'] = '';
+$db['default']['dbprefix'] = 'stg21_';
 $db['default']['pconnect'] = TRUE;
 $db['default']['db_debug'] = FALSE;
 $db['default']['cache_on'] = FALSE;
@@ -64,6 +64,21 @@ $db['default']['swap_pre'] = '';
 $db['default']['autoinit'] = TRUE;
 $db['default']['stricton'] = FALSE;
 
+$db['legacy']['hostname'] = 'localhost';
+$db['legacy']['username'] = 'phoenix_stage';
+$db['legacy']['password'] = 'uP2S5zobi8';
+$db['legacy']['database'] = 'phoenix_pvaphpvms';
+$db['legacy']['dbdriver'] = 'mysql';
+$db['legacy']['dbprefix'] = '';
+$db['legacy']['pconnect'] = FALSE;
+$db['legacy']['db_debug'] = TRUE;
+$db['legacy']['cache_on'] = FALSE;
+$db['legacy']['cachedir'] = '';
+$db['legacy']['char_set'] = 'utf8';
+$db['legacy']['dbcollat'] = 'utf8_general_ci';
+$db['legacy']['swap_pre'] = '';
+$db['legacy']['autoinit'] = TRUE;
+$db['legacy']['stricton'] = TRUE;
 
 /* End of file database.php */
 /* Location: ./application/config/database.php */
