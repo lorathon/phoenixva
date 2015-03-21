@@ -106,10 +106,22 @@ class Hubs extends PVA_Controller {
 			$this->data['body'] .= '<p>Logbook not yet implemented</p>';
 		}
 		
+		if (!is_null($page) && $page != 'logbook')
+		{
+			$this->data['article_id'] = $article->id;
+		}
 		
 		$this->_render();
 	}
-		
+	
+	public function transfer()
+	{
+		log_message('debug', 'Hub transfer called');
+		$this->data['title'] = 'Hub Transfer';
+		$this->data['body'] = '<h1>Transfer capability not yet implemented.</h1>';
+		$this->_render('article');
+	}
+			
 	/**
 	 * Returns an array of article links for the selected hub.
 	 * 

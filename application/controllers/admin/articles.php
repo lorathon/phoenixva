@@ -62,6 +62,29 @@ class Articles extends PVA_Controller {
     	$this->_render('admin/page_form');
     }
     
+    public function delete($id)
+    {
+    	log_message('debug','Deleting article');
+    	
+    	$article = new Article($id);
+    	$title = $article->title;
+    	$slug = $article->slug;
+    	$article->delete();
+    	
+    	// Make a note of the delete
+    	$note = new Note();
+    	$note->entity_type = 'article';
+    	$note->entity_id = $article->id;
+    	$note->user_id = $this->session->userdata('user_id');
+    	$note->note = "Deleted article #{$id}: {$title} ({$slug}).";
+    	$note->private_note = TRUE;
+    	$note->save();
+    	
+    	$this->_alert("Deleted article #{$id}: {$title} ({$slug}).",'success', TRUE);
+    	$this->load->helper('url');
+    	redirect('admin');
+    }
+    
     /**
      * Edits a page for a hub
      *

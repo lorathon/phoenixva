@@ -49,8 +49,13 @@
 					<h2>Hub Admin</h2>
 					<ul class="nav nav-pills">
 						<li role="presentation">
-							<?php echo anchor("/admin/articles/edit_hub/{$icao}/{$page}", 'Edit This Page'); ?>
+							<?php echo anchor("/admin/articles/edit_hub/{$icao}/{$page}", 'Edit This Page', button('warning')); ?>
 						</li>
+						<?php if (isset($article_id)): ?>
+							<li role="presentation">
+								<?php echo anchor("/admin/articles/delete/{$article_id}", 'Delete This Page', button('danger')); ?>
+							</li>
+						<?php endif;?>
 					</ul>
 				</div>
 			</div>

@@ -44,6 +44,7 @@ $route['admin'] = "admin/dashboard";
 $route['pages/(:any)'] = "pages/view/$1";
 
 // Route all hub related stuff
+$route['hubs/transfer'] = 'hubs/transfer';
 $route['hubs/(:any)'] = "hubs/view/$1";
 
 // Route all event related stuff

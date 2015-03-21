@@ -1,7 +1,7 @@
 <div class="container">
 	<div class="row">
 		<div class="col-md-12">
-			<?php if (! is_null($pubdate)): ?>
+			<?php if (isset($pubdate)): ?>
 				<p class="text-right"><small>Published <?php echo $pubdate; ?></small></p>
 			<?php endif; ?>
 			<?php echo $body; ?>
