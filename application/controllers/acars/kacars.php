@@ -13,24 +13,22 @@ class Kacars extends Acars_Base
 	public function index()
 	{
 		$input = file_get_contents('php://input');
-		if ($input)
+		if (TRUE)
 		{
 			// Load XML
-			$xml = simplexml_load_string($input);
+			//$xml = simplexml_load_string($input);
 			
-			// Check credentials
+			// Authenticate
+			
+			// Parse message from ACARS client format to PVA system format
+			$message = '';
 			
 			// Dispatch to appropriate handler
-			$timeout = 2;
-			$this->load->helper('url');
-			$stream = stream_socket_client(site_url(), $errno, $errstr, $timeout,
-					STREAM_CLIENT_ASYNC_CONNECT|STREAM_CLIENT_CONNECT);
-			if ($stream)
-			{
-				fwrite($stream, '');
-			}
-			// Drop back out asynchronously
-			echo $xml->asXML();
+			$this->dispatch($message);
+			log_message('debug', 'Returning to client');
+			
+			// Respond to the ACARS client
+			//echo $xml->asXML();
 		}
 		echo "Done!";
 	}
