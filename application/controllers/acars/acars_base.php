@@ -25,6 +25,45 @@ class Acars_Base extends CI_Controller {
 		spl_autoload_register(array('Acars_Base','_autoload'));
 	}
 	
+	protected function dispatch($message)
+	{
+		log_message('debug','Dispatching message');
+		$timeout = 2;
+		$this->load->helper('url');
+		$host = 'dev.phoenixva.org';
+		
+		// CSRF
+		$stream = stream_socket_client("{$host}:80", $errno, $errstr, $timeout,
+				STREAM_CLIENT_ASYNC_CONNECT|STREAM_CLIENT_CONNECT);
+		if ($stream)
+		{
+			log_message('debug', 'Stream connected');
+			$post_data = $this->security->get_csrf_token_name().'='.$this->security->get_csrf_hash();
+			$post_data .= '&'.$message;
+			$length = strlen($post_data);
+			log_message('debug', '---------- POST MESSAGE ----------');
+			log_message('debug', $post_data);
+			log_message('debug', '---------- END POST MESSAGE ----------');
+				
+			fwrite($stream, "POST /cjtop/acars/processor HTTP/1.1\r\n");
+			fwrite($stream, "Host: {$host}\r\n");
+			fwrite($stream, "Content-type: application/x-www-form-urlencoded\r\n");
+			fwrite($stream, "Content-length: {$length}\r\n");
+			fwrite($stream, "Accept: */*\r\n");
+			fwrite($stream, "\r\n");
+			fwrite($stream, $post_data);
+			
+			/* For testing only
+			while (!feof($stream))
+			{
+				log_message('debug', fgets($stream, 1024));
+			}
+			fclose($stream);
+			*/
+		}
+		log_message('debug', 'Message dispatching complete');
+	}
+	
 	/**
 	 * PVA Application ACARS autoloader
 	 *
@@ -42,6 +81,7 @@ class Acars_Base extends CI_Controller {
 			log_message('debug', 'Looking for file '.$file);
 			if ($this->load_file($file))
 			{
+				log_message('debug', 'File '.$file.' loaded');
 				break;
 			}
 		}
