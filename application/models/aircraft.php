@@ -53,63 +53,57 @@ class Aircraft extends PVA_Model
 	
 	$query = $this->db->get();
 	
-	$rows = $this->_get_objects($query);
-	
-	if($rows)
+	foreach ($query->result() as $row)
 	{
-	    foreach($rows as $row)
+	    $aircraft = new Aircraft();
+	    $aircraft->equip = $row->equip;
+	    $aircraft->find();
+
+	    // If aircraft not found then set default data
+	    if(is_null($aircraft->id))
 	    {
-		$aircraft = new Aircraft();
-		$aircraft->equip = $row->equip;
-		$aircraft->find();
-		
-		// If aircraft not found then set default data
-		if(is_null($aircraft->id))
-		{
-		    $aircraft->name	    = '';
-		    $aircraft->pax_first    = 0;
-		    $aircraft->pax_business = 0;
-		    $aircraft->pax_economy  = 0;
-		    $aircraft->max_cargo    = 0;
-		    $aircraft->max_range    = 0;
-		    $aircraft->oew	    = 0;
-		    $aircraft->mzfw	    = 0;
-		    $aircraft->mlw	    = 0;
-		    $aircraft->mtow	    = 0;
-		    $aircraft->total_pireps = 0;
-		    $aircraft->total_hours  = 0;
-		    $aircraft->total_distance = 0;
-		}
-		
-		// Find CAT based on equip
-		// check for a LIKE %equip% in
-		// sub table 
-		$subs = new Aircraft_sub();
-		$subs->equips = $aircraft->equip;
-		$sub = $subs->find_all(TRUE);
-		
-		// If sub row is not found set defaults
-		if(! $sub)
-		{
-		    $aircraft->aircraft_sub_id	= 0;
-		    $aircraft->category		= 0;
-		}
-		// If sub is found set id and cat from sub
-		else
-		{
-		    $aircraft->aircraft_sub_id  = $sub[0]->id;
-		    $aircraft->category		= $sub[0]->category;
-		}
-		
-		// Set data gathered from schedule scan.
-		$aircraft->carrier_count = $row->carrier_count;
-		$aircraft->flight_count = $row->flight_count;
-		$aircraft->operator_count = $row->operator_count;
-		
-		$aircraft->save();
+		$aircraft->name	    = '';
+		$aircraft->pax_first    = 0;
+		$aircraft->pax_business = 0;
+		$aircraft->pax_economy  = 0;
+		$aircraft->max_cargo    = 0;
+		$aircraft->max_range    = 0;
+		$aircraft->oew	    = 0;
+		$aircraft->mzfw	    = 0;
+		$aircraft->mlw	    = 0;
+		$aircraft->mtow	    = 0;
+		$aircraft->total_pireps = 0;
+		$aircraft->total_hours  = 0;
+		$aircraft->total_distance = 0;
 	    }
-	}
-    
+
+	    // Find CAT based on equip
+	    // check for a LIKE %equip% in
+	    // sub table 
+	    $subs = new Aircraft_sub();
+	    $subs->equips = $aircraft->equip;
+	    $sub = $subs->find_all(TRUE);
+
+	    // If sub row is not found set defaults
+	    if(! $sub)
+	    {
+		$aircraft->aircraft_sub_id	= 0;
+		$aircraft->category		= 0;
+	    }
+	    // If sub is found set id and cat from sub
+	    else
+	    {
+		$aircraft->aircraft_sub_id  = $sub[0]->id;
+		$aircraft->category		= $sub[0]->category;
+	    }
+
+	    // Set data gathered from schedule scan.
+	    $aircraft->carrier_count = $row->carrier_count;
+	    $aircraft->flight_count = $row->flight_count;
+	    $aircraft->operator_count = $row->operator_count;
+
+	    $aircraft->save();
+	}    
     }
     
     function get_carrier_airlines()
