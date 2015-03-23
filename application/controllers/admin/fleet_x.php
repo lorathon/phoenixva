@@ -47,7 +47,8 @@ class Fleet_x extends PVA_Controller
 	$obj->create_equip();
 	
 	$this->_alert_message('success', 'Aircraft Fleet Built');
-        $this->index();
+	
+	$this->_render('fleet');
     }
     
     public function create_aircraft()

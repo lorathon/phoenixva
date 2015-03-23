@@ -54,18 +54,14 @@ class Fleet extends PVA_Controller
 	{
 	    $this->data['flights'] = array();
 	}
+	elseif($tab == 'main')
+	{
+	    $this->data['airlines'] = array();
+	    $this->data['airlines'] = $aircraft->get_carrier_airlines();
+	}
 	else
 	{
-	    $sched = new Schedule();
-	    $sched->equip = $aircraft->equip;
-	    $flights = $sched->find_all();
-	    
-	    if($flights)
-	    {
-		
-	    }
-	    
-	    $this->data['airlines'] = array();
+	    $this->data['airlines'] = $aircraft->get_operator_airlines();
 	}
 	
 	$this->data['title'] = $aircraft->equip . ' - ' . $aircraft->name;

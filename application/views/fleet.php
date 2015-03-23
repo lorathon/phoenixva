@@ -103,6 +103,34 @@ $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
 	    <?php else : ?>
 	    <!-- Start: Airlines Table (main and regional) -->
 	    
+	    <div class="table-responsive">
+		<table class="table table-hover mb-none">
+		    <thead>
+			<tr>
+			    <th>IATA</th>
+			    <th>ICAO</th>
+			    <th>Name</th>
+			    <th>Category</th>
+			</tr>
+		    </thead>
+		    <tbody>
+			<?php if($airlines) : ?>
+			<?php foreach ($airlines as $row): ?>
+			    <tr>
+				<td><?php echo $row->iata; ?></td>
+				<td><?php echo $row->icao; ?></td>
+				<td><?php echo $row->name; ?></td>
+				<td><?php echo $row->category; ?></td>
+			    </tr>
+			<?php endforeach; ?>
+			<?php else : ?>
+			    <tr>
+				<td colspan="5">There are no airlines in this category.</td>
+			    </tr>
+			<?php endif; ?>
+		    </tbody>
+		</table>
+	    </div>	    
 	    
 	    <!-- End: Airline Table -->
 	    <?php endif; ?>

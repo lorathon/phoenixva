@@ -24,7 +24,11 @@ class Aircraft extends PVA_Model
     
     protected $_aircraft_sub	= NULL;
     
-    private $_schedules_table = 'schedules';
+    private $_schedule_table	= 'schedules';
+    private $_airline_table	= 'airlines';
+    
+    private $_carrier_airlines	= NULL;
+    private $_operator_airlines	= NULL;
     
     public function __construct($id = NULL)
     {
@@ -44,7 +48,7 @@ class Aircraft extends PVA_Model
 		->select('COUNT(DISTINCT `carrier`) as carrier_count')
 		->select('COUNT(DISTINCT `operator`) as operator_count')
 		->select('COUNT(`id`) as flight_count')
-		->from($this->_schedules_table)
+		->from($this->_schedule_table)
 		->group_by('equip');
 	
 	$query = $this->db->get();
@@ -106,6 +110,44 @@ class Aircraft extends PVA_Model
 	    }
 	}
     
+    }
+    
+    function get_carrier_airlines()
+    {
+	if( is_null($this->_carrier_airlines))
+	{
+	    $this->db->select('airlines.*')
+		    ->from($this->_schedule_table)
+		    ->join($this->_airline_table, 'schedules.carrier = airlines.fs')
+		    ->where('schedules.equip', $this->equip)
+		    ->group_by('carrier');
+		    
+            $query = $this->db->get();
+	    
+	    $this->_object_name = 'Airline';
+	    $this->_carrier_airlines = $this->_get_objects($query);
+	}
+	
+	return $this->_carrier_airlines;
+    }
+    
+    function get_operator_airlines()
+    {
+	if( is_null($this->_operator_airlines))
+	{
+	    $this->db->select('airlines.*')
+		    ->from($this->_schedule_table)
+		    ->join($this->_airline_table, 'schedules.operator = airlines.fs')
+		    ->where('schedules.equip', $this->equip)
+		    ->group_by('operator');
+		    
+            $query = $this->db->get();
+	    
+	    $this->_object_name = 'Airline';
+	    $this->_operator_airlines = $this->_get_objects($query);
+	}
+	
+	return $this->_operator_airlines;
     }
 }
 
