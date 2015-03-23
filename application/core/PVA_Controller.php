@@ -153,6 +153,35 @@ class PVA_Controller extends CI_Controller {
 			redirect('/auth/unauth/');
 		}
 	}
+	
+	/**
+	 * Gets the notes for the provided entity type and ID.
+	 * 
+	 * @param string $type the entity type (e.g. 'user', 'article', etc.)
+	 * @param number $id the ID of the entity
+	 * @param boolean $private TRUE if private notes should be returned
+	 * @return array of note objects
+	 */
+	protected function _get_notes($type, $id, $private = FALSE)
+	{
+		$out = array();
+		$note_model = new Note();
+		$note_model->entity_type = $type;
+		$note_model->entity_id = $id;
+		$note_model->private_note = $private;
+		$notes = $note_model->get_notes();
+		if ($notes)
+		{
+			$this->load->helper('html');
+			foreach ($notes as $note)
+			{
+				$note_user = $note->get_user();
+				$note->name = pva_id($note_user->id) . ' ' . $note_user->name;
+				$out[] = $note;
+			}
+		}
+		return $out;
+	}
 
 	/**
 	 * Renders HTML views as part of overall template
