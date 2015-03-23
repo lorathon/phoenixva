@@ -45,7 +45,7 @@ class Flightstatsapt extends PVA_Controller
 		foreach($data['airports'] as $stat => $value) {
 	
 			// first get classification number
-			$classification   = isset($value['classification']) ? $value['classification'] : '';
+			$classification   = isset($value['classification']) ? $value['classification'] : NULL;
 			
 			
 			
@@ -53,9 +53,9 @@ class Flightstatsapt extends PVA_Controller
 			if($classification <= $class)
 			{
 				// get data
-				$fs               = isset($value['fs']) ? $value['fs'] : '';
-				$iata             = isset($value['iata']) ? $value['iata'] : '';
-				$icao             = isset($value['icao']) ? $value['icao'] : '';
+				$fs               = isset($value['fs']) ? $value['fs'] : NULL;
+				$iata             = isset($value['iata']) ? $value['iata'] : NULL;
+				$icao             = isset($value['icao']) ? $value['icao'] : NULL;
 				
 				/**
 				 * Reduce Airport Names (case insenstive):
@@ -68,21 +68,21 @@ class Flightstatsapt extends PVA_Controller
 				 *
 				 */
 				
-				$name             = isset($value['name']) ? $value['name'] : '';
+				$name             = isset($value['name']) ? $value['name'] : NULL;
 				$old_name         = array("International Airport", "Internacional Airport", "International", "Intl Airport", "Regional Airport");
 				$new_name         = array("Intl", "Intl", "Intl", "Intl", "Regional");
 				$name = str_ireplace($old_name, $new_name, $name);
 				
 				
-				$city             = isset($value['city']) ? $value['city'] : '';
-				$state_code       = isset($value['stateCode']) ? $value['stateCode'] : '';
-				$country_code     = isset($value['countryCode']) ? $value['countryCode'] : '';
-				$country_name     = isset($value['countryName']) ? $value['countryName'] : '';
-				$region_name      = isset($value['regionName']) ? $value['regionName'] : '';
-				$utc_offset       = isset($value['utcOffsetHours']) ? $value['utcOffsetHours'] : '';
-				$lat              = isset($value['latitude']) ? $value['latitude'] : '';
-				$long             = isset($value['longitude']) ? $value['longitude'] : '';
-				$elevation        = isset($value['elevationFeet']) ? $value['elevationFeet'] : '';
+				$city             = isset($value['city']) ? $value['city'] : NULL;
+				$state_code       = isset($value['stateCode']) ? $value['stateCode'] : NULL;
+				$country_code     = isset($value['countryCode']) ? $value['countryCode'] : NULL;
+				$country_name     = isset($value['countryName']) ? $value['countryName'] : NULL;
+				$region_name      = isset($value['regionName']) ? $value['regionName'] : NULL;
+				$utc_offset       = isset($value['utcOffsetHours']) ? $value['utcOffsetHours'] : NULL;
+				$lat              = isset($value['latitude']) ? $value['latitude'] : NULL;
+				$long             = isset($value['longitude']) ? $value['longitude'] : NULL;
+				$elevation        = isset($value['elevationFeet']) ? $value['elevationFeet'] : NULL;
 				
 				// set elevation to 0 if showing a negative number or null
 				if ($elevation < 0 || $elevation == null)
@@ -144,8 +144,8 @@ class Flightstatsapt extends PVA_Controller
 		
 				
 				
-				$delay_url        = isset($value['delayIndexUrl']) ? $value['delayIndexUrl'] : '';
-				$weather_url      = isset($value['weatherUrl']) ? $value['weatherUrl'] : '';
+				$delay_url        = isset($value['delayIndexUrl']) ? $value['delayIndexUrl'] : NULL;
+				$weather_url      = isset($value['weatherUrl']) ? $value['weatherUrl'] : NULL;
 				
 				
 				// begin save to DB

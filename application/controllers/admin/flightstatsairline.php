@@ -32,12 +32,12 @@ class Flightstatsairline extends PVA_Controller
 		
 		foreach($data['airlines'] as $stat => $value) {
 					
-			$fs = isset($value['fs']) ? $value['fs'] : '';
-			$iata = isset($value['iata']) ? $value['iata'] : '';
-			$icao = isset($value['icao']) ? $value['icao'] : '';
-			$name = isset($value['name']) ? $value['name'] : '';
+			$fs = isset($value['fs']) ? $value['fs'] : NULL;
+			$iata = isset($value['iata']) ? $value['iata'] : NULL;
+			$icao = isset($value['icao']) ? $value['icao'] : NULL;
+			$name = isset($value['name']) ? $value['name'] : NULL;
 			$active = 1;
-			$category = isset($value['category']) ? $value['category'] : '';
+			$category = isset($value['category']) ? $value['category'] : NULL;
 			
 			
 			// begin save to DB

@@ -52,7 +52,7 @@ class Flightstatsschedules extends PVA_Controller
 				
 				if($equip == "") {$equip = $actualEquip;}
 				
-				$carrier = isset($value['carrierFsCode']) ? $value['carrierFsCode'] : '';				  
+				$carrier = isset($value['carrierFsCode']) ? $value['carrierFsCode'] : NULL;				  
 			  	
 				
 				/**
@@ -98,52 +98,52 @@ class Flightstatsschedules extends PVA_Controller
 				  
 				  
 			  	// get flight id, number and type (passenger/cargo)
-			  	$flightId = isset($value['flightId']) ? $value['flightId'] : '';
-			  	$flightNumber = isset($value['flightNumber']) ? $value['flightNumber'] : '';
-			  	$flightType = isset($value['schedule']['flightType']) ? $value['schedule']['flightType'] : '';
+			  	$flightId = isset($value['flightId']) ? $value['flightId'] : NULL;
+			  	$flightNumber = isset($value['flightNumber']) ? $value['flightNumber'] : NULL;
+			  	$flightType = isset($value['schedule']['flightType']) ? $value['schedule']['flightType'] : NULL;
 			  
 			  
 			  
 			  	// departure and arrival airports
-			  	$depAirport = isset($value['departureAirportFsCode']) ? $value['departureAirportFsCode'] : '';
-			  	$arrAirport = isset($value['arrivalAirportFsCode']) ? $value['arrivalAirportFsCode'] : '';
+			  	$depAirport = isset($value['departureAirportFsCode']) ? $value['departureAirportFsCode'] : NULL;
+			  	$arrAirport = isset($value['arrivalAirportFsCode']) ? $value['arrivalAirportFsCode'] : NULL;
 			  
 			  
 			  
 			  	// departure time local
-			  	$deplocal1 = isset($value['departureDate']['dateLocal']) ? $value['departureDate']['dateLocal'] : '';
+			  	$deplocal1 = isset($value['departureDate']['dateLocal']) ? $value['departureDate']['dateLocal'] : NULL;
 			  	$deplocal = strtotime($deplocal1);
 			  	$depTimeLocal = date("H:i", $deplocal);
 			  
 			  
 			  
 		  		// departure time UTC
-			  	$deputc1 = isset($value['departureDate']['dateUtc']) ? $value['departureDate']['dateUtc'] : '';
+			  	$deputc1 = isset($value['departureDate']['dateUtc']) ? $value['departureDate']['dateUtc'] : NULL;
 			  	$deputc = strtotime(rtrim($deputc1, "Z"));
 			  	$depTimeUtc = date("H:i", $deputc);
 			  
 			  
 			  
 			  	// arrival time local
-			  	$arrlocal1 = isset($value['arrivalDate']['dateLocal']) ? $value['arrivalDate']['dateLocal'] : '';
+			  	$arrlocal1 = isset($value['arrivalDate']['dateLocal']) ? $value['arrivalDate']['dateLocal'] : NULL;
 			  	$arrlocal = strtotime($arrlocal1);
 			  	$arrTimeLocal = date("H:i", $arrlocal);
 			  
 			  
 			  
 			  	// arrival time UTC
-			  	$arrutc1 = isset($value['arrivalDate']['dateUtc']) ? $value['arrivalDate']['dateUtc'] : '';
+			  	$arrutc1 = isset($value['arrivalDate']['dateUtc']) ? $value['arrivalDate']['dateUtc'] : NULL;
 			  	$arrutc = strtotime(rtrim($arrutc1, "Z"));
 			  	$arrTimeUtc = date("H:i", $arrutc);
 			
 			  
 			  
 			  	// total flight time
-			  	$flightMinutes = isset($value['flightDurations']['scheduledBlockMinutes']) ? $value['flightDurations']['scheduledBlockMinutes'] : '';
+			  	$flightMinutes = isset($value['flightDurations']['scheduledBlockMinutes']) ? $value['flightDurations']['scheduledBlockMinutes'] : NULL;
 			  	
 			  	if($flightMinutes == "") 
 			  	{
-			  		$flightMinutes = isset($value['flightDurations']['scheduledAirMinutes']) ? $value['flightDurations']['scheduledAirMinutes'] : '';
+			  		$flightMinutes = isset($value['flightDurations']['scheduledAirMinutes']) ? $value['flightDurations']['scheduledAirMinutes'] : NULL;
 			  	}
 			  		$hours = intval($flightMinutes/60);
 					$minutes = sprintf("%02d", ($flightMinutes - ($hours * 60)));		
@@ -152,7 +152,7 @@ class Flightstatsschedules extends PVA_Controller
 			  
 			  
 			  	// taxi out minutes  
-			  	$taxiOutMinutes = isset($value['flightDurations']['scheduledTaxiOutMinutes']) ? $value['flightDurations']['scheduledTaxiOutMinutes'] : '';
+			  	$taxiOutMinutes = isset($value['flightDurations']['scheduledTaxiOutMinutes']) ? $value['flightDurations']['scheduledTaxiOutMinutes'] : NULL;
 			  		$to_hours = intval($taxiOutMinutes/60);
 					$to_minutes = sprintf("%02d", ($taxiOutMinutes - ($to_hours * 60)));		
 			  	$taxiOutTime = "$to_hours:$to_minutes";
@@ -160,7 +160,7 @@ class Flightstatsschedules extends PVA_Controller
 			  
 			  
 			  	// air time  
-				$airMinutes = isset($value['flightDurations']['scheduledAirMinutes']) ? $value['flightDurations']['scheduledAirMinutes'] : '';
+				$airMinutes = isset($value['flightDurations']['scheduledAirMinutes']) ? $value['flightDurations']['scheduledAirMinutes'] : NULL;
 			  		$at_hours = intval($airMinutes/60);
 					$at_minutes = sprintf("%02d", ($airMinutes - ($at_hours * 60)));		
 			  	$airTime = "$at_hours:$at_minutes";
@@ -168,7 +168,7 @@ class Flightstatsschedules extends PVA_Controller
 			  
 			  
 			  	// taxi in minutes
-			  	$taxiInMinutes = isset($value['flightDurations']['scheduledTaxiInMinutes']) ? $value['flightDurations']['scheduledTaxiInMinutes'] : '';
+			  	$taxiInMinutes = isset($value['flightDurations']['scheduledTaxiInMinutes']) ? $value['flightDurations']['scheduledTaxiInMinutes'] : NULL;
 			  		$ti_hours = intval($taxiInMinutes/60);
 					$ti_minutes = sprintf("%02d", ($taxiInMinutes - ($ti_hours * 60)));		
 			  	$taxiInTime = "$ti_hours:$ti_minutes";
@@ -176,17 +176,17 @@ class Flightstatsschedules extends PVA_Controller
 			  
 			  
 			  	// departure and arrival gates
-			  	$depTerminal = isset($value['airportResources']['departureTerminal']) ? $value['airportResources']['departureTerminal'] : '';
-			  	$depGate = isset($value['airportResources']['departureGate']) ? $value['airportResources']['departureGate'] : '';
-			  	$arrTerminal = isset($value['airportResources']['arrivalTerminal']) ? $value['airportResources']['arrivalTerminal'] : '';
-			  	$arrGate = isset($value['airportResources']['arrivalGate']) ? $value['airportResources']['arrivalGate'] : '';
+			  	$depTerminal = isset($value['airportResources']['departureTerminal']) ? $value['airportResources']['departureTerminal'] : NULL;
+			  	$depGate = isset($value['airportResources']['departureGate']) ? $value['airportResources']['departureGate'] : NULL;
+			  	$arrTerminal = isset($value['airportResources']['arrivalTerminal']) ? $value['airportResources']['arrivalTerminal'] : NULL;
+			  	$arrGate = isset($value['airportResources']['arrivalGate']) ? $value['airportResources']['arrivalGate'] : NULL;
 			  
 			  
 			  
 			  	// get equipment and tail number for flight.
 			  	//$equip = isset($value['flightEquipment']['scheduledEquipmentIataCode']) ? $value['flightEquipment']['scheduledEquipmentIataCode'] : '';
 			  	//$actualEquip = isset($value['flightEquipment']['actualEquipmentIataCode']) ? $value['flightEquipment']['actualEquipmentIataCode'] : '';
-			  	$tailNumber = isset($value['flightEquipment']['tailNumber']) ? $value['flightEquipment']['tailNumber'] : '';
+			  	$tailNumber = isset($value['flightEquipment']['tailNumber']) ? $value['flightEquipment']['tailNumber'] : NULL;
 				
 			  	
 			  	
@@ -204,8 +204,8 @@ class Flightstatsschedules extends PVA_Controller
 			  	 * 
 			  	 */
 			    
-			  	$downlineapt        = "";
-			  	$downlineflightid   = "";
+			  	$downlineapt        = NULL;
+			  	$downlineflightid   = NULL;
 			  	
 			  	// check if downlines are present in this flight
 			  	if(isset($value['schedule']['downlines']))
@@ -225,7 +225,7 @@ class Flightstatsschedules extends PVA_Controller
 			  	
 
 			  	// if no scheduled equipment listed, use actual equipment
-			  	if($equip == "") 
+			  	if($equip == "" || $equip == NULL) 
 			  	{
 			  		$equip = $actualEquip;
 			  	}
