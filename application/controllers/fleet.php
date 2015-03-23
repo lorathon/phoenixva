@@ -53,6 +53,9 @@ class Fleet extends PVA_Controller
 	elseif($tab == 'flights')
 	{
 	    $this->data['flights'] = array();
+	    $sched = new Schedule();
+	    $sched->equip = $aircraft->equip;
+	    $this->data['flights'] = $sched->find_all();
 	}
 	elseif($tab == 'main')
 	{

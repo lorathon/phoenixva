@@ -98,6 +98,36 @@ $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
 	    <?php if(isset($flights)) : ?>
 	    <!-- Start: Flights Table (pireps and flights) -->
 	    
+	    <div class="table-responsive">
+		<table class="table table-hover mb-none">
+		    <thead>
+			<tr>
+			    <th>Carrier</th>
+			    <th>Operator</th>
+			    <th>Flight Number</th>
+			    <th>Dep IATA</th>
+			    <th>Arr IATA</th>
+			</tr>
+		    </thead>
+		    <tbody>
+			<?php if($flights) : ?>
+			<?php foreach ($flights as $row): ?>
+			    <tr>
+				<td><?php echo $row->carrier; ?></td>
+				<td><?php echo $row->operator; ?></td>
+				<td><?php echo $row->flight_num; ?></td>
+				<td><?php echo $row->dep_airport; ?></td>
+				<td><?php echo $row->arr_airport; ?></td>
+			    </tr>
+			<?php endforeach; ?>
+			<?php else : ?>
+			    <tr>
+				<td colspan="5">There are no records in this category.</td>
+			    </tr>
+			<?php endif; ?>
+		    </tbody>
+		</table>
+	    </div>	    	    
 	    
 	    <!-- End: Flight Table -->
 	    <?php else : ?>
