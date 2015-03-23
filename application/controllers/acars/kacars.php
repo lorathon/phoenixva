@@ -21,10 +21,10 @@ class Kacars extends Acars_Base
 			// Authenticate
 			
 			// Parse message from ACARS client format to PVA system format
-			$message = '';
+			$message = 'hello=world';
 			
 			// Dispatch to appropriate handler
-			$this->dispatch($message);
+			$this->dispatch($message, '/cjtop/acars/test_processor');
 			log_message('debug', 'Returning to client');
 			
 			// Respond to the ACARS client

@@ -25,41 +25,39 @@ class Acars_Base extends CI_Controller {
 		spl_autoload_register(array('Acars_Base','_autoload'));
 	}
 	
-	protected function dispatch($message)
+	/**
+	 * Dispatches asynchronous request
+	 * 
+	 * @param string $post_data to send
+	 * @param string $post_to is the script to send the data to
+	 * @param string $host is the host machine to connect to (defaults to current site)
+	 * @param string $port is the port to connect on (defaults to 80)
+	 */ 
+	protected function dispatch($post_data, $post_to, $host = NULL, $port = '80')
 	{
 		log_message('debug','Dispatching message');
 		$timeout = 2;
-		$this->load->helper('url');
-		$host = 'dev.phoenixva.org';
+		if (is_null($host)) $host = $this->input->server('HTTP_HOST');
 		
-		// CSRF
-		$stream = stream_socket_client("{$host}:80", $errno, $errstr, $timeout,
+		$stream = stream_socket_client("{$host}:{$port}", $errno, $errstr, $timeout,
 				STREAM_CLIENT_ASYNC_CONNECT|STREAM_CLIENT_CONNECT);
 		if ($stream)
 		{
 			log_message('debug', 'Stream connected');
-			$post_data = $this->security->get_csrf_token_name().'='.$this->security->get_csrf_hash();
-			$post_data .= '&'.$message;
 			$length = strlen($post_data);
+			log_message('debug', '---------- POSTING TO ---------');
+			log_message('debug', "{$host}:{$port}/{$post_to}");
 			log_message('debug', '---------- POST MESSAGE ----------');
 			log_message('debug', $post_data);
-			log_message('debug', '---------- END POST MESSAGE ----------');
+			log_message('debug', '---------- END POST ----------');
 				
-			fwrite($stream, "POST /cjtop/acars/processor HTTP/1.1\r\n");
+			fwrite($stream, "POST {$post_to} HTTP/1.1\r\n");
 			fwrite($stream, "Host: {$host}\r\n");
 			fwrite($stream, "Content-type: application/x-www-form-urlencoded\r\n");
 			fwrite($stream, "Content-length: {$length}\r\n");
 			fwrite($stream, "Accept: */*\r\n");
 			fwrite($stream, "\r\n");
-			fwrite($stream, $post_data);
-			
-			/* For testing only
-			while (!feof($stream))
-			{
-				log_message('debug', fgets($stream, 1024));
-			}
-			fclose($stream);
-			*/
+			fwrite($stream, $post_data);			
 		}
 		log_message('debug', 'Message dispatching complete');
 	}
