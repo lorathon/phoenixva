@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Aircraft_sub extends PVA_model
+class Aircraft_sub extends PVA_Model
 {    
     public $designation		= NULL;
     public $manufacturer	= NULL;
