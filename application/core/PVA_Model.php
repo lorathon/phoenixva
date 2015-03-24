@@ -12,7 +12,7 @@ class PVA_Model extends CI_Model
 {
     protected $_table_name      = '';
     protected $_object_name     = '';
-    protected $_primary_key     = 'id';
+    public    $_primary_key     = 'id';
     protected $_primary_filter  = 'intval';
     protected $_order_by        = NULL;
     public $_rules              = array();
@@ -246,11 +246,18 @@ class PVA_Model extends CI_Model
             $this->db->insert($this->_table_name,$this);
             $this->id = $this->db->insert_id();
         }
+        // If the primary key is not ID
+        elseif ($this->_primary_key != 'id')
+        {
+            // Update if pkey is passed
+            $this->db->where($this->_primary_key, $this->_pkey_value);
+            $this->db->update($this->_table_name, $this->_prep_data());            
+        }
         else
         {
             // Update if id is passed
-            $this->db->where($this->_primary_key, $this->_primary_key);
-            $this->db->update($this->_table_name, $this->_prep_data());            
+            $this->db->where($this->_primary_key, $this->id);
+            $this->db->update($this->_table_name, $this->_prep_data());
         }
     }
         
