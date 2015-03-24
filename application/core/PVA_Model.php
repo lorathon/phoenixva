@@ -226,7 +226,7 @@ class PVA_Model extends CI_Model
         {
             // If TRUE create timestamps
             $now = date('Y-m-d H:i:s');
-            if (is_null($this->_primary_key))
+            if (is_null($this->_primary_key) || $this->_primary_key == '')
             {
             	$this->created = $now;
             }
