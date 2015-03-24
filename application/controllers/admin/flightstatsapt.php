@@ -4,6 +4,7 @@ class Flightstatsapt extends PVA_Controller
 {
 	protected $_table_name = 'airports';
 	protected $_order_by = 'fs';
+        protected $_primary_key = 'fs';
 
 	public function __construct()
 	{
@@ -30,10 +31,18 @@ class Flightstatsapt extends PVA_Controller
 	 * @author Dustin
 	 */
 	
-	function getactive($class)
+	function getactive()
 	{
-	
-		$json = file_get_contents("https://api.flightstats.com/flex/airports/rest/v1/json/active?appId=f48100ea&appKey=217ebf7797870e89ad05a5a69e4f4bf6");
+            
+                echo "Processing...";
+                echo "<br />";
+                
+                // required from Post
+                $appid = $this->input->post('appid');
+                $appkey = $this->input->post('appkey');
+                $class = $this->input->post('class');
+                
+		$json = file_get_contents("https://api.flightstats.com/flex/airports/rest/v1/json/active?appId=$appid&appKey=$appkey");
 	
 		$data = json_decode($json, true);
 		
@@ -41,11 +50,17 @@ class Flightstatsapt extends PVA_Controller
 		$counter = 0;
 		$seaports = 0;
 		$heliports = 0;
+                
+                // mark all airports as inactive
+                $aptdata = array('active' => 0);
+                $this->db->update('airports', $aptdata);
 		
+                
+                 
 		foreach($data['airports'] as $stat => $value) {
 	
 			// first get classification number
-			$classification   = isset($value['classification']) ? $value['classification'] : '';
+			$classification   = isset($value['classification']) ? $value['classification'] : NULL;
 			
 			
 			
@@ -53,36 +68,36 @@ class Flightstatsapt extends PVA_Controller
 			if($classification <= $class)
 			{
 				// get data
-				$fs               = isset($value['fs']) ? $value['fs'] : '';
-				$iata             = isset($value['iata']) ? $value['iata'] : '';
-				$icao             = isset($value['icao']) ? $value['icao'] : '';
+				$fs               = isset($value['fs']) ? $value['fs'] : NULL;
+				$iata             = isset($value['iata']) ? $value['iata'] : NULL;
+				$icao             = isset($value['icao']) ? $value['icao'] : NULL;
 				
 				/**
 				 * Reduce Airport Names (case insenstive):
 				 *
 				 * International Airport 	-> 	Intl
 				 * Internacional Airport	->	Intl
-				 * International 			->	Intl
-				 * Intl Airport			    ->	Intl
+				 * International                ->	Intl
+				 * Intl Airport			->	Intl
 				 * Regional Airport 		->	Regional
 				 *
 				 */
 				
-				$name             = isset($value['name']) ? $value['name'] : '';
+				$name             = isset($value['name']) ? $value['name'] : NULL;
 				$old_name         = array("International Airport", "Internacional Airport", "International", "Intl Airport", "Regional Airport");
 				$new_name         = array("Intl", "Intl", "Intl", "Intl", "Regional");
 				$name = str_ireplace($old_name, $new_name, $name);
 				
 				
-				$city             = isset($value['city']) ? $value['city'] : '';
-				$state_code       = isset($value['stateCode']) ? $value['stateCode'] : '';
-				$country_code     = isset($value['countryCode']) ? $value['countryCode'] : '';
-				$country_name     = isset($value['countryName']) ? $value['countryName'] : '';
-				$region_name      = isset($value['regionName']) ? $value['regionName'] : '';
-				$utc_offset       = isset($value['utcOffsetHours']) ? $value['utcOffsetHours'] : '';
-				$lat              = isset($value['latitude']) ? $value['latitude'] : '';
-				$long             = isset($value['longitude']) ? $value['longitude'] : '';
-				$elevation        = isset($value['elevationFeet']) ? $value['elevationFeet'] : '';
+				$city             = isset($value['city']) ? $value['city'] : NULL;
+				$state_code       = isset($value['stateCode']) ? $value['stateCode'] : NULL;
+				$country_code     = isset($value['countryCode']) ? $value["countryCode"] : NULL;
+				$country_name     = isset($value['countryName']) ? $value['countryName'] : NULL;
+				$region_name      = isset($value['regionName']) ? $value['regionName'] : NULL;
+				$utc_offset       = isset($value['utcOffsetHours']) ? $value['utcOffsetHours'] : NULL;
+				$lat              = isset($value['latitude']) ? $value['latitude'] : NULL;
+				$long             = isset($value['longitude']) ? $value['longitude'] : NULL;
+				$elevation        = isset($value['elevationFeet']) ? $value['elevationFeet'] : NULL;
 				
 				// set elevation to 0 if showing a negative number or null
 				if ($elevation < 0 || $elevation == null)
@@ -144,11 +159,11 @@ class Flightstatsapt extends PVA_Controller
 		
 				
 				
-				$delay_url        = isset($value['delayIndexUrl']) ? $value['delayIndexUrl'] : '';
-				$weather_url      = isset($value['weatherUrl']) ? $value['weatherUrl'] : '';
+				$delay_url        = isset($value['delayIndexUrl']) ? $value['delayIndexUrl'] : NULL;
+				$weather_url      = isset($value['weatherUrl']) ? $value['weatherUrl'] : NULL;
 				
 				
-				// begin save to DB
+				// begin save to DB - array('fs' => $fs)
 				set_time_limit(15);
 				$airport_obj = new Airport();
 				
@@ -182,11 +197,11 @@ class Flightstatsapt extends PVA_Controller
 				}
 			}
 			// end if classification check, go back to beginning of loop
-			
+                        
 		}
 		// end foreach
 		
-		echo "$counter records added to airports table. Including $seaports seaports and $heliports heliports.";
+		echo "$counter airports now active, including $seaports seaports and $heliports heliports.";
 	}
 	// end getactive function
 	
@@ -214,13 +229,16 @@ class Flightstatsapt extends PVA_Controller
 	 * @author Dustin
 	 */
 	
-	function writeJsonApt ($class)
+	function writeJsonApt ()
 	{
 		header('Content-Type: application/json');
 	
 		$linklist=array();
 		$link=array();
 		
+                // required from Post
+                $class = $this->input->post('class');
+                
 		// get airports in class at or below $class parameter, sets up order for putting into JSON file.
 		$this->db->from('airports')->where('classification <=', $class)->order_by('classification ASC, fs ASC');
 		$query = $this->db->get();

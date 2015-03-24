@@ -234,7 +234,7 @@
 										</a>
 										<ul class="nav nav-children">
 											<li>
-												<?php echo anchor('admin/managedata','Flightstats Data'); ?>
+												<?php echo anchor('admin/flightstats','Flightstats Data'); ?>
 											</li>
                                                                                         <li>
                                                                                                 <?php echo anchor('admin/settings/general','General Settings'); ?>

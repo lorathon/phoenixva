@@ -23,25 +23,35 @@ class Flightstatsairline extends PVA_Controller
 
 	function getactive()
 	{
-	
-		$json = file_get_contents("https://api.flightstats.com/flex/airlines/rest/v1/json/active?appId=f48100ea&appKey=217ebf7797870e89ad05a5a69e4f4bf6&extendedOptions=includeNewFields");
+                echo "Processing...";
+                echo "<br />";
+                
+                // required from Post
+                $appid = $this->input->post('appid');
+                $appkey = $this->input->post('appkey');
+                
+		$json = file_get_contents("https://api.flightstats.com/flex/airlines/rest/v1/json/active?appId=$appid&appKey=$appkey&extendedOptions=includeNewFields");
 		
 		$data = json_decode($json, true);
 		
 		$counter = 0;
+                
+                // mark all airports as inactive (except PVA*)
+                $airdata = array('active' => 0);
+                $this->db->where_not_in('fs', 'PVA*')->update('airlines', $airdata);
 		
 		foreach($data['airlines'] as $stat => $value) {
 					
-			$fs = isset($value['fs']) ? $value['fs'] : '';
-			$iata = isset($value['iata']) ? $value['iata'] : '';
-			$icao = isset($value['icao']) ? $value['icao'] : '';
-			$name = isset($value['name']) ? $value['name'] : '';
+			$fs = isset($value['fs']) ? $value['fs'] : NULL;
+			$iata = isset($value['iata']) ? $value['iata'] : NULL;
+			$icao = isset($value['icao']) ? $value['icao'] : NULL;
+			$name = isset($value['name']) ? $value['name'] : NULL;
 			$active = 1;
-			$category = isset($value['category']) ? $value['category'] : '';
+			$category = isset($value['category']) ? $value['category'] : NULL;
 			
 			
 			// begin save to DB
-			$airline_obj = new Airline();
+			$airline_obj = new Airline(array('fs' => $fs));
 			  
 			$airline_obj->fs         		= $fs;
 			$airline_obj->iata       		= $iata;
@@ -63,7 +73,7 @@ class Flightstatsairline extends PVA_Controller
 		}
 		// end foreach
 	 
-	echo "$counter airlines added to the database.";
+	echo "$counter airlines now active in the database.";
 	 
 	}
 	// end getactive function
