@@ -357,7 +357,6 @@ class Migration_Install extends CI_Migration {
                 // Awards table
                 $this->dbforge->add_field(array(
                                 'id'            => $field_config['id_field'],
-                                'type'          => $field_config['status_field'],
                                 'award_type_id' => $field_config['fk_field'],
                                 'name'          => $field_config['input_field'],
                                 'description'   => $field_config['input_field'],
@@ -434,8 +433,8 @@ class Migration_Install extends CI_Migration {
 				'pax_first'	    => $field_config['altitude_field'],
 				'pax_business'	    => $field_config['altitude_field'],
 				'pax_economy'	    => $field_config['altitude_field'],
-				'cargo'		    => $field_config['counter_field'],
-				'range'		    => $field_config['altitude_field'],
+				'max_cargo'	    => $field_config['counter_field'],
+				'max_range'	    => $field_config['altitude_field'],
 				'oew'		    => $field_config['counter_field'],
 				'mzfw'		    => $field_config['counter_field'],
 				'mlw'		    => $field_config['counter_field'],
@@ -458,6 +457,7 @@ class Migration_Install extends CI_Migration {
                                 'equips'	=> $field_config['input_field'],
 				'hours_needed'	=> $field_config['status_field'],
 				'category'	=> $field_config['status_field'],
+				'rated'		=> $field_config['boolean_field'],
                             ));
                 $this->dbforge->add_key('id', TRUE);
                 $this->dbforge->create_table('aircraft_subs');
