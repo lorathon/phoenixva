@@ -226,7 +226,7 @@ class PVA_Model extends CI_Model
         {
             // If TRUE create timestamps
             $now = date('Y-m-d H:i:s');
-            if (is_null($this->_primary_key) || $this->_primary_key == '')
+            if (is_null($this->id) || $this->id == '')
             {
             	$this->created = $now;
             }
@@ -239,25 +239,18 @@ class PVA_Model extends CI_Model
          * JFK
          */
         // Insert or update
-        if (is_null($this->_primary_key) || $this->_primary_key == '')
+        if (is_null($this->id) || ($this->id == ''))
         {
             // Insert if id is NOT passed
             $this->id = NULL;  // ensure that id is NULL for insert
             $this->db->insert($this->_table_name,$this);
             $this->id = $this->db->insert_id();
         }
-        // If the primary key is not ID
-        elseif ($this->_primary_key != 'id')
-        {
-            // Update if pkey is passed
-            $this->db->where($this->_primary_key, $this->_pkey_value);
-            $this->db->update($this->_table_name, $this->_prep_data());            
-        }
         else
         {
             // Update if id is passed
             $this->db->where($this->_primary_key, $this->id);
-            $this->db->update($this->_table_name, $this->_prep_data());
+            $this->db->update($this->_table_name, $this->_prep_data());            
         }
     }
         
