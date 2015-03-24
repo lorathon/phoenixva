@@ -239,11 +239,11 @@ class PVA_Model extends CI_Model
          * JFK
          */
         // Insert or update
-        if (is_null($this->id) || ($this->id == ''))
+        if (is_null($this->id) || $this->id == '')
         {
             // Insert if id is NOT passed
             $this->id = NULL;  // ensure that id is NULL for insert
-            $this->db->insert($this->_table_name,$this);
+            $this->db->insert($this->_table_name, $this->_prep_data());
             $this->id = $this->db->insert_id();
         }
         else
