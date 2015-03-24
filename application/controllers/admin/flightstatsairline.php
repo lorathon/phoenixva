@@ -61,7 +61,7 @@ class Flightstatsairline extends PVA_Controller
 			$airline_obj->category   		= $category;
 			
 	
-			$airline_obj->save();
+			//$airline_obj->save();
 			  
 			$counter++;
 			  

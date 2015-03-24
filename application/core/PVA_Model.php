@@ -246,12 +246,6 @@ class PVA_Model extends CI_Model
             $this->db->insert($this->_table_name,$this);
             $this->id = $this->db->insert_id();
         }
-        elseif ($this->_primary_key != 'id')
-        {
-            // Update if id is passed
-            $this->db->where($this->_primary_key, $this->_pkey_value);
-            $this->db->update($this->_table_name, $this->_prep_data());            
-        }
         else
         {
             // Update if id is passed
