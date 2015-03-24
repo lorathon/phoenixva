@@ -54,7 +54,14 @@ class PVA_Model extends CI_Model
 				// Passing an array of column => values
 				foreach ($id as $field => $value)
 				{
-					$this->$field = $value;
+					if (substr($field,0,1) != '_')
+					{
+						$this->$field = $value;
+					}
+					else 
+					{
+						log_message('error', "Ignoring illegal property in {$this->_object_name} constructor: {$field}");
+					}
 				}
 			}
 			else
