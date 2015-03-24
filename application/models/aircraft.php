@@ -62,16 +62,16 @@ class Aircraft extends PVA_Model
 	    // If aircraft not found then set default data
 	    if(is_null($aircraft->id))
 	    {
-		$aircraft->name	    = '';
+		$aircraft->name		= '';
 		$aircraft->pax_first    = 0;
 		$aircraft->pax_business = 0;
 		$aircraft->pax_economy  = 0;
 		$aircraft->max_cargo    = 0;
 		$aircraft->max_range    = 0;
-		$aircraft->oew	    = 0;
-		$aircraft->mzfw	    = 0;
-		$aircraft->mlw	    = 0;
-		$aircraft->mtow	    = 0;
+		$aircraft->oew		= 0;
+		$aircraft->mzfw		= 0;
+		$aircraft->mlw		= 0;
+		$aircraft->mtow		= 0;
 		$aircraft->total_pireps = 0;
 		$aircraft->total_hours  = 0;
 		$aircraft->total_distance = 0;
@@ -93,55 +93,69 @@ class Aircraft extends PVA_Model
 	    // If sub is found set id and cat from sub
 	    else
 	    {
-		$aircraft->aircraft_sub_id  = $sub[0]->id;
+		$aircraft->aircraft_sub_id	= $sub[0]->id;
 		$aircraft->category		= $sub[0]->category;
 	    }
 
 	    // Set data gathered from schedule scan.
-	    $aircraft->carrier_count = $row->carrier_count;
-	    $aircraft->flight_count = $row->flight_count;
-	    $aircraft->operator_count = $row->operator_count;
+	    $aircraft->carrier_count	= $row->carrier_count;
+	    $aircraft->flight_count	= $row->flight_count;
+	    $aircraft->operator_count	= $row->operator_count;
 
 	    $aircraft->save();
 	}    
     }
     
-    function get_carrier_airlines()
+    /**
+     * Retrieve airlines basaed on boolean value
+     * 
+     * @param boolean $carrier carrier or operator airlines
+     * @return array of airline opjects
+     */
+    function get_airlines($carrier = TRUE)
     {
-	if( is_null($this->_carrier_airlines))
+	$obj = $this->_carrier_airlines;
+	if (! $carrier)
+	{
+	   $obj = $this->_operator_airlines; 
+	}
+	
+	if( is_null($obj))
 	{
 	    $this->db->select('airlines.*')
-		    ->from($this->_schedule_table)
-		    ->join($this->_airline_table, 'schedules.carrier = airlines.fs')
+		    ->from($this->_schedule_table)		    
 		    ->where('schedules.equip', $this->equip)
 		    ->group_by('carrier');
 		    
+	    if($carrier)
+	    {
+		// join to retrieve carrier airlines
+		$this->db->join($this->_airline_table, 'schedules.carrier = airlines.fs');
+	    }
+	    else
+	    {
+		// join to retrieve operator airlines
+		$this->db->join($this->_airline_table, 'schedules.operator = airlines.fs');
+	    }
+	    
             $query = $this->db->get();
 	    
 	    $this->_object_name = 'Airline';
-	    $this->_carrier_airlines = $this->_get_objects($query);
-	}
-	
-	return $this->_carrier_airlines;
-    }
-    
-    function get_operator_airlines()
-    {
-	if( is_null($this->_operator_airlines))
-	{
-	    $this->db->select('airlines.*')
-		    ->from($this->_schedule_table)
-		    ->join($this->_airline_table, 'schedules.operator = airlines.fs')
-		    ->where('schedules.equip', $this->equip)
-		    ->group_by('operator');
-		    
-            $query = $this->db->get();
+	    $obj = $this->_get_objects($query);
 	    
-	    $this->_object_name = 'Airline';
-	    $this->_operator_airlines = $this->_get_objects($query);
+	    if($carrier)
+	    {
+		// if carrier airlines retrieved then populate proper property
+		$this->_carrier_airlines = $obj;
+		return $this->_carrier_airlines;
+	    }
+	    else
+	    {
+		// if operator airlines retrieved then populate proper property
+		$this->_operator_airlines = $obj;
+		return $this->_operator_airlines;
+	    }
 	}
-	
-	return $this->_operator_airlines;
     }
 }
 

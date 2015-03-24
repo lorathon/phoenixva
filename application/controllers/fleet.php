@@ -60,11 +60,11 @@ class Fleet extends PVA_Controller
 	elseif($tab == 'main')
 	{
 	    $this->data['airlines'] = array();
-	    $this->data['airlines'] = $aircraft->get_carrier_airlines();
+	    $this->data['airlines'] = $aircraft->get_airlines();
 	}
 	else
 	{
-	    $this->data['airlines'] = $aircraft->get_operator_airlines();
+	    $this->data['airlines'] = $aircraft->get_airlines(FALSE);
 	}
 	
 	$this->data['title'] = $aircraft->equip . ' - ' . $aircraft->name;
