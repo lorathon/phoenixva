@@ -269,6 +269,7 @@ class Migration_Install extends CI_Migration {
 				'min_hours'  => $field_config['counter_field'],
 				'pay_rate'   => $field_config['money_field'],
 				'short'      => $field_config['short_input_field'],
+				'max_cat'   => $field_config['tiny_int'],
 		));
 		$this->dbforge->add_key('id', TRUE);
 		$this->dbforge->create_table('ranks');

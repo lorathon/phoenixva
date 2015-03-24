@@ -37,6 +37,7 @@ class Ranks extends PVA_Controller
 	    $this->data['rank'] = $rank;
 	    $this->data['users'] = $rank->get_users();
 	    $this->data['img_folders'] = config_item('img_folders');
+	    $this->data['aircraft_cat'] = $this->config->item('aircraft_cat');
 	    $this->session->set_flashdata('return_url','/ranks/'.$id);
 	    $this->_render();
 	}
@@ -71,6 +72,9 @@ class Ranks extends PVA_Controller
         $this->form_validation->set_rules('min_hours', 'Min Hours', 'integer|trim|required|xss_clean');
         $this->form_validation->set_rules('pay_rate', 'Pay Rate', 'decimal|trim|required|xss_clean');
         $this->form_validation->set_rules('short', 'Short', 'alpha-numeric|trim|required|xss_clean|strtoupper');
+	$this->form_validation->set_rules('max_cat', 'Max Category', 'integer|trim|required|xss_clean');
+	
+	$this->data['aircraft_cat'] = $this->config->item('aircraft_cat');
                 
         if ($this->form_validation->run() == FALSE)
 	{             
@@ -87,9 +91,11 @@ class Ranks extends PVA_Controller
             $rank->min_hours    = $this->form_validation->set_value('min_hours');
             $rank->pay_rate     = $this->form_validation->set_value('pay_rate');
             $rank->short        = $this->form_validation->set_value('short');
+	    $rank->max_cat	= $this->form_validation->set_value('max_cat');
                 
             $rank->save();
 	    
+	    $this->load->helper('url');
 	    $this->_alert('Rank - Record Saved', 'success', TRUE);
 	    redirect($this->session->flashdata('return_url'));
 	}        

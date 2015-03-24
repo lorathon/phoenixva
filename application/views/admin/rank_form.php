@@ -52,6 +52,13 @@ $short = array(
     'class'         => $field_class,
 );
 
+$max_cat = array(
+    'name'	    => 'max_cat',
+    'id'	    => 'max_cat',
+    'value'	    => set_value('max_cat', $record->max_cat),
+    'class'         => $field_class,
+);
+
 ?>
 
 <div class="container">
@@ -90,7 +97,14 @@ $short = array(
                     <div class="form-group">
                         <?php echo form_label('Short', $short['id'], $label_attributes); ?>
                         <div class="col-md-6"><?php echo form_input($short); ?></div>
-                    </div>        
+                    </div>       
+		    
+		    <div class="form-group">
+                        <?php echo form_label('Max A/C Category', $max_cat['id'], $label_attributes); ?>
+                        <div class="col-md-6">
+			    <?php echo form_dropdown('max_cat', $aircraft_cat, $max_cat['value'], "class='{$field_class}'"); ?>
+			</div>
+                    </div>
 
                     <div class="form-group">
                         <div class="col-md-12">
