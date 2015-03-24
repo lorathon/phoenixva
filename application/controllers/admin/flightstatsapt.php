@@ -162,9 +162,20 @@ class Flightstatsapt extends PVA_Controller
 				$weather_url      = isset($value['weatherUrl']) ? $value['weatherUrl'] : NULL;
 				
 				
-				// begin save to DB - array('fs' => $fs)
+				// begin save to DB - array('fs' => $fs, '_primary_key' => 'fs', '_pkey_value' => $fs)
 				set_time_limit(15);
-				$airport_obj = new Airport(array('_primary_key' => 'fs', '_pkey_value' => $fs));
+                                
+                                $query =  $this->db->from('airports')->where('fs', $fs)->get();
+                                
+                                if ($query->num_rows() == 0)
+                                {
+                                    $airport_obj = new Airport();
+                                }
+                                else
+                                { 
+                                    $airport_obj = new Airport(array('fs' => $fs, '_primary_key' => 'fs', '_pkey_value' => $fs));
+                                }
+				
 				
 				$airport_obj->fs                = $fs;
 				$airport_obj->iata              = $iata;
@@ -186,7 +197,8 @@ class Flightstatsapt extends PVA_Controller
 				$airport_obj->delay_url         = $delay_url;
 				$airport_obj->weather_url       = $weather_url;
 				
-				$airport_obj->save();
+				//$airport_obj->save();
+                                 
 				$counter++;
 
 				// if saved, remove from memory
