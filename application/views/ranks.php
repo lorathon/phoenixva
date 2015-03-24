@@ -126,6 +126,10 @@ $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
 			    <td><?php echo $rank->pay_rate; ?></td>
 			</tr>
 			<tr>
+			    <td>Max A/C Category: </td>
+			    <td><?php echo $aircraft_cat[$rank->max_cat]; ?></td>
+			</tr>
+			<tr>
 			    <td colspan="2">
 				<?php
                                     $image_properties = array(

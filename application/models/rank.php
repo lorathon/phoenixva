@@ -8,6 +8,7 @@ class Rank extends PVA_Model {
 	public $min_hours  = NULL;
 	public $pay_rate   = NULL;
 	public $short      = NULL;
+	public $max_cat	    = NULL;
 	
 	protected $_users	    = NULL;
 	protected $_user_count	    = NULL;
