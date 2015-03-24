@@ -4,7 +4,6 @@ class Flightstatsapt extends PVA_Controller
 {
 	protected $_table_name = 'airports';
 	protected $_order_by = 'fs';
-        protected $_primary_key = 'fs';
 
 	public function __construct()
 	{
@@ -165,7 +164,7 @@ class Flightstatsapt extends PVA_Controller
 				
 				// begin save to DB - array('fs' => $fs)
 				set_time_limit(15);
-				$airport_obj = new Airport();
+				$airport_obj = new Airport(array('_primary_key' => 'fs', '_pkey_value' => $fs));
 				
 				$airport_obj->fs                = $fs;
 				$airport_obj->iata              = $iata;
