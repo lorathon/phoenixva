@@ -36,12 +36,15 @@ class Articles extends PVA_Controller {
     		$this->load->helper('url');
     		redirect('pages/'.$this->form_validation->set_value('slug'));
     	}
+
+    	$this->data['pagetitle'] = '';
+    	$this->data['pagebody'] = '';
     	
     	if (is_null($slug))
     	{
     		$slug = $this->form_validation->set_value('slug');
     	}
-    	$this->data['slug'] = $slug;    	
+    	$this->data['slug'] = $slug;	
     	$article->slug = $slug;
     	$article->find();
     	
