@@ -56,10 +56,10 @@
                                                             <label class="col-sm-3 control-label">Classification Limit</label>
                                                             <div class="col-sm-6">
                                                                     <select class="form-control mb-md" name="class">
-                                                                            <option value="1">1 - Top 100 Airports</option>
+                                                                            <option value="1" selected="true">1 - Top 100 Airports</option>
                                                                             <option value="2">2 - Top 300 Airports</option>
                                                                             <option value="3">3 - Top 700 Airports</option>
-                                                                            <option value="4" selected="true">4 - All Airports w/ history (approx 4,000)</option>
+                                                                            <option value="4">4 - All Airports w/ history (approx 4,000)</option>
                                                                             <option value="5">5 - All Published Airports (approx 25,000)</option>
                                                                     </select>
                                                             </div>
@@ -87,7 +87,7 @@
                                                     <h2 class="panel-title">Create Typeahead JSON File</h2>
 
                                                     <p class="panel-subtitle">
-                                                            Create Typeahead JSON file for all the airports from active airports in the database. This is used to populate schedule search.
+                                                            Create Typeahead JSON file for all the active airports in the database. This is used to populate schedule search.
                                                     </p>
                                             </header>
                                             <div class="panel-body">

@@ -3,22 +3,25 @@
 class Airport extends PVA_Model {
 	
 	/* Airport properties */
-	public $icao            = NULL;
+        public $fs              = NULL;
 	public $iata            = NULL;
+	public $icao            = NULL;
 	public $name            = NULL;
 	public $city            = NULL;
 	public $state_code      = NULL;
-	public $country         = NULL;
+	public $country_code    = NULL;
+        public $country_name    = NULL;
+        public $region_name     = NULL;
 	public $utc_offset      = NULL;
 	public $lat             = NULL;
 	public $long            = NULL;
 	public $elevation       = NULL;
 	public $classification  = NULL;
-	public $type            = NULL;
 	public $active          = NULL;
-	public $delay_index_url = NULL;
-	public $weather_url     = NULL;
+        public $port_type       = NULL;
 	public $hub             = NULL;
+	public $delay_url       = NULL;
+	public $weather_url     = NULL;
 	
 	function __construct($id = NULL)
 	{
