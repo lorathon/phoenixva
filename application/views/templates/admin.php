@@ -181,51 +181,12 @@
 											</li>
                                                                                         <li>
 												<?php echo anchor('admin/airlines','View Airlines'); ?>
-											</li>                                                                                        
-											<li class="nav-parent">
-												<a>Fleet </a>
-												<ul class="nav nav-children">
-													<li>
-														<?php echo anchor('admin/fleet','View Fleet'); ?>
-													</li>
-													<li>
-														<?php echo anchor('admin/fleet/substitutions', 'Fleet Substituions'); ?>
-													</li>
-													<li>
-														<?php echo anchor('admin/fleet/missing_sub', 'Missing Substituions'); ?>
-													</li>
-													<li>
-														<?php echo anchor('admin/fleet/build_fleet', 'Build Fleet'); ?>
-													</li>
-												</ul>
 											</li>
                                                                                         <li>
 												<?php echo anchor('admin/schedules','View Schedules'); ?>
 											</li>
 										</ul>
-									</li>
-                                                                        
-									<!-- Start Event Nav -->
-                                                                        <li class="nav-parent">
-										<a>
-											<i class="fa fa-cubes" aria-hidden="true"></i>
-											<span>Events Dept</span>
-										</a>
-										<ul class="nav nav-children">
-											<li>
-												<?php echo anchor('admin/event_admin', 'All Events'); ?>
-											</li>
-											<li class="nav-parent">
-												<a>Tools</a>
-												<ul class="nav nav-children">													
-													<li>
-														<?php echo anchor('admin/event_admin/event_types', 'Event Types'); ?>
-													</li>													
-												</ul>
-											</li>
-										</ul>
-									</li>
-									<!-- End Event Nav -->
+									</li> 
                                                                         
                                                                         <li class="nav-parent">
 										<a>

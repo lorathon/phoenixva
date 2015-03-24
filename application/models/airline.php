@@ -49,6 +49,19 @@ class Airline extends PVA_Model {
             }      
             return $data;
         }
+	
+	function get_category_dropdown()
+        {
+	    $cat = new Airline_category();
+	    $rows = $cat->find_all();
+            
+            $data = array();
+            foreach($rows as $row)
+            {
+                $data[$row->value] = $row->description;
+            }      
+            return $data;
+        }
 }
 
 class Airline_category extends PVA_Model {

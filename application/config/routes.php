@@ -83,6 +83,12 @@ $route['fleet/view-sub/(:any)'] = "fleet/view_sub/$1";
 $route['fleet/(:any)'] = "fleet/index/$1";
 $route['private/fleet/edit-aircraft/(:any)'] = "fleet/edit_aircraft/$1";
 
+// Route all airlines related stuff
+$route['airlines/view/(:any)'] = "airlines/view/$1";
+$route['airlines/(:any)'] = "airlines/index/$1";
+$route['private/airlines/edit-airline/(:any)'] = "airlines/edit_airline/$1";
+$route['private/airlines/edit-airline'] = "airlines/edit_airline";
+
 // Default route
 $route['default_controller'] = 'pages/view';
 
