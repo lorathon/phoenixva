@@ -53,7 +53,11 @@ class Hubs extends PVA_Controller {
 		{
 			// Handle slug being passed in
 			$parts = explode('-', $icao, 3);
-			$icao = $parts[1];
+			if (count($parts) > 1)
+			{
+				$icao = $parts[1];
+			}
+			
 			if (count($parts) > 2)
 			{
 				$page = $parts[2];

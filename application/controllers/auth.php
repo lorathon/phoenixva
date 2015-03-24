@@ -142,6 +142,7 @@ class Auth extends PVA_Controller
 	function logout()
 	{
 		$this->tank_auth->logout();
+		$this->session->sess_create();
 		$this->_alert($this->lang->line('auth_message_logged_out', 'info', TRUE));
 		redirect();
 	}
@@ -382,6 +383,7 @@ class Auth extends PVA_Controller
 			$note->save();
 			
 			$this->tank_auth->logout();
+			$this->session->sess_create();
 			$this->_alert($this->lang->line('auth_message_activation_completed'), 'success', TRUE);
 			redirect('auth/login');
 		} 
