@@ -21,6 +21,9 @@ class Airline extends PVA_Model {
 	// Array of Aircraft
 	protected $_fleet	= NULL;
 	
+	// Array of Airports
+	protected $_destinations    = NULL;
+	
 	function __construct($id = NULL)
 	{
 		parent::__construct($id);
@@ -75,6 +78,12 @@ class Airline extends PVA_Model {
 		$this->_fleet = $fleet->get_fleet();
 	    }
 	    return $this->_fleet;
+	}
+	
+	function get_destinations()
+	{
+	    $this->_destinations = array();
+	    return $this->_destinations;
 	}
 	
 	function build_airline_fleet()
@@ -164,10 +173,8 @@ class Airline_aircraft extends PVA_Model {
     function get_fleet()
     {
 	if(is_null($this->_fleet))
-	{
-	    $fleet = $this->find_all();
-	    
-	    if(count($fleet) > 0)
+	{	    
+	    if($fleet = $this->find_all())
 	    {
 		foreach($fleet as $ac)
 		{
