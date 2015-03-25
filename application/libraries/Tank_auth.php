@@ -36,10 +36,8 @@ class Tank_auth
 
 		$this->ci->load->config('tank_auth', TRUE);
 
-		$this->ci->load->library('session');
 		$this->ci->load->database();
 		$this->ci->load->model('tank_auth/users');        
-        $this->ci->load->model('my_model/session_log_m');
 
 		// Try to autologin
 		$this->autologin();
@@ -87,9 +85,6 @@ class Tank_auth
 								'name'		=> $user->first_name.' '.$user->last_name,
 						));
                         
-                        // log in session log
-                        $this->ci->session_log_m->log($user->id);
-
 						if ($user->activated == 0) {							// fail - not activated
 							$this->error = array('not_activated' => '');
 
