@@ -18,6 +18,9 @@ class Airline extends PVA_Model {
 	
 	protected $_cat		= NULL;
 	
+	// Array of Aircraft
+	protected $_fleet	= NULL;
+	
 	function __construct($id = NULL)
 	{
 		parent::__construct($id);
@@ -62,6 +65,38 @@ class Airline extends PVA_Model {
             }      
             return $data;
         }
+	
+	function get_fleet()
+	{
+	    if(is_null($this->_fleet))
+	    {
+		$fleet = new Airline_aircraft();
+		$fleet->airline_id = $this->id;
+		$this->_fleet = $fleet->get_fleet();
+	    }
+	    return $this->_fleet;
+	}
+	
+	function build_airline_fleet()
+	{
+	    $fleet = new Airline_aircraft();
+	    $fleet->build_fleet($this);
+	}
+	
+	function build_entire_fleet()
+	{
+	    $this->_limit = NULL;
+	    $airlines = $this->find_all();
+	    
+	    if(! $airlines)
+		return;
+	    
+	    foreach($airlines as $airline)
+	    {
+		$ac = new Airline_aircraft();
+		$ac->build_fleet($airline);
+	    }
+	}
 }
 
 class Airline_category extends PVA_Model {
@@ -77,4 +112,71 @@ class Airline_category extends PVA_Model {
 	    $this->_table_name = 'airlines_categories';
 	}
 	
+}
+
+class Airline_aircraft extends PVA_Model {
+    
+    public $airline_id	    = NULL;
+    public $aircraft_id	    = NULL;
+    public $total_schedules = NULL;
+    public $total_flights   = NULL;
+    public $total_hours	    = NULL;
+    
+    protected $_fleet	    = NULL;
+    
+    protected $_schedules_table	= 'schedules';
+    protected $_aircrafts_table	= 'aircrafts';
+    
+    function __construct($id = NULL)
+    {
+	parent::__construct($id);
+    }
+    
+    function build_fleet($airline)
+    {			
+	if(is_null($airline->id))
+	    return;
+	
+	$this->db->select("aircrafts.id as id, COUNT({$this->db->dbprefix($this->_aircrafts_table)}.id) as total_schedules")
+		->from($this->_aircrafts_table)
+		->join($this->_schedules_table, 'schedules.equip = aircrafts.equip')
+		->where('schedules.carrier', $airline->fs)
+		->group_by('aircrafts.id');
+
+	$query = $this->db->get();
+
+	foreach ($query->result() as $row)
+	{
+	    $ac = new Airline_aircraft();
+	    $ac->aircraft_id = $row->id;
+	    $ac->airline_id = $airline->id;
+	    
+	    if(! $ac->find())
+	    {		
+		$ac->total_flights = 0;
+		$ac->total_hours = 0;
+	    }	    
+	    $ac->total_schedules = $row->total_schedules;
+	    $ac->save();
+	}
+    }
+    
+    function get_fleet()
+    {
+	if(is_null($this->_fleet))
+	{
+	    $fleet = $this->find_all();
+	    
+	    if(count($fleet) > 0)
+	    {
+		foreach($fleet as $ac)
+		{
+		    $aircraft = new Aircraft($ac->aircraft_id);
+		    $this->_fleet[] = $aircraft;
+		}
+	    }	    
+	}	
+	return $this->_fleet;
+    }
+    
 }

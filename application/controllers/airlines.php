@@ -101,4 +101,11 @@ class Airlines extends PVA_Controller
 	    redirect($this->session->flashdata('return_url'));
 	}        
     }
+    
+    public function build_fleet()
+    {
+	$airline = new Airline();
+	$airline->build_fleet();
+	//$this->index();
+    }
 }
