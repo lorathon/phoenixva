@@ -26,14 +26,15 @@ $config['img_folders'] = array (
 );
 
 $config['user_status'] = array (
-		'0' => 'Waiting Activation',
+	'0' => 'Waiting Activation',
     	'1' => 'New Registration',          // Activated, no PIREPs
     	'2' => 'Probation',                 // After 1st PIREP until accepted or anytime a pilot is warned.
     	'3' => 'Active',
     	'4' => 'Leave of Absence',
-    	'5' => 'Retired',
-    	'6' => 'Rejected',
+    	'5' => 'Furlough',
+    	'6' => 'Resigned',
     	'7' => 'Banned',
+	'8' => 'Rejected'
 );
 $config['pirep_status'] = array (
     '0' => 'Unapproved',
