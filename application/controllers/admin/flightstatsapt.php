@@ -122,8 +122,11 @@ class Flightstatsapt extends PVA_Controller
 				$port_type        = "land";
 				
 				
-				// if airport name has Seaplane or Sea Plane in title, make port type "sea" (case insensitive)
-				if (strpos(strtolower($name), "seaplane") !== false || strpos(strtolower($name), "sea plane") !== false)
+				// if airport name has common water ports in title, make port type "sea" (case insensitive)
+				if (strpos(strtolower($name), "seaplane") !== false || 
+                                    strpos(strtolower($name), "sea plane") !== false ||
+                                    strpos(strtolower($name), "water aerodrome") !== false ||
+                                    strpos(strtolower($name), "water airport") !== false)
 				{
 					$port_type    = "sea";
 					$seaports++;
@@ -131,7 +134,8 @@ class Flightstatsapt extends PVA_Controller
 				
 				
 				// if airport name has Heliport or Helipad in title, make port type "heli" (case insensitive)
-				if (strpos(strtolower($name), "heliport") !== false || strpos(strtolower($name), "helipad") !== false)
+				if (strpos(strtolower($name), "heliport") !== false || 
+                                    strpos(strtolower($name), "helipad") !== false)
 				{
 					$port_type    = "heli";
 					$heliports++;
@@ -187,13 +191,12 @@ class Flightstatsapt extends PVA_Controller
 				$airport_obj->delay_url         = $delay_url;
 				$airport_obj->weather_url       = $weather_url;
 				
-				$counter++;
+				$airport_obj->save();
+                                $counter++;
 
-				// if saved, remove from memory
-				if ($airport_obj->save())
-				{
-					unset($airport_obj);
-				}
+				// remove from memory
+				unset($airport_obj);
+				
 			}
 			// end if classification check, go back to beginning of loop
                         
