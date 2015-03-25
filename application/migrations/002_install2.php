@@ -44,11 +44,24 @@ class Migration_Install2 extends CI_Migration {
 		$this->dbforge->add_key('airline_id');
 		$this->dbforge->add_key('aircraft_id');
 		$this->dbforge->create_table('airline_aircrafts', TRUE);
+		
+		
+		// Airline Airports table
+		$this->dbforge->add_field(array(
+				'id'		    => $field_config['id_field'],
+				'airline_id'	    => $field_config['fk_field'],
+				'airport_id'	    => $field_config['fk_field'],
+		));
+		$this->dbforge->add_key('id', TRUE);
+		$this->dbforge->add_key('airline_id');
+		$this->dbforge->add_key('airport_id');
+		$this->dbforge->create_table('airline_airports', TRUE);
 	}
 	
 	public function down()
 	{
 		$this->dbforge->drop_table('session_logs');
 		$this->dbforge->drop_table('airline_aircrafts');
+		$this->dbforge->drop_table('airline_airports');
 	}
 }

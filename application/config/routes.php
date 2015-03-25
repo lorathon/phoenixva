@@ -88,7 +88,6 @@ $route['airlines/view/(:any)'] = "airlines/view/$1";
 $route['airlines/(:any)'] = "airlines/index/$1";
 $route['private/airlines/edit-airline/(:any)'] = "airlines/edit_airline/$1";
 $route['private/airlines/edit-airline'] = "airlines/edit_airline";
-$route['private/airlines/build-fleet'] = "airlines/build_fleet";
 
 // Default route
 $route['default_controller'] = 'pages/view';

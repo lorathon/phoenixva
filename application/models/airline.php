@@ -82,7 +82,12 @@ class Airline extends PVA_Model {
 	
 	function get_destinations()
 	{
-	    $this->_destinations = array();
+	    if(is_null($this->_destinations))
+	    {
+		$airport = new Airline_airport();
+		$airport->airline_id = $this->id;
+		$this->_destinations = $airport->get_destinations();
+	    }
 	    return $this->_destinations;
 	}
 	
@@ -90,6 +95,12 @@ class Airline extends PVA_Model {
 	{
 	    $fleet = new Airline_aircraft();
 	    $fleet->build_fleet($this);
+	}
+	
+	function build_airline_destinations()
+	{
+	    $airport = new Airline_airport();
+	    $airport->build_destinations($this);
 	}
 	
 	function build_entire_fleet()
@@ -104,6 +115,21 @@ class Airline extends PVA_Model {
 	    {
 		$ac = new Airline_aircraft();
 		$ac->build_fleet($airline);
+	    }
+	}
+	
+	function build_entire_destinations()
+	{
+	    $this->_limit = NULL;
+	    $airlines = $this->find_all();
+	    
+	    if(! $airlines)
+		return;
+	    
+	    foreach($airlines as $airline)
+	    {
+		$ac = new Airline_airport();
+		$ac->build_destinations($airline);
 	    }
 	}
 }
@@ -171,9 +197,10 @@ class Airline_aircraft extends PVA_Model {
     }
     
     function get_fleet()
-    {
+    {	
 	if(is_null($this->_fleet))
-	{	    
+	{	
+	    $this->_fleet = array();
 	    if($fleet = $this->find_all())
 	    {
 		foreach($fleet as $ac)
@@ -186,4 +213,78 @@ class Airline_aircraft extends PVA_Model {
 	return $this->_fleet;
     }
     
+}
+
+class Airline_airport extends PVA_Model {
+    
+    public $airline_id	    = NULL;
+    public $airport_id	    = NULL;
+    
+    protected $_schedules_table	= 'schedules';
+    protected $_airports_table	= 'airports';
+    
+    protected $_destinations   = NULL;
+    
+    function __construct($id = NULL)
+    {
+	parent::__construct($id);
+    }
+    
+    function build_destinations($airline)
+    {
+	if(is_null($airline->id))
+	    return;
+	
+	$this->db->select('airports.id as id')
+		->from($this->_airports_table)
+		->join($this->_schedules_table, 'schedules.dep_airport = airports.fs')
+		->where('schedules.carrier', $airline->fs)
+		->or_where('schedules.operator', $airline->fs)
+		->group_by('airports.id');
+	
+	$query = $this->db->get();
+
+	foreach ($query->result() as $row)
+	{
+	    $ac = new Airline_airport();
+	    $ac->airport_id = $row->id;
+	    $ac->airline_id = $airline->id;
+	    $ac->find();
+	    $ac->save();
+	}
+	
+	$this->db->select('airports.id as id')
+		->from($this->_airports_table)
+		->join($this->_schedules_table, 'schedules.arr_airport = airports.fs')
+		->where('schedules.carrier', $airline->fs)
+		->or_where('schedules.operator', $airline->fs)
+		->group_by('airports.id');
+	
+	$query = $this->db->get();
+
+	foreach ($query->result() as $row)
+	{
+	    $ac = new Airline_airport();
+	    $ac->airport_id = $row->id;
+	    $ac->airline_id = $airline->id;
+	    $ac->find();
+	    $ac->save();
+	}
+    }
+    
+    function get_destinations()
+    {	
+	if(is_null($this->_destinations))
+	{	
+	    $this->_destinations = array();
+	    if($destinations = $this->find_all())
+	    {
+		foreach($destinations as $airport)
+		{
+		    $this->_destinations[] = new Airport($airport->airport_id);
+		}
+	    }	    
+	}	
+	return $this->_destinations;
+    }
 }
