@@ -46,7 +46,7 @@ class User extends PVA_Model {
 	/* Related objects */
 	protected $_user_profile        = NULL;
 	protected $_user_stats          = NULL;
-        protected $_user_awards         = NULL;
+	protected $_user_awards         = NULL;
 	
 	/* Derived properties */
 	private $_is_premium = NULL;
@@ -62,7 +62,7 @@ class User extends PVA_Model {
 		// Create empty related objects
 		$this->_user_profile = new User_profile();
 		$this->_user_stats   = new User_stats();
-                $this->_user_awards = new User_award();
+		$this->_user_awards = new User_award();
 		
 		// Set default order
 		$this->_order_by = 'name asc';
@@ -112,64 +112,62 @@ class User extends PVA_Model {
 		return $this->_user_stats;
 	}
         
-        /**
+	/**
 	 * Gets the user awards associated with this user object.
 	 * 
 	 * The user object must be populated separately. Normal usage would be:
-	 * $user = new User();
-	 * $user->id = 123;
-	 * $user->find();
+	 * $user = new User($id);
 	 * $user->get_user_awards();
 	 * 
 	 * @return object User_awards object for the populated user
 	 */
 	function get_user_awards()
 	{    
-            $this->_user_awards->user_id = $this->id;                    
-            $this->_user_awards = $this->_user_awards->find_all();
+		$this->_user_awards->user_id = $this->id;                    
+		$this->_user_awards = $this->_user_awards->find_all();
 		                
-            return $this->_user_awards;
+		return $this->_user_awards;
 	}
         
-        function get_user_awards_by_type($type_id = NULL)
-        {
-            if(is_null($type_id)) return array();
-                 
-            $this->_user_awards->user_id = $this->id;       
-            return $this->_user_awards->get_by_type($type_id);
-        }
-        
-        function get_awards_not_granted()
-        {
-            $this->_user_awards->user_id = $this->id;
-            return $this->_user_awards->get_not_granted();
-        }
-        
-        function get_awards_not_granted_dropdown()
-        {
-            $this->_user_awards->user_id = $this->id;
-            return $this->_user_awards->get_dropdown();
-        }
-        
-        function grant_award($award_id = NULL)
-        {
-            if( is_null($award_id)) 
-                return FALSE;
+	function get_user_awards_by_type($type_id = NULL)
+	{
+		if(is_null($type_id)) return array();
+
+		$this->_user_awards->user_id = $this->id;       
+		return $this->_user_awards->get_by_type($type_id);
+	}
+
+	function get_awards_not_granted()
+	{
+		$this->_user_awards->user_id = $this->id;
+		return $this->_user_awards->get_not_granted();
+	}
+
+	function get_awards_not_granted_dropdown()
+	{
+		$this->_user_awards->user_id = $this->id;
+		return $this->_user_awards->get_dropdown();
+	}
+
+	function grant_award($award_id = NULL)
+	{
+		if( is_null($award_id)) 
+			return FALSE;
             
-            $user_award = new User_award();
-            $user_award->user_id = $this->id;
-            $user_award->award_id = $award_id;            
-            $user_award->save();
-        }
+		$user_award = new User_award();
+		$user_award->user_id = $this->id;
+		$user_award->award_id = $award_id;            
+		$user_award->save();
+	}
         
-        function revoke_award($user_award_id = NULL)
-        {
-            if( is_null($user_award_id))
-                return FALSE;
-            
-            $user_award = new User_award($user_award_id);
-            $user_award->delete();            
-        }
+	function revoke_award($user_award_id = NULL)
+	{
+		if( is_null($user_award_id))
+			return FALSE;
+
+		$user_award = new User_award($user_award_id);
+		$user_award->delete();            
+	}
                 
 	/**
 	 * Populates user object based on legacy data
@@ -592,6 +590,7 @@ class User extends PVA_Model {
 	{
 		if (is_null($this->id)) return FALSE;
 		$this->find();
+		$this->activated = 1;
 		$this->status = 3;
 		$this->_set_retirement();
 		$this->save();
@@ -635,6 +634,9 @@ class User extends PVA_Model {
 			$this->last_ip = $curr_ip;
 			$this->save();
 			
+			// Update session log
+			$sesslog = new Session_log();
+			$sesslog->add_log($this->id, $curr_ip);
 			return TRUE;
 		}
 		
