@@ -64,6 +64,7 @@ class Profile extends PVA_Controller
             $status_array = $this->config->item('user_status');
             $this->data['status'] = $status_array[$user->status];
             $this->data['raw_status'] = $user->status;
+            $this->data['activated'] = ($user->activated);  // Make boolean
 
             // Hub
             $hub = new Airport($user->hub);

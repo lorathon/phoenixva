@@ -470,7 +470,7 @@ class User extends PVA_Model {
 		// Massage data
 		$this->email = strtolower($this->email);
 		$this->name = $this->_set_name($this->name);
-		$this->retire_date = $this->_set_retirement('+14 days');
+		$this->_set_retirement('+14 days');
 		
 		// Prep the data
 		$user_parms = $this->_prep_data();
@@ -487,6 +487,7 @@ class User extends PVA_Model {
 		$this->_user_stats->user_id = $this->id;
 		
 		// Use minutes for transfer hours if not legacy user
+		// XXX This doesn't appear to be correct. Id should be populated always.
 		if (is_null($this->id))
 		{
 			$this->_user_stats->hours_transfer = $this->_hours_to_mins($this->_user_stats->hours_transfer);
@@ -505,6 +506,7 @@ class User extends PVA_Model {
 		
 		if ($this->db->trans_status() === FALSE)
 		{
+			log_message('error', 'New user database transaction failed.');
 			return FALSE;
 		}
 		
@@ -526,6 +528,7 @@ class User extends PVA_Model {
 		// Can only be used for updating
 		if (is_null($this->id))
 		{
+			log_message('error', 'Trying to save a new user. Users can only be updated.');
 			return FALSE;
 		}
 		parent::save();
@@ -540,6 +543,7 @@ class User extends PVA_Model {
 	function delete()
 	{
 		// Users can't be deleted at the moment.
+		log_message('error', 'Unsupported function: tried to delete a user.');
 		return FALSE;
 	}
 	
