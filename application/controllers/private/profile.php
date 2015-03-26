@@ -194,8 +194,7 @@ class Profile extends PVA_Controller
 
             // Get Notes XXX Probably need this in PVA_Controller
             $this->data['notes'] = array();
-            $note_model = new Note('user', $user->id);
-            $notes = $note_model->get_notes();
+            $notes = $user->get_notes();
             if ($notes)
             {
                 foreach ($notes as $note)
