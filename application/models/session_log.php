@@ -40,11 +40,13 @@ class Session_log extends PVA_Model {
 		// Use the find method to populate the ID if user/ip combo already exists
 		if ($this->find())
 		{
-			$this->save();
+			log_message('debug', 'Updating session log');
+			parent::save();
 		}
 		else
 		{
-			$this->save();
+			log_message('debug', 'Adding session log entry');
+			parent::save();
 		}
 	}
 	

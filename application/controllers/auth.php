@@ -198,7 +198,7 @@ class Auth extends PVA_Controller
 				// validation ok, create user object
 				$created = FALSE;
 				$user = new User();
-				if ($this->form_validation->set_value('transfer_link') == 'legacy')
+				if (strstr(strtolower($this->form_validation->set_value('transfer_link')), 'phoenixva.org'))
 				{
 					// Legacy PVA pilot.
 					log_message('debug', 'Look up legacy pilot: '.$user->email);

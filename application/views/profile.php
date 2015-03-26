@@ -66,15 +66,15 @@
 								<?php
 									if ($raw_status != 7)
 									{
-										if ($raw_status >= 4)
+										if (!$activated OR $raw_status >= 4)
 										{
-											echo anchor('auth/reactivate/'.$user_id,'Re-activate', button('success'));
+											echo anchor('auth/reactivate/'.$user_id,'Activate', button('success'));
 										}
 										else
 										{
 											echo anchor('auth/loa/'.$user_id,'LOA', button('warning'));
 											echo "\n";
-											echo anchor('auth/retire/'.$user_id,'Retire', button('danger'));
+											echo anchor('auth/retire/'.$user_id,'Resign', button('danger'));
 										}	
 									}
 								?>
