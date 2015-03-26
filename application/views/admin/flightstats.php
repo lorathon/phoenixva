@@ -170,7 +170,8 @@
                             <?php echo form_close(); ?>
                     </div>
                     <div id="schedules" class="tab-pane">
-                            <form id="form2" class="form-horizontal form-bordered">
+                            <?php $attributes = array('class' => 'form-horizontal form-bordered');
+                            echo form_open('admin/flightstatsschedules/apt'); ?>
                                     <section class="panel panel-featured">
                                             <header class="panel-heading">
                                                     <div class="panel-actions">
@@ -189,21 +190,19 @@
                                                             <label class="col-sm-3 control-label">Flightstats Credentials</label>
                                                             <section class="col-sm-6 form-group-vertical">
                                                                 <input class="form-control" type="text" name="appid" placeholder="App ID" value="f48100ea">
-                                                                    <input class="form-control last" type="text" name="appid" placeholder="App Key">
+                                                                <input class="form-control last" type="text" name="appkey" placeholder="App Key" value="217ebf7797870e89ad05a5a69e4f4bf6">
                                                             </section>
                                                     </div>
                                                     <div class="form-group">
-                                                            <label class="col-sm-3 control-label">Classification Limit</label>
-                                                            <div class="col-sm-6">
-                                                                    <select class="form-control mb-md">
-                                                                            <option value="1">1 - Top 100 Airports</option>
-                                                                            <option value="2">2 - Top 300 Airports</option>
-                                                                            <option value="3">3 - Top 700 Airports</option>
-                                                                            <option value="4">4 - All Airports (~ 4,000)</option>
-                                                                    </select>
+                                                            <label class="col-md-3 control-label">Airport FS Code</label>
+                                                            <div class="col-md-6">
+                                                                    <input type="text" class="form-control" name="apt">
                                                             </div>
-                                                            <div class="col-sm-9 col-md-offset-3">
-                                                                    <span class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span>
+                                                    </div>
+                                                    <div class="form-group">
+                                                            <label class="col-md-3 control-label">Schedule Version</label>
+                                                            <div class="col-md-6">
+                                                                <input type="text" class="form-control" name="version" value="15A1">
                                                             </div>
                                                     </div>
                                                     <footer class="panel-footer" align="center">
@@ -212,7 +211,7 @@
                                                     </footer>
                                             </div>
                                     </section>
-                            </form>
+                            <?php echo form_close(); ?>
                     </div>
                 </div>
         </div>          
