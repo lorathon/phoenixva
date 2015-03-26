@@ -61,15 +61,12 @@ class Flightstatsairline extends PVA_Controller
 			$airline_obj->category   		= $category;
 			
 	
-			//$airline_obj->save();
-			  
+			$airline_obj->save();
 			$counter++;
 			  
-			// if saved, get rid of object before leaving loop for memory purposes
-			if ($airline_obj->save())
-			{
-				unset($airline_obj);
-			}
+			// remove from memory
+			unset($airline_obj);
+			
 		}
 		// end foreach
 	 

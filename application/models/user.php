@@ -1095,10 +1095,14 @@ class User_award extends PVA_Model {
             $awards = $this->get_not_granted();
             
             $data = array();
-            foreach($awards as $award)
-            {
-                $data[$award->id] = $award->name;
-            }            
+	    
+	    if(count($awards) > 0)
+	    {
+		foreach($awards as $award)
+		{
+		    $data[$award->id] = $award->name;
+		}     
+	    }
             return $data;
         }
         

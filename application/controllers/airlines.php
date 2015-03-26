@@ -38,10 +38,9 @@ class Airlines extends PVA_Controller
         $this->_render();
     }    
     
-    public function view($id)
+    public function view($id, $page=NULL)
     {
-	$this->data['meta_title'] = 'Phoenix Virtual Airways Airlines';
-	$this->data['title'] = 'Airlines';
+	$this->data['meta_title'] = 'Phoenix Virtual Airways Airlines';	
 	$this->data['breadcrumb']['airlines'] = 'Airlines';
 	
 	$airline = new Airline($id);
@@ -49,6 +48,21 @@ class Airlines extends PVA_Controller
 	// send back to index if $airline is not found
 	if(! $airline->name)
 	    $this->index();
+	
+	$this->data['title'] = $airline->name;
+	
+	if($page == 'destinations')
+	{
+	    // destinations
+	    $airports = $airline->get_destinations();
+	    $this->data['airports'] = $airports;
+	}
+	else
+	{
+	    // fleet
+	    $fleet = $airline->get_fleet();
+	    $this->data['fleet'] = $fleet;	    
+	}	
 	
 	$this->data['airline'] = $airline;
 	$this->session->set_flashdata('return_url','airlines/view/'.$id);
