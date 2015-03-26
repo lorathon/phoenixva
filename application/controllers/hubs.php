@@ -78,7 +78,7 @@ class Hubs extends PVA_Controller {
 		
 		if (!$airport->is_hub())
 		{
-			$this->data['errors'][] = $airport->name.' ('.$airport->icao.') is not a crew center.';
+			$this->_alert($airport->name.' ('.$airport->icao.') is not a crew center.', 'danger');
 			$this->index();
 			return FALSE;
 		}
