@@ -6,11 +6,87 @@ $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
 <div class="container">
     <div class="row">
 	<div class="col-md-8">
-	    <div class="featured-box featured-box-green">
-		<div class="box-content">
-		    
-		</div>
-	    </div>
+	    <ul class="nav nav-tabs">
+		<li role="presentation" 
+		<?php if (uri_string() == 'airlines/view/' . $airline->id . '/fleet'): ?>
+		    class="active"
+		    <?php endif; ?> >
+			<?php echo anchor('/airlines/view/' . $airline->id . '/fleet', 'Fleet'); ?> 
+		</li>	
+		<li role="presentation" 
+		<?php if (uri_string() == 'airlines/view/' . $airline->id . '/destinations'): ?>
+		    class="active"
+		    <?php endif; ?> >
+			<?php echo anchor('/airlines/view/' . $airline->id . '/destinations', 'Destinations'); ?> 
+		</li>
+	    </ul> 
+	</div>
+    </div>
+    <div class=""row">	
+	<div class="<?php if ($show_admin) { echo "col-md-8"; } else { echo "col-md-12"; }  ?> >">
+	    <div class="table-responsive">
+		
+		<?php if(isset($fleet)) : ?>
+		
+                    <table class="table table-hover mb-none">
+                        <thead>
+                            <tr>
+                                <th>Airframe</th>
+                                <th>Name</th>
+                                <th>CAT</th>
+                                <th>Sub</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+			    <?php if($fleet) : ?>
+                            <?php foreach ($fleet as $row): ?>
+                                <tr>
+				    <td><?php echo $row->equip; ?></td>
+                                    <td><?php echo $row->name; ?></td>
+                                    <td><?php echo $row->category; ?></td>
+                                    <td><?php echo $row->aircraft_sub_id; ?></td> 
+                                </tr>
+                            <?php endforeach; ?>
+			    <?php else : ?>
+				<tr>
+				    <td colspan="5">There are no aircraft in fleet.</td>
+				</tr>
+			    <?php endif; ?>
+                        </tbody>
+                    </table>
+		
+		<?php elseif (isset($airports)) : ?>
+		
+		    <table class="table table-hover mb-none">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>IATA</th>
+                                <th>ICAO</th>
+                                <th>Country</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+			    <?php if($airports) : ?>
+                            <?php foreach ($airports as $row): ?>
+                                <tr>
+				    <td><?php echo $row->name; ?></td>
+                                    <td><?php echo $row->iata; ?></td>
+                                    <td><?php echo $row->icao; ?></td>
+                                    <td><?php echo $row->country_name; ?></td> 
+                                </tr>
+                            <?php endforeach; ?>
+			    <?php else : ?>
+				<tr>
+				    <td colspan="5">There are no destinations.</td>
+				</tr>
+			    <?php endif; ?>
+                        </tbody>
+                    </table>
+		
+		<?php endif; ?>
+		
+                </div>
 	</div>
 	<div class="col-md-4">
 	    

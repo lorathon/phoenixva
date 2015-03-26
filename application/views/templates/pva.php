@@ -92,7 +92,8 @@
                                                                         <?php endif; ?>			
 
                                                                             <li><?php echo anchor('pages/airports','Destinations'); ?></li>
-                                                                            <li><?php echo anchor('pages/typeahead','Airlines'); ?></li>
+                                                                            <li><?php echo anchor('pages/typeahead','TypeAhead'); ?></li>
+									    <li><?php echo anchor('airlines','Airlines'); ?></li>
                                                                             <li><?php echo anchor('fleet','Aircraft Fleet'); ?></li>
                                                                             <li><?php echo anchor('hubs','Crew Centers'); ?></li>
                                                                             <li><?php echo anchor('events','Events'); ?></li>
