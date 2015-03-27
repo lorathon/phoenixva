@@ -95,6 +95,15 @@ class Hubs extends PVA_Controller {
 		$user->hub = $airport->id;
 		$user->activated = 1;
 		$this->data['pilots'] = $user->find_all();
+		
+		// Get the list of pending transfers for managers and above.
+		if ($this->session->userdata('is_manager'))
+		{
+			$transfers = new User();
+			$transfers->hub_transfer = $airport->id;
+			$transfers->activated = 1;
+			$this->data['transfers'] = $transfers->find_all();
+		}
 
 		$article = new Article();
 		$article->slug = $article->build_slug('hub', array($icao, $page));

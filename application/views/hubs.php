@@ -58,6 +58,45 @@
 						<?php endif;?>
 					</ul>
 				</div>
+				<div class="box-content">
+					<h2>Pending Transfers</h2>
+					<?php if (!$transfers): ?>
+						<p>No incoming transfer requests.</p>
+					<?php else: ?>
+						<table class="table table-hover table-condensed">
+							<thead>
+								<tr>
+									<td>Pilot</td>
+									<td>Flights</td>
+									<td>Hours</td>
+									<td>Options</td>
+								</tr>
+							</thead>
+							<tbody>
+								<?php foreach ($transfers as $transfer): ?>
+								<tr>
+									<td>
+									<?php echo user($transfer); ?>
+									<?php if ($transfer->is_premium()): ?>
+											<i class="fa fa-star" title="Premium Member"></i>
+									<?php endif; ?>
+									</td>
+									<td>
+										<?php echo $transfer->get_user_stats()->total_flights(); ?>
+									</td>
+									<td>
+										<?php echo format_hours($transfer->get_user_stats()->total_hours()); ?>
+									</td>
+									<td>
+										<?php echo anchor("#", '<i class="fa fa-thumbs-up" title="Accept"></i>', button('success')); ?>
+										<?php echo anchor("#", '<i class="fa fa-thumbs-down" title="Reject"></i>', button('danger')); ?>
+									</td>
+								</tr>
+								<?php endforeach; ?>
+							</tbody>
+						</table>
+					<?php endif; ?>
+				</div>
 			</div>
 			<?php endif; ?>
 			<div class="featured-box featured-box-green">
