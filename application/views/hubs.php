@@ -1,6 +1,7 @@
 <?php
 	$this->load->helper('html');
 	$show_admin = (isset($userdata['name']) && $userdata['is_manager']);
+	$own_hub = ($show_admin && ($airport->id == $userdata['hub']));
 ?>
 <div class="container">
 	<?php if (isset($body)): ?>
@@ -45,6 +46,11 @@
 		<div class="col-md-4">
 			<?php if ($show_admin): ?>
 			<div class="featured-box featured-box-red">
+				<?php if (! $own_hub): ?>
+					<div class="alert alert-danger">
+						<p>WARNING: THIS IS NOT YOUR HUB</p>
+					</div>
+				<?php endif;?>
 				<div class="box-content">
 					<h2>Hub Admin</h2>
 					<ul class="nav nav-pills">

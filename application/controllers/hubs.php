@@ -90,6 +90,7 @@ class Hubs extends PVA_Controller {
 		$this->data['page'] = $page;
 		$this->data['pages'] = $this->_hub_navigation($icao);
 		$this->data['breadcrumb']['hubs'] = 'Crew Centers';
+		$this->data['airport'] = $airport;
 
 		$user = new User();
 		$user->hub = $airport->id;
