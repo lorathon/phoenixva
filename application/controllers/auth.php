@@ -87,6 +87,7 @@ class Auth extends PVA_Controller
 							'rank_name'    => $rank->rank,
 							'rank_short'   => $rank->short,
 							'hub'          => $user->hub,
+							'max_cat'	=> $rank->max_cat,
 							));
 					
 					$this->_alert('You have successfully logged into your account.', 'success', TRUE);
