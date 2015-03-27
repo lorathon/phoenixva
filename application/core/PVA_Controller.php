@@ -146,7 +146,7 @@ class PVA_Controller extends CI_Controller {
 	protected function _check_access($access)
 	{
 		$access = 'is_'.$access; 
-		if( ! $this->data['userdata'][$access])
+		if( ! isset($this->data['userdata'][$access]) OR ! $this->data['userdata'][$access])
 		{
 			// Insufficient access.  Redirect to UNAUTH page
 			$this->load->helper('url');
@@ -261,12 +261,18 @@ class PVA_Controller extends CI_Controller {
 	{
 		log_message('debug', 'Sending email of type: '.$type);
 		$this->load->library('email');
+		$this->load->helper('url');
 		$this->email->from(config_item('webmaster_email'), config_item('site_name'));
 		$this->email->reply_to(config_item('webmaster_email'), config_item('site_name'));
 		$this->email->to($email);
 		$this->email->subject($subject);
-		$this->email->message($this->load->view('email/'.$type.'-html', $data, TRUE));
-		$this->email->set_alt_message($this->load->view('email/'.$type.'-txt', $data, TRUE));
+		
+		$this->data['subject'] = $subject;
+		$this->data['view_output_html'] = $this->load->view('email/'.$type.'-html', $data, TRUE);
+		$this->data['view_output_txt'] = $this->load->view('email/'.$type.'-txt', $data, TRUE);
+		
+		$this->email->message($this->load->view('templates/email-html', $data, TRUE));
+		$this->email->set_alt_message($this->load->view('templates/email-txt', $data, TRUE));
 		log_message('debug', 'Email object: '.print_r($this->email, TRUE));
 		
 		return $this->email->send();

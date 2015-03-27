@@ -90,11 +90,21 @@ class Hubs extends PVA_Controller {
 		$this->data['page'] = $page;
 		$this->data['pages'] = $this->_hub_navigation($icao);
 		$this->data['breadcrumb']['hubs'] = 'Crew Centers';
+		$this->data['airport'] = $airport;
 
 		$user = new User();
 		$user->hub = $airport->id;
 		$user->activated = 1;
 		$this->data['pilots'] = $user->find_all();
+		
+		// Get the list of pending transfers for managers and above.
+		if ($this->session->userdata('is_manager'))
+		{
+			$transfers = new User();
+			$transfers->hub_transfer = $airport->id;
+			$transfers->activated = 1;
+			$this->data['transfers'] = $transfers->find_all();
+		}
 
 		$article = new Article();
 		$article->slug = $article->build_slug('hub', array($icao, $page));
@@ -118,12 +128,99 @@ class Hubs extends PVA_Controller {
 		$this->_render();
 	}
 	
-	public function transfer()
+	/**
+	 * Transfers the provided user to the provided hub.
+	 * 
+	 * @param int $uid
+	 * @param int $hub_id
+	 */
+	public function transfer($uid, $hub_id)
 	{
-		log_message('debug', 'Hub transfer called');
+		log_message('debug', 'Hub transfer requested for user '.$uid);
 		$this->data['title'] = 'Hub Transfer';
-		$this->data['body'] = '<h1>Transfer capability not yet implemented.</h1>';
-		$this->_render('article');
+		
+		if ($this->session->userdata('user_id') != $uid)
+		{
+			$this->_check_access('manager');
+		}
+		
+		$user = new User($uid);
+		
+		if ($user->request_transfer($hub_id) !== FALSE)
+		{
+			$hub = new Airport($hub_id);
+			$icao = $hub->icao;
+			$user->set_note("Transfer to {$icao} requested.", $uid);
+			$this->_alert("Transfer to {$icao} requested.", 'success', TRUE);
+			
+			$this->data['user'] = $user;
+			$this->data['hub'] = $hub;
+			
+			$this->_send_email('transfer_pilot', $user->email, 'Crew Center Transfer Requested', $this->data);
+		}
+		else
+		{
+			// Only one transfer allowed at a time.
+			$this->_alert('Pilot not found or already has a pending transfer.', 'danger', TRUE);
+		}
+		$this->load->helper('url');
+		redirect('private/profile/view/'.$uid);		
+	}
+	
+	public function transfer_approve($uid, $hub_id)
+	{
+		log_message('debug', 'Hub transfer approval called for user '.$uid);
+		$this->_check_access('manager');
+		$user = new User($uid);
+		$hub = new Airport($hub_id);
+		
+		if ($user->approve_transfer() !== FALSE)
+		{
+			$user->set_note("Crew Center transfer approved.", $uid);
+			$this->_alert("Crew Center transfer approved.", 'success', TRUE);
+			
+			$this->data['user'] = $user;
+			$this->data['hub'] = $hub;
+			
+			$this->_send_email('transfer_approval', $user->email, 'Crew Center Transfer Approved', $this->data);			
+		}
+		else
+		{
+			$this->_alert('Unable to accept transfer.', 'danger', TRUE);
+		}
+		$this->load->helper('url');
+		redirect('hubs/'.$hub->icao);
+	}
+	
+	/**
+	 * Rejects a pending transfer request.
+	 * 
+	 * @param int $uid
+	 * @param int $hub_id
+	 */
+	public function transfer_reject($uid, $hub_id)
+	{
+		log_message('debug', 'Hub transfer rejection called for user '.$uid);
+		$this->_check_access('manager');
+		$user = new User($uid);
+		$hub = new Airport($hub_id);
+		
+		if ($user->reject_transfer() !== FALSE)
+		{
+			$user->set_note("Crew Center transfer rejected.", $uid);
+			$this->_alert("Crew Center transfer rejected.", 'success', TRUE);
+			
+			$this->data['user'] = $user;
+			$this->data['hub'] = $hub;
+			
+			$this->_send_email('transfer_rejection', $user->email, 'Crew Center Transfer Denied', $this->data);
+		}
+		else
+		{
+			$this->_alert('The requested pilot was not found.', 'danger', TRUE);
+		}		
+		$this->load->helper('url');
+		redirect('hubs/'.$hub->icao);
 	}
 			
 	/**

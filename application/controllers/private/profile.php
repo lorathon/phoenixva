@@ -69,6 +69,11 @@ class Profile extends PVA_Controller
             // Hub
             $hub = new Airport($user->hub);
             $this->data['hub'] = $hub->icao;
+            
+            if ($user->hub_transfer > 0)
+            {
+            	$this->data['transfer'] = new Airport($user->hub_transfer);
+            }
 
             // Populate profile
             $user_profile = $user->get_user_profile();
