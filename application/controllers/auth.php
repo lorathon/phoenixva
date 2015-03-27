@@ -248,13 +248,8 @@ class Auth extends PVA_Controller
 				if ($created) 
 				{
 					// User created
-					$note = new Note();
-					$note->entity_type = 'user';
-					$note->entity_id = $user->id;
-					$note->note = '[SYSTEM] - Registered for the site.';
-					$note->private_note = FALSE;
-					$note->save();
-
+					$user->set_note('[SYSTEM] - Registered for the site.', $user->id);
+					
 					// Set values for the views
 					$this->load->helper('html');
 					$this->data['title'] = 'Application Submitted';
@@ -365,8 +360,7 @@ class Auth extends PVA_Controller
 	 */
 	function activate($id, $email_key)
 	{
-		$user = new User();
-		$user->id = $id;
+		$user = new User($id);
 		$user->new_email_key = $email_key;
 
 		// Activate user
@@ -375,12 +369,7 @@ class Auth extends PVA_Controller
 			// TODO Notify staff (call osTicket API and create ticket)
 			
 			// success
-			$note = new Note();
-			$note->entity_type = 'user';
-			$note->entity_id = $user->id;
-			$note->note = '[SYSTEM] - User activated.';
-			$note->private_note = FALSE;
-			$note->save();
+			$user->set_note('[SYSTEM] - User activated.', $user->id);
 			
 			$this->tank_auth->logout();
 			$this->session->sess_create();
@@ -507,12 +496,7 @@ class Auth extends PVA_Controller
 			if ( $admin_change AND ! $this->session->userdata('is_admin'))
 			{
 				// Make a note of unauthorized activity
-				$note = new Note();
-				$note->entity_type = 'user';
-				$note->entity_id = $this->session->userdata('user_id');
-				$note->note = '[WARNING ISSUED] - Non-admin attempted to change another user\'s password.';
-				$note->private_note = TRUE;
-				$note->save();
+				$this->unauthorized('[WARNING ISSUED] - Non-admin attempted to change another user\'s password.');
 				
 				$this->_alert('You are not authorized to perform this function. A formal warning has been issued and recorded on your permanent record.', 'danger', TRUE);
 				redirect('');
@@ -667,35 +651,20 @@ class Auth extends PVA_Controller
 			
 		// Admin processing LOA
 		$admin_change = ($id != $this->session->userdata('user_id'));
-	
+		
 		// Verify admin
 		if ( $admin_change AND ! $this->session->userdata('is_admin'))
 		{
 			// Make a note of unauthorized activity
-			$note = new Note();
-			$note->entity_type = 'user';
-			$note->entity_id = $this->session->userdata('user_id');
-			$note->note = '[WARNING ISSUED] - Non-admin attempted to place another user on LOA.';
-			$note->private_note = TRUE;
-			$note->save();
-	
-			$this->_alert('You are not authorized to perform this function. A formal warning has been issued and recorded on your permanent record.', 'danger', TRUE);
-			redirect('');
+			$this->unauthorized('[WARNING ISSUED] - Non-admin attempted to place another user on LOA.');
 		}
 		
-		$user = new User();
-		$user->id = $id;
+		$user = new User($id);
 		$user->loa();
-		$user->find();
 		
 		// Make a note in the user's record
-		$note = new Note();
-		$note->entity_type = 'user';
-		$note->entity_id = $id;
-		$note->user_id = $this->session->userdata('user_id');
-		$note->note = '[SYSTEM] - Pilot placed on Leave of Absence.';
-		$note->private_note = FALSE;
-		$note->save();
+		$user->set_note('[SYSTEM] - Pilot placed on Leave of Absence.', 
+				$this->session->userdata('user_id'));
 		
 		$this->_alert('The pilot has been placed on LOA.', 'success', TRUE);
 		$this->data['admin'] = $admin_change;
@@ -730,31 +699,16 @@ class Auth extends PVA_Controller
 		if ( $admin_change AND ! $this->session->userdata('is_admin'))
 		{
 			// Make a note of unauthorized activity
-			$note = new Note();
-			$note->entity_type = 'user';
-			$note->entity_id = $this->session->userdata('user_id');
-			$note->note = '[WARNING ISSUED] - Non-admin attempted to re-activate another user.';
-			$note->private_note = TRUE;
-			$note->save();
-	
-			$this->_alert('You are not authorized to perform this function. A formal warning has been issued and recorded on your permanent record.', 'danger', TRUE);
-			redirect('');
+			$this->unauthorized('[WARNING ISSUED] - Non-admin attempted to re-activate another user.');
 		}
 	
-		$user = new User();
-		$user->id = $id;
+		$user = new User($id);
 		$user->make_active();
-		$user->find();
 	
 		// Make a note in the user's record
-		$note = new Note();
-		$note->entity_type = 'user';
-		$note->entity_id = $id;
-		$note->user_id = $this->session->userdata('user_id');
-		$note->note = '[SYSTEM] - Pilot re-activated.';
-		$note->private_note = FALSE;
-		$note->save();
-	
+		$user->set_note('[SYSTEM] - Pilot re-activated.',
+				$this->session->userdata('user_id'));
+		
 		$this->_alert('The pilot has been re-activated.', 'success', TRUE);
 		$this->data['admin'] = $admin_change;
 		$this->data['username'] = $user->username;
@@ -763,6 +717,20 @@ class Auth extends PVA_Controller
 		$sent = $this->_send_email('reactivated', $user->email, 'Reactivated', $this->data);
 		log_message('debug', 'Email sent to: '.$user->email.', redirecting to profile id: '.$id);
 		redirect('/private/profile/view/'.$id);
+	}
+	
+	/**
+	 * Standardized unauthorized handling.
+	 * 
+	 * @param string $note The note to place in the user's permanent record.
+	 */
+	private function unauthorized($note)
+	{
+		$user = new User($this->session->userdata('user_id'));
+		$user->set_note($note, $this->session->userdata('user_id'), TRUE);
+		
+		$this->_alert('You are not authorized to perform this function. A formal warning has been issued and recorded on your permanent record.', 'danger', TRUE);
+		redirect('');
 	}
 
 	/**

@@ -273,6 +273,48 @@ class PVA_Model extends CI_Model
     }
     
     /**
+     * Sets a note for the current object.
+     * 
+     * @param string $note to record
+     * @param int $user_id of the user making the note
+     * @param boolean $private TRUE if the note should only be viewable by admins
+     * (defaults to FALSE)
+     */
+    public function set_note($msg, $user_id, $private = FALSE)
+    {
+    	$note = new Note();
+    	$note->entity_type = $this->_object_name;
+    	$key = $this->_primary_key;
+    	$note->entity_id = $this->$key;
+    	$note->user_id = $user_id;
+    	$note->note = $msg;
+    	$note->private_note = $private;
+    	$note->save();
+    }
+    
+    /**
+     * Gets the notes for the current object.
+     * 
+     * This is subject to limit and offset settings. If $private is set to true
+     * then only the private notes will be returned. To get all private and
+     * public notes requires too function calls.
+     * 
+     * @param boolean $private TRUE if the private notes should be returned.
+     * (defaults to FALSE)
+     * @return Ambigous <boolean, multitype:>
+     */
+    public function get_notes($private = FALSE)
+    {
+    	// Caching unnecessary since Note->get_notes already caches
+    	$note = new Note();
+    	$note->entity_type = $this->_object_name;
+    	$key = $this->_primary_key;
+    	$note->entity_id = $this->$key;
+    	$note->private_note = $private;
+    	return $note->get_notes();
+    }
+    
+    /**
      * Returns an array of objects.
      * 
      * Using a standard return will provide objects of stdClass but those won't
