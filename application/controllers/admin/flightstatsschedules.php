@@ -15,24 +15,34 @@ class Flightstatsschedules extends PVA_Controller
 	
 	
 	// single airport departures - 24 hours of data
-	public function apt($apt, $day, $version)
+	public function apt()
 	{
+                echo "Processing...";
+                echo "<br />";
+                
+                // required from Post
+                $appid = $this->input->post('appid');
+                $appkey = $this->input->post('appkey');
+                $apt = $this->input->post('apt');
+                $version = $this->input->post('version');
+                
+                $day = date('j');
 		$year = date('Y');
 		$month = date('n');
 		
-		$this->start($apt, $year, $month, $day, 0, $version);
-		$this->start($apt, $year, $month, $day, 6, $version);
-		$this->start($apt, $year, $month, $day, 12, $version);
-		$this->start($apt, $year, $month, $day, 18, $version);
+		$this->start($apt, $year, $month, $day, 0, $appid, $appkey, $version);
+		$this->start($apt, $year, $month, $day, 6, $appid, $appkey, $version);
+		$this->start($apt, $year, $month, $day, 12, $appid, $appkey, $version);
+		$this->start($apt, $year, $month, $day, 18, $appid, $appkey, $version);
 	}
 
 
 	
 	// main function to loop through 4 times for 24 hours of departures at designated airport
-	public function start($apt, $year, $month, $day, $hour, $version)
+	public function start($apt, $year, $month, $day, $hour, $appid, $appkey, $version)
 	{
 	
-		$json = file_get_contents("https://api.flightstats.com/flex/flightstatus/rest/v2/json/airport/status/$apt/dep/$year/$month/$day/$hour?appId=f48100ea&appKey=217ebf7797870e89ad05a5a69e4f4bf6&utc=false&numHours=6");
+		$json = file_get_contents("https://api.flightstats.com/flex/flightstatus/rest/v2/json/airport/status/$apt/dep/$year/$month/$day/$hour?appId=$appid&appKey=$appkey&utc=false&numHours=6");
 		
 		$data = json_decode($json, true);
 		
@@ -67,7 +77,7 @@ class Flightstatsschedules extends PVA_Controller
 				
 				
 				$regional = 0;
-				$operator = "";
+				$operator = NULL;
 					
 				if(isset($value['codeshares']))
 				{
@@ -255,7 +265,7 @@ class Flightstatsschedules extends PVA_Controller
 			  	
 			  	
 			  	// query DB to see if this route already exists
-			  	$query =   $this->db->from('schedules')
+			  	$query =   $this->db->from('schedules_pending')
 			  					  	->where('carrier', $carrier)
 			  					  	->where('flight_num', $flightNumber)
 			  					  	->where('dep_airport', $depAirport)
@@ -264,7 +274,7 @@ class Flightstatsschedules extends PVA_Controller
                                                                         ->where('version', $version)
 			  					  	->get();
 			  	
-			  	$query2 =  $this->db->from('schedules')
+			  	$query2 =  $this->db->from('schedules_pending')
 			  						->where('carrier', $carrier)
 			  						->where('dep_airport', $depAirport)
 			  						->where('arr_airport', $arrAirport)
@@ -280,7 +290,7 @@ class Flightstatsschedules extends PVA_Controller
 			  					  		
 				  		// create object to save to DB
 					  	set_time_limit(15);
-					  	$sched_obj = new Schedule();
+					  	$sched_obj = new Schedules_pending();
 					  
 					  	$sched_obj->flight_id        = $flightId;
 					  	$sched_obj->carrier          = $carrier;
@@ -310,15 +320,11 @@ class Flightstatsschedules extends PVA_Controller
 					
 					  
 					  	$sched_obj->save();
-					  
-					  	$counter++;
+					    	$counter++;
 					  	
-					  	// if saved, get rid of object before leaving loop for memory purposes
-					  	if ($sched_obj->save())
-					  	{
-					  		unset($sched_obj);
-					  	}
-					  	// end clear memory
+					  	// remove from memory
+					  	unset($sched_obj);
+					  	
 			  	}
 			  	// end query and DB insert
 			  	
@@ -335,7 +341,8 @@ class Flightstatsschedules extends PVA_Controller
 		}
 		// end foreach loop, go back to beginning.
 		
-		echo "$counter routes added to the database. $count_skipped routes were already in the system and skipped. \r\n Next: ";
+		echo "$counter routes added to the database. $count_skipped routes were already in the system and skipped.";
+                echo "<br />";
 	}
 	// end start function
 }
