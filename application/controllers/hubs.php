@@ -128,12 +128,39 @@ class Hubs extends PVA_Controller {
 		$this->_render();
 	}
 	
-	public function transfer()
+	public function transfer($uid, $hub_id)
 	{
 		log_message('debug', 'Hub transfer called');
 		$this->data['title'] = 'Hub Transfer';
-		$this->data['body'] = '<h1>Transfer capability not yet implemented.</h1>';
-		$this->_render('article');
+		
+		if ($this->session->userdata('user_id') != $uid)
+		{
+			$this->_check_access('manager');
+		}
+		
+		$user = new User($uid);
+		
+		if ($user->hub_transfer > 0)
+		{
+			// Only one transfer allowed at a time.
+			$this->_alert('Pilot already has a pending transfer.', 'danger', TRUE);
+		}
+		else
+		{
+			$user->hub_transfer = $hub_id;
+			$user->save();
+			$hub = new Airport($hub_id);
+			$icao = $hub->icao;
+			$user->set_note("Transfer to {$icao} requested.", $uid);
+			$this->_alert("Transfer to {$icao} requested.", 'success', TRUE);
+			
+			$this->data['user'] = $user;
+			$this->data['hub'] = $hub;
+			
+			$this->_send_email('transfer_pilot', $user->email, 'Crew Center Transfer Requested', $this->data);
+		}
+		$this->load->helper('url');
+		redirect('private/profile/view/'.$uid);		
 	}
 			
 	/**

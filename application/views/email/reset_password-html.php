@@ -1,31 +1,18 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head><title>Your new password on <?php echo $site_name; ?></title></head>
-<body>
-<div style="max-width: 800px; margin: 0; padding: 30px 0;">
-<table width="80%" border="0" cellpadding="0" cellspacing="0">
-<tr>
-<td width="5%"></td>
-<td align="left" width="95%" style="font: 13px/18px Arial, Helvetica, sans-serif;">
-<h2 style="font: normal 20px/23px Arial, Helvetica, sans-serif; margin: 0; padding: 0 0 18px; color: black;">Your new password on <?php echo $site_name; ?></h2>
+<p>
 Your password has been changed. If you did not change your password or request
-that your password be changed, please contact us immediately.<br />
-<br />
+that your password be changed, please contact us immediately.
+</p>
+<p>
 <?php if (strlen($username) > 0): ?>
 Your username: <?php echo $username; ?><br />
 <?php endif; ?>
 Your email address: <?php echo $email; ?><br />
 <?php if ($admin): ?>
 Your new password: <?php echo $new_password; ?><br />
-Please log in and change this password right away.
+<strong>Please log in and change this password right away.</strong>
 <?php endif; ?>
-<br />
-<br />
+</p>
+<p>
 Thank you,<br />
 The <?php echo $site_name; ?> Team
-</td>
-</tr>
-</table>
-</div>
-</body>
-</html>
+</p>

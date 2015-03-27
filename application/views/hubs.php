@@ -1,7 +1,10 @@
 <?php
 	$this->load->helper('html');
-	$show_admin = (isset($userdata['name']) && $userdata['is_manager']);
-	$own_hub = ($show_admin && ($airport->id == $userdata['hub']));
+	if (isset($airport))
+	{
+		$show_admin = (isset($userdata['name']) && $userdata['is_manager']);
+		$own_hub = ($show_admin && ($airport->id == $userdata['hub']));
+	}
 ?>
 <div class="container">
 	<?php if (isset($body)): ?>
@@ -49,7 +52,6 @@
 				<?php if (! $own_hub): ?>
 					<div class="alert alert-danger">
 						<p>WARNING: THIS IS NOT YOUR HUB</p>
-					</div>
 				<?php endif;?>
 				<div class="box-content">
 					<h2>Hub Admin</h2>
@@ -102,6 +104,7 @@
 							</tbody>
 						</table>
 					<?php endif; ?>
+					<?php if (! $own_hub): ?></div><?php endif; ?>
 				</div>
 			</div>
 			<?php endif; ?>
