@@ -10,12 +10,11 @@
  */
 class PVA_Model extends CI_Model
 {
-    protected $_table_name      = '';
-    protected $_object_name     = '';
+    protected $_table_name      = NULL;
+    protected $_object_name     = NULL;
     protected $_primary_key     = 'id';
     protected $_primary_filter  = 'intval';
     protected $_order_by        = NULL;
-    public $_rules              = array();
     protected $_timestamps      = FALSE;
     
     // ID
@@ -25,10 +24,7 @@ class PVA_Model extends CI_Model
     protected $_offset          = 0;
     
     // Default limit
-    protected $_limit           = 25;
-    
-    protected $_join            = array();
-    protected $_select          = NULL;
+    protected $_limit           = 25;    
     
     function __construct($id = NULL)
     {
@@ -37,14 +33,23 @@ class PVA_Model extends CI_Model
         // Connect to data store
         $this->load->database();
         
+	
         // Set the object name
-        $this->_object_name = strtolower(get_class($this));
-        log_message('debug', 'Object name: '.$this->_object_name);
+	if( is_null($this->_object_name))
+	{
+	    $this->_object_name = strtolower(get_class($this));	    
+	}
+	log_message('debug', 'Object name: '.$this->_object_name);
         
+	
         // Guess the table name
-        $this->_table_name = strtolower(get_class($this).'s');
+	if( is_null($this->_table_name))
+	{
+	    $this->_table_name = strtolower(get_class($this).'s');
+	}
         log_message('debug', 'Table name: '.$this->_table_name);
         
+	
         // If the id is set, create a populated model (Kohana-esque)
     	if ( ! is_null($id))
 		{
