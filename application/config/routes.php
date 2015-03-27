@@ -45,6 +45,8 @@ $route['pages/(:any)'] = "pages/view/$1";
 
 // Route all hub related stuff
 $route['hubs/transfer/(:any)'] = "hubs/transfer/$1";
+$route['hubs/transfer_approve/(:any)'] = "hubs/transfer_approve/$1";
+$route['hubs/transfer_reject/(:any)'] = "hubs/transfer_reject/$1";
 $route['hubs/(:any)'] = "hubs/view/$1";
 
 // Route all event related stuff

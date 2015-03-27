@@ -648,6 +648,51 @@ class User extends PVA_Model {
 	}
 	
 	/**
+	 * Requests a transfer to the given hub_id
+	 * @param int $hub_id
+	 * @return boolean FALSE if the user object is not populated
+	 */
+	function request_transfer($hub_id)
+	{
+		if (is_null($this->id) OR $this->hub_transfer > 0) return FALSE;
+		
+		$this->hub_transfer = $hub_id;
+		$this->save();
+	}
+	
+	/**
+	 * Approves any pending transfer.
+	 * 
+	 * @return boolean FALSE if the user object is not populated
+	 */
+	function approve_transfer()
+	{
+		if (is_null($this->id) OR $this->hub_transfer == 0) return FALSE;
+		
+		$this->hub = $this->hub_transfer;
+		$this->hub_transfer = 0;
+		$this->save();
+		
+		// Reset hub seniority
+		$stats = $this->get_user_stats();
+		$stats->hours_hub = 0;
+		$stats->save();		
+	}
+	
+	/**
+	 * Rejects any pending transfer.
+	 * 
+	 * @return boolean FALSE if the user object is not populated
+	 */
+	function reject_transfer()
+	{
+		if (is_null($this->id)) return FALSE;
+		
+		$this->hub_transfer = 0;
+		$this->save();
+	}
+	
+	/**
 	 * Bans a user from accessing the system.
 	 * 
 	 * Banned users cannot login and cannot re-register.

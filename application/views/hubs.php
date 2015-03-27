@@ -96,8 +96,8 @@
 										<?php echo format_hours($transfer->get_user_stats()->total_hours()); ?>
 									</td>
 									<td>
-										<?php echo anchor("#", '<i class="fa fa-thumbs-up" title="Accept"></i>', button('success')); ?>
-										<?php echo anchor("#", '<i class="fa fa-thumbs-down" title="Reject"></i>', button('danger')); ?>
+										<?php echo anchor('hubs/transfer_approve/'.$transfer->id.'/'.$airport->id, '<i class="fa fa-thumbs-up" title="Accept"></i>', button('success')); ?>
+										<?php echo anchor('hubs/transfer_reject/'.$transfer->id.'/'.$airport->id, '<i class="fa fa-thumbs-down" title="Reject"></i>', button('danger')); ?>
 									</td>
 								</tr>
 								<?php endforeach; ?>
