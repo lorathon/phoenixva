@@ -12,8 +12,22 @@
 						</h1>
 					</td>
 					<td style="text-align: right;">
-						<?php echo anchor('auth/login','SIGN IN'); ?>
-						<?php echo anchor('http://helpdesk.phoenixva.org/','HELP DESK'); ?>
+						<?php echo anchor('auth/login','SIGN IN', 'style="font-size: 12px;
+  font-style: normal;
+  line-height: 20px;
+  margin-left: 3px;
+  margin-right: 3px;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 10px 13px;"'); ?>
+						<?php echo anchor('http://helpdesk.phoenixva.org/','HELP DESK', 'style="font-size: 12px;
+  font-style: normal;
+  line-height: 20px;
+  margin-left: 3px;
+  margin-right: 3px;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 10px 13px;"'); ?>
 					</td>
 				</tr>
 			</table>
