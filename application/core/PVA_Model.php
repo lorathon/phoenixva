@@ -376,6 +376,18 @@ class PVA_Model extends CI_Model
     		// If a property is null or starts with underscore, do not include it.
     		if ( ! is_null($prop) && substr($key,0,1) != '_')
     		{
+    		    if (strpos($prop, ' '))
+    			{
+    				// Support for operators in properties
+    				$parts = explode(' ', $prop, 2);
+    				
+    				// Match an operator as the first character
+    				if (preg_match('/^(<=|>=|!=|> |< )/', $parts[0]))
+    				{
+    					$key .= ' '.$parts[0];
+    					$prop = $parts[1];
+    				}
+    			}
     			$parms[$key] = $prop;
     		}
     	}
