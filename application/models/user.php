@@ -575,6 +575,11 @@ class User extends PVA_Model {
 				}
 				$this->_set_retirement();
 				$this->save();
+				
+				// Update hub stats
+				$hub_stat = new Hub_stat();
+				$hub_stat->airport_id = $this->hub;
+				$hub_stat->update_pilots_assigned();
 
 				// TODO Create user in other systems
 				
@@ -668,10 +673,24 @@ class User extends PVA_Model {
 	function approve_transfer()
 	{
 		if (is_null($this->id) OR $this->hub_transfer == 0) return FALSE;
+
+		$out_hub = $this->hub;
+		$in_hub = $this->hub_transfer;
 		
 		$this->hub = $this->hub_transfer;
 		$this->hub_transfer = 0;
 		$this->save();
+		
+		// Update out hub stats
+		$hub_stat = new Hub_stat();
+		$hub_stat->airport_id = $out_hub;
+		$hub_stat->update_pilots_assigned();
+		
+		// Update in hub stats
+		$hub_stat = new Hub_stat();
+		$hub_stat->airport_id = $in_hub;
+		$hub_stat->update_pilots_assigned();
+		
 		
 		// Reset hub seniority
 		$stats = $this->get_user_stats();

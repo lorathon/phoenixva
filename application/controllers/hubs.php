@@ -93,7 +93,7 @@ class Hubs extends PVA_Controller {
 
 		$user = new User();
 		$user->hub = $airport->id;
-		$user->admin_level = '>= 50';
+		$user->admin_level = '>= 60';
 		$staff = $user->find_all();
 		if ($staff)
 		{
@@ -195,7 +195,7 @@ class Hubs extends PVA_Controller {
 		{
 			$user->set_note("Crew Center transfer approved.", $uid);
 			$this->_alert("Crew Center transfer approved.", 'success', TRUE);
-			
+						
 			$this->data['user'] = $user;
 			$this->data['hub'] = $hub;
 			
