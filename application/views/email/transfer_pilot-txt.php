@@ -1,7 +1,7 @@
 Hello <?php echo $user->name; ?>,
 
 We received a request to transfer you to: 
-<?php echo $hub->get_full_name(); ?>
+<?php echo $hub->get_full_name(); ?> 
 If you made this request there is nothing more you need to do. The 
 staff will review your request and process it accordingly.
 

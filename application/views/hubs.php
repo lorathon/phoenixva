@@ -3,7 +3,7 @@
 	if (isset($airport))
 	{
 		$show_admin = (isset($userdata['name']) && $userdata['is_manager']);
-		$own_hub = ($show_admin && ($airport->id == $userdata['hub']));
+		$own_hub = (isset($userdata['name']) && ($airport->id == $userdata['hub']));
 	}
 ?>
 <div class="container">
@@ -141,6 +141,13 @@
 								<?php endforeach; ?>
 							</tbody>
 						</table>
+					<?php endif; ?>
+					<?php if (isset($userdata['name'])): ?>
+						<?php if (!$own_hub): ?>
+							<?php echo anchor('hubs/transfer/'.$userdata['user_id'].'/'.$airport->id, 'Request Transfer To This Hub', button('warning')); ?>
+						<?php endif; ?>
+					<?php else: ?>
+						<?php echo anchor('auth/register', 'Join PVA Now!', button('success')); ?>
 					<?php endif; ?>
 				</div>
 			</div>
