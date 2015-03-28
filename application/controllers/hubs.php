@@ -85,13 +85,30 @@ class Hubs extends PVA_Controller {
 				
 		$this->data['meta_title'] = 'PVA Crew Centers: '.$airport->get_full_name();
 		$this->data['title'] = $airport->get_full_name();
-		$this->data['body'] = '<p>This page has no content.</p>';
 		$this->data['icao'] = $icao;
 		$this->data['page'] = $page;
 		$this->data['pages'] = $this->_hub_navigation($icao);
 		$this->data['breadcrumb']['hubs'] = 'Crew Centers';
 		$this->data['airport'] = $airport;
 
+		$user = new User();
+		$user->hub = $airport->id;
+		$user->admin_level = '>= 60';
+		$staff = $user->find_all();
+		if ($staff)
+		{
+			$this->data['body'] = '<p>This page has no content.</p>';
+		}
+		else 
+		{
+			$this->data['body'] = 
+					'<h2>This crew center is not staffed</h2> 
+					 <p>It does	not participate in Crew Center related events
+						and is meant for pilots who only wish to fly with
+						Phoenix Virtual Airways while not actively participating
+						in the forums or events.</p>';
+		}
+		
 		$user = new User();
 		$user->hub = $airport->id;
 		$user->activated = 1;
@@ -178,7 +195,7 @@ class Hubs extends PVA_Controller {
 		{
 			$user->set_note("Crew Center transfer approved.", $uid);
 			$this->_alert("Crew Center transfer approved.", 'success', TRUE);
-			
+						
 			$this->data['user'] = $user;
 			$this->data['hub'] = $hub;
 			

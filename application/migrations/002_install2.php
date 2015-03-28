@@ -89,10 +89,41 @@ class Migration_Install2 extends CI_Migration {
 				));
 		$this->dbforge->add_key('id', TRUE);
 		$this->dbforge->create_table('schedules_pending');
+		
+		// Hub Stats
+		$this->dbforge->add_field(array(
+				'id'               => $field_config['id_field'],
+				'airport_id'       => $field_config['fk_field'],
+				'total_pay'        => $field_config['money_field'],
+				'airlines_flown'   => $field_config['counter_field'],
+				'aircraft_flown'   => $field_config['counter_field'],
+				'airports_landed'  => $field_config['counter_field'],
+				'fuel_used'        => $field_config['calculated_field'],
+				'fuel_cost'        => $field_config['money_field'],
+				'total_landings'   => $field_config['calculated_field'],
+				'landing_softest'  => $field_config['calculated_field'],
+				'landing_hardest'  => $field_config['calculated_field'],
+				'total_gross'      => $field_config['money_field'],
+				'total_expenses'   => $field_config['money_field'],
+				'flights_early'    => $field_config['counter_field'],
+				'flights_ontime'   => $field_config['counter_field'],
+				'flights_late'     => $field_config['counter_field'],
+				'flights_manual'   => $field_config['counter_field'],
+				'flights_rejected' => $field_config['counter_field'],
+				'hours_flights'    => $field_config['counter_field'],
+				'pilots_assigned'  => $field_config['counter_field'],
+				'pilots_flying'    => $field_config['counter_field'],
+				'created'          => $field_config['timestamp_field'],
+				'modified'         => $field_config['timestamp_field'],
+		));
+		$this->dbforge->add_key('id', TRUE);
+		$this->dbforge->add_key('airport_id');
+		$this->dbforge->create_table('hub_stats', TRUE);
 	}
 	
 	public function down()
 	{
+		$this->dbforge->drop_table('hub_stats');
 		$this->dbforge->drop_table('session_logs');
 		$this->dbforge->drop_table('airline_aircrafts');
 		$this->dbforge->drop_table('airline_airports');

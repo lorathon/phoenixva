@@ -157,15 +157,18 @@ class PVA_Model extends CI_Model
      * Finds all objects similar to the current object.
      * 
      * Create an object populated with the search criteria, then call find_all on
-     * that object to return an array of populated objects of the same type. This
-     * method is subject to limit and offset settings.
+     * that object to return an array of populated objects of the same type.
+     * 
+     * This method is subject to limit and offset settings unless $count is TRUE.
      * 
      * @param boolean TRUE to perform a LIKE search. Defaults to WHERE clause.
+     * @param boolean TRUE to just count all of the results.
      * @throws Exception if the object id is populated.
-     * @return array |boolean Array of populated objects if found or FALSE if no
-     * records were found. 
+     * @return array |int |boolean Array of populated objects if found, an integer
+     * representing the number of matching records or FALSE if no records were 
+     * found. 
      */
-    public function find_all($search = FALSE)
+    public function find_all($search = FALSE, $count = FALSE)
     {
     	if (! is_null($this->id))
     	{
@@ -189,14 +192,21 @@ class PVA_Model extends CI_Model
     	{
     		$this->db->where($parms);
     	}
-    	
+
+    	// Just get the count of the results
+    	if ($count)
+    	{
+    		return $this->db->count_all_results();
+    	}
+    	 
+    	// XXX Creates opportunity for massive performance issue. Remove before production. [CJT]
         /* 
          * Added NULL check to allow for ALL records to be found
          * 03/04/2015
          * JFK
          */        
-	if (! is_null($this->_limit) )
-	    $this->db->limit($this->_limit, $this->_offset);
+		if (! is_null($this->_limit) )
+	    	$this->db->limit($this->_limit, $this->_offset);
     	
     	if ( ! is_null($this->_order_by))
     	{
@@ -255,7 +265,7 @@ class PVA_Model extends CI_Model
         {
             // Insert if id is NOT passed
             $this->id = NULL;  // ensure that id is NULL for insert
-            $this->db->insert($this->_table_name,$this);
+            $this->db->insert($this->_table_name, $this->_prep_data());
             $this->id = $this->db->insert_id();
         }
         else
