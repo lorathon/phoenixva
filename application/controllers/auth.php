@@ -175,7 +175,7 @@ class Auth extends PVA_Controller
 			$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'trim|required|xss_clean|matches[password]');
 			$this->form_validation->set_rules('first_name', 'First Name', 'trim|required|xss_clean');
 			$this->form_validation->set_rules('last_name', 'Last Name', 'trim|required|xss_clean');
-			$this->form_validation->set_rules('birth_date', 'Birth Date', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('birth_date', 'Birth Date', 'trim|required|xss_clean|callback_check_date_format');
 			$this->form_validation->set_rules('location', 'Location', 'trim|required|xss_clean');
 			$this->form_validation->set_rules('crew_center', 'Crew Center', 'trim|required|xss_clean');
 			$this->form_validation->set_rules('transfer_hours', 'Transfer Hours', 'trim|xss_clean|numeric|less_than[150.01]');
@@ -368,6 +368,7 @@ class Auth extends PVA_Controller
 		if ($this->_background_checks($user) && $user->activate()) 
 		{
 			// TODO Notify staff (call osTicket API and create ticket)
+			
 			
 			// success
 			$user->set_note('[SYSTEM] - User activated.', $user->id);
@@ -849,6 +850,20 @@ class Auth extends PVA_Controller
 		return TRUE;
 	}
 	
+	public function check_date_format($date)
+	{
+		$parts = explode('-', $date);
+		if (count($parts) == 3 && checkdate($parts[1], $parts[2], $parts[0]))
+		{
+			return TRUE;
+		}
+		else
+		{
+			$this->form_validation->set_message('check_date_format', 'The %s field must contain a date in the format YYYY-MM-DD.');
+			return FALSE;
+		}
+	}
+	
 	/**
 	 * Runs automated background checks
 	 * 
@@ -859,9 +874,8 @@ class Auth extends PVA_Controller
 	{		
 		// Old enough?
 		
-		// Previously Banned?
 		
-		// Vataware hours verification
+		// Previously Banned?
 		
 		return TRUE;
 	}
