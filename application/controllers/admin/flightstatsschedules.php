@@ -26,14 +26,52 @@ class Flightstatsschedules extends PVA_Controller
                 $apt = $this->input->post('apt');
                 $version = $this->input->post('version');
                 
-                $day = date('j');
+                $day1 = date('j')-6;
+                $day2 = date('j')-5;
+                $day3 = date('j')-4;
+                $day4 = date('j')-3;
+                $day5 = date('j')-2;
+                $day6 = date('j')-1;
+                $day7 = date('j');
+                
 		$year = date('Y');
 		$month = date('n');
 		
-		$this->start($apt, $year, $month, $day, 0, $appid, $appkey, $version);
-		$this->start($apt, $year, $month, $day, 6, $appid, $appkey, $version);
-		$this->start($apt, $year, $month, $day, 12, $appid, $appkey, $version);
-		$this->start($apt, $year, $month, $day, 18, $appid, $appkey, $version);
+                // 0000 - 0600
+		$this->start($apt, $year, $month, $day1, 0, $appid, $appkey, $version);
+		$this->start($apt, $year, $month, $day2, 0, $appid, $appkey, $version);
+		$this->start($apt, $year, $month, $day3, 0, $appid, $appkey, $version);
+		$this->start($apt, $year, $month, $day4, 0, $appid, $appkey, $version);
+		$this->start($apt, $year, $month, $day5, 0, $appid, $appkey, $version);
+		$this->start($apt, $year, $month, $day6, 0, $appid, $appkey, $version);
+		$this->start($apt, $year, $month, $day7, 0, $appid, $appkey, $version);
+                
+                // 0600 - 1200
+		$this->start($apt, $year, $month, $day1, 6, $appid, $appkey, $version);
+		$this->start($apt, $year, $month, $day2, 6, $appid, $appkey, $version);
+		$this->start($apt, $year, $month, $day3, 6, $appid, $appkey, $version);
+		$this->start($apt, $year, $month, $day4, 6, $appid, $appkey, $version);
+		$this->start($apt, $year, $month, $day5, 6, $appid, $appkey, $version);
+		$this->start($apt, $year, $month, $day6, 6, $appid, $appkey, $version);
+		$this->start($apt, $year, $month, $day7, 6, $appid, $appkey, $version);
+                
+                // 1200 - 1800
+		$this->start($apt, $year, $month, $day1, 12, $appid, $appkey, $version);
+		$this->start($apt, $year, $month, $day2, 12, $appid, $appkey, $version);
+		$this->start($apt, $year, $month, $day3, 12, $appid, $appkey, $version);
+		$this->start($apt, $year, $month, $day4, 12, $appid, $appkey, $version);
+		$this->start($apt, $year, $month, $day5, 12, $appid, $appkey, $version);
+		$this->start($apt, $year, $month, $day6, 12, $appid, $appkey, $version);
+		$this->start($apt, $year, $month, $day7, 12, $appid, $appkey, $version);
+                
+                // 1800 - 2400
+		$this->start($apt, $year, $month, $day1, 18, $appid, $appkey, $version);
+		$this->start($apt, $year, $month, $day2, 18, $appid, $appkey, $version);
+		$this->start($apt, $year, $month, $day3, 18, $appid, $appkey, $version);
+		$this->start($apt, $year, $month, $day4, 18, $appid, $appkey, $version);
+		$this->start($apt, $year, $month, $day5, 18, $appid, $appkey, $version);
+		$this->start($apt, $year, $month, $day6, 18, $appid, $appkey, $version);
+		$this->start($apt, $year, $month, $day7, 18, $appid, $appkey, $version);
 	}
 
 
@@ -341,7 +379,7 @@ class Flightstatsschedules extends PVA_Controller
 		}
 		// end foreach loop, go back to beginning.
 		
-		echo "$counter routes added to the database. $count_skipped routes were already in the system and skipped.";
+		echo "$apt - $counter routes added to the database. $count_skipped routes were already in the system and skipped.";
                 echo "<br />";
 	}
 	// end start function
