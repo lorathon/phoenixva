@@ -401,13 +401,17 @@ class Auth extends PVA_Controller
 		} else {
 
 			if ($this->form_validation->run()) {								// validation ok
-				if (!is_null($this->data = $this->tank_auth->forgot_password(
+				if (!is_null($fpdata = $this->tank_auth->forgot_password(
 						$this->form_validation->set_value('login')))) {
 
+					$this->data['user_id'] = $fpdata['user_id'];
+					$this->data['username'] = $fpdata['username'];
+					$this->data['email'] = $fpdata['email'];
+					$this->data['new_pass_key'] = $fpdata['new_pass_key'];
 					$this->data['site_name'] = $this->config->item('website_name', 'tank_auth');
 
 					// Send email with password activation link
-					$this->_send_email('forgot_password', $this->data['email'], 'Forgot your password on Phoenix Virtual Airways?', $this->data);
+					$this->_send_email('forgot_password', $this->data['email'], 'Forgot your password?', $this->data);
 
 					$this->_alert($this->lang->line('auth_message_new_password_sent'), 'info');
 
@@ -416,10 +420,11 @@ class Auth extends PVA_Controller
 					foreach ($errors as $k => $v)	$this->_alert($this->lang->line($v), 'danger');
 				}
 			}
-			//$this->load->view('auth/forgot_password_form', $this->data);
-            $this->data['meta_title'] = config_item('site_name');            
-            $this->data['subview'] = 'auth/forgot_password_form';
-            $this->load->view('_layout_modal', $this->data);
+			
+            $this->data['meta_title'] = 'Phoenix Virtual Airways: Password Reset';           
+            $this->data['title'] = 'Password Reset Form';
+            $this->data['meta_description'] = 'Use this form to send a password reminder.';
+            $this->_render('auth/forgot_password_form');
 		}
 	}
 
@@ -462,7 +467,8 @@ class Auth extends PVA_Controller
 				$this->_show_message('error', $this->lang->line('auth_message_new_password_failed'));
 			}
 		}
-		$this->load->view('auth/reset_password_form', $this->data);
+		$this->data['title'] = 'Enter New Password';
+		$this->_render('auth/reset_password_form');
 	}
 
 	/**
