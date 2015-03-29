@@ -26,52 +26,68 @@ class Flightstatsschedules extends PVA_Controller
                 $apt = $this->input->post('apt');
                 $version = $this->input->post('version');
                 
-                $day1 = date('j')-6;
-                $day2 = date('j')-5;
-                $day3 = date('j')-4;
-                $day4 = date('j')-3;
-                $day5 = date('j')-2;
-                $day6 = date('j')-1;
-                $day7 = date('j');
+                // setup dates for the previous week
+                $date = date();
                 
-		$year = date('Y');
-		$month = date('n');
+                $year1 = date('Y', strtotime("$date -6 day"));
+                $year2 = date('Y', strtotime("$date -5 day"));
+                $year3 = date('Y', strtotime("$date -4 day"));
+                $year4 = date('Y', strtotime("$date -3 day"));
+                $year5 = date('Y', strtotime("$date -2 day"));
+                $year6 = date('Y', strtotime("$date -1 day"));
+                $year7 = date('Y');
+                
+		$month1 = date('n', strtotime("$date -6 day"));
+		$month2 = date('n', strtotime("$date -5 day"));
+		$month3 = date('n', strtotime("$date -4 day"));
+		$month4 = date('n', strtotime("$date -3 day"));
+		$month5 = date('n', strtotime("$date -2 day"));
+		$month6 = date('n', strtotime("$date -1 day"));
+		$month7 = date('n');
+                
+                $day1 = date('j', strtotime("$date -6 day")); 
+                $day2 = date('j', strtotime("$date -5 day"));
+                $day3 = date('j', strtotime("$date -4 day"));
+                $day4 = date('j', strtotime("$date -3 day"));
+                $day5 = date('j', strtotime("$date -2 day"));
+                $day6 = date('j', strtotime("$date -1 day"));
+                $day7 = date('j');
 		
                 // 0000 - 0600
-		$this->start($apt, $year, $month, $day1, 0, $appid, $appkey, $version);
-		$this->start($apt, $year, $month, $day2, 0, $appid, $appkey, $version);
-		$this->start($apt, $year, $month, $day3, 0, $appid, $appkey, $version);
-		$this->start($apt, $year, $month, $day4, 0, $appid, $appkey, $version);
-		$this->start($apt, $year, $month, $day5, 0, $appid, $appkey, $version);
-		$this->start($apt, $year, $month, $day6, 0, $appid, $appkey, $version);
-		$this->start($apt, $year, $month, $day7, 0, $appid, $appkey, $version);
+		$this->start($apt, $year1, $month1, $day1, 0, $appid, $appkey, $version);
+		$this->start($apt, $year2, $month2, $day2, 0, $appid, $appkey, $version);
+		$this->start($apt, $year3, $month3, $day3, 0, $appid, $appkey, $version);
+		$this->start($apt, $year4, $month4, $day4, 0, $appid, $appkey, $version);
+		$this->start($apt, $year5, $month5, $day5, 0, $appid, $appkey, $version);
+		$this->start($apt, $year6, $month6, $day6, 0, $appid, $appkey, $version);
+		$this->start($apt, $year7, $month7, $day7, 0, $appid, $appkey, $version);
                 
                 // 0600 - 1200
-		$this->start($apt, $year, $month, $day1, 6, $appid, $appkey, $version);
-		$this->start($apt, $year, $month, $day2, 6, $appid, $appkey, $version);
-		$this->start($apt, $year, $month, $day3, 6, $appid, $appkey, $version);
-		$this->start($apt, $year, $month, $day4, 6, $appid, $appkey, $version);
-		$this->start($apt, $year, $month, $day5, 6, $appid, $appkey, $version);
-		$this->start($apt, $year, $month, $day6, 6, $appid, $appkey, $version);
-		$this->start($apt, $year, $month, $day7, 6, $appid, $appkey, $version);
+		$this->start($apt, $year1, $month1, $day1, 6, $appid, $appkey, $version);
+		$this->start($apt, $year2, $month2, $day2, 6, $appid, $appkey, $version);
+		$this->start($apt, $year3, $month3, $day3, 6, $appid, $appkey, $version);
+		$this->start($apt, $year4, $month4, $day4, 6, $appid, $appkey, $version);
+		$this->start($apt, $year5, $month5, $day5, 6, $appid, $appkey, $version);
+		$this->start($apt, $year6, $month6, $day6, 6, $appid, $appkey, $version);
+		$this->start($apt, $year7, $month7, $day7, 6, $appid, $appkey, $version);
                 
                 // 1200 - 1800
-		$this->start($apt, $year, $month, $day1, 12, $appid, $appkey, $version);
-		$this->start($apt, $year, $month, $day2, 12, $appid, $appkey, $version);
-		$this->start($apt, $year, $month, $day3, 12, $appid, $appkey, $version);
-		$this->start($apt, $year, $month, $day4, 12, $appid, $appkey, $version);
-		$this->start($apt, $year, $month, $day5, 12, $appid, $appkey, $version);
-		$this->start($apt, $year, $month, $day6, 12, $appid, $appkey, $version);
-		$this->start($apt, $year, $month, $day7, 12, $appid, $appkey, $version);
+		$this->start($apt, $year1, $month1, $day1, 12, $appid, $appkey, $version);
+		$this->start($apt, $year2, $month2, $day2, 12, $appid, $appkey, $version);
+		$this->start($apt, $year3, $month3, $day3, 12, $appid, $appkey, $version);
+		$this->start($apt, $year4, $month4, $day4, 12, $appid, $appkey, $version);
+		$this->start($apt, $year5, $month5, $day5, 12, $appid, $appkey, $version);
+		$this->start($apt, $year6, $month6, $day6, 12, $appid, $appkey, $version);
+		$this->start($apt, $year7, $month7, $day7, 12, $appid, $appkey, $version);
                 
                 // 1800 - 2400
-		$this->start($apt, $year, $month, $day1, 18, $appid, $appkey, $version);
-		$this->start($apt, $year, $month, $day2, 18, $appid, $appkey, $version);
-		$this->start($apt, $year, $month, $day3, 18, $appid, $appkey, $version);
-		$this->start($apt, $year, $month, $day4, 18, $appid, $appkey, $version);
-		$this->start($apt, $year, $month, $day5, 18, $appid, $appkey, $version);
-		$this->start($apt, $year, $month, $day6, 18, $appid, $appkey, $version);
-		$this->start($apt, $year, $month, $day7, 18, $appid, $appkey, $version);
+		$this->start($apt, $year1, $month1, $day1, 18, $appid, $appkey, $version);
+		$this->start($apt, $year2, $month2, $day2, 18, $appid, $appkey, $version);
+		$this->start($apt, $year3, $month3, $day3, 18, $appid, $appkey, $version);
+		$this->start($apt, $year4, $month4, $day4, 18, $appid, $appkey, $version);
+		$this->start($apt, $year5, $month5, $day5, 18, $appid, $appkey, $version);
+		$this->start($apt, $year6, $month6, $day6, 18, $appid, $appkey, $version);
+		$this->start($apt, $year7, $month7, $day7, 18, $appid, $appkey, $version);
 	}
 
 
