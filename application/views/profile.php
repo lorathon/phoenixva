@@ -44,8 +44,6 @@
 										<i class="fa fa-arrow-circle-right"></i>
 										<?php echo anchor('hubs/'.$transfer->icao, $transfer->icao); ?>
 									</span>
-								<?php else: ?>
-									<?php echo anchor('hubs/transfer','<i class="fa fa-exclamation-circle"></i> Transfer'); ?>
 								<?php endif; ?>
 							</dd>
 							<?php if ($raw_status < 4): ?>
