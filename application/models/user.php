@@ -834,13 +834,35 @@ class User extends PVA_Model {
 				$user->password = $this->password;
 				$user->_hash_password();
 				$user->save();
-			
+
 				return TRUE;
 			}
 		}
 		
 		return FALSE;
 		
+	}
+	
+	/**
+	 * Resets a user's password.
+	 * 
+	 * Object must be populated with id and password key prior to calling this
+	 * method.
+	 * 
+	 * @param string $new_pass
+	 * @return boolean TRUE if the password was changed, FALSE if the user is not found
+	 */
+	public function reset_password($new_pass)
+	{
+		if ($this->find())
+		{
+			$this->password = $new_pass;
+			$this->_hash_password();
+			$this->save();
+			return TRUE;
+		}
+		
+		return FALSE;
 	}
 	
 	/**
