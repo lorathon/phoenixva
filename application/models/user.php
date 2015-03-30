@@ -564,7 +564,33 @@ class User extends PVA_Model {
 			if ( ! $this->activated && ! $this->banned)
 			{
 
-				// TODO Background checking (business logic level)
+				// Background checking (business logic level)
+				log_message('debug', 'Running background check on user ID: '.$this->id);
+				
+				$birth = strtotime($this->birthday);
+				$maxbirth = strtotime('-16 year');
+				$minbirth = strtotime('-100 year');
+				log_message('debug', 'Birthdate: '.$birth);
+				log_message('debug', 'Youngest Birthdate: '.$maxbirth);
+				log_message('debug', 'Oldest Birthdate: '.$minbirth);
+				
+				if ($birth >= $maxbirth)
+				{
+					// Too young
+					$this->set_note('[SYSTEM] - Account rejected: Too young.', $this->id, TRUE);
+					$this->ban_reason = 'Too young at time of application';
+					$this->ban();
+					return FALSE;
+				}
+				if ($birth <= $minbirth)
+				{
+					// Too old (over 100 years!)
+					$this->set_note('[SYSTEM] - Account rejected: Too old.', $this->id, TRUE);
+					$this->ban_reason = 'Too old at time of application';
+					$this->ban();
+					return FALSE;
+				}
+				
 				
 				// Background check ok, activate the user
 				$this->activated = 1;

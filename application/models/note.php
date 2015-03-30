@@ -136,6 +136,7 @@ class Note extends PVA_Model {
 		$this->db->select()
 		         ->from($this->_table_name)
 		         ->where($parms)
+		         ->limit($this->_limit, $this->_offset)
 		         ->order_by($this->_order_by);
 		 
 		// Query the database
