@@ -361,7 +361,9 @@ class Auth extends PVA_Controller
 	 */
 	function activate($id, $email_key)
 	{
-		$user = new User($id);
+		// Don't create user with ID because activate needs to verify the email key
+		$user = new User();
+		$user->id = $id;
 		$user->new_email_key = $email_key;
 
 		// Activate user
@@ -433,7 +435,7 @@ class Auth extends PVA_Controller
 	 * Replace user password (forgotten) with a new one (set by user).
 	 * User is verified by user_id and authentication code in the URL.
 	 * Can be called by clicking on link in mail.
-	 *
+	 * 
 	 * @return void
 	 */
 	function reset_password()
@@ -443,29 +445,40 @@ class Auth extends PVA_Controller
 
 		$this->form_validation->set_rules('new_password', 'New Password', 'trim|required|xss_clean|min_length['.$this->config->item('password_min_length', 'tank_auth').']|max_length['.$this->config->item('password_max_length', 'tank_auth').']|alpha_dash');
 		
-		if ($this->form_validation->run()) {								// validation ok
-			if (!is_null($this->data = $this->tank_auth->reset_password(
-					$user_id, $new_pass_key,
-					$this->form_validation->set_value('new_password')))) {	// success
-
-				$this->data['site_name'] = $this->config->item('website_name', 'tank_auth');
-
-				// Send email with new password
-				$this->_send_email('reset_password', $this->data['email'], 'Your new password on Phoenix Virtual Airways', $this->data);
-
-				$this->_show_message('success', $this->lang->line('auth_message_new_password_activated').' '.anchor('/auth/login/', 'Login'));
-
-			} else {														// fail
-				$this->_show_message('error', $this->lang->line('auth_message_new_password_failed'));
+		if ($this->form_validation->run()) 
+		{								// validation ok
+			$user = new User();
+			$user->id = $user_id;
+			$user->new_password_key = $new_pass_key;
+			if ($user->reset_password($this->form_validation->set_value('new_password'))) 
+			{
+				// success
+				log_message('debug','Password changed for user id: '.$user->id);
+				$this->_alert($this->lang->line('auth_message_password_changed'), 'success', TRUE);
+				$this->data['admin'] = FALSE;
+				$this->data['username'] = $user->username;
+				$this->data['email'] = $user->email;
+					
+				$sent = $this->_send_email('reset_password', $user->email, 'Your Password Has Been Changed', $this->data);
+				log_message('debug', 'Email sent to: '.$user->email);
+				redirect('auth/login');
+			} 
+			else 
+			{														
+				// fail
+				log_message('debug','Error changing password for user id: '.$user->id);
+				$this->_alert('An error occurred changing the password.', 'danger');
 			}
-		} else {
+		} 
+		else 
+		{
 			// Try to activate user by password key (if not activated yet)
 			if ($this->config->item('email_activation', 'tank_auth')) {
 				$this->tank_auth->activate_user($user_id, $new_pass_key, FALSE);
 			}
 
 			if (!$this->tank_auth->can_reset_password($user_id, $new_pass_key)) {
-				$this->_show_message('error', $this->lang->line('auth_message_new_password_failed'));
+				$this->_alert($this->lang->line('auth_message_new_password_failed'), 'error');
 			}
 		}
 		$this->data['title'] = 'Enter New Password';
@@ -523,8 +536,8 @@ class Auth extends PVA_Controller
 				if ($user->change_password($this->form_validation->set_value('old_password'), $admin_change)) 
 				{
 					// success
+					$user = new User($id);   // Repopulate the user object.
 					log_message('debug','Password changed for user id: '.$user->id);
-					$user->find();
 					$this->_alert($this->lang->line('auth_message_password_changed'), 'success', TRUE);
 					$this->data['admin'] = $admin_change;
 					if ($admin_change)
@@ -534,7 +547,7 @@ class Auth extends PVA_Controller
 					$this->data['username'] = $user->username;
 					$this->data['email'] = $user->email;
 						
-					$sent = $this->_send_email('reset_password', $user->email, 'Your new password on Phoenix Virtual Airways', $this->data);
+					$sent = $this->_send_email('reset_password', $user->email, 'Your Password Has Been Changed', $this->data);
 					log_message('debug', 'Email sent to: '.$user->email.', redirecting to profile id: '.$id);
 					redirect('/private/profile/view/'.$id);
 				} 
@@ -735,6 +748,7 @@ class Auth extends PVA_Controller
 	private function unauthorized($note)
 	{
 		$user = new User($this->session->userdata('user_id'));
+		$user->warn();
 		$user->set_note($note, $this->session->userdata('user_id'), TRUE);
 		
 		$this->_alert('You are not authorized to perform this function. A formal warning has been issued and recorded on your permanent record.', 'danger', TRUE);
