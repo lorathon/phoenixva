@@ -124,6 +124,18 @@ class Migration_Install2 extends CI_Migration {
 		$this->dbforge->add_key('id', TRUE);
 		$this->dbforge->add_key('airport_id');
 		$this->dbforge->create_table('hub_stats', TRUE);
+                
+                // Flightstats Logs
+		$this->dbforge->add_field(array(
+				'id'               => $field_config['id_field'],
+				'type'             => $field_config['short_input_field'],
+				'version'          => $field_config['icao_field'],
+				'fs'               => $field_config['icao_field'],
+				'note'             => $field_config['short_input_field'],
+				'created'          => $field_config['timestamp_field'],
+		));
+		$this->dbforge->add_key('id', TRUE);
+		$this->dbforge->create_table('flightstats_logs', TRUE);
 	}
 	
 	public function down()
