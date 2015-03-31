@@ -11,15 +11,116 @@ class Flightstatsschedules extends PVA_Controller
 		parent::__construct();
 	}
 	
-	
-	
-	
-	// single airport departures - 24 hours of data
-	public function apt()
-	{
-                echo "Processing...";
-                echo "<br />";
+        //multiple airports flight pull
+	public function aptwhere()
+        {
+                $appid      = $this->input->post('appid');
+                $appkey     = $this->input->post('appkey');
+                $idstart    = $this->input->post('idstart');
+                $idstop     = $this->input->post('idstop');
+                $version    = $this->input->post('version');
                 
+                
+                $query = $this->db->select('fs')
+                                    ->from('airports')
+                                    ->where('id >=', $idstart)
+                                    ->where('id <=', $idstop)
+                                    ->where('active', 1)
+                                    ->get();
+                
+                foreach ($query->result() as $row)
+                {
+                    $apt = $row->fs;
+                    
+                    // required from Post
+                    $appid = $this->input->post('appid');
+                    $appkey = $this->input->post('appkey');
+                    $version = $this->input->post('version');
+
+                    // setup dates for the previous week
+                    $date = date('D Y-n-j');
+
+                    $date1 = date('D Y-n-j', strtotime("$date -7 day"));
+                    $date2 = date('D Y-n-j', strtotime("$date -6 day"));
+                    $date3 = date('D Y-n-j', strtotime("$date -5 day"));
+                    $date4 = date('D Y-n-j', strtotime("$date -4 day"));
+                    $date5 = date('D Y-n-j', strtotime("$date -3 day"));
+                    $date6 = date('D Y-n-j', strtotime("$date -2 day"));
+                    $date7 = date('D Y-n-j', strtotime("$date -1 day"));
+
+                    $year1 = date('Y', strtotime($date1)); $month1 = date('n', strtotime($date1)); $day1 = date('j', strtotime($date1)); $dow1 = date('D', strtotime($date1));
+                    $year2 = date('Y', strtotime($date2)); $month2 = date('n', strtotime($date2)); $day2 = date('j', strtotime($date2)); $dow2 = date('D', strtotime($date2));
+                    $year3 = date('Y', strtotime($date3)); $month3 = date('n', strtotime($date3)); $day3 = date('j', strtotime($date3)); $dow3 = date('D', strtotime($date3));
+                    $year4 = date('Y', strtotime($date4)); $month4 = date('n', strtotime($date4)); $day4 = date('j', strtotime($date4)); $dow4 = date('D', strtotime($date4));
+                    $year5 = date('Y', strtotime($date5)); $month5 = date('n', strtotime($date5)); $day5 = date('j', strtotime($date5)); $dow5 = date('D', strtotime($date5));
+                    $year6 = date('Y', strtotime($date6)); $month6 = date('n', strtotime($date6)); $day6 = date('j', strtotime($date6)); $dow6 = date('D', strtotime($date6));
+                    $year7 = date('Y', strtotime($date7)); $month7 = date('n', strtotime($date7)); $day7 = date('j', strtotime($date7)); $dow7 = date('D', strtotime($date7));
+
+
+                    $counter = 0;
+
+                    // Day 1 (7 days ago)
+                    $processed = $this->start($apt, $year1, $month1, $day1, 0, $appid, $appkey, $version, $dow1, $counter);
+                    $processed += $this->start($apt, $year1, $month1, $day1, 6, $appid, $appkey, $version, $dow1, $counter);
+                    $processed += $this->start($apt, $year1, $month1, $day1, 12, $appid, $appkey, $version, $dow1, $counter);
+                    $processed += $this->start($apt, $year1, $month1, $day1, 18, $appid, $appkey, $version, $dow1, $counter);
+
+                    /* Day 2 (6 days ago)
+                    $processed += $this->start($apt, $year2, $month2, $day2, 0, $appid, $appkey, $version, $dow2, $counter);
+                    $processed += $this->start($apt, $year2, $month2, $day2, 6, $appid, $appkey, $version, $dow2, $counter);
+                    $processed += $this->start($apt, $year2, $month2, $day2, 12, $appid, $appkey, $version, $dow2, $counter);
+                    $processed += $this->start($apt, $year2, $month2, $day2, 18, $appid, $appkey, $version, $dow2, $counter);
+
+                    // Day 3 (5 days ago)
+                    $processed += $this->start($apt, $year3, $month3, $day3, 0, $appid, $appkey, $version, $dow3, $counter);
+                    $processed += $this->start($apt, $year3, $month3, $day3, 6, $appid, $appkey, $version, $dow3, $counter);
+                    $processed += $this->start($apt, $year3, $month3, $day3, 12, $appid, $appkey, $version, $dow3, $counter);
+                    $processed += $this->start($apt, $year3, $month3, $day3, 18, $appid, $appkey, $version, $dow3, $counter);
+
+                    // Day 4 (4 days ago)
+                    $processed += $this->start($apt, $year4, $month4, $day4, 0, $appid, $appkey, $version, $dow4, $counter);
+                    $processed += $this->start($apt, $year4, $month4, $day4, 6, $appid, $appkey, $version, $dow4, $counter);
+                    $processed += $this->start($apt, $year4, $month4, $day4, 12, $appid, $appkey, $version, $dow4, $counter);
+                    $processed += $this->start($apt, $year4, $month4, $day4, 18, $appid, $appkey, $version, $dow4, $counter);
+
+                    // Day 5 (3 days ago)
+                    $processed += $this->start($apt, $year5, $month5, $day5, 0, $appid, $appkey, $version, $dow5, $counter);
+                    $processed += $this->start($apt, $year5, $month5, $day5, 6, $appid, $appkey, $version, $dow5, $counter);
+                    $processed += $this->start($apt, $year5, $month5, $day5, 12, $appid, $appkey, $version, $dow5, $counter);
+                    $processed += $this->start($apt, $year5, $month5, $day5, 18, $appid, $appkey, $version, $dow5, $counter);
+
+                    // Day 6 (2 day ago)
+                    $processed += $this->start($apt, $year6, $month6, $day6, 0, $appid, $appkey, $version, $dow6, $counter);
+                    $processed += $this->start($apt, $year6, $month6, $day6, 6, $appid, $appkey, $version, $dow6, $counter);
+                    $processed += $this->start($apt, $year6, $month6, $day6, 12, $appid, $appkey, $version, $dow6, $counter);
+                    $processed += $this->start($apt, $year6, $month6, $day6, 18, $appid, $appkey, $version, $dow6, $counter);
+
+                    // Day 7 (1 day ago)
+                    $processed += $this->start($apt, $year7, $month7, $day7, 0, $appid, $appkey, $version, $dow7, $counter);
+                    $processed += $this->start($apt, $year7, $month7, $day7, 6, $appid, $appkey, $version, $dow7, $counter);
+                    $processed += $this->start($apt, $year7, $month7, $day7, 12, $appid, $appkey, $version, $dow7, $counter);
+                    $processed += $this->start($apt, $year7, $month7, $day7, 18, $appid, $appkey, $version, $dow7, $counter);
+                    */
+                    echo "$apt - Version $version - $processed flights processed. <br />";
+
+                    // create flightstats log entry for flight entry
+                    $log_obj = new Flightstats_log();
+
+                    $log_obj->type      = "Schedule";
+                    $log_obj->version   = $version;
+                    $log_obj->fs        = $apt;
+                    $log_obj->note      = "$processed flights processed.";
+
+                    $log_obj->save();
+
+                    }
+                
+        }
+	
+        
+	// single airport flight pull
+	public function apt()
+	{            
                 // required from Post
                 $appid = $this->input->post('appid');
                 $appkey = $this->input->post('appkey');
@@ -29,80 +130,91 @@ class Flightstatsschedules extends PVA_Controller
                 // setup dates for the previous week
                 $date = date('D Y-n-j');
                 
-                $date1 = date('D Y-n-j', strtotime("$date -6 day"));
-                $date2 = date('D Y-n-j', strtotime("$date -5 day"));
-                $date3 = date('D Y-n-j', strtotime("$date -4 day"));
-                $date4 = date('D Y-n-j', strtotime("$date -3 day"));
-                $date5 = date('D Y-n-j', strtotime("$date -2 day"));
-                $date6 = date('D Y-n-j', strtotime("$date -1 day"));
-                $date7 = $date;
+                $date1 = date('D Y-n-j', strtotime("$date -7 day"));
+                $date2 = date('D Y-n-j', strtotime("$date -6 day"));
+                $date3 = date('D Y-n-j', strtotime("$date -5 day"));
+                $date4 = date('D Y-n-j', strtotime("$date -4 day"));
+                $date5 = date('D Y-n-j', strtotime("$date -3 day"));
+                $date6 = date('D Y-n-j', strtotime("$date -2 day"));
+                $date7 = date('D Y-n-j', strtotime("$date -1 day"));
                 
                 $year1 = date('Y', strtotime($date1)); $month1 = date('n', strtotime($date1)); $day1 = date('j', strtotime($date1)); $dow1 = date('D', strtotime($date1));
                 $year2 = date('Y', strtotime($date2)); $month2 = date('n', strtotime($date2)); $day2 = date('j', strtotime($date2)); $dow2 = date('D', strtotime($date2));
-                $year3 = date('Y', strtotime($date3)); $month3 = date('n', strtotime($date3)); $day3 = date('j', strtotime($date2)); $dow3 = date('D', strtotime($date3));
-                $year4 = date('Y', strtotime($date4)); $month4 = date('n', strtotime($date4)); $day4 = date('j', strtotime($date2)); $dow4 = date('D', strtotime($date4));
-                $year5 = date('Y', strtotime($date5)); $month5 = date('n', strtotime($date5)); $day5 = date('j', strtotime($date2)); $dow5 = date('D', strtotime($date5));
-                $year6 = date('Y', strtotime($date6)); $month6 = date('n', strtotime($date6)); $day6 = date('j', strtotime($date2)); $dow6 = date('D', strtotime($date6));
-                $year7 = date('Y'); $month7 = date('n'); $day7 = date('j');  $dow7 = date('D');
+                $year3 = date('Y', strtotime($date3)); $month3 = date('n', strtotime($date3)); $day3 = date('j', strtotime($date3)); $dow3 = date('D', strtotime($date3));
+                $year4 = date('Y', strtotime($date4)); $month4 = date('n', strtotime($date4)); $day4 = date('j', strtotime($date4)); $dow4 = date('D', strtotime($date4));
+                $year5 = date('Y', strtotime($date5)); $month5 = date('n', strtotime($date5)); $day5 = date('j', strtotime($date5)); $dow5 = date('D', strtotime($date5));
+                $year6 = date('Y', strtotime($date6)); $month6 = date('n', strtotime($date6)); $day6 = date('j', strtotime($date6)); $dow6 = date('D', strtotime($date6));
+                $year7 = date('Y', strtotime($date7)); $month7 = date('n', strtotime($date7)); $day7 = date('j', strtotime($date7)); $dow7 = date('D', strtotime($date7));
 		
-
-		
-                // Day 1 (6 days ago)
-		$this->start($apt, $year1, $month1, $day1, 0, $appid, $appkey, $version, $dow1);
-		$this->start($apt, $year1, $month1, $day1, 6, $appid, $appkey, $version, $dow1);
-		$this->start($apt, $year1, $month1, $day1, 12, $appid, $appkey, $version, $dow1);
-		$this->start($apt, $year1, $month1, $day1, 18, $appid, $appkey, $version, $dow1);
                 
-                // Day 2 (5 days ago)
-		$this->start($apt, $year2, $month2, $day2, 0, $appid, $appkey, $version, $dow2);
-		$this->start($apt, $year2, $month2, $day2, 6, $appid, $appkey, $version, $dow2);
-		$this->start($apt, $year2, $month2, $day2, 12, $appid, $appkey, $version, $dow2);
-		$this->start($apt, $year2, $month2, $day2, 18, $appid, $appkey, $version, $dow2);
+                $counter = 0;
+                
+                // Day 1 (7 days ago)
+		$processed = $this->start($apt, $year1, $month1, $day1, 0, $appid, $appkey, $version, $dow1, $counter);
+		//$processed += $this->start($apt, $year1, $month1, $day1, 6, $appid, $appkey, $version, $dow1, $counter);
+		//$processed += $this->start($apt, $year1, $month1, $day1, 12, $appid, $appkey, $version, $dow1, $counter);
+		//$processed += $this->start($apt, $year1, $month1, $day1, 18, $appid, $appkey, $version, $dow1, $counter);
+                
+                /* Day 2 (6 days ago)
+		$processed += $this->start($apt, $year2, $month2, $day2, 0, $appid, $appkey, $version, $dow2, $counter);
+		$processed += $this->start($apt, $year2, $month2, $day2, 6, $appid, $appkey, $version, $dow2, $counter);
+		$processed += $this->start($apt, $year2, $month2, $day2, 12, $appid, $appkey, $version, $dow2, $counter);
+		$processed += $this->start($apt, $year2, $month2, $day2, 18, $appid, $appkey, $version, $dow2, $counter);
                       
-                // Day 3 (4 days ago)
-		$this->start($apt, $year3, $month3, $day3, 0, $appid, $appkey, $version, $dow3);
-		$this->start($apt, $year3, $month3, $day3, 6, $appid, $appkey, $version, $dow3);
-		$this->start($apt, $year3, $month3, $day3, 12, $appid, $appkey, $version, $dow3);
-		$this->start($apt, $year3, $month3, $day3, 18, $appid, $appkey, $version, $dow3);
+                // Day 3 (5 days ago)
+		$processed += $this->start($apt, $year3, $month3, $day3, 0, $appid, $appkey, $version, $dow3, $counter);
+		$processed += $this->start($apt, $year3, $month3, $day3, 6, $appid, $appkey, $version, $dow3, $counter);
+		$processed += $this->start($apt, $year3, $month3, $day3, 12, $appid, $appkey, $version, $dow3, $counter);
+		$processed += $this->start($apt, $year3, $month3, $day3, 18, $appid, $appkey, $version, $dow3, $counter);
                 
-                // Day 4 (3 days ago)
-		$this->start($apt, $year4, $month4, $day4, 0, $appid, $appkey, $version, $dow4);
-		$this->start($apt, $year4, $month4, $day4, 6, $appid, $appkey, $version, $dow4);
-		$this->start($apt, $year4, $month4, $day4, 12, $appid, $appkey, $version, $dow4) ;
-		$this->start($apt, $year4, $month4, $day4, 18, $appid, $appkey, $version, $dow4);
+                // Day 4 (4 days ago)
+		$processed += $this->start($apt, $year4, $month4, $day4, 0, $appid, $appkey, $version, $dow4, $counter);
+		$processed += $this->start($apt, $year4, $month4, $day4, 6, $appid, $appkey, $version, $dow4, $counter);
+		$processed += $this->start($apt, $year4, $month4, $day4, 12, $appid, $appkey, $version, $dow4, $counter);
+		$processed += $this->start($apt, $year4, $month4, $day4, 18, $appid, $appkey, $version, $dow4, $counter);
                 
-                // Day 5 (2 days ago)
-		$this->start($apt, $year5, $month5, $day5, 0, $appid, $appkey, $version, $dow5);
-		$this->start($apt, $year5, $month5, $day5, 6, $appid, $appkey, $version, $dow5);
-		$this->start($apt, $year5, $month5, $day5, 12, $appid, $appkey, $version, $dow5);
-		$this->start($apt, $year5, $month5, $day5, 18, $appid, $appkey, $version, $dow5);
+                // Day 5 (3 days ago)
+		$processed += $this->start($apt, $year5, $month5, $day5, 0, $appid, $appkey, $version, $dow5, $counter);
+		$processed += $this->start($apt, $year5, $month5, $day5, 6, $appid, $appkey, $version, $dow5, $counter);
+		$processed += $this->start($apt, $year5, $month5, $day5, 12, $appid, $appkey, $version, $dow5, $counter);
+		$processed += $this->start($apt, $year5, $month5, $day5, 18, $appid, $appkey, $version, $dow5, $counter);
                 
-                // Day 6 (1 day ago)
-		$this->start($apt, $year6, $month6, $day6, 0, $appid, $appkey, $version, $dow6);
-		$this->start($apt, $year6, $month6, $day6, 6, $appid, $appkey, $version, $dow6);
-		$this->start($apt, $year6, $month6, $day6, 12, $appid, $appkey, $version, $dow6);
-		$this->start($apt, $year6, $month6, $day6, 18, $appid, $appkey, $version, $dow6);
+                // Day 6 (2 day ago)
+		$processed += $this->start($apt, $year6, $month6, $day6, 0, $appid, $appkey, $version, $dow6, $counter);
+		$processed += $this->start($apt, $year6, $month6, $day6, 6, $appid, $appkey, $version, $dow6, $counter);
+		$processed += $this->start($apt, $year6, $month6, $day6, 12, $appid, $appkey, $version, $dow6, $counter);
+		$processed += $this->start($apt, $year6, $month6, $day6, 18, $appid, $appkey, $version, $dow6, $counter);
                 
-                // Day 7 (today)
-		$this->start($apt, $year7, $month7, $day7, 0, $appid, $appkey, $version, $dow7);
-		$this->start($apt, $year7, $month7, $day7, 6, $appid, $appkey, $version, $dow7);
-		$this->start($apt, $year7, $month7, $day7, 12, $appid, $appkey, $version, $dow7);
-		$this->start($apt, $year7, $month7, $day7, 18, $appid, $appkey, $version, $dow7);
-		
+                // Day 7 (1 day ago)
+		$processed += $this->start($apt, $year7, $month7, $day7, 0, $appid, $appkey, $version, $dow7, $counter);
+		$processed += $this->start($apt, $year7, $month7, $day7, 6, $appid, $appkey, $version, $dow7, $counter);
+		$processed += $this->start($apt, $year7, $month7, $day7, 12, $appid, $appkey, $version, $dow7, $counter);
+		$processed += $this->start($apt, $year7, $month7, $day7, 18, $appid, $appkey, $version, $dow7, $counter);
+                */
+                echo "$apt - Version $version - $processed flights processed. <br />";
+                
+                // create flightstats log entry for flight entry
+                $log_obj = new Flightstats_log();
+                
+                $log_obj->type      = "Schedule";
+                $log_obj->version   = $version;
+                $log_obj->fs        = $apt;
+                $log_obj->note      = "$processed flights processed.";
+                
+                $log_obj->save();
 	}
 
 
 	
 	// main function to loop through 4 times for 24 hours of departures at designated airport
-	public function start($apt, $year, $month, $day, $hour, $appid, $appkey, $version, $dayofweek)
+	public function start($apt, $year, $month, $day, $hour, $appid, $appkey, $version, $dayofweek, $counter)
 	{
 	
 		$json = file_get_contents("https://api.flightstats.com/flex/flightstatus/rest/v2/json/airport/status/$apt/dep/$year/$month/$day/$hour?appId=$appid&appKey=$appkey&utc=false&numHours=6");
 		
 		$data = json_decode($json, true);
 		
-		$counter = 0;
-		$count_skipped = 0;
+		//$counter = 0;
 		
 		
 		foreach($data['flightStatuses'] as $stat => $value) {
@@ -371,13 +483,11 @@ class Flightstatsschedules extends PVA_Controller
 
                                 // remove from memory
                                 unset($sched_obj);
-					  	
+                                					  	
 			  	}
 		}
 		// end foreach loop, go back to beginning.
-		
-		echo "$apt - $dayofweek - $counter routes added to the database.";
-                echo "<br />";
+                return $counter;
 	}
 	// end start function
 }
