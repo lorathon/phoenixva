@@ -204,6 +204,7 @@ class Migration_Install extends CI_Migration {
 				'total_pireps'    => $field_config['counter_field'],
 				'total_hours'     => $field_config['counter_field'],
 				'regional'        => $field_config['status_field'],
+                                'version'         => $field_config['icao_field'],
 				));
 		$this->dbforge->add_key('id', TRUE);
 		$this->dbforge->add_key(array('iata','icao'));

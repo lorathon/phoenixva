@@ -14,7 +14,8 @@ class Airline extends PVA_Model {
 	public $total_schedules	= NULL;
 	public $total_pireps	= NULL;
 	public $total_hours	= NULL;
-	public $regional	= NULL;	
+	public $regional	= NULL;
+        public $version         = NULL;
 	
 	protected $_cat		= NULL;
 	
