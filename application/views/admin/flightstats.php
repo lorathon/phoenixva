@@ -72,6 +72,12 @@
                                                                     <span class="help-block">Choose the amount of airports to process and insert into DB. Defaults to all airports with flight history in Flightstats.</span>
                                                             </div>
                                                     </div>
+                                                    <div class="form-group">
+                                                            <label class="col-md-3 control-label">Schedule Version</label>
+                                                            <div class="col-md-6">
+                                                                <input type="text" class="form-control" name="version" value="15A1">
+                                                            </div>
+                                                    </div>
                                                     <footer class="panel-footer" align="center">
                                                             <button class="btn btn-primary">Submit</button>
                                                             <button type="reset" class="btn btn-default">Reset</button>
@@ -143,6 +149,12 @@
                                                                 <input class="form-control" type="text" name="appid" placeholder="App ID" value="f48100ea">
                                                                 <input class="form-control last" type="text" name="appkey" placeholder="App Key" value="217ebf7797870e89ad05a5a69e4f4bf6">
                                                             </section>
+                                                    </div>
+                                                    <div class="form-group">
+                                                            <label class="col-md-3 control-label">Schedule Version</label>
+                                                            <div class="col-md-6">
+                                                                <input type="text" class="form-control" name="version" value="15A1">
+                                                            </div>
                                                     </div>
                                                     <footer class="panel-footer" align="center">
                                                             <button class="btn btn-primary">Submit</button>
@@ -248,16 +260,11 @@
                                                             </section>
                                                     </div>
                                                     <div class="form-group">
-                                                            <label class="col-md-3 control-label">ID Start</label>
-                                                            <div class="col-md-6">
-                                                                    <input type="text" class="form-control" name="idstart">
-                                                            </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                            <label class="col-md-3 control-label">ID End</label>
-                                                            <div class="col-md-6">
-                                                                    <input type="text" class="form-control" name="idstop">
-                                                            </div>
+                                                            <label class="col-sm-3 control-label">Airport ID's to process</label>
+                                                            <section class="col-sm-6 form-group-vertical">
+                                                                <input class="form-control" type="text" name="idstart" placeholder="Starting ID">
+                                                                <input class="form-control last" type="text" name="idstop" placeholder="Ending ID">
+                                                            </section>
                                                     </div>
                                                     <div class="form-group">
                                                             <label class="col-md-3 control-label">Schedule Version</label>
