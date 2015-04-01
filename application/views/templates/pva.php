@@ -49,7 +49,7 @@
 		<![endif]-->
 
 	</head>
-	<body>
+	<body class="sticky-menu-active">
            
 		<div class="body">
                     <header id="header" class="narrow" data-plugin-options='{"alwaysStickyEnabled": true, "stickyEnabled": true, "stickyWithGap": false, "stickyChangeLogoSize": false}'>
@@ -63,14 +63,17 @@
 				</div>
 				<div class="navbar-collapse nav-main-collapse collapse">
 					<div class="container">
-						<ul class="social-icons">
-                                                    <?php if (isset($userdata['name'])): ?>
-                                                        <li class="digg"><?php echo anchor('http://www.phoenixva.org/forums/index.php?app=members&module=messaging','title="Messenger"'); ?></li>
-							<li class="dribbble"><?php echo anchor('http://helpdesk.phoenixva.org/','title="Help Desk"'); ?></li>
-                                                    <?php endif; ?>
-                                                        <li class="twitter"><?php echo anchor('http://www.facebook.com/phoenixairways','title="Facebook"'); ?></li>
-							<li class="facebook"><?php echo anchor('http://www.twitter.com/','title="Twitter"'); ?></li>
-						</ul>
+                                                <?php if (isset($userdata['name'])): ?>
+                                                    <ul class="help-links">
+                                                        <a href="http://www.phoenixva.org/forums/index.php?app=members&module=messaging"><i class="fa fa-inbox fa-lg"></i></a>
+                                                        <a href="http://helpdesk.phoenixva.org/"><i class="fa fa-life-ring fa-lg"></i></a>
+                                                    </ul>
+                                                <?php else: ?> 
+                                                    <ul class="social-icons">
+							<li class="facebook"><?php echo anchor('http://www.facebook.com/phoenixairways','title="Facebook"'); ?></li>
+                                                        <li class="twitter"><?php echo anchor('http://www.twitter.com/phoenixairways','title="Twitter"'); ?></li>
+                                                    </ul>
+                                                <?php endif; ?> 
 						<nav class="nav-main mega-menu">
 							<ul class="nav nav-pills nav-main" id="mainMenu">
 								<li><?php echo anchor('live','Live Ops'); ?></li>
@@ -283,7 +286,7 @@
                                                                                 
 									</ul>
 								</li>
-                                                                <?php endif; // Logged in ?>
+                                                                <?php endif; // Logged in ?>                                                                
 							</ul>
 						</nav>
 					</div>
@@ -399,6 +402,7 @@
 							<div class="social-icons">
 								<ul class="social-icons">
 									<li class="facebook"><a href="https://www.facebook.com/phoenixairways" target="_blank" data-placement="bottom" rel="tooltip" title="Facebook">Facebook</a></li>
+                                                                        <li class="twitter"><a href="https://www.twitter.com/phoenixairways" target="_blank" data-placement="bottom" rel="tooltip" title="Twitter">Twitter</a></li>
 								</ul>
 							</div>
 						</div>
@@ -408,7 +412,7 @@
 					<div class="container">
 						<div class="row">
 							<div class="col-md-12">
-								<p align="center">© Copyright 2014. All Rights Reserved. For flight simulation purposes only. We are in no way affiliated with any real-world entities.</p>
+								<p align="center">© Copyright 2015. Phoenix Virtual Airways Inc. All Rights Reserved. For flight simulation purposes only. We are in no way affiliated with any real-world entities.</p>
 							</div>
 						</div>
 					</div>

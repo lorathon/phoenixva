@@ -22,6 +22,7 @@ class Airport extends PVA_Model {
 	public $hub             = NULL;
 	public $delay_url       = NULL;
 	public $weather_url     = NULL;
+        public $version         = NULL;
 	
 	function __construct($id = NULL)
 	{

@@ -11,43 +11,141 @@ class Flightstatsschedules extends PVA_Controller
 		parent::__construct();
 	}
 	
-	
-	
-	
-	// single airport departures - 24 hours of data
-	public function apt()
-	{
-                echo "Processing...";
-                echo "<br />";
+        //multiple airports flight pull
+	public function aptwhere()
+        {
+                $appid      = $this->input->post('appid');
+                $appkey     = $this->input->post('appkey');
+                $idstart    = $this->input->post('idstart');
+                $idstop     = $this->input->post('idstop');
+                $version    = $this->input->post('version');
                 
+                
+                $query = $this->db->select('fs')
+                                    ->from('airports')
+                                    ->where('id >=', $idstart)
+                                    ->where('id <=', $idstop)
+                                    ->where('active', 1)
+                                    ->get();
+                
+                foreach ($query->result() as $row)
+                {
+                    $apt = $row->fs;
+                    $this->apt($apt);
+                    }
+                
+        }
+	
+        //single airport flight pull
+	public function aptsingle()
+        {
+                $appid      = $this->input->post('appid');
+                $appkey     = $this->input->post('appkey');
+                $apt        = $this->input->post('apt');
+                $version    = $this->input->post('version');
+                
+                $this->apt($apt);
+        }
+        
+	// Airport pull setup
+	public function apt($apt)
+	{            
                 // required from Post
                 $appid = $this->input->post('appid');
                 $appkey = $this->input->post('appkey');
-                $apt = $this->input->post('apt');
                 $version = $this->input->post('version');
                 
-                $day = date('j');
-		$year = date('Y');
-		$month = date('n');
+                // setup dates for the previous week
+                $date = date('D Y-n-j');
+                
+                $date1 = date('D Y-n-j', strtotime("$date -7 day"));
+                $date2 = date('D Y-n-j', strtotime("$date -6 day"));
+                $date3 = date('D Y-n-j', strtotime("$date -5 day"));
+                $date4 = date('D Y-n-j', strtotime("$date -4 day"));
+                $date5 = date('D Y-n-j', strtotime("$date -3 day"));
+                $date6 = date('D Y-n-j', strtotime("$date -2 day"));
+                $date7 = date('D Y-n-j', strtotime("$date -1 day"));
+                
+                $year1 = date('Y', strtotime($date1)); $month1 = date('n', strtotime($date1)); $day1 = date('j', strtotime($date1)); $dow1 = date('D', strtotime($date1));
+                $year2 = date('Y', strtotime($date2)); $month2 = date('n', strtotime($date2)); $day2 = date('j', strtotime($date2)); $dow2 = date('D', strtotime($date2));
+                $year3 = date('Y', strtotime($date3)); $month3 = date('n', strtotime($date3)); $day3 = date('j', strtotime($date3)); $dow3 = date('D', strtotime($date3));
+                $year4 = date('Y', strtotime($date4)); $month4 = date('n', strtotime($date4)); $day4 = date('j', strtotime($date4)); $dow4 = date('D', strtotime($date4));
+                $year5 = date('Y', strtotime($date5)); $month5 = date('n', strtotime($date5)); $day5 = date('j', strtotime($date5)); $dow5 = date('D', strtotime($date5));
+                $year6 = date('Y', strtotime($date6)); $month6 = date('n', strtotime($date6)); $day6 = date('j', strtotime($date6)); $dow6 = date('D', strtotime($date6));
+                $year7 = date('Y', strtotime($date7)); $month7 = date('n', strtotime($date7)); $day7 = date('j', strtotime($date7)); $dow7 = date('D', strtotime($date7));
 		
-		$this->start($apt, $year, $month, $day, 0, $appid, $appkey, $version);
-		$this->start($apt, $year, $month, $day, 6, $appid, $appkey, $version);
-		$this->start($apt, $year, $month, $day, 12, $appid, $appkey, $version);
-		$this->start($apt, $year, $month, $day, 18, $appid, $appkey, $version);
+                
+                $counter = 0;
+                
+                // Day 1 (7 days ago, 0000-0600 moved to end using todays date. Possibly not in flightstats DB anymore otherwise)
+		
+		$processed = $this->start($apt, $year1, $month1, $day1, 6, $appid, $appkey, $version, $dow1, $counter);
+		//$processed += $this->start($apt, $year1, $month1, $day1, 12, $appid, $appkey, $version, $dow1, $counter);
+		//$processed += $this->start($apt, $year1, $month1, $day1, 18, $appid, $appkey, $version, $dow1, $counter);
+                
+                /* Day 2 (6 days ago)
+		$processed += $this->start($apt, $year2, $month2, $day2, 0, $appid, $appkey, $version, $dow2, $counter);
+		$processed += $this->start($apt, $year2, $month2, $day2, 6, $appid, $appkey, $version, $dow2, $counter);
+		$processed += $this->start($apt, $year2, $month2, $day2, 12, $appid, $appkey, $version, $dow2, $counter);
+		$processed += $this->start($apt, $year2, $month2, $day2, 18, $appid, $appkey, $version, $dow2, $counter);
+                      
+                // Day 3 (5 days ago)
+		$processed += $this->start($apt, $year3, $month3, $day3, 0, $appid, $appkey, $version, $dow3, $counter);
+		$processed += $this->start($apt, $year3, $month3, $day3, 6, $appid, $appkey, $version, $dow3, $counter);
+		$processed += $this->start($apt, $year3, $month3, $day3, 12, $appid, $appkey, $version, $dow3, $counter);
+		$processed += $this->start($apt, $year3, $month3, $day3, 18, $appid, $appkey, $version, $dow3, $counter);
+                
+                // Day 4 (4 days ago)
+		$processed += $this->start($apt, $year4, $month4, $day4, 0, $appid, $appkey, $version, $dow4, $counter);
+		$processed += $this->start($apt, $year4, $month4, $day4, 6, $appid, $appkey, $version, $dow4, $counter);
+		$processed += $this->start($apt, $year4, $month4, $day4, 12, $appid, $appkey, $version, $dow4, $counter);
+		$processed += $this->start($apt, $year4, $month4, $day4, 18, $appid, $appkey, $version, $dow4, $counter);
+                
+                // Day 5 (3 days ago)
+		$processed += $this->start($apt, $year5, $month5, $day5, 0, $appid, $appkey, $version, $dow5, $counter);
+		$processed += $this->start($apt, $year5, $month5, $day5, 6, $appid, $appkey, $version, $dow5, $counter);
+		$processed += $this->start($apt, $year5, $month5, $day5, 12, $appid, $appkey, $version, $dow5, $counter);
+		$processed += $this->start($apt, $year5, $month5, $day5, 18, $appid, $appkey, $version, $dow5, $counter);
+                
+                // Day 6 (2 day ago)
+		$processed += $this->start($apt, $year6, $month6, $day6, 0, $appid, $appkey, $version, $dow6, $counter);
+		$processed += $this->start($apt, $year6, $month6, $day6, 6, $appid, $appkey, $version, $dow6, $counter);
+		$processed += $this->start($apt, $year6, $month6, $day6, 12, $appid, $appkey, $version, $dow6, $counter);
+		$processed += $this->start($apt, $year6, $month6, $day6, 18, $appid, $appkey, $version, $dow6, $counter);
+                
+                // Day 7 (1 day ago)
+		$processed += $this->start($apt, $year7, $month7, $day7, 0, $appid, $appkey, $version, $dow7, $counter);
+		$processed += $this->start($apt, $year7, $month7, $day7, 6, $appid, $appkey, $version, $dow7, $counter);
+		$processed += $this->start($apt, $year7, $month7, $day7, 12, $appid, $appkey, $version, $dow7, $counter);
+		$processed += $this->start($apt, $year7, $month7, $day7, 18, $appid, $appkey, $version, $dow7, $counter);
+                */
+                // Today
+                $processed += $this->start($apt, date('Y'), date('n'), date('j'), 0, $appid, $appkey, $version, date('D'), $counter);
+                
+                echo "$apt - Version $version - $processed flights processed. <br />";
+                
+                // create flightstats log entry for flight entry
+                $log_obj = new Flightstats_log();
+                
+                $log_obj->type      = "Schedule";
+                $log_obj->version   = $version;
+                $log_obj->fs        = $apt;
+                $log_obj->note      = "$processed flights processed.";
+                
+                $log_obj->save();
 	}
 
 
 	
 	// main function to loop through 4 times for 24 hours of departures at designated airport
-	public function start($apt, $year, $month, $day, $hour, $appid, $appkey, $version)
+	public function start($apt, $year, $month, $day, $hour, $appid, $appkey, $version, $dayofweek, $counter)
 	{
 	
 		$json = file_get_contents("https://api.flightstats.com/flex/flightstatus/rest/v2/json/airport/status/$apt/dep/$year/$month/$day/$hour?appId=$appid&appKey=$appkey&utc=false&numHours=6");
 		
 		$data = json_decode($json, true);
 		
-		$counter = 0;
-		$count_skipped = 0;
+		//$counter = 0;
 		
 		
 		foreach($data['flightStatuses'] as $stat => $value) {
@@ -250,99 +348,77 @@ class Flightstatsschedules extends PVA_Controller
 				 * 
 				 * Carrier, Flight #, Dep Airport, Arr Airport, Equipment, Schedule Version (added 20150209)
 				 * 
-				 * This will allow for same flight number but using different airframes, to allow
-				 * the most flights as possible without having duplicates. (Operated with 757 on Monday
-				 * but 767 on Tuesday).
-				 * 
-				 * Runs a second query matching the above results against the dep_time_local. It will clip
-				 * some flights but will make sure we dont have a lot of the same legs with slightly different
-				 * departure times.
-				 * 
-				 * 
-				 * If flight already exists, do not add it to the system.
+				 * If flight already exists, it will update the day of week of the existing flight.
 				 * 
 				 */
-			  	
-			  	
-			  	// query DB to see if this route already exists
-			  	$query =   $this->db->from('schedules_pending')
-			  					  	->where('carrier', $carrier)
-			  					  	->where('flight_num', $flightNumber)
-			  					  	->where('dep_airport', $depAirport)
-                                                                        ->where('arr_airport', $arrAirport)
-                                                                        ->where('equip', $equip)
-                                                                        ->where('version', $version)
-			  					  	->get();
-			  	
-			  	$query2 =  $this->db->from('schedules_pending')
-			  						->where('carrier', $carrier)
-			  						->where('dep_airport', $depAirport)
-			  						->where('arr_airport', $arrAirport)
-			  						->where('equip', $equip)
-			  						->where('dep_time_local', $depTimeLocal)
-                                                                        ->where('version', $version)
-			  						->get();
-			  	
-			  	
-			  	// if queries don't return any results
-			  	if($query->num_rows() + $query2->num_rows() == 0) {
-			  		
-			  					  		
-				  		// create object to save to DB
-					  	set_time_limit(15);
-					  	$sched_obj = new Schedules_pending();
-					  
-					  	$sched_obj->flight_id        = $flightId;
-					  	$sched_obj->carrier          = $carrier;
-					  	$sched_obj->operator         = $operator;
-					  	$sched_obj->flight_num       = $flightNumber;
-					  	$sched_obj->dep_airport      = $depAirport;
-					  	$sched_obj->arr_airport      = $arrAirport;
-					  	$sched_obj->equip            = $equip;
-					  	$sched_obj->tail_number      = $tailNumber;
-					  	$sched_obj->flight_type      = $flightType;
-					  	$sched_obj->regional         = $regional;
-					  	$sched_obj->dep_time_local   = $depTimeLocal;
-					  	$sched_obj->dep_time_utc     = $depTimeUtc;
-					  	$sched_obj->dep_terminal     = $depTerminal;
-					  	$sched_obj->dep_gate         = $depGate;
-					  	$sched_obj->block_time       = $flightTime;
-					  	$sched_obj->taxi_out_time    = $taxiOutTime;
-					  	$sched_obj->air_time         = $airTime;
-					  	$sched_obj->taxi_in_time     = $taxiInTime;
-					  	$sched_obj->arr_time_local   = $arrTimeLocal;
-					  	$sched_obj->arr_time_utc     = $arrTimeUtc;
-					  	$sched_obj->arr_terminal     = $arrTerminal;
-					  	$sched_obj->arr_gate         = $arrGate;
-					  	$sched_obj->downline_apt     = $downlineapt;
-					  	$sched_obj->downline_fltId   = $downlineflightid;
-                                                $sched_obj->version          = $version;
-					
-					  
-					  	$sched_obj->save();
-					    	$counter++;
-					  	
-					  	// remove from memory
-					  	unset($sched_obj);
-					  	
+			  	                    
+                                // create object to save to DB
+                                set_time_limit(15);
+                                $sched_obj = new Schedules_pending();
+
+                                $sched_obj->carrier          = $carrier;
+                                $sched_obj->flight_num       = $flightNumber;
+                                $sched_obj->dep_airport      = $depAirport;
+                                $sched_obj->arr_airport      = $arrAirport;
+                                $sched_obj->equip            = $equip;
+                                $sched_obj->version          = $version;
+
+                                $sched_obj->find();
+
+                                $sched_obj->operator         = $operator;
+                                $sched_obj->tail_number      = $tailNumber;
+                                $sched_obj->flight_type      = $flightType;
+                                $sched_obj->regional         = $regional;
+                                $sched_obj->dep_time_local   = $depTimeLocal;
+                                $sched_obj->dep_time_utc     = $depTimeUtc;
+                                $sched_obj->dep_terminal     = $depTerminal;
+                                $sched_obj->dep_gate         = $depGate;
+                                $sched_obj->block_time       = $flightTime;
+                                $sched_obj->taxi_out_time    = $taxiOutTime;
+                                $sched_obj->air_time         = $airTime;
+                                $sched_obj->taxi_in_time     = $taxiInTime;
+                                $sched_obj->arr_time_local   = $arrTimeLocal;
+                                $sched_obj->arr_time_utc     = $arrTimeUtc;
+                                $sched_obj->arr_terminal     = $arrTerminal;
+                                $sched_obj->arr_gate         = $arrGate;
+                                $sched_obj->downline_apt     = $downlineapt;
+
+                                switch ($dayofweek) {
+                                    case "Sun":
+                                        $sched_obj->sun   = 1;
+                                        break;
+                                    case "Mon":
+                                        $sched_obj->mon   = 1;
+                                        break;
+                                    case "Tue":
+                                        $sched_obj->tue   = 1;
+                                        break;
+                                    case "Wed":
+                                        $sched_obj->wed   = 1;
+                                        break;
+                                    case "Thu":
+                                        $sched_obj->thu   = 1;
+                                        break;
+                                    case "Fri":
+                                        $sched_obj->fri   = 1;
+                                        break;
+                                    case "Sat":
+                                        $sched_obj->sat   = 1;
+                                        break;
+                                    default:
+                                        break;
+                                }
+
+                                $sched_obj->save();
+                                $counter++;
+
+                                // remove from memory
+                                unset($sched_obj);
+                                					  	
 			  	}
-			  	// end query and DB insert
-			  	
-			  	
-			  	
-			  	// if route is already in the system, skip it
-			  	else 
-			  	{
-			  		$count_skipped++;
-			  	}
-			  
-			}
-			// end insert if there is equipment
 		}
 		// end foreach loop, go back to beginning.
-		
-		echo "$counter routes added to the database. $count_skipped routes were already in the system and skipped.";
-                echo "<br />";
+                return $counter;
 	}
 	// end start function
 }

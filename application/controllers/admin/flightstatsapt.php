@@ -40,6 +40,7 @@ class Flightstatsapt extends PVA_Controller
                 $appid = $this->input->post('appid');
                 $appkey = $this->input->post('appkey');
                 $class = $this->input->post('class');
+                $version = $this->input->post('version');
                 
 		$json = file_get_contents("https://api.flightstats.com/flex/airports/rest/v1/json/active?appId=$appid&appKey=$appkey");
 	
@@ -190,12 +191,32 @@ class Flightstatsapt extends PVA_Controller
 				$airport_obj->hub               = $hub;
 				$airport_obj->delay_url         = $delay_url;
 				$airport_obj->weather_url       = $weather_url;
+                                $airport_obj->version           = $version;
 				
 				$airport_obj->save();
-                                $counter++;
 
 				// remove from memory
 				unset($airport_obj);
+                                
+                                // create flightstats log entry for flight entry
+                                $log_obj = new Flightstats_log();
+
+                                $log_obj->type      = "Airport";
+                                $log_obj->version   = $version;
+                                $log_obj->fs        = $fs;
+                                
+                                // if no state, omit state code
+                                if($state_code == '' || $state_code == null)
+                                {
+                                    $log_obj->note  = "$name, $city, $country_code activated.";
+                                }
+                                // note with state code
+                                else {
+                                    $log_obj->note  = "$name, $city, $state_code, $country_code activated.";
+                                }
+
+                                $log_obj->save();
+                                $counter++;
 				
 			}
 			// end if classification check, go back to beginning of loop
@@ -253,7 +274,7 @@ class Flightstatsapt extends PVA_Controller
 			$link["fs"] = $row->fs;
 			 
 			// if there is no state code, do not include it in airport name
-			if($row->state_code == "" || null)
+			if($row->state_code == "" || $row->state_code == null)
 			{
 				$link["typeAhead"] = "$row->fs - $row->name, $row->city, $row->country_code";
 			}

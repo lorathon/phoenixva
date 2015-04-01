@@ -3,7 +3,6 @@
 class Schedules_pending extends PVA_Model {
 	
 	/* schedule properties */
-	public $flight_id       = NULL;
 	public $carrier         = NULL;
 	public $operator        = NULL;
 	public $flight_num      = NULL;
@@ -26,7 +25,13 @@ class Schedules_pending extends PVA_Model {
 	public $arr_terminal    = NULL;
 	public $arr_gate        = NULL;
 	public $downline_apt	= NULL;
-	public $downline_fltId	= NULL;
+        public $sun             = NULL;
+        public $mon             = NULL;
+        public $tue             = NULL;
+        public $wed             = NULL;
+        public $thu             = NULL;
+        public $fri             = NULL;
+        public $sat             = NULL;
         public $version         = NULL;
 
 	

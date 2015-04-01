@@ -22,12 +22,17 @@
                         </li>
                 </ul>
                 <div class="tab-content">
+                    
+                    
+                    
                     <div id="general" class="tab-pane active">
                                 <p>Recent <code>.nav-tabs.nav-justified</code></p>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitat.</p>
                     </div>
+                    
+                    
+                    
                     <div id="airports" class="tab-pane">
-                        
                             <?php $attributes = array('class' => 'form-horizontal form-bordered');
                             echo form_open('admin/flightstatsapt/getactive'); ?>
                         
@@ -65,6 +70,12 @@
                                                             </div>
                                                             <div class="col-sm-9 col-md-offset-3">
                                                                     <span class="help-block">Choose the amount of airports to process and insert into DB. Defaults to all airports with flight history in Flightstats.</span>
+                                                            </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                            <label class="col-md-3 control-label">Schedule Version</label>
+                                                            <div class="col-md-6">
+                                                                <input type="text" class="form-control" name="version" value="15A1">
                                                             </div>
                                                     </div>
                                                     <footer class="panel-footer" align="center">
@@ -111,6 +122,9 @@
                                     </section>
                             </form>
                     </div>
+                    
+                    
+                    
                     <div id="airlines" class="tab-pane">
                             <?php $attributes = array('class' => 'form-horizontal form-bordered');
                             echo form_open('admin/flightstatsairline/getactive'); ?>
@@ -135,6 +149,12 @@
                                                                 <input class="form-control" type="text" name="appid" placeholder="App ID" value="f48100ea">
                                                                 <input class="form-control last" type="text" name="appkey" placeholder="App Key" value="217ebf7797870e89ad05a5a69e4f4bf6">
                                                             </section>
+                                                    </div>
+                                                    <div class="form-group">
+                                                            <label class="col-md-3 control-label">Schedule Version</label>
+                                                            <div class="col-md-6">
+                                                                <input type="text" class="form-control" name="version" value="15A1">
+                                                            </div>
                                                     </div>
                                                     <footer class="panel-footer" align="center">
                                                             <button class="btn btn-primary">Submit</button>
@@ -169,9 +189,12 @@
                                     </section>
                             <?php echo form_close(); ?>
                     </div>
+                    
+                    
+                    
                     <div id="schedules" class="tab-pane">
                             <?php $attributes = array('class' => 'form-horizontal form-bordered');
-                            echo form_open('admin/flightstatsschedules/apt'); ?>
+                            echo form_open('admin/flightstatsschedules/aptsingle'); ?>
                                     <section class="panel panel-featured">
                                             <header class="panel-heading">
                                                     <div class="panel-actions">
@@ -179,10 +202,10 @@
                                                             <a href="#" class="fa fa-times"></a>
                                                     </div>
 
-                                                    <h2 class="panel-title">Get Schedules</h2>
+                                                    <h2 class="panel-title">Get Schedules for Single Airport</h2>
 
                                                     <p class="panel-subtitle">
-                                                            Consume Flightstats API for Schedules and insert into database. This will create several hits to the API account.
+                                                            Consume Flightstats API for Schedules and insert into database. This will create 28 hits to the API account. ($0.14)
                                                     </p>
                                             </header>
                                             <div class="panel-body">
@@ -198,6 +221,50 @@
                                                             <div class="col-md-6">
                                                                     <input type="text" class="form-control" name="apt">
                                                             </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                            <label class="col-md-3 control-label">Schedule Version</label>
+                                                            <div class="col-md-6">
+                                                                <input type="text" class="form-control" name="version" value="15A1">
+                                                            </div>
+                                                    </div>
+                                                    <footer class="panel-footer" align="center">
+                                                            <button class="btn btn-primary">Submit</button>
+                                                            <button type="reset" class="btn btn-default">Reset</button>
+                                                    </footer>
+                                            </div>
+                                    </section>
+                            <?php echo form_close(); ?>
+                        
+                            <?php $attributes = array('class' => 'form-horizontal form-bordered');
+                            echo form_open('admin/flightstatsschedules/aptwhere'); ?>
+                                    <section class="panel panel-featured">
+                                            <header class="panel-heading">
+                                                    <div class="panel-actions">
+                                                            <a href="#" class="fa fa-caret-down"></a>
+                                                            <a href="#" class="fa fa-times"></a>
+                                                    </div>
+
+                                                    <h2 class="panel-title">Get Schedules for Multiple Airports</h2>
+
+                                                    <p class="panel-subtitle">
+                                                            Consume Flightstats API for Schedules and insert into database. This will create several hits to the API account.
+                                                    </p>
+                                            </header>
+                                            <div class="panel-body">
+                                                    <div class="form-group">
+                                                            <label class="col-sm-3 control-label">Flightstats Credentials</label>
+                                                            <section class="col-sm-6 form-group-vertical">
+                                                                <input class="form-control" type="text" name="appid" placeholder="App ID" value="f48100ea">
+                                                                <input class="form-control last" type="text" name="appkey" placeholder="App Key" value="217ebf7797870e89ad05a5a69e4f4bf6">
+                                                            </section>
+                                                    </div>
+                                                    <div class="form-group">
+                                                            <label class="col-sm-3 control-label">Airport ID's to process</label>
+                                                            <section class="col-sm-6 form-group-vertical">
+                                                                <input class="form-control" type="text" name="idstart" placeholder="Starting ID">
+                                                                <input class="form-control last" type="text" name="idstop" placeholder="Ending ID">
+                                                            </section>
                                                     </div>
                                                     <div class="form-group">
                                                             <label class="col-md-3 control-label">Schedule Version</label>

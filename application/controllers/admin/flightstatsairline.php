@@ -29,6 +29,7 @@ class Flightstatsairline extends PVA_Controller
                 // required from Post
                 $appid = $this->input->post('appid');
                 $appkey = $this->input->post('appkey');
+                $version = $this->input->post('version');
                 
 		$json = file_get_contents("https://api.flightstats.com/flex/airlines/rest/v1/json/active?appId=$appid&appKey=$appkey&extendedOptions=includeNewFields");
 		
@@ -62,10 +63,22 @@ class Flightstatsairline extends PVA_Controller
 			
 	
 			$airline_obj->save();
+                        
+                        // remove from memory
+			unset($airline_obj);
+                        
+                        // create flightstats log entry for flight entry
+                        $log_obj = new Flightstats_log();
+
+                        $log_obj->type      = "Airline";
+                        $log_obj->version   = $version;
+                        $log_obj->fs        = $fs;
+                        $log_obj->note      = "$name activated.";
+
+                        $log_obj->save();
 			$counter++;
 			  
-			// remove from memory
-			unset($airline_obj);
+			
 			
 		}
 		// end foreach

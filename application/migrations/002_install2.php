@@ -60,7 +60,6 @@ class Migration_Install2 extends CI_Migration {
                 // Pending Schedules table
 		$this->dbforge->add_field(array(
 				'id'              => $field_config['id_field'],
-				'flight_id'       => $field_config['short_input_field'],
 				'carrier'         => $field_config['short_input_field'],
 				'operator'        => $field_config['short_input_field'],
 				'flight_num'      => $field_config['short_input_field'],
@@ -83,7 +82,13 @@ class Migration_Install2 extends CI_Migration {
 				'arr_terminal'    => $field_config['short_input_field'],
 				'arr_gate'        => $field_config['short_input_field'],
 				'downline_apt'	  => $field_config['icao_field'],
-				'downline_fltId'  => $field_config['short_input_field'],
+                                'sun'             => $field_config['status_field'],
+                                'mon'             => $field_config['status_field'],
+                                'tue'             => $field_config['status_field'],
+                                'wed'             => $field_config['status_field'],
+                                'thu'             => $field_config['status_field'],
+                                'fri'             => $field_config['status_field'],
+                                'sat'             => $field_config['status_field'],
                                 'version'         => $field_config['icao_field'],
 				'source_date'	  => $field_config['timestamp_field'],	
 				));
@@ -119,6 +124,18 @@ class Migration_Install2 extends CI_Migration {
 		$this->dbforge->add_key('id', TRUE);
 		$this->dbforge->add_key('airport_id');
 		$this->dbforge->create_table('hub_stats', TRUE);
+                
+                // Flightstats Logs
+		$this->dbforge->add_field(array(
+				'id'               => $field_config['id_field'],
+				'type'             => $field_config['short_input_field'],
+				'version'          => $field_config['icao_field'],
+				'fs'               => $field_config['icao_field'],
+				'note'             => $field_config['short_input_field'],
+				'created'          => $field_config['timestamp_field'],
+		));
+		$this->dbforge->add_key('id', TRUE);
+		$this->dbforge->create_table('flightstats_logs', TRUE);
 	}
 	
 	public function down()
