@@ -1,6 +1,33 @@
-/* space navbar and icons */
+/* space navbar and social icons */
 #header .social-icons {
-margin-left: 25px;
+    margin-left: 20px;
+}
+
+/* sticky menu */
+div.body {
+    padding-top: 70px !important;
+}
+
+body.sticky-menu-active #header {
+    top: -62px;
+}
+
+/* Header help links */
+#header .help-links {
+    float: right;
+    margin-top: auto;
+    margin-bottom: auto;
+    padding-left: 15px;
+}
+
+#header .help-links a{
+    color: #0088cc;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#header .help-links a:hover{
+    color: #444;
 }
 
 /* rev-slider, additional caption colors */
@@ -239,13 +266,3 @@ text-shadow: 0px 0px 2px rgba(255, 255, 255, 1);
 .text-data {
 	color: #744ba9;
 }
-
-//sticky menu
-div.body {
-	padding-top: 70px !important;
-}
-
-body.sticky-menu-active #header {
-    top: -62px;
-}
-
