@@ -194,7 +194,7 @@
                     
                     <div id="schedules" class="tab-pane">
                             <?php $attributes = array('class' => 'form-horizontal form-bordered');
-                            echo form_open('admin/flightstatsschedules/apt'); ?>
+                            echo form_open('admin/flightstatsschedules/aptsingle'); ?>
                                     <section class="panel panel-featured">
                                             <header class="panel-heading">
                                                     <div class="panel-actions">

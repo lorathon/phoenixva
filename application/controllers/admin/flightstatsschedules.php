@@ -47,7 +47,7 @@ class Flightstatsschedules extends PVA_Controller
                 $this->apt($apt);
         }
         
-	// single airport flight pull
+	// Airport pull setup
 	public function apt($apt)
 	{            
                 // required from Post
