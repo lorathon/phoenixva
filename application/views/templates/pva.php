@@ -49,7 +49,7 @@
 		<![endif]-->
 
 	</head>
-	<body>
+	<body class="sticky-menu-active">
            
 		<div class="body">
                     <header id="header" class="narrow" data-plugin-options='{"alwaysStickyEnabled": true, "stickyEnabled": true, "stickyWithGap": false, "stickyChangeLogoSize": false}'>
