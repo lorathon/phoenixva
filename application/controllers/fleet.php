@@ -99,9 +99,52 @@ class Fleet extends PVA_Controller
     public function edit_aircraft($id = NULL)
     {
 	$this->_check_access('manager');
+		
+	$this->load->library('form_validation'); 
+	$this->load->helper('url');
 	
-	// Can NOT create only edit
-	if(is_null($id))
+	$this->data['title'] = 'Edit Aircraft';
+	$this->data['breadcrumb']['fleet'] = 'Fleet';
+	
+        $aircraft = new Aircraft($id);
+                
+        $this->form_validation->set_rules('id', 'ID', '');
+        $this->form_validation->set_rules('name', 'Name', 'alpha-numberic|trim|required|xss_clean');
+        $this->form_validation->set_rules('pax_first', '1st Class Seats', 'integer|trim|xss_clean');
+	$this->form_validation->set_rules('pax_business', 'Business Class Seats', 'integer|trim|xss_clean');
+	$this->form_validation->set_rules('pax_economy', 'Economy Class Seats', 'integer|trim|xss_clean');
+	$this->form_validation->set_rules('max_cargo', 'Cargo Capacity', 'integer|trim|xss_clean');
+	$this->form_validation->set_rules('oew', 'Operating Empty Weight', 'integer|trim|xss_clean');
+	$this->form_validation->set_rules('mzfw', 'Maximum Zero Fuel Weight', 'integer|trim|xss_clean');
+	$this->form_validation->set_rules('mlw', 'Maximum Landing Weight', 'integer|trim|xss_clean');
+	$this->form_validation->set_rules('mtow', 'Meximum Take Off Weight', 'integer|trim|xss_clean');
+        
+        $this->data['scripts'][] = base_url('assets/admin/vendor/jquery-validation/jquery.validate.js');
+	$this->data['scripts'][] = base_url('assets/js/forms.validation.js');
+                
+        if ($this->form_validation->run() == FALSE)
+	{             
+            $this->data['errors'] = validation_errors();;  
+            $this->data['record'] = $aircraft;
+            $this->_render('admin/aircraft_form');
+	}
+	else
+	{
+            $aircraft->id	    = $this->input->post('id', TRUE);
+            $aircraft->name	    = $this->form_validation->set_value('name');
+	    $aircraft->pax_first    = $this->form_validation->set_value('pax_first');
+	    $aircraft->pax_business = $this->form_validation->set_value('pax_business');
+	    $aircraft->pax_economy  = $this->form_validation->set_value('pax_economy');
+	    $aircraft->max_cargo    = $this->form_validation->set_value('max_cargo');
+	    $aircraft->oew	    = $this->form_validation->set_value('oew');
+	    $aircraft->mzfw	    = $this->form_validation->set_value('mzfw');
+	    $aircraft->mlw	    = $this->form_validation->set_value('mlw');
+	    $aircraft->mtow	    = $this->form_validation->set_value('mtow');
+                
+            $aircraft->save();
+	    
+	    $this->_alert('Aircraft - Record Saved', 'success', FALSE);
 	    $this->index();
+	}        
     }
 }
