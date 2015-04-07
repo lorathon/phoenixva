@@ -66,34 +66,35 @@ class Migration_Install2 extends CI_Migration {
 				'dep_airport'     => $field_config['icao_field'],
 				'arr_airport'     => $field_config['icao_field'],
 				'equip'           => $field_config['icao_field'],
-				'tail_number'     => $field_config['short_input_field'],
-				'flight_type'     => $field_config['icao_field'],
+				'service_type'    => $field_config['icao_field'],
 				'regional'        => $field_config['status_field'],
 				'dep_time_local'  => $field_config['short_input_field'],
 				'dep_time_utc'    => $field_config['short_input_field'],
 				'dep_terminal'    => $field_config['short_input_field'],
-				'dep_gate'        => $field_config['short_input_field'],
 				'block_time'      => $field_config['short_input_field'],
-				'taxi_out_time'   => $field_config['short_input_field'],
-				'air_time'        => $field_config['short_input_field'],
-				'taxi_in_time'    => $field_config['short_input_field'],
 				'arr_time_local'  => $field_config['short_input_field'],
 				'arr_time_utc'    => $field_config['short_input_field'],
 				'arr_terminal'    => $field_config['short_input_field'],
-				'arr_gate'        => $field_config['short_input_field'],
-				'downline_apt'	  => $field_config['icao_field'],
-                                'sun'             => $field_config['status_field'],
-                                'mon'             => $field_config['status_field'],
-                                'tue'             => $field_config['status_field'],
-                                'wed'             => $field_config['status_field'],
-                                'thu'             => $field_config['status_field'],
-                                'fri'             => $field_config['status_field'],
-                                'sat'             => $field_config['status_field'],
                                 'version'         => $field_config['icao_field'],
-				'source_date'	  => $field_config['timestamp_field'],	
+				'created'	  => $field_config['timestamp_field'],	
 				));
 		$this->dbforge->add_key('id', TRUE);
 		$this->dbforge->create_table('schedules_pending');
+                
+                // Aircraft Pending
+		$this->dbforge->add_field(array(
+                                'id'                => $field_config['id_field'],
+                                'equip'		    => $field_config['icao_field'],
+				'name'		    => $field_config['input_field'],
+                                'regional'          => $field_config['status_field'],
+                                'turboprop'         => $field_config['status_field'],            
+                                'jet'               => $field_config['status_field'],
+                                'widebody'          => $field_config['status_field'],
+                                'created'	    => $field_config['timestamp_field'],	
+                                'modified'	    => $field_config['timestamp_field'],	
+                                ));
+		$this->dbforge->add_key('id', TRUE);
+		$this->dbforge->create_table('aircraft_pending');
 		
 		// Hub Stats
 		$this->dbforge->add_field(array(
