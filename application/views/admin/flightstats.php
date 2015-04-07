@@ -34,7 +34,7 @@
                     
                     <div id="airports" class="tab-pane">
                             <?php $attributes = array('class' => 'form-horizontal form-bordered');
-                            echo form_open('admin/flightstatsapt/getactive'); ?>
+                            echo form_open('admin/flightstats_airport/getactive'); ?>
                         
                                     <section class="panel panel-featured">
                                             <header class="panel-heading">
@@ -87,7 +87,7 @@
                             <?php echo form_close(); ?>
                             
                             <?php $attributes = array('class' => 'form-horizontal form-bordered');
-                            echo form_open('admin/flightstatsapt/writeJsonApt'); ?>
+                            echo form_open('admin/flightstats_airport/writeJsonApt'); ?>
                                     <section class="panel panel-featured">
                                             <header class="panel-heading">
                                                     <div class="panel-actions">
@@ -127,7 +127,7 @@
                     
                     <div id="airlines" class="tab-pane">
                             <?php $attributes = array('class' => 'form-horizontal form-bordered');
-                            echo form_open('admin/flightstatsairline/getactive'); ?>
+                            echo form_open('admin/flightstats_airline/getactive'); ?>
                         
                                     <section class="panel panel-featured">
                                             <header class="panel-heading">
@@ -165,7 +165,7 @@
                             <?php echo form_close(); ?>
                         
                             <?php $attributes = array('class' => 'form-horizontal form-bordered');
-                            echo form_open('admin/flightstatsairline/writeJsonAirline'); ?>
+                            echo form_open('admin/flightstats_airline/writeJsonAirline'); ?>
                                     <section class="panel panel-featured">
                                             <header class="panel-heading">
                                                     <div class="panel-actions">
@@ -194,7 +194,7 @@
                     
                     <div id="schedules" class="tab-pane">
                             <?php $attributes = array('class' => 'form-horizontal form-bordered');
-                            echo form_open('admin/flightstatsschedules/aptsingle'); ?>
+                            echo form_open('admin/flightstats_schedules/aptsingle'); ?>
                                     <section class="panel panel-featured">
                                             <header class="panel-heading">
                                                     <div class="panel-actions">
@@ -237,7 +237,7 @@
                             <?php echo form_close(); ?>
                         
                             <?php $attributes = array('class' => 'form-horizontal form-bordered');
-                            echo form_open('admin/flightstatsschedules/aptwhere'); ?>
+                            echo form_open('admin/flightstats_schedules/aptwhere'); ?>
                                     <section class="panel panel-featured">
                                             <header class="panel-heading">
                                                     <div class="panel-actions">
