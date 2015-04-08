@@ -60,8 +60,7 @@ class Airlines extends PVA_Controller
 	else
 	{
 	    // fleet
-	    $fleet = $airline->get_fleet();
-	    $this->data['fleet'] = $fleet;	    
+	    $this->data['fleet'] = array();	    
 	}	
 	
 	$this->data['airline'] = $airline;
