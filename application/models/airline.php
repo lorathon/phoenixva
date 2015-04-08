@@ -76,7 +76,7 @@ class Airline extends PVA_Model {
 	    {
 		$fleet = new Airline_aircraft();
 		$fleet->airline_id = $this->id;
-		$this->_fleet = $fleet->get_fleet();
+		$this->_fleet = $fleet->find_all();
 	    }
 	    return $this->_fleet;
 	}
@@ -92,31 +92,10 @@ class Airline extends PVA_Model {
 	    return $this->_destinations;
 	}
 	
-	function build_airline_fleet()
-	{
-	    $fleet = new Airline_aircraft();
-	    $fleet->build_fleet($this);
-	}
-	
 	function build_airline_destinations()
 	{
 	    $airport = new Airline_airport();
 	    $airport->build_destinations($this);
-	}
-	
-	function build_entire_fleet()
-	{
-	    $this->_limit = NULL;
-	    $airlines = $this->find_all();
-	    
-	    if(! $airlines)
-		return;
-	    
-	    foreach($airlines as $airline)
-	    {
-		$ac = new Airline_aircraft();
-		$ac->build_fleet($airline);
-	    }
 	}
 	
 	function build_entire_destinations()
