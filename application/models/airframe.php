@@ -7,6 +7,10 @@ class Airframe extends PVA_Model
     public $name		= NULL;
     public $aircraft_sub_id	= NULL;
     public $category		= NULL;
+    public $regional		= NULL;
+    public $turboprop		= NULL;
+    public $jet			= NULL;
+    public $widebody		= NULL;
     public $pax_first		= NULL;
     public $pax_business	= NULL;
     public $pax_economy		= NULL;
@@ -19,7 +23,9 @@ class Airframe extends PVA_Model
     
     public function __construct($id = NULL)
     {
-        parent::__construct($id);
+	$this->_order_by = 'name ASC';
+	$this->_timestamps = TRUE;
+        parent::__construct($id);	
     }    
     
     public function find_all()

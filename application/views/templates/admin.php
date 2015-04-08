@@ -185,6 +185,9 @@
                                                                                         <li>
 												<?php echo anchor('admin/schedules','View Schedules'); ?>
 											</li>
+											<li>
+												<?php echo anchor('admin/airframes','View Airframes'); ?>
+											</li>
 										</ul>
 									</li> 
                                                                         
