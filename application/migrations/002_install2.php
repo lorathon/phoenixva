@@ -137,6 +137,34 @@ class Migration_Install2 extends CI_Migration {
 		));
 		$this->dbforge->add_key('id', TRUE);
 		$this->dbforge->create_table('flightstats_logs', TRUE);
+		
+		// Airframe table
+                $this->dbforge->add_field(array(
+                                'id'		    => $field_config['id_field'],
+                                'iata'		    => $field_config['icao_field'],
+				'icao'		    => $field_config['icao_field'],
+				'name'		    => $field_config['input_field'],
+				'aircraft_sub_id'   => $field_config['fk_field'],				
+                                'category'	    => $field_config['fk_field'],
+				'regional'	    => $field_config['boolean_field'],
+				'turboprop'	    => $field_config['boolean_field'],
+				'jet'		    => $field_config['boolean_field'],
+				'widebody'	    => $field_config['boolean_field'],
+				'pax_first'	    => $field_config['altitude_field'],
+				'pax_business'	    => $field_config['altitude_field'],
+				'pax_economy'	    => $field_config['altitude_field'],
+				'max_cargo'	    => $field_config['counter_field'],
+				'max_range'	    => $field_config['altitude_field'],
+				'oew'		    => $field_config['counter_field'],
+				'mzfw'		    => $field_config['counter_field'],
+				'mlw'		    => $field_config['counter_field'],
+				'mtow'		    => $field_config['counter_field'],
+				'created'	    => $field_config['timestamp_field'],
+				'modified'	    => $field_config['timestamp_field'],
+                ));
+                $this->dbforge->add_key('id', TRUE);
+		$this->dbforge->add_key('aircraft_sub_id');
+                $this->dbforge->create_table('airframes', TRUE);
 	}
 	
 	public function down()
@@ -145,5 +173,8 @@ class Migration_Install2 extends CI_Migration {
 		$this->dbforge->drop_table('session_logs');
 		$this->dbforge->drop_table('airline_aircrafts');
 		$this->dbforge->drop_table('airline_airports');
+		$this->dbforge->drop_table('schedules_pending');
+		$this->dbforge->drop_table('flightstats_log');
+		$this->dbforge->drop_table('airframes');
 	}
 }

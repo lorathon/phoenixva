@@ -1,3 +1,5 @@
+<?php $this->load->helper('html'); ?>
+
 <header class="page-header">
         <h2>Aircraft Substitution</h2>
 </header>
@@ -28,16 +30,16 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($rows as $row): ?>
+                            <?php foreach ($airframe_subs as $row): ?>
                                 <tr>
                                     <td><?php echo $row->id ?></td>
                                     <td><?php echo $row->designation ?></td>
                                     <td><?php echo $row->manufacturer ?></td>
                                     <td><?php echo $row->equips ?></td>
                                     <td><?php echo $row->hours_needed ?></td>   
-				    <td><?php echo $aircraft_cat[$row->category] ?></td>
+				    <td><?php echo $cat[$row->category] ?></td>
                                     <td align="center">
-                                        <?php echo anchor('admin/fleet/create_sub/' . $row->id,'<i class="fa fa-pencil"></i> Edit', button('info')); ?>
+                                        <?php echo anchor('admin/airframes/create_sub/' . $row->id,'<i class="fa fa-pencil"></i> Edit', button('info')); ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
