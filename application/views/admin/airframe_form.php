@@ -152,7 +152,7 @@ $mtow = array(
                 </header>
                 <div class="panel-body">
 
-                    <?php echo form_open_multipart('admin/airframes/edit_airframe', $form_attributes); ?>
+                    <?php echo form_open_multipart('admin/airframes/create_airframe', $form_attributes); ?>
 
                     <?php echo form_hidden('id', $record->id); ?>
 		    

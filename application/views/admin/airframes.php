@@ -50,7 +50,7 @@
 						<td><font color="<?php if($row->mlw == 0) echo "#ff0000"; ?>"><?php echo $row->mlw; ?> lbs</td>
 						<td><font color="<?php if($row->aircraft_sub_id == 0) echo "#ff0000"; ?>"><?php echo $row->aircraft_sub_id; ?></td>
 	    					<td><font color="<?php if($row->category == 0) echo "#ff0000"; ?>"><?php echo $cat[$row->category]; ?></td>
-						<td><?php echo anchor('admin/airframes/edit_airframe/' . $row->id,'<i class="fa fa-pencil"></i> Edit', button('info')); ?></td>
+						<td><?php echo anchor('admin/airframes/create_airframe/' . $row->id,'<i class="fa fa-pencil"></i> Edit', button('info')); ?></td>
 					    </tr>
 					<?php endforeach; ?>
 				    <?php else : ?>

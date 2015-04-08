@@ -188,6 +188,9 @@
 											<li>
 												<?php echo anchor('admin/airframes','View Airframes'); ?>
 											</li>
+											<li>
+												<?php echo anchor('admin/airframes/view_sub','View Aircraft TR/Substitutions'); ?>
+											</li>
 										</ul>
 									</li> 
                                                                         

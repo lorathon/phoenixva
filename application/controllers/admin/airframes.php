@@ -15,14 +15,23 @@ class Airframes extends PVA_Controller
         $this->_render('admin/airframes');
     }
     
-    public function edit_airframe($id = NULL)
+    public function view_sub()
     {
-	$this->_check_access('manager');
-		
+	$sub = new Aircraft_sub();	
+	$this->data['airframe_subs'] = $sub->find_all();
+	$this->data['cat'] = $this->config->item('aircraft_cat');
+        $this->_render('admin/airframe_sub');	
+    }
+    
+    public function create_airframe($id = NULL)
+    {		
 	$this->load->library('form_validation'); 
 	$this->load->helper('url');
 	
-	$this->data['title'] = 'Edit Aircraft';
+	$this->data['title'] = 'Edit Airframe';
+	
+	if(is_null($id))
+	    $this->data['title'] = 'Create Airframe';
 	
         $aircraft = new Airframe($id);
                 
@@ -36,9 +45,6 @@ class Airframes extends PVA_Controller
 	$this->form_validation->set_rules('mzfw', 'Maximum Zero Fuel Weight', 'integer|trim|xss_clean');
 	$this->form_validation->set_rules('mlw', 'Maximum Landing Weight', 'integer|trim|xss_clean');
 	$this->form_validation->set_rules('mtow', 'Meximum Take Off Weight', 'integer|trim|xss_clean');
-        
-        //$this->data['scripts'][] = base_url('assets/admin/vendor/jquery-validation/jquery.validate.js');
-	//$this->data['scripts'][] = base_url('assets/js/forms.validation.js');
 	
 	$this->data['aircraft_cat'] = $this->config->item('aircraft_cat');
                 
@@ -70,6 +76,50 @@ class Airframes extends PVA_Controller
 	    
 	    $this->_alert('Airframe - Record Saved', 'success', FALSE);
 	    $this->index();
+	}        
+    }
+    
+    public function create_sub($id = NULL)
+    {		
+	$this->load->library('form_validation'); 
+	$this->load->helper('url');
+	
+	$this->data['title'] = 'Edit Substitution';
+	
+	if(is_null($id))
+	    $this->data['title'] = 'Create Substitution';
+	
+        $aircraft = new Aircraft_sub($id);
+                
+        $this->form_validation->set_rules('id', 'ID', '');
+        $this->form_validation->set_rules('designation', 'Designation', 'alpha-numeric|trim|required|xss_clean');
+        $this->form_validation->set_rules('manufacturer', 'Manufacturer', 'alpha-numeric|trim|xss_clean');
+	$this->form_validation->set_rules('equips', 'Airframes', 'alpha-numeric|trim|xss_clean');
+	$this->form_validation->set_rules('hours_needed', 'TR Hours Needed', 'integer|trim|xss_clean');
+	
+	$this->data['aircraft_cat'] = $this->config->item('aircraft_cat');
+	$this->data['hours'] = array('1'=>1, '100'=>100, '200'=>200, '300'=>300, '400'=>400, '500'=>500, '600'=>600, '700'=>700, '800'=>800, '900'=>900);
+                
+        if ($this->form_validation->run() == FALSE)
+	{             
+            $this->data['errors'] = validation_errors();;  
+            $this->data['record'] = $aircraft;
+            $this->_render('admin/airframe_sub_form');
+	}
+	else
+	{
+            $aircraft->id	    = $this->input->post('id', TRUE);
+            $aircraft->designation  = $this->form_validation->set_value('designation');
+	    $aircraft->manufacturer = $this->form_validation->set_value('manufacturer');
+	    $aircraft->equips	    = $this->form_validation->set_value('equips');
+	    $aircraft->hours_needed  = $this->form_validation->set_value('hours_needed');
+	    $aircraft->category	    = $this->input->post('category', TRUE);
+	    $aircraft->rated	    = $this->input->post('rated', TRUE);
+                
+            $aircraft->save();
+	    
+	    $this->_alert('Aircraft Substitution - Record Saved', 'success', FALSE);
+	    $this->view_sub();
 	}        
     }
 }
