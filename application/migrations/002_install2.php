@@ -88,21 +88,6 @@ class Migration_Install2 extends CI_Migration {
 				));
 		$this->dbforge->add_key('id', TRUE);
 		$this->dbforge->create_table('schedules_pending');
-                
-                // Aircraft Pending
-		$this->dbforge->add_field(array(
-                                'id'                => $field_config['id_field'],
-                                'equip'		    => $field_config['icao_field'],
-				'name'		    => $field_config['input_field'],
-                                'regional'          => $field_config['status_field'],
-                                'turboprop'         => $field_config['status_field'],            
-                                'jet'               => $field_config['status_field'],
-                                'widebody'          => $field_config['status_field'],
-                                'created'	    => $field_config['timestamp_field'],	
-                                'modified'	    => $field_config['timestamp_field'],	
-                                ));
-		$this->dbforge->add_key('id', TRUE);
-		$this->dbforge->create_table('aircraft_pending');
 		
 		// Hub Stats
 		$this->dbforge->add_field(array(
