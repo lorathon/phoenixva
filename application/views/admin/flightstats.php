@@ -26,15 +26,52 @@
                     
                     
                     <div id="general" class="tab-pane active">
-                                <p>Recent <code>.nav-tabs.nav-justified</code></p>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitat.</p>
+                        <section class="panel panel-featured">
+                                <header class="panel-heading">
+                                        <div class="panel-actions">
+                                                <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+                                                <a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss></a>
+                                        </div>
+
+                                        <h2 class="panel-title">Flightstats APIs General Information</h2>
+                                        <p class="panel-subtitle">Introduction to the APIs used to gather real-world data and workflow guides</p>
+                                </header>
+                                <div class="panel-body">
+                                        <p>We purchase active airline, airport, aircraft and schedule data from Flightstats Flex APIs. We have a pay-as-you-go commercial license 
+                                            using the debit card attached to our PVA checking account. All queries require an application ID and application Key which are specific
+                                            to our account. Flightstats bills monthly for each API query made using the APIs. Each query has a different cost associated with it. 
+                                            All requests are made by using the forms in the following tabs above. A schedule version field is in the forms for specifying which 
+                                            version you are creating (S15, W15/16, etc). Recommended work flow for pulling new data is below.</p>
+                                        <h3>Airports</h3>
+                                        <blockquote class="primary rounded b-thin">
+                                        <p>The "Get Active Airports" form on the airports tab is built to get reference data for all currently active public-use airports. Flightstats
+                                            classifies airports into 5 categories. 1 - Top 100 airports (by volume). 2 - Top 300 airports. 3 - Top 700 airports. 4 - Airports with flight
+                                            history (approx 4,700). 5 - All active airports (approx 25,000). The form is defaulted to level 4. Submitting the form will mark all airports in 
+                                            the DB as inactive, query Flightstats and insert or update the airports table with the new data. This could add some new airports or mark some as
+                                            inactive. The list of active airports will be used to get schedules, so having too little or too many will affect schedule results. <strong>This 
+                                            query costs $.003 (1/3 of a cent).</strong></p>
+                                        <p>The "Create Type Json" form will go through the DB and create a JSON file listing all of the active airports with the classification selected. This
+                                            is used for Typeahead on schedule searches or elsewhere. It will list the FS code along with the Airport name, city, state (if applicable) and country.
+                                            This does not query Flightstats data and runs solely against the airports table. It saves the JSON to assets/data folder.</p>
+                                        </blockquote>
+                                        <h3>Airlines</h3>
+                                        <blockquote class="primary rounded b-thin">
+                                        <p>The "Get Active Airlines" form on the airlines tab is built to get reference data for all currently active airlines. It will mark all airlines as
+                                            inactive, process the JSON and insert or update the airlines into the airlines table. Some new airlines may be added and some airlines may be marked
+                                            as inactive. Schedule version is also present for marking the request (S15, W14/15, etc)<strong>This query costs $.003 (1/3 of a cent).</strong></p>
+                                        <p>The "Create Type Json" form will go through the DB and create a JSON file listing all of the active airlines. This is used for Typeahead on schedule
+                                            searches or elsewhere. It will list the FS code along with the Airline name. This does not query Flightstats data and runs solely against the airlines 
+                                            table. It saves the JSON to assets/data folder.</p>
+                                        </blockquote>
+                                </div>
+                        </section>
                     </div>
                     
                     
                     
                     <div id="airports" class="tab-pane">
                             <?php $attributes = array('class' => 'form-horizontal form-bordered');
-                            echo form_open('admin/flightstatsapt/getactive'); ?>
+                            echo form_open('admin/flightstats_airport/getactive'); ?>
                         
                                     <section class="panel panel-featured">
                                             <header class="panel-heading">
@@ -87,7 +124,7 @@
                             <?php echo form_close(); ?>
                             
                             <?php $attributes = array('class' => 'form-horizontal form-bordered');
-                            echo form_open('admin/flightstatsapt/writeJsonApt'); ?>
+                            echo form_open('admin/flightstats_airport/writeJsonApt'); ?>
                                     <section class="panel panel-featured">
                                             <header class="panel-heading">
                                                     <div class="panel-actions">
@@ -127,7 +164,7 @@
                     
                     <div id="airlines" class="tab-pane">
                             <?php $attributes = array('class' => 'form-horizontal form-bordered');
-                            echo form_open('admin/flightstatsairline/getactive'); ?>
+                            echo form_open('admin/flightstats_airline/getactive'); ?>
                         
                                     <section class="panel panel-featured">
                                             <header class="panel-heading">
@@ -165,7 +202,7 @@
                             <?php echo form_close(); ?>
                         
                             <?php $attributes = array('class' => 'form-horizontal form-bordered');
-                            echo form_open('admin/flightstatsairline/writeJsonAirline'); ?>
+                            echo form_open('admin/flightstats_airline/writeJsonAirline'); ?>
                                     <section class="panel panel-featured">
                                             <header class="panel-heading">
                                                     <div class="panel-actions">
@@ -194,7 +231,7 @@
                     
                     <div id="schedules" class="tab-pane">
                             <?php $attributes = array('class' => 'form-horizontal form-bordered');
-                            echo form_open('admin/flightstatsschedules/aptsingle'); ?>
+                            echo form_open('admin/flightstats_schedules/aptsingle'); ?>
                                     <section class="panel panel-featured">
                                             <header class="panel-heading">
                                                     <div class="panel-actions">
@@ -223,6 +260,17 @@
                                                             </div>
                                                     </div>
                                                     <div class="form-group">
+                                                            <label class="col-md-3 control-label">Date of Schedule Pull</label>
+                                                            <div class="col-md-6">
+                                                                    <div class="input-group">
+                                                                            <span class="input-group-addon">
+                                                                                    <i class="fa fa-calendar"></i>
+                                                                            </span>
+                                                                            <input type="text" name="date" data-plugin-datepicker class="form-control">
+                                                                    </div>
+                                                            </div>
+                                                    </div>
+                                                    <div class="form-group">
                                                             <label class="col-md-3 control-label">Schedule Version</label>
                                                             <div class="col-md-6">
                                                                 <input type="text" class="form-control" name="version" value="15A1">
@@ -237,7 +285,7 @@
                             <?php echo form_close(); ?>
                         
                             <?php $attributes = array('class' => 'form-horizontal form-bordered');
-                            echo form_open('admin/flightstatsschedules/aptwhere'); ?>
+                            echo form_open('admin/flightstats_schedules/aptwhere'); ?>
                                     <section class="panel panel-featured">
                                             <header class="panel-heading">
                                                     <div class="panel-actions">
@@ -265,6 +313,17 @@
                                                                 <input class="form-control" type="text" name="idstart" placeholder="Starting ID">
                                                                 <input class="form-control last" type="text" name="idstop" placeholder="Ending ID">
                                                             </section>
+                                                    </div>
+                                                    <div class="form-group">
+                                                            <label class="col-md-3 control-label">Date of Schedule Pull</label>
+                                                            <div class="col-md-6">
+                                                                    <div class="input-group">
+                                                                            <span class="input-group-addon">
+                                                                                    <i class="fa fa-calendar"></i>
+                                                                            </span>
+                                                                            <input type="text" name="date" data-plugin-datepicker class="form-control">
+                                                                    </div>
+                                                            </div>
                                                     </div>
                                                     <div class="form-group">
                                                             <label class="col-md-3 control-label">Schedule Version</label>

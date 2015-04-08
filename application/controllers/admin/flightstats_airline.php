@@ -1,6 +1,6 @@
 <?php
 
-class Flightstatsairline extends PVA_Controller
+class Flightstats_airline extends PVA_Controller
 {
 	protected $_table_name = 'airlines';
 	protected $_order_by = 'fs';
