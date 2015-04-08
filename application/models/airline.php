@@ -153,67 +153,22 @@ class Airline_category extends PVA_Model {
 class Airline_aircraft extends PVA_Model {
     
     public $airline_id	    = NULL;
-    public $aircraft_id	    = NULL;
+    public $airframe_id	    = NULL;
+    public $pax_first	    = NULL;
+    public $pax_business    = NULL;
+    public $pax_economy	    = NULL;
+    public $max_cargo	    = NULL;
     public $total_schedules = NULL;
     public $total_flights   = NULL;
     public $total_hours	    = NULL;
-    
-    protected $_fleet	    = NULL;
-    
-    protected $_schedules_table	= 'schedules';
-    protected $_aircrafts_table	= 'aircrafts';
+    public $total_fuel	    = NULL;
+    public $total_landings  = NULL;
     
     function __construct($id = NULL)
     {
+	$this->_timestamps = TRUE;
 	parent::__construct($id);
-    }
-    
-    function build_fleet($airline)
-    {			
-	if(is_null($airline->id))
-	    return;
-	
-	$this->db->select("aircrafts.id as id, COUNT({$this->db->dbprefix($this->_aircrafts_table)}.id) as total_schedules")
-		->from($this->_aircrafts_table)
-		->join($this->_schedules_table, 'schedules.equip = aircrafts.equip')
-		->where('schedules.carrier', $airline->fs)
-		->group_by('aircrafts.id');
-
-	$query = $this->db->get();
-
-	foreach ($query->result() as $row)
-	{
-	    $ac = new Airline_aircraft();
-	    $ac->aircraft_id = $row->id;
-	    $ac->airline_id = $airline->id;
-	    
-	    if(! $ac->find())
-	    {		
-		$ac->total_flights = 0;
-		$ac->total_hours = 0;
-	    }	    
-	    $ac->total_schedules = $row->total_schedules;
-	    $ac->save();
-	}
-    }
-    
-    function get_fleet()
-    {	
-	if(is_null($this->_fleet))
-	{	
-	    $this->_fleet = array();
-	    if($fleet = $this->find_all())
-	    {
-		foreach($fleet as $ac)
-		{
-		    $aircraft = new Aircraft($ac->aircraft_id);
-		    $this->_fleet[] = $aircraft;
-		}
-	    }	    
-	}	
-	return $this->_fleet;
-    }
-    
+    }    
 }
 
 class Airline_airport extends PVA_Model {

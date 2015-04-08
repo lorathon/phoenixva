@@ -35,14 +35,22 @@ class Migration_Install2 extends CI_Migration {
 		$this->dbforge->add_field(array(
 				'id'		    => $field_config['id_field'],
 				'airline_id'	    => $field_config['fk_field'],
-				'aircraft_id'	    => $field_config['fk_field'],
+				'airframe_id'	    => $field_config['fk_field'],
+				'pax_first'	    => $field_config['altitude_field'],
+				'pax_business'	    => $field_config['altitude_field'],
+				'pax_economy'	    => $field_config['altitude_field'],
+				'max_cargo'	    => $field_config['counter_field'],
 				'total_schedules'   => $field_config['counter_field'],
 				'total_flights'	    => $field_config['counter_field'],
 				'total_hours'	    => $field_config['counter_field'],
+				'total_fuel'	    => $field_config['counter_field'],
+				'total_landings'    => $field_config['calculated_field'],
+				'created'	    => $field_config['timestamp_field'],
+				'modified'	    => $field_config['timestamp_field'],
 		));
 		$this->dbforge->add_key('id', TRUE);
 		$this->dbforge->add_key('airline_id');
-		$this->dbforge->add_key('aircraft_id');
+		$this->dbforge->add_key('airframe_id');
 		$this->dbforge->create_table('airline_aircrafts', TRUE);
 		
 		
