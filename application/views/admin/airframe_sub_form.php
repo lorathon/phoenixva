@@ -72,7 +72,7 @@ $rated = array(
                 </header>
                 <div class="panel-body">
 
-                    <?php echo form_open_multipart('admin/fleet/create_sub', $form_attributes); ?>
+                    <?php echo form_open_multipart('admin/airframes/create_sub', $form_attributes); ?>
 
                     <?php echo form_hidden('id', $record->id); ?>
 

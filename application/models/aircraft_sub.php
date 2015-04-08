@@ -13,5 +13,32 @@ class Aircraft_sub extends PVA_Model
     {
         parent::__construct($id);
     }    
+    
+    public function save()
+    {
+	parent::save();
+	
+	/***
+	 * If this is an update then check airframes
+	 * and update them.  Just incase the category has changed
+	 */
+	if(!is_null($this->id))
+	{
+	    $airframe = new Airframe();
+	    $airframe->aircraft_sub_id = $this->id;
+	    $airframe->_limit = $airframe->find_all(FALSE, TRUE);
+	    $airframes = $airframe->find_all();
+	    
+	    if(!$airframes)
+		return;
+	    
+	    foreach($airframes as $obj)
+	    {
+		$obj->category = $this->category;
+		$obj->save();
+	    }
+	    
+	}
+    }
 }
 
