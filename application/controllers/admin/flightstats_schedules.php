@@ -20,6 +20,11 @@ class Flightstats_schedules extends PVA_Controller
                 $idstart    = $this->input->post('idstart');
                 $idstop     = $this->input->post('idstop');
                 $version    = $this->input->post('version');
+                $date       = $this->input->post('date');
+                
+                $year = date('Y', strtotime($date));
+                $month = date('n', strtotime($date));
+                $day = date('j', strtotime($date));
                 
                 
                 $query = $this->db->select('fs')
@@ -32,9 +37,8 @@ class Flightstats_schedules extends PVA_Controller
                 foreach ($query->result() as $row)
                 {
                     $apt = $row->fs;
-                    $this->apt($apt);
-                    }
-                
+                    $this->apt($apt, $year, $month, $day);
+                }
         }
 	
         //single airport flight pull
@@ -44,27 +48,26 @@ class Flightstats_schedules extends PVA_Controller
                 $appkey     = $this->input->post('appkey');
                 $apt        = $this->input->post('apt');
                 $version    = $this->input->post('version');
+                $date       = $this->input->post('date');
                 
-                $this->apt($apt);
+                $year = date('Y', strtotime($date));
+                $month = date('n', strtotime($date));
+                $day = date('j', strtotime($date));
+                
+                $this->apt($apt, $year, $month, $day);
         }
         
 	// Airport pull setup
-	public function apt($apt)
+	public function apt($apt, $year, $month, $day)
 	{            
                 // required from Post
                 $appid = $this->input->post('appid');
                 $appkey = $this->input->post('appkey');
                 $version = $this->input->post('version');
-                
-                // setup dates for the previous week
-                $year = date('Y');
-                $month = date('n');
-                $day = date('j');
-                        
+                                        
                 $counter = 0;
                 
-                		
-		$processed = $this->start($apt, $year, $month, $day, 0, $appid, $appkey, $version, $counter);
+                $processed  = $this->start($apt, $year, $month, $day, 0, $appid, $appkey, $version, $counter);
 		$processed += $this->start($apt, $year, $month, $day, 1, $appid, $appkey, $version, $counter);
 		$processed += $this->start($apt, $year, $month, $day, 2, $appid, $appkey, $version, $counter);
 		$processed += $this->start($apt, $year, $month, $day, 3, $appid, $appkey, $version, $counter);
@@ -113,36 +116,35 @@ class Flightstats_schedules extends PVA_Controller
 		
 		$counter = 0;
                 
-                
                 // GET AIRPORT UTC OFFSET, ADD TO ARRAY FOR LATER
                 foreach($decode->appendix->airports as $airport) {
                     $fs = $airport->fs;
                     $UTC[$fs] = -1 * $airport->utcOffsetHours;
                 }
                 
-                                
-                
                 // GET EQUIPMENT CODES, ADD TO / UPDATE PENDING AIRCRAFT TABLE
                 if(isset($decode->appendix->equipments)) {
                     foreach($decode->appendix->equipments as $equipments) {
                     
-                    $equip_obj = new Aircraft_pending();
+                        $equip_obj = new Aircraft_pending();
+
+                        $equip_obj->equip       = $equipments->iata;
+                        $equip_obj->find();
+                        
+                        if( ! $equip_obj->id)
+                        {
+                            $equip_obj->name        = $equipments->name;
+                            $equip_obj->turboprop   = $equipments->turboProp == true ? 1 : 0;
+                            $equip_obj->regional    = $equipments->regional == true ? 1 : 0;
+                            $equip_obj->jet         = $equipments->jet == true ? 1 : 0;
+                            $equip_obj->widebody    = $equipments->widebody == true ? 1 : 0;
+
+                            $equip_obj->save();
+                        }
                     
-                    $equip_obj->equip       = $equipments->iata;
-                    $equip_obj->find();
-                    
-                    $equip_obj->name        = $equipments->name;
-                    $equip_obj->turboprop   = $equipments->turboProp == true ? 1 : 0;
-                    $equip_obj->regional    = $equipments->regional == true ? 1 : 0;
-                    $equip_obj->jet         = $equipments->jet == true ? 1 : 0;
-                    $equip_obj->widebody    = $equipments->widebody == true ? 1 : 0;
-                    
-                    $equip_obj->save();
                     }
                     
                 }
-                
-                
                 
                 // BUILD FLIGHTS AND ADD TO / UPDATE PENDING SCHEDULES TABLE
                 foreach($decode->scheduledFlights as $flight) {

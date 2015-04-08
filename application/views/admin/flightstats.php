@@ -223,6 +223,17 @@
                                                             </div>
                                                     </div>
                                                     <div class="form-group">
+                                                            <label class="col-md-3 control-label">Date of Schedule Pull</label>
+                                                            <div class="col-md-6">
+                                                                    <div class="input-group">
+                                                                            <span class="input-group-addon">
+                                                                                    <i class="fa fa-calendar"></i>
+                                                                            </span>
+                                                                            <input type="text" name="date" data-plugin-datepicker class="form-control">
+                                                                    </div>
+                                                            </div>
+                                                    </div>
+                                                    <div class="form-group">
                                                             <label class="col-md-3 control-label">Schedule Version</label>
                                                             <div class="col-md-6">
                                                                 <input type="text" class="form-control" name="version" value="15A1">
@@ -265,6 +276,17 @@
                                                                 <input class="form-control" type="text" name="idstart" placeholder="Starting ID">
                                                                 <input class="form-control last" type="text" name="idstop" placeholder="Ending ID">
                                                             </section>
+                                                    </div>
+                                                    <div class="form-group">
+                                                            <label class="col-md-3 control-label">Date of Schedule Pull</label>
+                                                            <div class="col-md-6">
+                                                                    <div class="input-group">
+                                                                            <span class="input-group-addon">
+                                                                                    <i class="fa fa-calendar"></i>
+                                                                            </span>
+                                                                            <input type="text" name="date" data-plugin-datepicker class="form-control">
+                                                                    </div>
+                                                            </div>
                                                     </div>
                                                     <div class="form-group">
                                                             <label class="col-md-3 control-label">Schedule Version</label>
