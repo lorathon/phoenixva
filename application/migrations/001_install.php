@@ -183,7 +183,7 @@ class Migration_Install extends CI_Migration {
 				'hub'             => $field_config['status_field'],
 				'delay_url'       => $field_config['input_field'],
 				'weather_url'     => $field_config['input_field'],
-                                'version'         => $field_config['icao_field'],
+                                'version'         => $field_config['short_input_field'],
 				));
 		$this->dbforge->add_key('id', TRUE);
 		$this->dbforge->add_key(array('iata','icao','hub'));
@@ -204,7 +204,7 @@ class Migration_Install extends CI_Migration {
 				'total_pireps'    => $field_config['counter_field'],
 				'total_hours'     => $field_config['counter_field'],
 				'regional'        => $field_config['status_field'],
-                                'version'         => $field_config['icao_field'],
+                                'version'         => $field_config['short_input_field'],
 				));
 		$this->dbforge->add_key('id', TRUE);
 		$this->dbforge->add_key(array('iata','icao'));
@@ -248,7 +248,7 @@ class Migration_Install extends CI_Migration {
 				'arr_gate'        => $field_config['short_input_field'],
 				'downline_apt'	  => $field_config['icao_field'],
 				'downline_fltId'  => $field_config['short_input_field'],
-                                'version'         => $field_config['icao_field'],
+                                'version'         => $field_config['short_input_field'],
 				'source_date'	  => $field_config['timestamp_field'],	
 				));
 		$this->dbforge->add_key('id', TRUE);

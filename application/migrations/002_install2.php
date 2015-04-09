@@ -83,7 +83,7 @@ class Migration_Install2 extends CI_Migration {
 				'arr_time_local'  => $field_config['short_input_field'],
 				'arr_time_utc'    => $field_config['short_input_field'],
 				'arr_terminal'    => $field_config['short_input_field'],
-                                'version'         => $field_config['icao_field'],
+                                'version'         => $field_config['short_input_field'],
 				'created'	  => $field_config['timestamp_field'],	
 				));
 		$this->dbforge->add_key('id', TRUE);
@@ -123,7 +123,7 @@ class Migration_Install2 extends CI_Migration {
 		$this->dbforge->add_field(array(
 				'id'               => $field_config['id_field'],
 				'type'             => $field_config['short_input_field'],
-				'version'          => $field_config['icao_field'],
+				'version'          => $field_config['short_input_field'],
 				'fs'               => $field_config['icao_field'],
 				'note'             => $field_config['short_input_field'],
 				'created'          => $field_config['timestamp_field'],
