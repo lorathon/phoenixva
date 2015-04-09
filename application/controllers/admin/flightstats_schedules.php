@@ -155,6 +155,7 @@ class Flightstats_schedules extends PVA_Controller
                     $operator = NULL;
                     $regional = 0;
                     $brand = NULL;
+                    $classes = NULL;
                     
                     // ONLY BUILD FLIGHT THAT IS NOT A CODESHARE
                     if($flight->isCodeshare == 0) {
@@ -166,6 +167,11 @@ class Flightstats_schedules extends PVA_Controller
                             $operator = isset($flight->wetleaseOperatorFsCode) ? $flight->wetleaseOperatorFsCode : NULL;
                             $regional = 1;
                             $brand = isset($flight->brand) ? $flight->brand : NULL;
+                        }
+                        
+                        // GET SERVICE CLASS
+                        if(isset($flight->serviceClasses)) {
+                            $classes = join(',', $flight->serviceClasses);
                         }
                         
                         $flight_num = $flight->flightNumber;
@@ -196,6 +202,7 @@ class Flightstats_schedules extends PVA_Controller
 
                         $sched_obj->operator         = $operator;
                         $sched_obj->service_type     = $service_type;
+                        $sched_obj->service_classes  = $classes;
                         $sched_obj->regional         = $regional;
                         $sched_obj->brand            = $brand;
                         $sched_obj->dep_time_local   = $dep_time_local;

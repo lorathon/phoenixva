@@ -10,6 +10,7 @@ class Schedules_pending extends PVA_Model {
 	public $arr_airport     = NULL;
 	public $equip           = NULL;
 	public $service_type    = NULL;
+        public $service_classes = NULL;
 	public $regional        = NULL;
         public $brand           = NULL;
 	public $dep_time_local  = NULL;
