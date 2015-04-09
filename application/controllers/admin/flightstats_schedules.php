@@ -67,18 +67,18 @@ class Flightstats_schedules extends PVA_Controller
                                         
                 $counter = 0;
                 
-                /*$processed  = $this->start($apt, $year, $month, $day, 0, $appid, $appkey, $version, $counter);
+                $processed  = $this->start($apt, $year, $month, $day, 0, $appid, $appkey, $version, $counter);
 		$processed += $this->start($apt, $year, $month, $day, 1, $appid, $appkey, $version, $counter);
 		$processed += $this->start($apt, $year, $month, $day, 2, $appid, $appkey, $version, $counter);
 		$processed += $this->start($apt, $year, $month, $day, 3, $appid, $appkey, $version, $counter);
 		$processed += $this->start($apt, $year, $month, $day, 4, $appid, $appkey, $version, $counter);
 		$processed += $this->start($apt, $year, $month, $day, 5, $appid, $appkey, $version, $counter);
 		$processed += $this->start($apt, $year, $month, $day, 6, $appid, $appkey, $version, $counter);
-		$processed += $this->start($apt, $year, $month, $day, 7, $appid, $appkey, $version, $counter);*/
-		$processed = $this->start($apt, $year, $month, $day, 8, $appid, $appkey, $version, $counter);
+		$processed += $this->start($apt, $year, $month, $day, 7, $appid, $appkey, $version, $counter);
+		$processed += $this->start($apt, $year, $month, $day, 8, $appid, $appkey, $version, $counter);
 		$processed += $this->start($apt, $year, $month, $day, 9, $appid, $appkey, $version, $counter);
 		$processed += $this->start($apt, $year, $month, $day, 10, $appid, $appkey, $version, $counter);
-		/*$processed += $this->start($apt, $year, $month, $day, 11, $appid, $appkey, $version, $counter);
+		$processed += $this->start($apt, $year, $month, $day, 11, $appid, $appkey, $version, $counter);
 		$processed += $this->start($apt, $year, $month, $day, 12, $appid, $appkey, $version, $counter);
 		$processed += $this->start($apt, $year, $month, $day, 13, $appid, $appkey, $version, $counter);
 		$processed += $this->start($apt, $year, $month, $day, 14, $appid, $appkey, $version, $counter);
@@ -90,7 +90,7 @@ class Flightstats_schedules extends PVA_Controller
 		$processed += $this->start($apt, $year, $month, $day, 20, $appid, $appkey, $version, $counter);
 		$processed += $this->start($apt, $year, $month, $day, 21, $appid, $appkey, $version, $counter);
 		$processed += $this->start($apt, $year, $month, $day, 22, $appid, $appkey, $version, $counter);
-		$processed += $this->start($apt, $year, $month, $day, 23, $appid, $appkey, $version, $counter);*/
+		$processed += $this->start($apt, $year, $month, $day, 23, $appid, $appkey, $version, $counter);
                 
                 echo "$apt - Version $version - $processed flights processed. <br />";
                 

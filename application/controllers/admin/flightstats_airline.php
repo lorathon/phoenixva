@@ -60,6 +60,7 @@ class Flightstats_airline extends PVA_Controller
 			$airline_obj->name		        = $name;
 			$airline_obj->active     		= $active;
 			$airline_obj->category   		= $category;
+                        $airline_obj->version                   = $version;
 			
 	
 			$airline_obj->save();
