@@ -20,6 +20,13 @@ class Schedules_pending extends PVA_Model {
 	public $arr_time_local  = NULL;
 	public $arr_time_utc    = NULL;
 	public $arr_terminal    = NULL;
+        public $sun             = NULL;
+        public $mon             = NULL;
+        public $tue             = NULL;
+        public $wed             = NULL;
+        public $thu             = NULL;
+        public $fri             = NULL;
+        public $sat             = NULL;
         public $version         = NULL;
         public $created         = NULL;
         
