@@ -144,6 +144,8 @@ class Flightstats_schedules extends PVA_Controller
                         $equip_obj->widebody    = $equipments->widebody == true ? 1 : 0;
 
                         $equip_obj->save();
+                        
+                        unset($equip_obj);
                     }
                     
                 }
