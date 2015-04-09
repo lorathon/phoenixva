@@ -223,26 +223,36 @@ class Migration_Install extends CI_Migration {
 		
 		// Schedules table
 		$this->dbforge->add_field(array(
-				'id'              => $field_config['id_field'],
-				'carrier'         => $field_config['short_input_field'],
-				'operator'        => $field_config['short_input_field'],
-				'flight_num'      => $field_config['short_input_field'],
-				'dep_airport'     => $field_config['icao_field'],
-				'arr_airport'     => $field_config['icao_field'],
-				'equip'           => $field_config['icao_field'],
-				'service_type'    => $field_config['icao_field'],
-				'regional'        => $field_config['status_field'],
-				'dep_time_local'  => $field_config['short_input_field'],
-				'dep_time_utc'    => $field_config['short_input_field'],
-				'dep_terminal'    => $field_config['short_input_field'],
-				'block_time'      => $field_config['short_input_field'],
-				'arr_time_local'  => $field_config['short_input_field'],
-				'arr_time_utc'    => $field_config['short_input_field'],
-				'arr_terminal'    => $field_config['short_input_field'],
-                                'version'         => $field_config['short_input_field'],
-				'created'	  => $field_config['timestamp_field'],
+				'id'		    => $field_config['id_field'],
+				'carrier_id'	    => $field_config['fk_field'],
+				'operator_id'	    => $field_config['fk_field'],
+				'flight_num'	    => $field_config['short_input_field'],
+				'dep_airport_id'    => $field_config['fk_field'],
+				'arr_airport_id'    => $field_config['fk_field'],
+				'airframe_id'	    => $field_config['fk_field'],
+				'schedule_cat_id'   => $field_config['fk_field'],
+				'regional'	    => $field_config['status_field'],
+				'brand'		    => $field_config['input_field'],
+				'dep_time_local'    => $field_config['short_input_field'],
+				'dep_time_utc'	    => $field_config['short_input_field'],
+				'dep_terminal'	    => $field_config['short_input_field'],
+				'block_time'	    => $field_config['short_input_field'],
+				'arr_time_local'    => $field_config['short_input_field'],
+				'arr_time_utc'	    => $field_config['short_input_field'],
+				'arr_terminal'	    => $field_config['short_input_field'],
+                                'version'	    => $field_config['short_input_field'],
+				'created'	    => $field_config['timestamp_field'],
+				'modified'	    => $field_config['timestamp_field'],
 				));
 		$this->dbforge->add_key('id', TRUE);
+		$this->dbforge->add_key(array(
+		    'carrier_id',
+		    'operator_id',
+		    'dep_airport_id',
+		    'arr_airport_id',
+		    'airframe_id',
+		    'schedule_cat_id'
+		    ));
 		$this->dbforge->create_table('schedules');
 		
 		// Schedules Categories table
@@ -357,6 +367,7 @@ class Migration_Install extends CI_Migration {
                                 ));
 
                 $this->dbforge->add_key('id', TRUE);
+		$this->dbforge->add_key('award_type_id');
                 $this->dbforge->create_table('awards');
 
                 // User Awards table
@@ -368,6 +379,7 @@ class Migration_Install extends CI_Migration {
                             ));
 
                 $this->dbforge->add_key('id', TRUE);
+		$this->dbforge->add_key(array('user_id','award_id'));
                 $this->dbforge->create_table('user_awards');
 		
 		// Event_types table
@@ -414,33 +426,17 @@ class Migration_Install extends CI_Migration {
                             ));
 
                 $this->dbforge->add_key('id', TRUE);
-                $this->dbforge->create_table('events');	
-		
-		// Aircraft table
-                $this->dbforge->add_field(array(
-                                'id'		    => $field_config['id_field'],
-                                'equip'		    => $field_config['icao_field'],
-				'aircraft_sub_id'   => $field_config['fk_field'],
-				'name'		    => $field_config['input_field'],
-                                'category'	    => $field_config['fk_field'],
-				'pax_first'	    => $field_config['altitude_field'],
-				'pax_business'	    => $field_config['altitude_field'],
-				'pax_economy'	    => $field_config['altitude_field'],
-				'max_cargo'	    => $field_config['counter_field'],
-				'max_range'	    => $field_config['altitude_field'],
-				'oew'		    => $field_config['counter_field'],
-				'mzfw'		    => $field_config['counter_field'],
-				'mlw'		    => $field_config['counter_field'],
-				'mtow'		    => $field_config['counter_field'],				
-				'carrier_count'	    => $field_config['counter_field'],
-                                'operator_count'    => $field_config['counter_field'],
-                                'flight_count'      => $field_config['counter_field'],
-				'total_pireps'	    => $field_config['counter_field'],
-				'total_hours'	    => $field_config['counter_field'],
-				'total_distance'    => $field_config['counter_field'],
-                                ));
-                $this->dbforge->add_key('id', TRUE);
-                $this->dbforge->create_table('aircrafts');
+		$this->dbforge->add_key(array(
+		    'event_type_id',
+		    'airline_id',
+		    'airport_id',
+		    'award_id_winner',
+		    'award_id_particapant',
+		    'user_id_1',
+		    'user_id_2',
+		    'user_id_3'
+		    ));
+                $this->dbforge->create_table('events');			
 		
 		// Aircraft Substitution table
                 $this->dbforge->add_field(array(
@@ -472,10 +468,8 @@ class Migration_Install extends CI_Migration {
                 $this->dbforge->drop_table('awards');
                 $this->dbforge->drop_table('award_types');
 		$this->dbforge->drop_table('events');
-                $this->dbforge->drop_table('event_types');         
-		$this->dbforge->drop_table('aircrafts');
+                $this->dbforge->drop_table('event_types');  
 		$this->dbforge->drop_table('aircraft_subs');
-                $this->dbforge->drop_table('users');
-                
+                $this->dbforge->drop_table('users');                
 	}
 }

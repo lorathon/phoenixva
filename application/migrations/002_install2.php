@@ -49,8 +49,7 @@ class Migration_Install2 extends CI_Migration {
 				'modified'	    => $field_config['timestamp_field'],
 		));
 		$this->dbforge->add_key('id', TRUE);
-		$this->dbforge->add_key('airline_id');
-		$this->dbforge->add_key('airframe_id');
+		$this->dbforge->add_key(array('airline_id', 'airframe_id'));
 		$this->dbforge->create_table('airline_aircrafts', TRUE);
 		
 		
@@ -61,8 +60,7 @@ class Migration_Install2 extends CI_Migration {
 				'airport_id'	    => $field_config['fk_field'],
 		));
 		$this->dbforge->add_key('id', TRUE);
-		$this->dbforge->add_key('airline_id');
-		$this->dbforge->add_key('airport_id');
+		$this->dbforge->add_key(array('airline_id', 'airport_id'));
 		$this->dbforge->create_table('airline_airports', TRUE);
                 
                 // Pending Schedules table
