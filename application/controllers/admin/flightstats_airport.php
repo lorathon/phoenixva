@@ -228,9 +228,84 @@ class Flightstats_airport extends PVA_Controller
 	}
 	// end getactive function
 	
-	
-	
-	
+	function deactivate_empty_airport()
+        {
+            // get list of airport codes
+            $airports = $this->db->select('fs')->from('airports')->get();
+            $counter = 0;
+            
+            foreach($airports->result() as $airport) {
+            
+                $fs = $airport->fs;
+                
+                //look in schedules pending table for the id in dep or arr fields
+                $query = $this->db->from('schedules_pending')
+                                    ->where('dep_airport', $fs)
+                                    ->or_where('arr_airport', $fs)
+                                    ->limit(1)
+                                    ->get();
+                
+                // if airport has no departures or arrivals, make it inactive
+                if($query->num_rows() == 0 )
+                {
+                    $airport_obj = new Airport();
+                    
+                    $airport_obj->fs = $fs;
+                    $airport_obj->find();
+                    
+                    $airport_obj->active = 0;
+                    $airport_obj->save();
+                    
+                    $counter++;
+                    
+                    echo ".";
+                }
+                
+            }
+            echo "<br />$counter airports deactivated.";
+        }
+        
+        function get_stranded_flights()
+        {
+            // get list of active airport codes
+            $airports = $this->db->select('fs')->from('airports')->where('active', 1)->get();
+            
+            foreach($airports->result() as $airport) {
+            
+                $fs = $airport->fs;
+                
+                //look in schedules pending table for the id in dep or arr fields
+                $query = $this->db->from('schedules_pending')
+                                    ->where('dep_airport', $fs)
+                                    ->get();
+                
+                // if airport has no departures or arrivals, make it inactive
+                if($query->num_rows() == 0 )
+                {
+                    $airport_obj = new Airport();
+                    
+                    $airport_obj->fs = $fs;
+                    $airport_obj->find();
+                    
+                    $id = $airport_obj->id;
+                    $name = $airport_obj->name;
+                    $city = $airport_obj->city;
+                    $state = $airport_obj->state_code;
+                    $country_code = $airport_obj->country_code;
+                    
+                    if(isset($state)) 
+                    {
+                        echo "<br />$fs - $name, $city, $state, $country_code (ID: $id) ";
+                    }
+                    else {
+                        echo "<br />$fs - $name, $city, $country_code (ID: $id) ";
+                    }
+                    
+                }
+                
+                echo ".";
+            }
+        }
 	/**
 	 * writeJsonApt function
 	 *

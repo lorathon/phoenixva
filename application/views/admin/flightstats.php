@@ -122,6 +122,58 @@
                                             </div>
                                     </section>
                             <?php echo form_close(); ?>
+                        
+                            <?php $attributes = array('class' => 'form-horizontal form-bordered');
+                            echo form_open('admin/flightstats_airport/deactivate_empty_airport'); ?>
+                                    <section class="panel panel-featured">
+                                            <header class="panel-heading">
+                                                    <div class="panel-actions">
+                                                            <a href="#" class="fa fa-caret-down"></a>
+                                                            <a href="#" class="fa fa-times"></a>
+                                                    </div>
+
+                                                    <h2 class="panel-title">Deactivate Empty Airports</h2>
+
+                                                    <p class="panel-subtitle">
+                                                            After running an initial day of schedules, this will deactivate airports with no departures or arrivals.
+                                                    </p>
+                                            </header>
+                                            <div class="panel-body">
+                                                    
+                                                    <footer class="panel-footer" align="center">
+                                                            <button class="btn btn-primary">Submit</button>
+                                                            <button type="reset" class="btn btn-default">Reset</button>
+                                                    </footer>
+                                            </div>
+                                    </section>
+                            <?php echo form_close(); ?>
+                        
+                            <?php $attributes = array('class' => 'form-horizontal form-bordered');
+                            echo form_open('admin/flightstats_airport/get_stranded_flights'); ?>
+                                    <section class="panel panel-featured">
+                                            <header class="panel-heading">
+                                                    <div class="panel-actions">
+                                                            <a href="#" class="fa fa-caret-down"></a>
+                                                            <a href="#" class="fa fa-times"></a>
+                                                    </div>
+
+                                                    <h2 class="panel-title">Get Stranded Flights</h2>
+
+                                                    <p class="panel-subtitle">
+                                                            After running an initial day of schedules, this will get list of airports with arrivals but no departures.
+                                                    </p>
+                                            </header>
+                                            <div class="panel-body">
+                                                    
+                                                    <footer class="panel-footer" align="center">
+                                                            <button class="btn btn-primary">Submit</button>
+                                                            <button type="reset" class="btn btn-default">Reset</button>
+                                                    </footer>
+                                            </div>
+                                    </section>
+                            <?php echo form_close(); ?>
+                        
+                        
                             
                             <?php $attributes = array('class' => 'form-horizontal form-bordered');
                             echo form_open('admin/flightstats_airport/writeJsonApt'); ?>
