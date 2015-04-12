@@ -111,7 +111,7 @@ class Flightstats_airline extends PVA_Controller
 	function getLogos ()
 	{
 		// get all active airlines in the DB table
-		$this->db->from('airlines')->where('active =', 1)->order_by('fs ASC');
+		$this->db->from('airlines')->where('active', 1)->order_by('fs ASC');
 		$query = $this->db->get();
 		
 		foreach ($query->result() as $row)
@@ -154,13 +154,11 @@ class Flightstats_airline extends PVA_Controller
 	
 	function writeJsonAirline ()
 	{
-		header('Content-Type: application/json');
-		
 		$linklist=array();
 		$link=array();
 		
 		// get only active airlines from DB table.
-		$this->db->from('airlines')->where('active =', 1)->order_by('fs ASC');
+		$this->db->from('airlines')->where('active', 1)->order_by('fs ASC');
 		$query = $this->db->get();
 		
 		$counter = 0;
@@ -177,9 +175,8 @@ class Flightstats_airline extends PVA_Controller
 		// save JSON file to assets folder
 		$fp = fopen("/home/phoenix/public_html/zz_dev/gofly02/assets/data/airlines.json", "w");
 		fwrite($fp, json_encode($linklist));
-		//echo json_encode($linklist);
 		
-		echo "TypeAhead file created, showing $counter Airlines.";
+		echo "TypeAhead file created, showing $counter airlines.";
 	}
 }
 

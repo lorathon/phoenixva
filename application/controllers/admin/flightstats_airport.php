@@ -329,8 +329,6 @@ class Flightstats_airport extends PVA_Controller
 	
 	function writeJsonApt ()
 	{
-		header('Content-Type: application/json');
-	
 		$linklist=array();
 		$link=array();
 		
@@ -338,7 +336,7 @@ class Flightstats_airport extends PVA_Controller
                 $class = $this->input->post('class');
                 
 		// get airports in class at or below $class parameter, sets up order for putting into JSON file.
-		$this->db->from('airports')->where('classification <=', $class)->order_by('classification ASC, fs ASC');
+		$this->db->from('airports')->where('classification <=', $class)->where('active', 1)->order_by('classification ASC, fs ASC');
 		$query = $this->db->get();
 		
 		$counter = 0;
@@ -367,13 +365,9 @@ class Flightstats_airport extends PVA_Controller
 		
 		$fp = fopen("/home/phoenix/public_html/zz_dev/gofly02/assets/data/airports.json", "w");
 		fwrite($fp, json_encode($linklist));
-		//echo json_encode($linklist);
 		
-		echo "TypeAhead file created, showing $counter Airports.";
+		echo "TypeAhead file created, showing $counter airports.";
 	}
 	// end writeJsonApt function
-	
-
-
 }
 
