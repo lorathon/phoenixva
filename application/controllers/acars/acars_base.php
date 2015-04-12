@@ -15,6 +15,21 @@ class Acars_Base extends CI_Controller {
 	// Used to enable/disable the profiler (can be overriden by child controllers)
 	protected $_profile_this = TRUE;
 	
+	/**
+	 * Holds any parameters to be returned to the client.
+	 * @var array
+	 */
+	protected $_params = array();
+	
+	/**
+	 * Separator between input fields
+	 * 
+	 * Used by the asynch messaging system.
+	 * 
+	 * @var string
+	 */
+	protected $_field_separator = '&';
+	
 	function __construct()
 	{
 		parent::__construct();
