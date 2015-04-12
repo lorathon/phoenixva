@@ -63,6 +63,34 @@ class Acars_Base extends CI_Controller {
 	}
 	
 	/**
+	 * Outputs an XML response
+	 * 
+	 * @param array $params containing the name/value pairs for the XML
+	 * @param string $switch
+	 */
+	protected function sendXML($params, $switch = '') 
+	{
+		$xml = new SimpleXMLElement('<sitedata />');
+	
+		$info_xml = $xml->addChild('info');
+		if($switch != '')
+			$info_xml->addChild('xml_sw', $switch);
+			
+		foreach($params as $name => $value)	
+		{
+			$info_xml->addChild($name, $value);
+		}
+	
+		header('Content-type: text/xml');
+		$xml_string = $xml->asXML();
+
+		log_message('debug', "Sending XML: \n".print_r($xml_string, true));
+		
+		echo $xml_string;
+	}
+	
+
+	/**
 	 * PVA Application ACARS autoloader
 	 *
 	 * Allows calling objects without having to load models first. This is a
