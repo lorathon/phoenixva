@@ -202,7 +202,7 @@ class Migration_Install extends Migration_base {
 				'icao' => $this->get_icao_field(),
 				'name' => $this->get_input_field(),
 				'city' => $this->get_short_input_field(),
-				'state_code' => $this->get_short_input_field(),
+				'state_code' => $this->get_icao_field(),
 				'country_code' => $this->get_icao_field(),
 				'country_name' => $this->get_short_input_field(),
 				'region_name' => $this->get_short_input_field(),
@@ -211,9 +211,9 @@ class Migration_Install extends Migration_base {
 				'long' => $this->get_location_field(),
 				'elevation' => $this->get_altitude_field(),
 				'classification' => $this->get_tinyint_field(),
-				'active' => $this->get_status_field(),
+				'active' => $this->get_boolean_field(),
 				'port_type' => $this->get_short_input_field(),
-				'hub' => $this->get_status_field(),
+				'hub' => $this->get_boolean_field(),
 				'delay_url' => $this->get_input_field(),
 				'weather_url' => $this->get_input_field(),
 				'version' => $this->get_short_input_field()
@@ -261,14 +261,14 @@ class Migration_Install extends Migration_base {
 				'iata' => $this->get_icao_field(),
 				'icao' => $this->get_icao_field(),
 				'name' => $this->get_input_field(),
-				'active' => $this->get_status_field(),
+				'active' => $this->get_boolean_field(),
 				'category' => $this->get_icao_field(),
 				'fuel_discount' => $this->get_status_field(),
 				'airline_image' => $this->get_input_field(),
 				'total_schedules' => $this->get_counter_field(),
 				'total_pireps' => $this->get_counter_field(),
 				'total_hours' => $this->get_counter_field(),
-				'regional' => $this->get_status_field(),
+				'regional' => $this->get_boolean_field(),
 				'version' => $this->get_short_input_field()
 		));
 		$this->add_key(array (
