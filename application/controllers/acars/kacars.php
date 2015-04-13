@@ -147,33 +147,31 @@ class Kacars extends Acars_Base
 					'pirep_id=0',
 					'load=',
 					'lat='.$update->lat,
-					'long='.$update->lon,
+					'long='.$update->lng,
 					'altitude='.$update->alt,
 					'altitude_agl=',
 					'altitude_msl=',
-					'heading=',
+					'heading='.$update->heading,
 					'ground_speed='.$update->gs,
 					'true_airspeed=',
 					'indicated_airspeed=',
-					'vertical_speed=',
+					'vertical_speed='.$update->vs,
 					'bank=',
 					'pitch=',
-					'fuel_onboard=',
-					'phase=',
+					'fuel_onboard='.$update->fob,
+					'phase='.$update->phase,
 					'warning=',
 					'warning_detail=',
 					'remain_dist='.$update->remain_dist,
-					'remain_time=',
-					'flown_time=',
-					'landed=',
-					'ontime=',
+					'flown_time='.$update->flown_time,
+					'landed='.$update->landed,
 			);
 			
 			$message = implode($this->_field_separator, $fields);
 
 			// Dispatch to appropriate handler
 			// XXX Need a better way to handle the processor location
-			$this->dispatch($message, '/cjtop/acars/live_processor');
+			$this->dispatch($message, '/cjtop/acars/acars_processor/update');
 			log_message('debug', 'Live Update returning to client');
 		}
 		else
@@ -193,13 +191,14 @@ class Kacars extends Acars_Base
 	{
 		if ($xml->pirep)
 		{
+			$update = $xml->liveupdate;
 			$pirep = $xml->pirep;
 			
 			// Translate KACARS to PIREP fields
 			$fields = array(
 					'client='.$this->_client,
 					'user_id='.$this->_user_id,
-					'hub_id=0',
+					'hub_id='.$xml->data->crewcenter,
 					'airline_aircraft_id=0',
 					'flight_number='.$pirep->flightnumber,
 					'flight_type='.$pirep->flighttype,
@@ -210,7 +209,7 @@ class Kacars extends Acars_Base
 					'arr_lat=0',
 					'arr_long=0',
 					'flight_level='.$pirep->flightlevel,
-					'route=',
+					'route='.$update->route,
 					'pax_first=0',
 					'pax_business=0',
 					'pax_economy=0',
@@ -251,7 +250,7 @@ class Kacars extends Acars_Base
 
 			// Dispatch to appropriate handler
 			// XXX Need a better way to handle the processor location
-			$this->dispatch($message, '/cjtop/acars/pirep_processor');
+			$this->dispatch($message, '/cjtop/acars/acars_processor/file_pirep');
 			log_message('debug', 'PIREP Returning to client');
 			$this->_params['pirepStatus'] = 1;
 			
