@@ -44,15 +44,6 @@ class PVA_Controller extends CI_Controller {
 		// Register autoloader
 		spl_autoload_register(array('PVA_Controller','_autoload'));
 
-		// Ensure database is current
-		$this->load->library('migration');
-
-		if ( ! $this->migration->current())
-		{
-			show_error($this->migration->error_string());
-			log_message('error', 'Migration error: '.$this->migration->error_string());
-		}
-
 		// Load PVA config file XXX This should probably not be loaded here.
 		$this->load->config('pva_config');
 		
