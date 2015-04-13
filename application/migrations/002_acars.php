@@ -21,6 +21,8 @@ class Migration_Acars extends Migration_base {
 	
 		// List the tables included in this migration in the order they should be created
 		$this->table_list = array(
+				'acars_chat',
+				'acars_settings',
 				'positions',
 				'pireps',
 				'passengers',
@@ -29,6 +31,36 @@ class Migration_Acars extends Migration_base {
 				'cargo',
 				'cargo_logs',
 		);
+	}
+	
+	protected function _define_acars_chat()
+	{
+		$this->add_fields(array(
+				'sender_id' => $this->get_fk_field(),
+				'receiver_id' => $this->get_fk_field(),
+				'message' => $this->get_text_input_field(),
+				'created' => $this->get_timestamp_field(),
+				'staff' => $this->get_boolean_field(),
+				'chat' => $this->get_boolean_field(),
+				'active' => $this->get_boolean_field(),				
+		));
+		$this->add_key('sender_id');
+		$this->add_key('receiver_id');
+		$this->add_key('created');
+	}
+	
+	protected function _define_acars_settings()
+	{
+		$this->add_fields(array(
+				'client' => $this->get_short_input_field(),
+				'title' => $this->get_short_input_field(),
+				'parameter' => $this->get_short_input_field(),
+				'value' => $this->get_input_field(),
+				'description' => $this->get_input_field(),
+				'data_type' => $this->get_short_input_field(),
+		));
+		$this->add_key('client');
+		$this->add_key('parameter');
 	}
 	
 	protected function _define_positions()
