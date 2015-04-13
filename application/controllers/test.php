@@ -17,5 +17,11 @@ class Test extends PVA_Controller
 	    $frame->check_sub();
 	    $frame->save();
 	}
+	
+	foreach($frames as $frame)
+	{
+	    $frame->set_count();
+	}
+	
     }
 }

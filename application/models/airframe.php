@@ -5,6 +5,7 @@ class Airframe extends PVA_Model
     public $iata		= NULL;
     public $icao		= NULL;    
     public $name		= NULL;
+    public $count               = NULL;
     public $aircraft_sub_id	= NULL;
     public $category		= NULL;
     public $regional		= NULL;
@@ -34,6 +35,17 @@ class Airframe extends PVA_Model
 	return parent::find_all();
     }
     
+    public function find_good()
+    {
+	$this->db->select('*')
+		->where('count > 0')
+		->from($this->_table_name)
+		;
+	
+	$query = $this->db->get();
+        return $this->_get_objects($query);
+    }
+    
     function check_sub()
     {
 	$subs = new Aircraft_sub();
@@ -45,6 +57,16 @@ class Airframe extends PVA_Model
 	    $this->aircraft_sub_id	= $sub[0]->id;
 	    $this->category		= $sub[0]->category;	    
 	}	    
+    }
+    
+    function set_count()
+    {
+	$schedule = new Schedules_pending();
+	$schedule->equip = $this->iata;
+	$count = $schedule->find_all(FALSE, TRUE);
+	
+	$this->count = $count;
+	$this->save();
     }
 }
 

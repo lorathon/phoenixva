@@ -31,6 +31,7 @@
 					<th>MTOW</th>
 					<th>MLW</th>
 					<th>TR ID</th>
+					<th>Count</th>
     					<th>CAT</th>
 					<th>OPTIONS</th>
 				    </tr>
@@ -49,6 +50,7 @@
 						<td><font color="<?php if($row->mtow == 0) echo "#ff0000"; ?>"><?php echo $row->mtow; ?> lbs</td>
 						<td><font color="<?php if($row->mlw == 0) echo "#ff0000"; ?>"><?php echo $row->mlw; ?> lbs</td>
 						<td><font color="<?php if($row->aircraft_sub_id == 0) echo "#ff0000"; ?>"><?php echo $row->aircraft_sub_id; ?></td>
+						<td><font color="<?php if($row->count == 0) echo "#ff0000"; ?>"><?php echo $row->count; ?></td>
 	    					<td><font color="<?php if($row->category == 0) echo "#ff0000"; ?>"><?php echo $cat[$row->category]; ?></td>
 						<td><?php echo anchor('admin/airframes/create_airframe/' . $row->id,'<i class="fa fa-pencil"></i> Edit', button('info')); ?></td>
 					    </tr>
