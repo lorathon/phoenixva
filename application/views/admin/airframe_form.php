@@ -111,10 +111,10 @@ $pax_economy = array(
     'class'         => $field_class,
 );
 
-$max_cargo = array(
-    'name'	    => 'max_cargo',
-    'id'	    => 'max_cargo',
-    'value'	    => set_value('max_cargo', $record->max_cargo),
+$payload = array(
+    'name'	    => 'payload',
+    'id'	    => 'payload',
+    'value'	    => set_value('payload', $record->payload),
     'class'         => $field_class,
 );
 
@@ -234,10 +234,10 @@ $mtow = array(
                     </div>
 		    
 		    <div class="form-group">
-			<?php echo form_label('Cargo Capacity', $max_cargo['id'], $label_attributes); ?>
+			<?php echo form_label('Payload Capacity', $payload['id'], $label_attributes); ?>
                         <div class="col-md-6">
 			    <div class="input-group mb-md">
-				<?php echo form_input($max_cargo); ?>
+				<?php echo form_input($payload); ?>
 				<span class="input-group-addon btn-warning">lbs</span>
 			    </div>
 			</div>

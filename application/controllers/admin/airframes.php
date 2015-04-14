@@ -10,7 +10,7 @@ class Airframes extends PVA_Controller
     public function index()
     {		
 	$airframe = new Airframe();
-	$this->data['airframes'] = $airframe->find_good();
+	$this->data['airframes'] = $airframe->find_all();
 	$this->data['cat'] = $this->config->item('aircraft_cat');
         $this->_render('admin/airframes');
     }
@@ -40,7 +40,7 @@ class Airframes extends PVA_Controller
         $this->form_validation->set_rules('pax_first', '1st Class Seats', 'integer|trim|xss_clean');
 	$this->form_validation->set_rules('pax_business', 'Business Class Seats', 'integer|trim|xss_clean');
 	$this->form_validation->set_rules('pax_economy', 'Economy Class Seats', 'integer|trim|xss_clean');
-	$this->form_validation->set_rules('max_cargo', 'Cargo Capacity', 'integer|trim|xss_clean');
+	$this->form_validation->set_rules('payload', 'Payload Capacity', 'integer|trim|xss_clean');
 	$this->form_validation->set_rules('max_range', 'Maximum Range', 'integer|trim|xss_clean');
 	$this->form_validation->set_rules('oew', 'Operating Empty Weight', 'integer|trim|xss_clean');
 	$this->form_validation->set_rules('mzfw', 'Maximum Zero Fuel Weight', 'integer|trim|xss_clean');
@@ -68,7 +68,7 @@ class Airframes extends PVA_Controller
 	    $aircraft->pax_first    = $this->form_validation->set_value('pax_first');
 	    $aircraft->pax_business = $this->form_validation->set_value('pax_business');
 	    $aircraft->pax_economy  = $this->form_validation->set_value('pax_economy');
-	    $aircraft->max_cargo    = $this->form_validation->set_value('max_cargo');
+	    $aircraft->payload	    = $this->form_validation->set_value('payload');
 	    $aircraft->max_range    = $this->form_validation->set_value('max_range');
 	    $aircraft->oew	    = $this->form_validation->set_value('oew');
 	    $aircraft->mzfw	    = $this->form_validation->set_value('mzfw');
