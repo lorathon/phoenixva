@@ -17,17 +17,26 @@ class Airline extends PVA_Model {
 	public $regional	= NULL;
         public $version         = NULL;
 	
+	// Airline Category
 	protected $_cat		= NULL;
 	
 	// Array of Aircraft
 	protected $_fleet	= NULL;
+		
+	// Array of Airlines
+	protected $_airlines	= NULL;
 	
 	// Array of Airports
 	protected $_destinations    = NULL;
 	
+	// Array of all Airline Categories
+	protected $_airline_categories	= NULL;	
+	
+	private $_schedule_table	= 'schedules_pending';
+	
 	function __construct($id = NULL)
 	{
-		parent::__construct($id);
+	    parent::__construct($id);
 	}
 	
 	function get_category()
@@ -39,6 +48,16 @@ class Airline extends PVA_Model {
 		$this->_cat->find();
 	    }
 	    return $this->_cat;
+	}
+	
+	function get_categories()
+	{
+	    if(is_null($this->_airline_categories))
+	    {
+		$cat = new Airline_category();
+		$this->_airline_categories = $cat->find_all();
+	    }
+	    return $this->_airline_categories;
 	}
 	
 	function get_dropdown()
@@ -81,6 +100,26 @@ class Airline extends PVA_Model {
 	    return $this->_fleet;
 	}
 	
+	function get_fleet_airlines($airframe_id = NULL)
+	{
+	    if(is_null($this->_airlines))
+	    {
+		$this->_airlines = array();
+		$fleet = new Airline_aircraft();
+		$fleet->airframe_id = $airframe_id;
+		$aircraft = $fleet->find_all();		
+		
+		if($aircraft)
+		{
+		    foreach($aircraft as $obj)
+		    {
+			$this->_airlines[] = new Airline($obj->airline_id);
+		    }
+		}
+	    }
+	    return $this->_airlines;
+	}	
+	
 	function get_destinations()
 	{
 	    if(is_null($this->_destinations))
@@ -90,6 +129,43 @@ class Airline extends PVA_Model {
 		$this->_destinations = $airport->get_destinations();
 	    }
 	    return $this->_destinations;
+	}
+	
+	function set_regional()
+	{	    
+	    $airline = new Airline();
+	    $airlines = $airline->find_all();
+	    
+	    foreach($airlines as $airline)
+	    {
+		// Check for schedules with airline as operator
+		$sched1 = new Schedules_pending();
+		$sched1->operator = $airline->fs;		
+		$count1 = $sched1->find_all(FALSE, TRUE);
+		
+		// if schedules as operator exist set regional flag
+		if($count1 > 0)
+		    $airline->regional = TRUE;		    
+		
+		// Check for schedules with airline as carrier
+		$sched2 = new Schedules_pending();
+		$sched2->carrier = $airline->fs;
+		$count2 = $sched2->find_all(FALSE, TRUE);
+		
+		// If schedules as carrier exists reset regional flag
+		if($count2 > 0)
+		    $airline->regional = FALSE;
+		
+		// Set total schedules
+		$airline->total_schedules = $count1 + $count2;
+		
+		// If total schedules = 0 then deactivate airline
+		if($count1 + $count2 == 0)
+		    $airline->active = FALSE;
+		
+		// Save airline
+		$airline->save();		
+	    }
 	}
 	
 	function build_airline_destinations()
@@ -112,20 +188,62 @@ class Airline extends PVA_Model {
 		$ac->build_destinations($airline);
 	    }
 	}
+	
+	// XXX temporary to create fleet
+	function build_airline_fleet()
+	{	    
+	    $this->db->select('equip')
+		    ->select('COUNT(`id`) as count')
+		    ->from($this->_schedule_table)
+		    ->where('operator', $this->fs)		    
+		    ->group_by('equip');
+	
+	    $query = $this->db->get();
+	    
+	    foreach ($query->result() as $row)
+	    {
+		$aircraft = new Airline_aircraft();
+		$aircraft->airline_id = $this->id;
+		
+		$airframe = new Airframe();
+		$airframe->iata = $row->equip;
+		$airframe->find();
+		
+		// Enable Airframe
+		$airframe->enable_airframe();
+		$aircraft->airframe_id = $airframe->id;
+		
+		// Check to see if the airframe exists
+		$aircraft->find();
+		
+		if(is_null($aircraft->id))
+		{
+		    // Set standard data from airframe
+		    $aircraft->pax_first = $airframe->pax_first;
+		    $aircraft->pax_business = $airframe->pax_business;
+		    $aircraft->pax_economy = $airframe->pax_economy;
+		    $aircraft->payload = $airframe->payload;
+		    
+		}
+		
+		$aircraft->total_schedules = $row->count;		
+		$aircraft->save();		
+	    }
+	}
 }
 
 class Airline_category extends PVA_Model {
     
-	public $value	    = NULL;
-	public $description = NULL;
-	public $passenger   = NULL;
-	public $cargo	    = NULL;
-	
-	function __construct($id = NULL)
-	{	    
-	    parent::__construct($id);
-	    $this->_table_name = 'airlines_categories';
-	}
+    public $value	    = NULL;
+    public $description = NULL;
+    public $passenger   = NULL;
+    public $cargo	    = NULL;
+
+    function __construct($id = NULL)
+    {	    
+	parent::__construct($id);
+	$this->_table_name = 'airlines_categories';
+    }
 	
 }
 
@@ -136,17 +254,28 @@ class Airline_aircraft extends PVA_Model {
     public $pax_first	    = NULL;
     public $pax_business    = NULL;
     public $pax_economy	    = NULL;
-    public $max_cargo	    = NULL;
+    public $payload	    = NULL;
     public $total_schedules = NULL;
     public $total_flights   = NULL;
     public $total_hours	    = NULL;
     public $total_fuel	    = NULL;
     public $total_landings  = NULL;
     
+    protected $_airframe    = NULL;
+    
     function __construct($id = NULL)
     {
 	$this->_timestamps = TRUE;
 	parent::__construct($id);
+    } 
+    
+    function get_airframe()
+    {
+	if(is_null($this->_airframe))
+	{
+	    $this->_airframe = new Airframe($this->airframe_id);	    
+	}
+	return $this->_airframe;
     }    
 }
 
@@ -165,6 +294,7 @@ class Airline_airport extends PVA_Model {
 	parent::__construct($id);
     }
     
+    // XXX should be a better way to do this.  
     function build_destinations($airline)
     {
 	if(is_null($airline->id))

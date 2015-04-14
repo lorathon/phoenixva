@@ -30,6 +30,7 @@ class Airlines extends PVA_Controller
 	{
 	    $airline->regional = FALSE; 
 	}
+	$airline->active = 1;
 	
 	$airlines = $airline->find_all();
 	
@@ -60,7 +61,8 @@ class Airlines extends PVA_Controller
 	else
 	{
 	    // fleet
-	    $this->data['fleet'] = array();	    
+	    $fleet = $airline->get_fleet();
+	    $this->data['fleet'] = $fleet;	    
 	}	
 	
 	$this->data['airline'] = $airline;
@@ -69,10 +71,7 @@ class Airlines extends PVA_Controller
     }
     
     public function edit_airline($id = NULL)
-    {
-	if(is_null($id))
-	    $this->index();
-	
+    {	
 	$this->_check_access('manager');
 	$this->load->library('form_validation');
 	$this->load->helper('url');
@@ -83,8 +82,8 @@ class Airlines extends PVA_Controller
         $airline = New Airline($id);
                 
         $this->form_validation->set_rules('id', 'ID', '');
-        $this->form_validation->set_rules('iata', 'IATA', 'alpha-numberic|trim|required|xss_clean');
-	$this->form_validation->set_rules('icao', 'ICAO', 'alpha-numberic|trim|required|xss_clean');
+        $this->form_validation->set_rules('iata', 'IATA', 'alpha-numberic|trim|xss_clean');
+	$this->form_validation->set_rules('icao', 'ICAO', 'alpha-numberic|trim|xss_clean');
         $this->form_validation->set_rules('name', 'Name', 'alpha-numberic|trim|required|xss_clean');
         
         $this->data['categories'] = $airline->get_category_dropdown();
@@ -94,7 +93,7 @@ class Airlines extends PVA_Controller
                 
         if ($this->form_validation->run() == FALSE)
 	{             
-            $this->data['errors'] = validation_errors();;  
+            $this->data['errors'] = validation_errors();  
             $this->data['record'] = $airline;
 	    $this->session->keep_flashdata('return_url');
             $this->_render('admin/airline_form');
@@ -113,5 +112,5 @@ class Airlines extends PVA_Controller
 	    $this->_alert('Airline - Record Saved', 'success', TRUE);
 	    redirect($this->session->flashdata('return_url'));
 	}        
-    }
+    }    
 }

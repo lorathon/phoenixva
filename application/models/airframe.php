@@ -20,13 +20,20 @@ class Airframe extends PVA_Model
     public $mzfw		= NULL;    
     public $mtow		= NULL; 
     public $mlw			= NULL;
+    public $enabled		= NULL;
     
     public function __construct($id = NULL)
     {
 	$this->_order_by = 'name ASC';
 	$this->_timestamps = TRUE;
         parent::__construct($id);	
-    }    
+    }  
+    
+    function enable_airframe()
+    {
+	$this->enabled = 1;
+	$this->save();
+    }
     
     function check_sub()
     {
