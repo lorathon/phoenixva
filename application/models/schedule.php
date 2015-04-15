@@ -59,23 +59,13 @@ class Schedule extends PVA_Model
 
 		// Retrieve Carrier Airline
 		$carrier = new Airline(array('fs', $sch->carrier));
-		if (! $carrier)
-		{
-		    // Carrier Airline NOT found
-		    $carrier->save();
-		}
 		$schedule->carrier_id = $carrier->id;
 
 		// Retrieve Operator Airline - if not NULL
 		if (!is_null($sch->operator))
 		{
 		    $operator = new Airline(array('fs', $sch->operator));
-		    if (! $operator)
-		    {
-			// Operator Airline NOT found
-			$operator->save();
-		    }
-		    $schedule->operator_id = $operaor->id;
+		    $schedule->operator_id = $operator->id;
 		}
 
 		// Populate flight number
@@ -83,46 +73,36 @@ class Schedule extends PVA_Model
 
 		// Retrieve Departure Airport
 		$dep_airport = new Airport(array('fa', $sch->dep_airport));
-		if (! $dep_airport)
-		{
-		    // Departure Airport NOT found
-		    $dep_airport->save();
-		}
 		$schedule->dep_airport_id = $dep_airport->id;
 
 		// Retrieve Arrival Airport
 		$arr_airport = new Airport(array('fs', $sch->arr_airport));
-		if (! $arr_airport)
-		{
-		    // Arrival Airport NOT found
-		    $arr_airport->save();
-		}
 		$schedule->arr_airport_id = $arr_airport->id;
 
 		// Retrieve Airframe
 		$airframe = new Airframe('iata', $sch->equip);
-		if (! $airframe)
-		{
-		    // Airframe NOT found
-		    $airframe->save();
-		}
 		$schedule->airframe_id = $airframe->id;
 
 		// Set version
 		$schedule->version = $sch->version;
+		
+		// Retrieve Schedule Category
+		$category = new Schedules_categories(array('value', $sch->service_type));
+		$schedule->schedule_cat_id = $category->id;
+		
+		// Check for NULL ids.  If exist then throw execption
+		if (is_null($schedule->carrier_id) 
+		    OR is_null($schedule->dep_airport_id)
+		    OR is_null($schedule->arr_airport_id)
+		    OR is_null($schedule->airframe_id)
+		    OR is_null($schedule->schedule_cat_id)
+		)
+		{
+		    throw new Exception('Required linked table(s) not populated');
+		}
 
 		// Check for duplicate Schedule
 		$schedule->find();
-
-		// Populate remaining parameters
-		// Retrieve Schedule Category
-		$category = new Schedules_categories(array('value', $sch->service_type));
-		if (! $category)
-		{
-		    // Category NOT found
-		    $category->save();
-		}
-		$schedule->schedule_cat_id = $category->id;
 
 		$schedule->service_classes = $sch->service_classes;
 		$schedule->regional = $sch->regional;
