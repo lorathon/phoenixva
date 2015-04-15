@@ -113,4 +113,52 @@ class Airlines extends PVA_Controller
 	    redirect($this->session->flashdata('return_url'));
 	}        
     }    
+    
+    public function edit_aircraft($aircraft_id = NULL)
+    {	
+	$this->_check_access('manager');
+	$this->load->library('form_validation');
+	$this->load->helper('url');
+	
+	$this->data['title'] = 'Edit Aircraft';
+	$this->data['breadcrumb']['airlines'] = 'Airlines';
+	
+        $airline = New Airline();
+	$aircraft = $airline->get_aircraft($aircraft_id);
+	
+	$airline = new Airline($aircraft->airline_id);
+	$airframe = new Airframe($aircraft->airframe_id);
+	
+	$aircraft->name = $airline->name . ' - ' . $airframe->name;
+                
+        $this->form_validation->set_rules('id', 'ID', '');
+        $this->form_validation->set_rules('pax_first', 'First Class Seating', 'integer|trim|xss_clean');
+	$this->form_validation->set_rules('pax_business', 'Business Class Seating', 'integer|trim|xss_clean');
+        $this->form_validation->set_rules('pax_economy', 'Economy Class Seating', 'integer|trim|xss_clean');
+	$this->form_validation->set_rules('payload', 'Payload Capacity', 'integer|trim|xss_clean');
+        
+        $this->data['scripts'][] = base_url('assets/admin/vendor/jquery-validation/jquery.validate.js');
+	$this->data['scripts'][] = base_url('assets/js/forms.validation.js');
+                
+        if ($this->form_validation->run() == FALSE)
+	{             
+            $this->data['errors'] = validation_errors();  
+            $this->data['record'] = $aircraft;
+	    $this->session->keep_flashdata('return_url');
+            $this->_render('admin/aircraft_form');
+	}
+	else
+	{
+            $aircraft->id	    = $this->input->post('id', TRUE);
+	    $aircraft->pax_first    = $this->form_validation->set_value('pax_first');
+	    $aircraft->pax_business = $this->form_validation->set_value('pax_business');
+            $aircraft->pax_economy  = $this->form_validation->set_value('pax_economy');
+	    $aircraft->payload	    = $this->form_validation->set_value('payload');
+                
+            $aircraft->save();
+	    
+	    $this->_alert('Aircraft - Record Saved', 'success', TRUE);
+	    redirect($this->session->flashdata('return_url'));
+	}        
+    }
 }

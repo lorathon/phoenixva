@@ -35,6 +35,9 @@ $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
                                 <th>Schedules</th>
                                 <th>Pireps</th>
                                 <th>Hours</th>
+				<?php if($show_admin) : ?>
+				    <th>Actions</th>
+				<?php endif; ?>
                             </tr>
                         </thead>
                         <tbody>
@@ -45,6 +48,11 @@ $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
                                     <td><?php echo $row->total_schedules; ?></td>
                                     <td><?php echo $row->total_flights; ?></td>
                                     <td><?php echo $row->total_hours; ?></td> 
+				    <?php if($show_admin) : ?>
+				    <td align="center">
+					<?php echo anchor('private/airlines/edit-aircraft/' . $row->id,'<i class="fa fa-pencil"></i> Edit', button('info')); ?>
+				    </td>
+				    <?php endif; ?>
                                 </tr>
                             <?php endforeach; ?>
 			    <?php else : ?>

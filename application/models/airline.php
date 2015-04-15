@@ -22,7 +22,10 @@ class Airline extends PVA_Model {
 	
 	// Array of Aircraft
 	protected $_fleet	= NULL;
-		
+	
+	// Airline Aircraft Object
+	protected $_aircraft	= NULL;
+
 	// Array of Airlines
 	protected $_airlines	= NULL;
 	
@@ -119,6 +122,15 @@ class Airline extends PVA_Model {
 	    }
 	    return $this->_airlines;
 	}	
+	
+	function get_aircraft($aircraft_id)
+	{
+	    if(is_null($this->_aircraft))
+	    {
+		$this->_aircraft = new Airline_aircraft($aircraft_id);		
+	    }
+	    return $this->_aircraft;
+	}
 	
 	function get_destinations()
 	{
