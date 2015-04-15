@@ -28,19 +28,15 @@ class Schedules_pending extends PVA_Model {
         public $fri             = NULL;
         public $sat             = NULL;
         public $version         = NULL;
+	public $consumed	= NULL;
         public $created         = NULL;
-        
-
-	
-	
+	public $modified	= NULL;    	
 	
 	function __construct()
 	{
-		parent::__construct();
-		
-                $this->_table_name = 'schedules_pending';
-		// Set default order
-		//$this->_order_by = 'dep_airport asc';
+	    $this->_table_name = 'schedules_pending';
+	    $this->_timestamps = TRUE;
+	    parent::__construct();                
 	}
 	
 }

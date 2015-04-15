@@ -21,10 +21,20 @@ class Schedule extends PVA_Model {
 	public $arr_time_utc    = NULL;
 	public $arr_terminal    = NULL;
         public $version         = NULL;
+	public $sun		= NULL;
+	public $mon		= NULL;
+	public $tue		= NULL;
+	public $wed		= NULL;
+	public $thu		= NULL;
+	public $fri		= NULL;
+	public $sat		= NULL;
+	public $created		= NULL;
+	public $modified	= NULL;
 	
 	function __construct()
 	{
-		parent::__construct();
+	    $this->_timestamps = TRUE;
+	    parent::__construct();
 	}
 	
 }
