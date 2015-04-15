@@ -268,6 +268,7 @@ class Migration_Acars extends Migration_base {
 				'enabled' => $this->get_boolean_field(),
 		));
 		$this->dbforge->add_column('schedules_pending', array(
+				'modified' => $this->get_timestamp_field(),
 				'consumed' => $this->get_boolean_field(),
 		));
 	}
