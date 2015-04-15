@@ -256,4 +256,19 @@ class Migration_Acars extends Migration_base {
 		$this->add_key('cargo_id');
 		$this->add_key('pirep_id');
 	}
+	
+	protected function _finish_up()
+	{
+		$this->modify_fields('airline_aircraft', array(
+				'max_cargo' => array(
+						'name' => 'payload'
+				),
+		));
+		$this->dbforge->add_column('airframes', array(
+				'enabled' => $this->get_boolean_field(),
+		));
+		$this->dbforge->add_column('schedules_pending', array(
+				'consumed' => $this->get_boolean_field(),
+		));
+	}
 }
