@@ -32,11 +32,11 @@ class Schedules_pending extends PVA_Model {
         public $created         = NULL;
 	public $modified	= NULL;    	
 	
-	function __construct()
+	function __construct($id = NULL)
 	{
 	    $this->_table_name = 'schedules_pending';
 	    $this->_timestamps = TRUE;
-	    parent::__construct();                
+	    parent::__construct($id);                
 	}
 	
 }

@@ -32,10 +32,10 @@ class Schedule extends PVA_Model
     public $created		= NULL;
     public $modified		= NULL;
 
-    function __construct()
+    function __construct($id = NULL)
     {
 	$this->_timestamps = TRUE;
-	parent::__construct();
+	parent::__construct($id);
     }
 
     function activate($limit = 25)
@@ -52,46 +52,54 @@ class Schedule extends PVA_Model
 	// If pending schedules have been found
 	if ($scheds)
 	{
-	    foreach ($scheds as $sch)
+	    foreach ($scheds as $pending)
 	    {
 		// Create New Schedule;
 		$schedule = new Schedule();
 
 		// Retrieve Carrier Airline
-		$carrier = new Airline(array('fs', $sch->carrier));
+		$carrier = new Airline(array('fs'=>$pending->carrier));
 		$schedule->carrier_id = $carrier->id;
 
 		// Retrieve Operator Airline - if not NULL
-		if (!is_null($sch->operator))
+		if (!is_null($pending->operator))
 		{
-		    $operator = new Airline(array('fs', $sch->operator));
+		    $operator = new Airline(array('fs'=>$pending->operator));
 		    $schedule->operator_id = $operator->id;
+		    $schedule->regional = TRUE;
+		}
+		else
+		{
+		    // If not a regional flight than set the carrier id as the operator id.
+		    $schedule->operator_id = $carrier->id;
+		    $schedule->regional = FALSE;
 		}
 
 		// Populate flight number
-		$schedule->flight_num = $sch->flight_num;
+		$schedule->flight_num = $pending->flight_num;
 
 		// Retrieve Departure Airport
-		$dep_airport = new Airport(array('fa', $sch->dep_airport));
+		$dep_airport = new Airport(array('fs'=>$pending->dep_airport));
 		$schedule->dep_airport_id = $dep_airport->id;
 
 		// Retrieve Arrival Airport
-		$arr_airport = new Airport(array('fs', $sch->arr_airport));
+		$arr_airport = new Airport(array('fs'=>$pending->arr_airport));
 		$schedule->arr_airport_id = $arr_airport->id;
 
 		// Retrieve Airframe
-		$airframe = new Airframe('iata', $sch->equip);
+		$airframe = new Airframe(array('iata'=> $pending->equip));
 		$schedule->airframe_id = $airframe->id;
 
 		// Set version
-		$schedule->version = $sch->version;
+		$schedule->version = $pending->version;
 		
 		// Retrieve Schedule Category
-		$category = new Schedules_categories(array('value', $sch->service_type));
+		$category = new Schedules_categories(array('value'=>$pending->service_type));
 		$schedule->schedule_cat_id = $category->id;
 		
 		// Check for NULL ids.  If exist then throw execption
 		if (is_null($schedule->carrier_id) 
+		    OR is_null($schedule->dep_airport_id)
 		    OR is_null($schedule->dep_airport_id)
 		    OR is_null($schedule->arr_airport_id)
 		    OR is_null($schedule->airframe_id)
@@ -104,39 +112,38 @@ class Schedule extends PVA_Model
 		// Check for duplicate Schedule
 		$schedule->find();
 
-		$schedule->service_classes = $sch->service_classes;
-		$schedule->regional = $sch->regional;
-		$schedule->brand = $sch->brand;
-		$schedule->dep_time_local = $sch->dep_time_local;
-		$schedule->dep_time_utc = $sch->dep_time_utc;
-		$schedule->dep_terminal = $sch->dep_termianl;
-		$schedule->block_time = $sch->block_time;
-		$schedule->arr_time_local = $sch->arr_time_local;
-		$schedule->arr_time_utc = $sch->arr_time_utc;
-		$schedule->arr_terminal = $sch->arr_termianl;
+		$schedule->service_classes = $pending->service_classes;
+		$schedule->brand = $pending->brand;
+		$schedule->dep_time_local = $pending->dep_time_local;
+		$schedule->dep_time_utc = $pending->dep_time_utc;
+		$schedule->dep_terminal = $pending->dep_terminal;
+		$schedule->block_time = $pending->block_time;
+		$schedule->arr_time_local = $pending->arr_time_local;
+		$schedule->arr_time_utc = $pending->arr_time_utc;
+		$schedule->arr_terminal = $pending->arr_terminal;
 
 		// Check for day of the week.  Only set those days that are TRUE(1)
-		if ($sch->sun)
+		if ($pending->sun)
 		    $schedule->sun = TRUE;
-		if ($sch->mon)
+		if ($pending->mon)
 		    $schedule->mon = TRUE;
-		if ($sch->tue)
+		if ($pending->tue)
 		    $schedule->tue = TRUE;
-		if ($sch->wed)
+		if ($pending->wed)
 		    $schedule->wed = TRUE;
-		if ($sch->thu)
+		if ($pending->thu)
 		    $schedule->thu = TRUE;
-		if ($sch->fri)
+		if ($pending->fri)
 		    $schedule->fri = TRUE;
-		if ($sch->sat)
+		if ($pending->sat)
 		    $schedule->sat = TRUE;
 
 		// Save new schedule
 		$schedule->save();
 
 		// Set pending schedule to consumed
-		$sch->consumed = TRUE;
-		$sch->save();
+		$pending->consumed = TRUE;
+		$pending->save();
 		
 		// Increase counter by 1
 		$count++;
@@ -154,10 +161,10 @@ class Schedules_categories extends PVA_Model
     public $value	= NULL;
     public $description	= NULL;
 
-    function __construct()
-    {
+    function __construct($id = NULL)
+    {	
 	$this->_table_name = 'schedules_categories';
-	parent::__construct();
+	parent::__construct($id);	
     }
 
 }
