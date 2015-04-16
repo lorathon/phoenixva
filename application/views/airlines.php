@@ -41,8 +41,7 @@ $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
                                 <tr>
 				    <td><?php echo $row->icao; ?></td>
                                     <td><?php echo $row->iata ?></td>
-                                    <td><?php echo $row->icao ?></td>
-                                    <td><?php echo anchor('airlines/view/' . $row->id, $row->name); ?></td>   
+                                    <td><?php echo airline($row); ?></td>   
 				    <td>IMAGE</td>
 				    <?php if($show_admin) : ?>
                                     <td align="center">					

@@ -25,29 +25,25 @@ $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
 		    <thead>
 			<tr>
 			    <th>Airframe</th>
-			    <th>Name</th>
 			    <th>Sub Chart</th>
-			    <th>Total Schedules</th>
-			    <th>Total PIREPs</th>
-			    <?php if($show_admin) : ?>
-			    <th>Actions</th>
-			    <?php endif; ?>
+			    <th>Turboprop</th>
+			    <th>Jet</th>
+			    <th>Regional</th>
+			    <th>Wide Body</th>
+			    <th>Helicopter</th>
 			</tr>
 		    </thead>
 		    <tbody>
 			<?php if($fleet) : ?>
 			<?php foreach ($fleet as $row): ?>
 			    <tr>
-				<td><?php echo anchor('fleet/view/' . $row->id, $row->equip); ?></td>
-				<td><?php echo $row->name; ?></td>
+				<td><?php echo anchor('fleet/view/' . $row->id, $row->name); ?></td>
 				<td><?php echo anchor('fleet/view-sub/' . $row->aircraft_sub_id, $row->aircraft_sub_id); ?></td>
-				<td><?php echo $row->flight_count; ?></td>
-				<td><?php echo $row->total_pireps; ?></td>
-				<?php if($show_admin) : ?>
-				<td align="center">					
-				    <?php echo anchor('private/fleet/edit-aircraft/' . $row->id,'<i class="fa fa-pencil"></i> Edit', button('info')); ?>					
-				</td>
-				<?php endif; ?>
+				<td><?php if($row->turboprop == 1): ?><i class="fa fa-check"></i><?php endif ?></td>
+				<td><?php if($row->jet == 1): ?><i class="fa fa-check"></i><?php endif ?></td>
+				<td><?php if($row->regional == 1): ?><i class="fa fa-check"></i><?php endif ?></td>
+				<td><?php if($row->widebody == 1): ?><i class="fa fa-check"></i><?php endif ?></td>
+				<td><?php if($row->helicopter == 1): ?><i class="fa fa-check"></i><?php endif ?></td>
 			    </tr>
 			<?php endforeach; ?>
 			<?php else : ?>
@@ -80,16 +76,10 @@ $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
 			<?php echo anchor('/fleet/view/' . $aircraft->id . '/flights', 'Flights'); ?> 
 		</li>
 		<li role="presentation" 
-		<?php if (uri_string() == 'fleet/view/' . $aircraft->id . '/main'): ?>
+		<?php if (uri_string() == 'fleet/view/' . $aircraft->id . '/airlines'): ?>
 		    class="active"
 		    <?php endif; ?> >
-			<?php echo anchor('/fleet/view/' . $aircraft->id . '/main', 'Main Airlines'); ?> 
-		</li>	
-		<li role="presentation" 
-		<?php if (uri_string() == 'fleet/view/' . $aircraft->id . '/regional'): ?>
-		    class="active"
-		    <?php endif; ?> >
-			<?php echo anchor('/fleet/view/' . $aircraft->id . '/regional', 'Regional Airlines'); ?> 
+			<?php echo anchor('/fleet/view/' . $aircraft->id . '/airlines', 'Airlines'); ?> 
 		</li>	
 	</ul>            
     </div>
@@ -149,8 +139,8 @@ $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
 			    <tr>
 				<td><?php echo $row->iata; ?></td>
 				<td><?php echo $row->icao; ?></td>
-				<td><?php echo $row->name; ?></td>
-				<td><?php echo $row->category; ?></td>
+				<td><?php echo airline($row); ?></td>
+				<td data-toggle="tooltip" title="<?php echo $row->get_category()->description; ?>"><?php echo $row->category; ?></td>
 			    </tr>
 			<?php endforeach; ?>
 			<?php else : ?>
@@ -165,43 +155,23 @@ $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
 	    <!-- End: Airline Table -->
 	    <?php endif; ?>
 	</div>
-	<div class="col-md-4">
-	    
-	    <!-- Start: Admin Options -->
-	    <?php if($show_admin) : ?>
-	    <div class="featured-box featured-box-red">
-		<div class="box-content">
-		    <h2>Aircraft Admin</h2>
-		    <ul class="nav nav-pills">
-			<li role="presentation">
-			    <?php echo anchor("/private/fleet/edit-aircraft/" . $aircraft->id, 'Edit Aircraft'); ?>
-			</li>
-		    </ul>
-		</div>
-	    </div>
-	    <?php endif; ?>
-	    <!-- End: Admin Options -->
-	    
+	<div class="col-md-4">	    
 	    <!-- Start: Aircraft Detail -->
 	    <div class="featured-box featured-box-blue">
 		<div class="box-content">
-		    <h2>Aircraft Detail</h2>
+		    <h2>Airframe Detail</h2>
 		    <table class="table table-hover table-condensed">
 			<tr>
 			    <td>Name: </td>
 			    <td><?php echo $aircraft->name; ?></td>
 			</tr>
 			<tr>
-			    <td>Airframe: </td>
-			    <td><?php echo $aircraft->equip; ?></td>
-			</tr>
-			<tr>
-			    <td>Pax: </td>
-			    <td><?php echo '(1st)'.$aircraft->pax_first . ' -(bus)' . $aircraft->pax_business . ' (eco)' . $aircraft->pax_economy; ?></td>
+			    <td>Standard Seating: </td>
+			    <td><?php echo '(1st)'.$aircraft->pax_first . ' | (bus)' . $aircraft->pax_business . ' | (eco)' . $aircraft->pax_economy; ?></td>
 			</tr>	
 			<tr>
-			    <td>Cargo: </td>
-			    <td><?php echo $aircraft->max_cargo; ?></td>
+			    <td>Standard Payload: </td>
+			    <td><?php echo $aircraft->payload; ?></td>
 			</tr>
 			<tr>
 			    <td>Range: </td>
@@ -223,35 +193,33 @@ $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
 			    <td>MTOW: </td>
 			    <td><?php echo $aircraft->mtow; ?></td>
 			</tr>
-			<tr>
-			    <td>Main Airlines: </td>
-			    <td><?php echo $aircraft->carrier_count; ?></td>
-			</tr>
-			<tr>
-			    <td>Regional Airlines: </td>
-			    <td><?php echo $aircraft->operator_count; ?></td>
-			</tr>
-			<tr>
-			    <td>Scheduled Flights: </td>
-			    <td><?php echo $aircraft->flight_count; ?></td>
-			</tr>
-			<tr>
-			    <td>Recorded Flights: </td>
-			    <td><?php echo $aircraft->total_pireps; ?></td>
-			</tr>
-			<tr>
-			    <td>Recorded Hours: </td>
-			    <td><?php echo $aircraft->total_hours; ?></td>
-			</tr>
-			<tr>
-			    <td>Recorded Distance: </td>
-			    <td><?php echo $aircraft->total_distance; ?></td>
-			</tr>
 		    </table>
 		</div>
 	    </div>
 	    <!-- End: Aircraft Detail -->
 	    
+	    <!-- Start:  Category Legend -->
+	    <?php if(isset($airlines)) : ?>
+	    <div class="featured-box featured-box-green">
+		<div class="box-content">
+		    <h2>Category Legend</h2>
+		    <table class="table table-hover table-condensed">
+			<?php if($airline_categories) : ?>
+			<?php foreach ($airline_categories as $row): ?>
+			    <tr>
+				<td><?php echo $row->value; ?></td>
+				<td><?php echo $row->description; ?></td>
+			    </tr>
+			<?php endforeach; ?>
+			<?php else : ?>
+			    <tr>
+				<td colspan="2"></td>
+			    </tr>
+			<?php endif; ?>
+		    </table>
+		</div>
+	    </div>
+	    <?php endif; ?>
 	</div>
     </div> 
     
@@ -266,35 +234,29 @@ $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
 		<table class="table table-hover mb-none">
 		    <thead>
 			<tr>
-			    <th>Equipment</th>
-			    <th>Name</th>
-			    <th>Sub Chart</th>
-			    <th>Total Schedules</th>
-			    <th>Total PIREPs</th>
-			    <?php if($show_admin) : ?>
-			    <th>Actions</th>
-			    <?php endif; ?>
+			    <th>Airframe</th>
+			    <th>OEW</th>
+			    <th>MZFW</th>
+			    <th>MTOW</th>
+			    <th>MLW</th>
+			    <th>Range</th>
 			</tr>
 		    </thead>
 		    <tbody>
 			<?php if($sub_fleet) : ?>
 			<?php foreach ($sub_fleet as $row): ?>
 			    <tr>
-				<td><?php echo anchor('fleet/view/' . $row->id, $row->equip); ?></td>
-				<td><?php echo $row->name; ?></td>
-				<td><?php echo anchor('fleet/view-sub/' . $row->aircraft_sub_id, $row->aircraft_sub_id); ?></td>
-				<td><?php echo $row->flight_count; ?></td>
-				<td><?php echo $row->total_pireps; ?></td>
-				<?php if($show_admin) : ?>
-				<td align="center">					
-				    <?php echo anchor('private/fleet/edit-aircraft/' . $row->id,'<i class="fa fa-pencil"></i> Edit', button('info')); ?>					
-				</td>
-				<?php endif; ?>
+				<td><?php echo anchor('fleet/view/' . $row->id, $row->name); ?></td>
+				<td><?php echo $row->oew; ?></td>
+				<td><?php echo $row->mzfw; ?></td>
+				<td><?php echo $row->mtow; ?></td>
+				<td><?php echo $row->mlw; ?></td>
+				<td><?php echo $row->max_range; ?></td>
 			    </tr>
 			<?php endforeach; ?>
 			<?php else : ?>
 			    <tr>
-				<td colspan="5">There are no aircraft in this category.</td>
+				<td colspan="5">There are no airframes in this category.</td>
 			    </tr>
 			<?php endif; ?>
 		    </tbody>

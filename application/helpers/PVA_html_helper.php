@@ -19,6 +19,18 @@ function airport($airport)
 }
 
 /**
+ * Returns airline info in a consistent format.
+ * 
+ * @param object $airline Airline object of the airline to display.
+ * @return string in the format airline name with a link to the airline details page.
+ */
+function airline($airline)
+{
+	$attribs = array();	
+	return anchor('airlines/view/'.$airline->id, $airline->name, $attribs);
+}
+
+/**
  * Returns button attributes for an anchor link.
  * 
  * @param string $type The button type to create

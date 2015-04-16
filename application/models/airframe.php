@@ -14,24 +14,25 @@ class Airframe extends PVA_Model
     public $pax_first		= NULL;
     public $pax_business	= NULL;
     public $pax_economy		= NULL;
-    public $max_cargo		= NULL;
+    public $payload		= NULL;
     public $max_range		= NULL;
     public $oew			= NULL;
     public $mzfw		= NULL;    
     public $mtow		= NULL; 
     public $mlw			= NULL;
+    public $enabled		= NULL;
     
     public function __construct($id = NULL)
     {
 	$this->_order_by = 'name ASC';
 	$this->_timestamps = TRUE;
         parent::__construct($id);	
-    }    
+    }  
     
-    public function find_all()
+    function enable_airframe()
     {
-	$this->_limit = NULL;
-	return parent::find_all();
+	$this->enabled = 1;
+	$this->save();
     }
     
     function check_sub()
