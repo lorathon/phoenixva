@@ -1,36 +1,38 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php
+
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Schedule extends PVA_Model
 {
-    
     /* schedule properties */
-    public $carrier_id		= NULL;
-    public $operator_id		= NULL;
-    public $flight_num		= NULL;
-    public $dep_airport_id	= NULL;
-    public $arr_airport_id	= NULL;
-    public $airframe_id		= NULL;
-    public $schedule_cat_id	= NULL;
-    public $service_classes	= NULL;
-    public $regional		= NULL;
-    public $brand		= NULL;
-    public $dep_time_local	= NULL;
-    public $dep_time_utc	= NULL;
-    public $dep_terminal	= NULL;
-    public $block_time		= NULL;
-    public $arr_time_local	= NULL;
-    public $arr_time_utc	= NULL;
-    public $arr_terminal	= NULL;
-    public $version		= NULL;
-    public $sun			= NULL;
-    public $mon			= NULL;
-    public $tue			= NULL;
-    public $wed			= NULL;
-    public $thu			= NULL;
-    public $fri			= NULL;
-    public $sat			= NULL;
-    public $created		= NULL;
-    public $modified		= NULL;
+
+    public $carrier_id	    = NULL;
+    public $operator_id	    = NULL;
+    public $flight_num	    = NULL;
+    public $dep_airport_id  = NULL;
+    public $arr_airport_id  = NULL;
+    public $airframe_id	    = NULL;
+    public $schedule_cat_id = NULL;
+    public $service_classes = NULL;
+    public $regional	    = NULL;
+    public $brand	    = NULL;
+    public $dep_time_local  = NULL;
+    public $dep_time_utc    = NULL;
+    public $dep_terminal    = NULL;
+    public $block_time	    = NULL;
+    public $arr_time_local  = NULL;
+    public $arr_time_utc    = NULL;
+    public $arr_terminal    = NULL;
+    public $version	    = NULL;
+    public $sun		    = NULL;
+    public $mon		    = NULL;
+    public $tue		    = NULL;
+    public $wed		    = NULL;
+    public $thu		    = NULL;
+    public $fri		    = NULL;
+    public $sat		    = NULL;
+    public $created	    = NULL;
+    public $modified	    = NULL;
 
     function __construct($id = NULL)
     {
@@ -42,7 +44,7 @@ class Schedule extends PVA_Model
     {
 	// Counter to return for total activated
 	$count = 0;
-	
+
 	// Retrieve limit # of pending schedules that have NOT been consumed
 	$sched = new Schedules_pending();
 	$sched->consumed = FALSE;
@@ -58,13 +60,13 @@ class Schedule extends PVA_Model
 		$schedule = new Schedule();
 
 		// Retrieve Carrier Airline
-		$carrier = new Airline(array('fs'=>$pending->carrier));
+		$carrier = new Airline(array('fs' => $pending->carrier));
 		$schedule->carrier_id = $carrier->id;
 
 		// Retrieve Operator Airline - if not NULL
 		if (!is_null($pending->operator))
 		{
-		    $operator = new Airline(array('fs'=>$pending->operator));
+		    $operator = new Airline(array('fs' => $pending->operator));
 		    $schedule->operator_id = $operator->id;
 		    $schedule->regional = TRUE;
 		}
@@ -79,31 +81,31 @@ class Schedule extends PVA_Model
 		$schedule->flight_num = $pending->flight_num;
 
 		// Retrieve Departure Airport
-		$dep_airport = new Airport(array('fs'=>$pending->dep_airport));
+		$dep_airport = new Airport(array('fs' => $pending->dep_airport));
 		$schedule->dep_airport_id = $dep_airport->id;
 
 		// Retrieve Arrival Airport
-		$arr_airport = new Airport(array('fs'=>$pending->arr_airport));
+		$arr_airport = new Airport(array('fs' => $pending->arr_airport));
 		$schedule->arr_airport_id = $arr_airport->id;
 
 		// Retrieve Airframe
-		$airframe = new Airframe(array('iata'=> $pending->equip));
+		$airframe = new Airframe(array('iata' => $pending->equip));
 		$schedule->airframe_id = $airframe->id;
 
 		// Set version
 		$schedule->version = $pending->version;
-		
+
 		// Retrieve Schedule Category
-		$category = new Schedules_categories(array('value'=>$pending->service_type));
+		$category = new Schedules_categories(array('value' => $pending->service_type));
 		$schedule->schedule_cat_id = $category->id;
-		
+
 		// Check for NULL ids.  If exist then throw execption
-		if (is_null($schedule->carrier_id) 
-		    OR is_null($schedule->dep_airport_id)
-		    OR is_null($schedule->dep_airport_id)
-		    OR is_null($schedule->arr_airport_id)
-		    OR is_null($schedule->airframe_id)
-		    OR is_null($schedule->schedule_cat_id)
+		if (is_null($schedule->carrier_id)
+			OR is_null($schedule->dep_airport_id)
+			OR is_null($schedule->dep_airport_id)
+			OR is_null($schedule->arr_airport_id)
+			OR is_null($schedule->airframe_id)
+			OR is_null($schedule->schedule_cat_id)
 		)
 		{
 		    throw new Exception('Required linked table(s) not populated');
@@ -144,7 +146,7 @@ class Schedule extends PVA_Model
 		// Set pending schedule to consumed
 		$pending->consumed = TRUE;
 		$pending->save();
-		
+
 		// Increase counter by 1
 		$count++;
 	    }
@@ -162,9 +164,9 @@ class Schedules_categories extends PVA_Model
     public $description	= NULL;
 
     function __construct($id = NULL)
-    {	
+    {
 	$this->_table_name = 'schedules_categories';
-	parent::__construct($id);	
+	parent::__construct($id);
     }
 
 }
