@@ -37,7 +37,7 @@ class Kacars extends Acars_Base
 		$input = file_get_contents('php://input');
 		$xml = simplexml_load_string($input);
 		
-		log_message('debug', 'Incoming ACARS Message:');
+		log_message('debug', 'Incoming kACARS Message:');
 		log_message('debug', print_r($xml, TRUE));
 		log_message('debug', '-----------------------------');
 		
@@ -47,6 +47,11 @@ class Kacars extends Acars_Base
 		if (function_exists($this->$function))
 		{
 			$this->_user_id = $xml->data->pilotID;
+			if ( ! is_int($this->_user_id))
+			{
+				// Probably used PVA#### instead of just ####
+				$this->_user_id = substr($this->_user_id, 3);
+			}
 			$this->$function($xml);
 		}
 				
