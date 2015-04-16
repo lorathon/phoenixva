@@ -544,7 +544,9 @@ class User extends PVA_Model {
 			return FALSE;
 		}
 		
+		// Filing a PIREP activates the user
 		$this->make_active();
+				
 		$stats = $this->get_user_stats();
 		$stats->current_location = $pirep->arr_icao;
 		
@@ -694,16 +696,21 @@ class User extends PVA_Model {
 	/**
 	 * Makes a user fully active.
 	 * 
+	 * If a user is banned, this function will have no effect. Use unban() instead.
+	 * 
 	 * @return boolean FALSE if user id is not populated
 	 */
 	function make_active()
 	{
 		if (is_null($this->id)) return FALSE;
 		$this->find();
-		$this->activated = 1;
-		$this->status = self::ACTIVE;
-		$this->_set_retirement();
-		$this->save();
+		if (!$this->banned)
+		{
+			$this->activated = 1;
+			$this->status = self::ACTIVE;
+			$this->_set_retirement();
+			$this->save();
+		}
 	}
 	
 	/**

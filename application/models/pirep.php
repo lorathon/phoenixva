@@ -141,13 +141,17 @@ class Pirep extends PVA_Model {
 			$this->id = $this->find_open()->id;
 		}
 		
+		// Save the PIREP right away so we are sure we have it. Default status is holding.
+		$this->status = self::HOLDING;
+		$this->save();
+		
+		$this->_validate();
+		
 		// Calculate finances
 		$user = new User($this->user_id);
 		$this->_pilot_pay_rate = $user->get_pay_rate();
 		$this->_pilot_pay_total = $this->_pilot_pay_rate * $this->hours_total();
 		
-		// Update PIREP
-		$this->save();
 		log_message('debug', 'PIREP '.$this->id.' filed.');
 		
 		$user->process_pirep($this);
@@ -170,6 +174,9 @@ class Pirep extends PVA_Model {
 		// Update Passengers
 		
 		// Update Cargo
+		
+		// Now that the whole thing is processed, save it again
+		$this->save();
 		
 		return $this;
 	}
@@ -211,5 +218,40 @@ class Pirep extends PVA_Model {
 				$this->hours_dusk,
 				$this->hours_night,
 		));
-	}	
+	}
+	
+	private function _validate()
+	{
+		$this->status = self::APPROVED;
+		$user = new User($this->user_id);
+		
+		// Check aircraft type
+		
+		// Check airports
+		
+		if ($this->afk_elapsed >= 60)
+		{
+			$this->status = self::REJECTED;
+			$this->set_note('Rejected due to excessive AFK.', 0);
+		}
+		
+		// Excessive overspeeds
+		
+		// Outside CAT
+		
+		// Refueling
+		
+		if ($this->landing_rate >= 1000)
+		{
+			$this->status = self::REJECTED;
+			$this->set_note('Rejected due to landing rate in excess of 1,000 feet per minute.', 0);
+		}
+				
+		// Hold first PIREP and all PIREPs for users on Probation
+		if ($user->status == User::NEWREG OR $user->status == User::PROBATION)
+		{
+			$this->status = self::HOLDING;
+		}
+
+	}
 }
