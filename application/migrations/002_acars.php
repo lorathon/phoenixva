@@ -103,6 +103,7 @@ class Migration_Acars extends Migration_base {
 				'user_id'             => $this->get_fk_field(),
 				'hub_id'              => $this->get_fk_field(),
 				'airline_aircraft_id' => $this->get_fk_field(),
+				'client'              => $this->get_short_input_field(),
 				'flight_number'       => $this->get_short_input_field(),
 				'flight_type'         => $this->get_status_field(),
 				'dep_icao'            => $this->get_icao_field(),
