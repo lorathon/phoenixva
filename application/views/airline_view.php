@@ -31,20 +31,28 @@ $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
                     <table class="table table-hover mb-none">
                         <thead>
                             <tr>
-                                <th>Airframe</th>
                                 <th>Name</th>
-                                <th>CAT</th>
-                                <th>Sub</th>
+                                <th>Schedules</th>
+                                <th>Pireps</th>
+                                <th>Hours</th>
+				<?php if($show_admin) : ?>
+				    <th>Actions</th>
+				<?php endif; ?>
                             </tr>
                         </thead>
                         <tbody>
 			    <?php if($fleet) : ?>
-                            <?php foreach ($fleet as $row): ?>
+                            <?php foreach ($fleet as $row): ?>			    
                                 <tr>
-				    <td><?php echo $row->equip; ?></td>
-                                    <td><?php echo $row->name; ?></td>
-                                    <td><?php echo $row->category; ?></td>
-                                    <td><?php echo $row->aircraft_sub_id; ?></td> 
+				    <td><?php echo $row->get_airframe()->name; ?></td>
+                                    <td><?php echo $row->total_schedules; ?></td>
+                                    <td><?php echo $row->total_flights; ?></td>
+                                    <td><?php echo $row->total_hours; ?></td> 
+				    <?php if($show_admin) : ?>
+				    <td align="center">
+					<?php echo anchor('private/airlines/edit-aircraft/' . $row->id,'<i class="fa fa-pencil"></i> Edit', button('info')); ?>
+				    </td>
+				    <?php endif; ?>
                                 </tr>
                             <?php endforeach; ?>
 			    <?php else : ?>
@@ -70,7 +78,7 @@ $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
 			    <?php if($airports) : ?>
                             <?php foreach ($airports as $row): ?>
                                 <tr>
-				    <td><?php echo $row->name; ?></td>
+				    <td><?php echo airport($row); ?></td>
                                     <td><?php echo $row->iata; ?></td>
                                     <td><?php echo $row->icao; ?></td>
                                     <td><?php echo $row->country_name; ?></td> 

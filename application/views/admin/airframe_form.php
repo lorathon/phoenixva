@@ -82,6 +82,14 @@ $widebody = array(
     'class'	    => $field_class,
 );
 
+$helicopter = array(
+    'name'	    => 'helicopter',
+    'id'	    => 'helicopter',
+    'value'	    => TRUE,
+    'checked'	    => $record->helicopter ? TRUE : FALSE,
+    'class'	    => $field_class,
+);
+
 $pax_first = array(
     'name'	    => 'pax_first',
     'id'	    => 'pax_first',
@@ -103,10 +111,17 @@ $pax_economy = array(
     'class'         => $field_class,
 );
 
-$max_cargo = array(
-    'name'	    => 'max_cargo',
-    'id'	    => 'max_cargo',
-    'value'	    => set_value('max_cargo', $record->max_cargo),
+$payload = array(
+    'name'	    => 'payload',
+    'id'	    => 'payload',
+    'value'	    => set_value('payload', $record->payload),
+    'class'         => $field_class,
+);
+
+$max_range = array(
+    'name'	    => 'max_range',
+    'id'	    => 'max_range',
+    'value'	    => set_value('max_range', $record->max_range),
     'class'         => $field_class,
 );
 
@@ -199,6 +214,11 @@ $mtow = array(
                     </div>
 		    
 		    <div class="form-group">
+                        <?php echo form_label('Helicopter', $helicopter['id'], $label_attributes); ?>
+                        <div class="col-md-6"><?php echo form_checkbox($helicopter); ?></div>
+                    </div>
+		    
+		    <div class="form-group">
 			<?php echo form_label('1st Class Seats', $pax_first['id'], $label_attributes); ?>
                         <div class="col-md-6"><?php echo form_input($pax_first); ?></div>
                     </div>
@@ -214,11 +234,21 @@ $mtow = array(
                     </div>
 		    
 		    <div class="form-group">
-			<?php echo form_label('Cargo Capacity', $max_cargo['id'], $label_attributes); ?>
+			<?php echo form_label('Payload Capacity', $payload['id'], $label_attributes); ?>
                         <div class="col-md-6">
 			    <div class="input-group mb-md">
-				<?php echo form_input($max_cargo); ?>
+				<?php echo form_input($payload); ?>
 				<span class="input-group-addon btn-warning">lbs</span>
+			    </div>
+			</div>
+                    </div>
+		    
+		    <div class="form-group">
+			<?php echo form_label('Maximum Range', $max_range['id'], $label_attributes); ?>
+                        <div class="col-md-6">
+			    <div class="input-group mb-md">
+				<?php echo form_input($max_range); ?>
+				<span class="input-group-addon btn-warning">miles</span>
 			    </div>
 			</div>
                     </div>

@@ -83,14 +83,14 @@ $route['private/ranks/delete-rank/(:any)'] = "ranks/delete_rank/$1";
 $route['fleet/view/(:any)'] = "fleet/view/$1";
 $route['fleet/view-sub/(:any)'] = "fleet/view_sub/$1";
 $route['fleet/(:any)'] = "fleet/index/$1";
-$route['private/fleet/edit-aircraft/(:any)'] = "fleet/edit_aircraft/$1";
-$route['private/fleet/edit-aircraft'] = "fleet/edit_aircraft";
 
 // Route all airlines related stuff
 $route['airlines/view/(:any)'] = "airlines/view/$1";
 $route['airlines/(:any)'] = "airlines/index/$1";
 $route['private/airlines/edit-airline/(:any)'] = "airlines/edit_airline/$1";
 $route['private/airlines/edit-airline'] = "airlines/edit_airline";
+$route['private/airlines/edit-aircraft/(:any)'] = "airlines/edit_aircraft/$1";
+$route['private/airlines/edit-aircraft'] = "airlines/edit_aircraft";
 
 // Default route
 $route['default_controller'] = 'pages/view';
