@@ -121,15 +121,34 @@ class Airline extends PVA_Model {
 		}
 	    }
 	    return $this->_airlines;
-	}	
+	}
+	
+	function check_aircraft($airframe_id)
+	{	    
+	    $aircraft = new Airline_aircraft(array('airline_id'=>$this->id, 'airframe_id'=>$airframe_id));
+	    if(is_null($aircraft->id))
+		$aircraft->add_aircraft();
+	}
 	
 	function get_aircraft($aircraft_id)
-	{
+	{	    
 	    if(is_null($this->_aircraft))
 	    {
 		$this->_aircraft = new Airline_aircraft($aircraft_id);		
 	    }
 	    return $this->_aircraft;
+	}
+	
+	function check_destination($airport_id)
+	{
+	    if(is_null($this->id))
+		return;
+	    if(is_null($airport_id))
+		return;
+	    
+	    $airport = new Airline_airport(array('airline_id'=>$this->id, 'airport_id'=>$airport_id));
+	    if(is_null($airport->id))
+		$airport->save();
 	}
 	
 	function get_destinations()
@@ -288,7 +307,24 @@ class Airline_aircraft extends PVA_Model {
 	    $this->_airframe = new Airframe($this->airframe_id);	    
 	}
 	return $this->_airframe;
-    }    
+    }   
+    
+    function add_aircraft()
+    {
+	if(is_null($this->airline_id))
+	    return;
+	
+	if(is_null($this->airframe_id))
+	    return;
+	
+	$airframe = new Airframe($this->airframe_id);
+	
+	$this->pax_first = $airframe->pax_first;
+	$this->pax_business = $airframe->pax_business;
+	$this->pax_economy = $airframe->pax_economy;
+	$this->payload = $airframe->payload;
+	$this->save();	
+    }
 }
 
 class Airline_airport extends PVA_Model {
@@ -305,7 +341,7 @@ class Airline_airport extends PVA_Model {
     {
 	parent::__construct($id);
     }
-    
+        
     // XXX should be a better way to do this.  
     function build_destinations($airline)
     {

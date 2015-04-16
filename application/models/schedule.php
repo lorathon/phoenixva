@@ -62,6 +62,25 @@ class Schedule extends PVA_Model
 		// Retrieve Carrier Airline
 		$carrier = new Airline(array('fs' => $pending->carrier));
 		$schedule->carrier_id = $carrier->id;
+		
+		// Retrieve Airframe
+		$airframe = new Airframe(array('iata' => $pending->equip));
+		$schedule->airframe_id = $airframe->id;
+		
+		// Retrieve Departure Airport
+		$dep_airport = new Airport(array('fs' => $pending->dep_airport));
+		$schedule->dep_airport_id = $dep_airport->id;
+		
+		// Retrieve Arrival Airport
+		$arr_airport = new Airport(array('fs' => $pending->arr_airport));
+		$schedule->arr_airport_id = $arr_airport->id;
+		
+		// Check for Carrier Airline airports
+		$carrier->check_destination($dep_airport->id);
+		$carrier->check_destination($arr_airport->id);
+		
+		// Check for Carrier Airline airframe
+		$carrier->check_aircraft($airframe->id);
 
 		// Retrieve Operator Airline - if not NULL
 		if (!is_null($pending->operator))
@@ -69,6 +88,13 @@ class Schedule extends PVA_Model
 		    $operator = new Airline(array('fs' => $pending->operator));
 		    $schedule->operator_id = $operator->id;
 		    $schedule->regional = TRUE;
+		    
+		    // Check for Operator Airline aiports
+		    $operator->check_destination($dep_airport->id);
+		    $operator->check_destination($dep_airport->id);
+		    
+		    // Check for Carrier Airline airframe
+		    $operator->check_aircraft($airframe->id);
 		}
 		else
 		{
@@ -79,18 +105,6 @@ class Schedule extends PVA_Model
 
 		// Populate flight number
 		$schedule->flight_num = $pending->flight_num;
-
-		// Retrieve Departure Airport
-		$dep_airport = new Airport(array('fs' => $pending->dep_airport));
-		$schedule->dep_airport_id = $dep_airport->id;
-
-		// Retrieve Arrival Airport
-		$arr_airport = new Airport(array('fs' => $pending->arr_airport));
-		$schedule->arr_airport_id = $arr_airport->id;
-
-		// Retrieve Airframe
-		$airframe = new Airframe(array('iata' => $pending->equip));
-		$schedule->airframe_id = $airframe->id;
 
 		// Set version
 		$schedule->version = $pending->version;
