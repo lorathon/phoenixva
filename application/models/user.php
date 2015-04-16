@@ -55,6 +55,17 @@ class User extends PVA_Model {
 	private $_is_exec    = NULL;
 	private $_is_super   = NULL;
 	
+	/* Constants */
+	const WAITING = 0;
+	const NEWREG = 1;
+	const PROBATION = 2;
+	const ACTIVE = 3;
+	const LOA = 4;
+	const FURLOUGH = 5;
+	const RESIGNED = 6;
+	const BANNED = 7;
+	const REJECTED = 8;
+	
 	function __construct($id = NULL)
 	{
 		parent::__construct($id);
@@ -659,9 +670,9 @@ class User extends PVA_Model {
 				// Background check ok, activate the user
 				$this->activated = 1;
 				$this->new_email_key = '';
-				if ($this->status == 0)
+				if ($this->status == self::WAITING)
 				{
-					$this->status = 1;
+					$this->status = self::NEWREG;
 				}
 				$this->_set_retirement();
 				$this->save();
@@ -690,7 +701,7 @@ class User extends PVA_Model {
 		if (is_null($this->id)) return FALSE;
 		$this->find();
 		$this->activated = 1;
-		$this->status = 3;
+		$this->status = self::ACTIVE;
 		$this->_set_retirement();
 		$this->save();
 	}
@@ -811,7 +822,7 @@ class User extends PVA_Model {
 		if (is_null($this->id)) return FALSE;
 		
 		$this->banned = 1;
-		$this->status = 7;
+		$this->status = self::BANNED;
 		if (is_null($this->ban_reason))
 		{
 			$this->ban_reason = 'No reason given';
@@ -830,7 +841,7 @@ class User extends PVA_Model {
 		if (is_null($this->id)) return FALSE;
 		
 		$this->banned = 0;
-		$this->status = 2;
+		$this->status = self::PROBATION;
 		$this->ban_reason = '';
 		
 		$this->save();
@@ -846,7 +857,7 @@ class User extends PVA_Model {
 	{
 		if (is_null($this->id)) return FALSE;
 		
-		$this->status = 4;
+		$this->status = self::LOA;
 		$this->save();
 	}
 	
@@ -859,7 +870,7 @@ class User extends PVA_Model {
 	{
 		if (is_null($this->id)) return FALSE;
 		
-		$this->status = 5;
+		$this->status = self::RESIGNED;
 		$this->retire_date = date('Y-m-d H:i:s');
 		$this->save();
 	}
@@ -875,7 +886,7 @@ class User extends PVA_Model {
 	{
 		if (is_null($this->id)) return FALSE;
 		
-		$this->status = 2;
+		$this->status = self::PROBATION;
 		$this->save();
 	}
 	
