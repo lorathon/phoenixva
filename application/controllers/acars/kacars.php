@@ -204,7 +204,6 @@ class Kacars extends Acars_Base
 					'client='.$this->_client,
 					'user_id='.$this->_user_id,
 					'hub_id='.$xml->data->crewcenter,
-					'airline_aircraft_id=0',
 					'flight_number='.$pirep->flightnumber,
 					'flight_type='.$pirep->flighttype,
 					'dep_icao='.$pirep->depicao,

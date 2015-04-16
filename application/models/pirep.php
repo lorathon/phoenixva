@@ -59,6 +59,11 @@ class Pirep extends PVA_Model {
 	protected $_pilot_pay_total = NULL;
 	protected $_expenses = NULL;
 	
+	// Constants
+	const OPEN = 0;
+	const APPROVED = 1;
+	const REJECTED = 2;
+	const HOLDING = 3;
 	
 	public function __construct($id = NULL)
 	{
@@ -89,7 +94,7 @@ class Pirep extends PVA_Model {
 		// Delete any open PIREPs and positions. A user can only have one PIREP open at a time.
 		$pirep = new Pirep();
 		$pirep->user_id = $this->user_id;
-		$pirep->status = 0;
+		$pirep->status = self::OPEN;
 		$open_list = $pirep->find_all();
 		
 		if ($open_list)
@@ -114,8 +119,10 @@ class Pirep extends PVA_Model {
 		}
 		
 		// Set the status for an open PIREP
-		$this->status = 0;
+		$this->status = self::OPEN;
 		$this->save();
+		
+		$this->set_note('PIREP '.$this->id.' opened.', $this->user_id);
 		
 		return $this;
 	}
@@ -135,12 +142,17 @@ class Pirep extends PVA_Model {
 		}
 		
 		// Calculate finances
+		$user = new User($this->user_id);
+		$this->_pilot_pay_rate = $user->get_pay_rate();
+		$this->_pilot_pay_total = $this->_pilot_pay_rate * $this->hours_total();
 		
 		// Update PIREP
+		$this->save();
+		log_message('debug', 'PIREP '.$this->id.' filed.');
 		
-		// Update User
+		$user->process_pirep($this);
 		
-		// Update Hub
+		// Update hub
 		
 		// Update Airline
 		
@@ -149,6 +161,15 @@ class Pirep extends PVA_Model {
 		// Update Airline_airframe
 		
 		// Update Airport
+		
+		if ($this->event)
+		{
+			// Update event
+		}
+		
+		// Update Passengers
+		
+		// Update Cargo
 		
 		return $this;
 	}
@@ -172,8 +193,23 @@ class Pirep extends PVA_Model {
 		// Return populated PIREP if this PIREP was already opened.
 		$pirep = new Pirep(array(
 				'user_id' => $this->user_id,
-				'status' => '0',
+				'status' => self::OPEN,
 		));
 		return $pirep;
-	} 
+	}
+	
+	/**
+	 * The total hours flown for this PIREP
+	 * 
+	 * @return number
+	 */
+	public function hours_total()
+	{
+		return array_sum(array(
+				$this->hours_dawn,
+				$this->hours_day,
+				$this->hours_dusk,
+				$this->hours_night,
+		));
+	}	
 }

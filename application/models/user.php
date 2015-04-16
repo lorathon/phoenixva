@@ -69,12 +69,21 @@ class User extends PVA_Model {
 	}
 	
 	/**
+	 * Gets the pay rate for this user.
+	 * 
+	 * @return number
+	 */
+	public function get_pay_rate()
+	{
+		$rank = new Rank($this->rank_id);
+		return $rank->pay_rate;
+	}
+	
+	/**
 	 * Gets the user profile associated with this user object.
 	 * 
 	 * The user object must be populated separately. Normal usage would be:
-	 * $user = new User();
-	 * $user->id = 123;
-	 * $user->find();
+	 * $user = new User($id);
 	 * $user->get_user_profile();
 	 * 
 	 * @return object User_profile object for the populated user
@@ -94,9 +103,7 @@ class User extends PVA_Model {
 	 * Gets the user stats associated with this user object.
 	 * 
 	 * The user object must be populated separately. Normal usage would be:
-	 * $user = new User();
-	 * $user->id = 123;
-	 * $user->find();
+	 * $user = new User(123);
 	 * $user->get_user_stats();
 	 * 
 	 * @return object User_stats object for the populated user
@@ -512,6 +519,63 @@ class User extends PVA_Model {
 		
 		return $this->id;
 	}
+	
+	/**
+	 * Processes a PIREP for the user.
+	 * 
+	 * @param Pirep $pirep object to process
+	 */
+	public function process_pirep($pirep)
+	{
+		if (is_null($this->id))
+		{
+			log_message('error', 'Trying to process PIREP for null user.');
+			return FALSE;
+		}
+		
+		$this->make_active();
+		$stats = $this->get_user_stats();
+		$stats->current_location = $pirep->arr_icao;
+		
+		if ($pirep->status != Pirep::REJECTED)
+		{
+			$stats->fuel_used = $stats->fuel_used + $pirep->fuel_used;
+			$stats->total_landings = $stats->total_landings + $pirep->landing_rate;
+			$stats->hours_flights = $stats->hours_flights + $pirep->hours_total();
+			$stats->hours_hub = $stats->hours_hub + $pirep->hours_total();
+			
+			if ($stats->landing_hardest < $pirep->landing_rate)
+			{
+				$stats->landing_hardest = $pirep->landing_rate;
+			}
+			if ($stats->landing_softest == 0
+					OR $stats->landing_softest > $pirep->landing_rate)
+			{
+				$stats->landing_softest = $pirep->landing_rate;
+			}
+			
+			$stats->total_expenses = $stats->total_expenses + $pirep->get_property('_expenses');
+			$stats->total_gross = $stats->total_gross + $pirep->get_property('_gross_income');
+			$stats->total_pay = $stats->total_pay + $pirep->get_property('_pilot_pay_total');
+
+			// Promote?
+			$rank = new Rank($this->rank_id);
+			$next_rank = $rank->next_rank();
+			if ($stats->total_hours() > $next_rank->min_hours)
+			{
+				$this->rank_id = $next_rank->id;
+				$this->set_note('Promoted to '.$next_rank->rank, $this->id);
+				$this->save();
+			}
+		}
+		else
+		{
+			$stats->flights_rejected++;
+		}
+		
+		$stats->last_flight_date = date('Y-m-d');
+		$stats->save();
+	} 
 	
 	/**
 	 * Saves a user
