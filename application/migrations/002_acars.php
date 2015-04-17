@@ -277,5 +277,9 @@ class Migration_Acars extends Migration_base {
 						'name' => 'aircraft_sub_id'
 				),
 		));
+		$this->dbforge->add_column('users', array(
+				'waivers_js' => $this->get_status_field(),
+				'waivers_cat' => $this->get_status_field(),
+		));
 	}
 }
