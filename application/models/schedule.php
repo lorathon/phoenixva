@@ -84,7 +84,7 @@ class Schedule extends PVA_Model
 		$schedule->aircraft_sub_id = $aircraft_sub->id;
 
 		// Check for Carrier Airline aircrafts
-		$carrier->check_aircraft($aircraft_sub_id->id);
+		$carrier->check_aircraft($aircraft_sub->id);
 
 		// Retrieve Departure Airport
 		$dep_airport = new Airport(array('fs' => $pending->dep_airport));
@@ -134,7 +134,7 @@ class Schedule extends PVA_Model
 			OR is_null($schedule->dep_airport_id)
 			OR is_null($schedule->dep_airport_id)
 			OR is_null($schedule->arr_airport_id)
-			OR is_null($schedule->airframe_id)
+			OR is_null($schedule->aircraft_sub_id)
 			OR is_null($schedule->schedule_cat_id)
 		)
 		{

@@ -298,12 +298,12 @@ class Airline_aircraft extends PVA_Model
      * Airline_aircraft.  If missing a new Airline_aircrfaft
      * is created using Airframe and Airline data     
      * 
-     * Only called by Airline Object
+     * Should Only called by Airline Object
      * 
      * @param ID of Aircfrat_sub $aircraft_sub_id
      * @return none
      */
-    protected function check_aircraft($aircraft_sub_id = NULL)
+    function check_aircraft($aircraft_sub_id = NULL)
     {
 	if (is_null($aircraft_sub_id))
 	    return;
@@ -315,18 +315,17 @@ class Airline_aircraft extends PVA_Model
 	{
 	    foreach ($equips as $equip)
 	    {
-		$airframe = new Airframe(array('iata' => equip));
-		$this->airframe_id = $airframe->id;
-		$this->find();
+		$airframe = new Airframe(array('iata' => $equip));
+		$aircraft = new Airline_aircraft(array('airline_id'=>$this->airline_id, 'airframe_id'=>$airframe->id));
 
-		if (!is_null($this->id))
-		    return;
+		if (!is_null($aircraft->id))
+		    continue;
 
-		$this->pax_first = $airframe->pax_first;
-		$this->pax_business = $airframe->pax_business;
-		$this->pax_economy = $airframe->pax_economy;
-		$this->payload = $airframe->payload;
-		$this->save();
+		$aircraft->pax_first = $airframe->pax_first;
+		$aircraft->pax_business = $airframe->pax_business;
+		$aircraft->pax_economy = $airframe->pax_economy;
+		$aircraft->payload = $airframe->payload;
+		$aircraft->save();
 	    }
 	}
     }
@@ -367,11 +366,11 @@ class Airline_airport extends PVA_Model
 
     /**
      * Gets array of Airport based on Airline_id
-     * Only called by Airline.
+     * Should Only called by Airline.
      * 
      * @return array Airport
      */
-    protected function get_destinations()
+    function get_destinations()
     {
 	if (is_null($this->_destinations))
 	{
