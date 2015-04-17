@@ -55,6 +55,17 @@ class User extends PVA_Model {
 	private $_is_exec    = NULL;
 	private $_is_super   = NULL;
 	
+	/* Constants */
+	const WAITING = 0;
+	const NEWREG = 1;
+	const PROBATION = 2;
+	const ACTIVE = 3;
+	const LOA = 4;
+	const FURLOUGH = 5;
+	const RESIGNED = 6;
+	const BANNED = 7;
+	const REJECTED = 8;
+	
 	function __construct($id = NULL)
 	{
 		parent::__construct($id);
@@ -69,12 +80,21 @@ class User extends PVA_Model {
 	}
 	
 	/**
+	 * Gets the pay rate for this user.
+	 * 
+	 * @return number
+	 */
+	public function get_pay_rate()
+	{
+		$rank = new Rank($this->rank_id);
+		return $rank->pay_rate;
+	}
+	
+	/**
 	 * Gets the user profile associated with this user object.
 	 * 
 	 * The user object must be populated separately. Normal usage would be:
-	 * $user = new User();
-	 * $user->id = 123;
-	 * $user->find();
+	 * $user = new User($id);
 	 * $user->get_user_profile();
 	 * 
 	 * @return object User_profile object for the populated user
@@ -94,9 +114,7 @@ class User extends PVA_Model {
 	 * Gets the user stats associated with this user object.
 	 * 
 	 * The user object must be populated separately. Normal usage would be:
-	 * $user = new User();
-	 * $user->id = 123;
-	 * $user->find();
+	 * $user = new User(123);
 	 * $user->get_user_stats();
 	 * 
 	 * @return object User_stats object for the populated user
@@ -514,6 +532,65 @@ class User extends PVA_Model {
 	}
 	
 	/**
+	 * Processes a PIREP for the user.
+	 * 
+	 * @param Pirep $pirep object to process
+	 */
+	public function process_pirep($pirep)
+	{
+		if (is_null($this->id))
+		{
+			log_message('error', 'Trying to process PIREP for null user.');
+			return FALSE;
+		}
+		
+		// Filing a PIREP activates the user
+		$this->make_active();
+				
+		$stats = $this->get_user_stats();
+		$stats->current_location = $pirep->arr_icao;
+		
+		if ($pirep->status != Pirep::REJECTED)
+		{
+			$stats->fuel_used = $stats->fuel_used + $pirep->fuel_used;
+			$stats->total_landings = $stats->total_landings + $pirep->landing_rate;
+			$stats->hours_flights = $stats->hours_flights + $pirep->hours_total();
+			$stats->hours_hub = $stats->hours_hub + $pirep->hours_total();
+			
+			if ($stats->landing_hardest < $pirep->landing_rate)
+			{
+				$stats->landing_hardest = $pirep->landing_rate;
+			}
+			if ($stats->landing_softest == 0
+					OR $stats->landing_softest > $pirep->landing_rate)
+			{
+				$stats->landing_softest = $pirep->landing_rate;
+			}
+			
+			$stats->total_expenses = $stats->total_expenses + $pirep->get_property('_expenses');
+			$stats->total_gross = $stats->total_gross + $pirep->get_property('_gross_income');
+			$stats->total_pay = $stats->total_pay + $pirep->get_property('_pilot_pay_total');
+
+			// Promote?
+			$rank = new Rank($this->rank_id);
+			$next_rank = $rank->next_rank();
+			if ($stats->total_hours() > $next_rank->min_hours)
+			{
+				$this->rank_id = $next_rank->id;
+				$this->set_note('Promoted to '.$next_rank->rank, $this->id);
+				$this->save();
+			}
+		}
+		else
+		{
+			$stats->flights_rejected++;
+		}
+		
+		$stats->last_flight_date = date('Y-m-d');
+		$stats->save();
+	} 
+	
+	/**
 	 * Saves a user
 	 * 
 	 * This method can only be used for updating a user. If saving a new user,
@@ -595,9 +672,9 @@ class User extends PVA_Model {
 				// Background check ok, activate the user
 				$this->activated = 1;
 				$this->new_email_key = '';
-				if ($this->status == 0)
+				if ($this->status == self::WAITING)
 				{
-					$this->status = 1;
+					$this->status = self::NEWREG;
 				}
 				$this->_set_retirement();
 				$this->save();
@@ -619,16 +696,21 @@ class User extends PVA_Model {
 	/**
 	 * Makes a user fully active.
 	 * 
+	 * If a user is banned, this function will have no effect. Use unban() instead.
+	 * 
 	 * @return boolean FALSE if user id is not populated
 	 */
 	function make_active()
 	{
 		if (is_null($this->id)) return FALSE;
 		$this->find();
-		$this->activated = 1;
-		$this->status = 3;
-		$this->_set_retirement();
-		$this->save();
+		if (!$this->banned)
+		{
+			$this->activated = 1;
+			$this->status = self::ACTIVE;
+			$this->_set_retirement();
+			$this->save();
+		}
 	}
 	
 	/**
@@ -747,7 +829,7 @@ class User extends PVA_Model {
 		if (is_null($this->id)) return FALSE;
 		
 		$this->banned = 1;
-		$this->status = 7;
+		$this->status = self::BANNED;
 		if (is_null($this->ban_reason))
 		{
 			$this->ban_reason = 'No reason given';
@@ -766,7 +848,7 @@ class User extends PVA_Model {
 		if (is_null($this->id)) return FALSE;
 		
 		$this->banned = 0;
-		$this->status = 2;
+		$this->status = self::PROBATION;
 		$this->ban_reason = '';
 		
 		$this->save();
@@ -782,7 +864,7 @@ class User extends PVA_Model {
 	{
 		if (is_null($this->id)) return FALSE;
 		
-		$this->status = 4;
+		$this->status = self::LOA;
 		$this->save();
 	}
 	
@@ -795,7 +877,7 @@ class User extends PVA_Model {
 	{
 		if (is_null($this->id)) return FALSE;
 		
-		$this->status = 5;
+		$this->status = self::RESIGNED;
 		$this->retire_date = date('Y-m-d H:i:s');
 		$this->save();
 	}
@@ -811,7 +893,7 @@ class User extends PVA_Model {
 	{
 		if (is_null($this->id)) return FALSE;
 		
-		$this->status = 2;
+		$this->status = self::PROBATION;
 		$this->save();
 	}
 	
