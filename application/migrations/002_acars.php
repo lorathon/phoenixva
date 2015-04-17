@@ -272,5 +272,10 @@ class Migration_Acars extends Migration_base {
 				'modified' => $this->get_timestamp_field(),
 				'consumed' => $this->get_boolean_field(),
 		));
+		$this->modify_fields('schedules', array(
+				'airframe_id' => array(
+						'name' => 'aircraft_sub_id'
+				),
+		));
 	}
 }
