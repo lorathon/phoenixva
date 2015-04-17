@@ -133,7 +133,7 @@ class Migration_Acars extends Migration_base {
 				'hours_night'         => $this->get_counter_field(),
 				'distance'            => $this->get_calculated_field(),
 				'status'              => $this->get_status_field(),
-				'landing_rate'        => $this->get_landingrate_field(),
+				'landing_rate'        => $this->get_landing_rate_field(),
 				'fuel_out'            => $this->get_calculated_field(),
 				'fuel_off'            => $this->get_calculated_field(),
 				'fuel_toc'            => $this->get_calculated_field(),
@@ -147,7 +147,7 @@ class Migration_Acars extends Migration_base {
 				'pilot_pay_total'     => $this->get_money_field(),
 				'expenses'            => $this->get_money_field(),
 				'afk_elapsed'         => $this->get_counter_field(),
-				'afk_attempts'        => $this->get_tiny_int_field(),
+				'afk_attempts'        => $this->get_tinyint_field(),
 				'online'              => $this->get_boolean_field(),
 				'event'               => $this->get_boolean_field(),
 				'checkride'           => $this->get_boolean_field(),
@@ -260,7 +260,7 @@ class Migration_Acars extends Migration_base {
 	
 	protected function _finish_up()
 	{
-		$this->modify_fields('airline_aircraft', array(
+		$this->modify_fields('airline_aircrafts', array(
 				'max_cargo' => array(
 						'name' => 'payload'
 				),
@@ -278,8 +278,8 @@ class Migration_Acars extends Migration_base {
 				),
 		));
 		$this->dbforge->add_column('users', array(
-				'waivers_js' => $this->get_status_field(),
-				'waivers_cat' => $this->get_status_field(),
+				'waivers_js' => $this->get_tinyint_field(),
+				'waivers_cat' => $this->get_tinyint_field(),
 		));
 	}
 }
