@@ -80,4 +80,28 @@ class Rank extends PVA_Model {
 	    }
 	    return $this->_user_count;
 	}
+	
+	/**
+	 * Checks if this rank can fly the provided aircraft.
+	 * 
+	 * @param integer $aircraft_id of the Airline_aircraft to check
+	 * @return boolean TRUE if the rank can fly the aircraft.
+	 */
+	public function check_aircraft_category($aircraft_id)
+	{
+		$aircraft = new Airline_aircraft($aircraft_id);
+		return $this->check_airframe_category($aircraft->airframe_id);
+	}
+	
+	/**
+	 * Checks if this rank can fly the provided airframe.
+	 * 
+	 * @param integer $airframe_id for the airframe to check
+	 * @return boolean TRUE if the rank can fly the airframe.
+	 */
+	public function check_airframe_category($airframe_id)
+	{
+		$airframe = new Airframe($aircraft->airframe_id);
+		return ($airframe->category > $this->max_cat);
+	}
 }

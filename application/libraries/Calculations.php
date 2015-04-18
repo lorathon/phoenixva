@@ -135,6 +135,26 @@ class Calculations
 	    }
 	    return false;
 	}
+	
+	/**
+	 * Calculate the difference between two headings
+	 * 
+	 * Headings must be between 0 and 360.
+	 * 
+	 * @param integer $hdg1
+	 * @param integer $hdg2
+	 * @return number the absolute degrees difference between hdg1 and hdg2
+	 */
+	public static function heading_difference($hdg1, $hdg2)
+	{
+		// XXX Not working yet
+		$diff = abs($hdg1 - $hdg2);
+		if ($diff > 180)
+		{
+			$diff = $diff - 180;
+		}
+		return $diff;
+	}
     
     /**
      * Calculate a random pricing based on the distance of

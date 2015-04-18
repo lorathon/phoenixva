@@ -569,14 +569,27 @@ class User extends PVA_Model {
 		))) {
 			$this->make_active();
 		}
+		$this->_set_retirement();
 				
 		$stats = $this->get_user_stats();
 		
 		if ($pirep->status == Pirep::APPROVED)
 		{
-			// Set the updates flag so we know whether to save the user after processing
-			$user_updates = FALSE;
-			
+			// Charge the category if needed so the PIREP is Rejected post haste
+			$rank = new Rank($this->rank_id);
+			if (!$rank->check_aircraft_category($pirep->airline_aircraft_id))
+			{
+				if (!$this->charge_cat_waiver())
+				{
+					$pirep->status == Pirep::REJECTED;
+					$pirep->save();
+					$pirep->set_note('[SYSTEM] - PIREP Rejected/Unable to charge CAT waiver.', $this->id);
+				}
+			}
+		}
+		
+		if ($pirep->status == Pirep::APPROVED)
+		{	
 			$stats->fuel_used = $stats->fuel_used + $pirep->fuel_used;
 			$stats->total_landings = $stats->total_landings + $pirep->landing_rate;
 			$stats->hours_flights = $stats->hours_flights + $pirep->hours_total();
@@ -596,14 +609,27 @@ class User extends PVA_Model {
 			$stats->total_gross = $stats->total_gross + $pirep->get_property('_gross_income');
 			$stats->total_pay = $stats->total_pay + $pirep->get_property('_pilot_pay_total');
 			
-			// Promote?
-			$rank = new Rank($this->rank_id);
-			$next_rank = $rank->next_rank();
-			if ($next_rank && $stats->total_hours() >= $next_rank->min_hours)
+			// Promote/Demote?
+			if ($rank->min_hours > $stats->total_hours())
 			{
-				$this->rank_id = $next_rank->id;
-				$this->set_note('Promoted to '.$next_rank->rank, $this->id);
-				$user_updates = TRUE;
+				// Demotion
+				$prev_rank = $rank->next_rank(TRUE);
+				if ($prev_rank)
+				{
+					$this->rank_id = $prev_rank->id;
+					$this->set_note('Demoted to '.$prev_rank->rank, $this->id);
+				}
+			}
+			else 
+			{
+				$next_rank = $rank->next_rank();
+				if ($next_rank && $stats->total_hours() >= $next_rank->min_hours)
+				{
+					// Promotion
+					$this->rank_id = $next_rank->id;
+					$this->set_note('Promoted to '.$next_rank->rank, $this->id);
+					$user_updates = TRUE;
+				}
 			}
 			
 			// Online flyer award
@@ -611,12 +637,7 @@ class User extends PVA_Model {
 			{
 				$award = new Award(array('name' => 'Online Flyer'));
 				$this->grant_award($award->id);
-			}
-			
-			if ($user_updates)
-			{
-				$this->save();
-			}
+			}			
 		}
 		elseif ($pirep->status == Pirep::REJECTED)
 		{
@@ -626,6 +647,7 @@ class User extends PVA_Model {
 		$stats->current_location = $pirep->arr_icao;
 		$stats->last_flight_date = date('Y-m-d');
 		$stats->save();
+		$this->save();
 	} 
 	
 	/**

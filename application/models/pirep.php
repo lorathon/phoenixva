@@ -173,7 +173,10 @@ class Pirep extends PVA_Model {
 		$this->save();		
 		log_message('debug', 'PIREP '.$this->id.' filed.');
 		
-		$this->_process_pireps();
+		if ($this->status != self::HOLDING)
+		{
+			$this->_process_pireps();
+		}
 		
 		return $this;
 	}
@@ -260,9 +263,6 @@ class Pirep extends PVA_Model {
 	private function _validate()
 	{
 		$this->status = self::APPROVED;
-		$user = new User($this->user_id);
-		
-		// Check aircraft type
 		
 		// Check airports
 		$dep_airport = new Airport(array('icao' => $this->dep_icao));
@@ -276,12 +276,12 @@ class Pirep extends PVA_Model {
 		if ($dep_distance > 10)
 		{
 			$this->status = self::REJECTED;
-			$this->set_note('Automatically rejected due to wrong departure airport.', 0);
+			$this->set_note('[SYSTEM] - Automatically rejected due to wrong departure airport.', 0);
 		}
 		elseif ($dep_distance > 5)
 		{
 			$this->status = self::HOLDING;
-			$this->set_note('Automatically holding due to excessive departure distance.', 0);
+			$this->set_note('[SYSTEM] - Automatically holding due to excessive departure distance.', 0);
 		}
 		
 		$arr_airport = new Airport(array('icao' => $this->arr_icao));
@@ -295,37 +295,130 @@ class Pirep extends PVA_Model {
 		if ($arr_distance > 10)
 		{
 			$this->status = self::REJECTED;
-			$this->set_note('Automatically rejected due to wrong arrival airport.', 0);
+			$this->set_note('[SYSTEM] - Automatically rejected due to wrong arrival airport.', 0);
 		}
 		elseif ($arr_distance > 5)
 		{
 			$this->status = self::HOLDING;
-			$this->set_note('Automatically holding due to excessive arrival distance.', 0);
+			$this->set_note('[SYSTEM] - Automatically holding due to excessive arrival distance.', 0);
 		}
 		
 		if ($this->afk_elapsed >= 60)
 		{
 			$this->status = self::REJECTED;
-			$this->set_note('Automatically rejected due to excessive AFK.', 0);
+			$this->set_note('[SYSTEM] - Automatically rejected due to excessive AFK.', 0);
 		}
 		
-		// Excessive overspeeds
+		// FOQA Checks
+		$taxi = TRUE;
+		$inflight = FALSE;
+		$landed = FALSE;
+		$pos_search = new Position();
+		$pos_search->pirep_id = $this->id;
+		$pos_list = $pos_search->find_all();
 		
-		// Outside CAT
+		foreach ($pos_list as $position)
+		{
+			// @todo Need to determine when starting takeoff roll to set $taxi = FALSE;
+			if (!$inflight && $position->vertical_speed > 100)
+			{
+				// Takeoff
+				$taxi = FALSE;
+				$inflight = TRUE;
+				$prev_fob = $position->fuel_onboard;
+			}
+			if ($inflight)
+			{
+				if ($position->landed)
+				{
+					$landed = TRUE;
+					$inflight = FALSE;
+					$land_heading = $position->heading;
+				}
+				
+				$location = $position->lat.' / '.$position->long;
+				
+				// Midair Refueling
+				if (!$landed && $position->fuel_onboard > $prev_fob)
+				{
+					$this->status = self::REJECTED;
+					$this->set_note("[SYSTEM] - Automatically rejected due to midair refueling at {$location}.", 0);
+				}
+				if (!$landed && $position->fuel_onboard == $prev_fob)
+				{
+					$this->status = self::HOLDING;
+					$this->set_note("[SYSTEM] - Automatically holding due to no fuel burn at {$location}.", 0);
+				}
+				$prev_fob = $position->fuel_onboard;
+			}
+			if ($landed)
+			{
+				// Taxiing
+				if (Calculations::heading_difference($land_heading, $position->heading) > 30)
+				{
+					$taxi = TRUE;
+				}
+			}
+			
+			// Taxi speed check
+			if ($taxi && $position->ground_speed > 30)
+			{
+				$this->status = self::HOLDING;
+				$this->set_note("[SYSTEM] - Automatically holding due to excessive taxi speed at {$location}.", 0);
+			}
+		}
 		
-		// Refueling
-		
+		// Excessive landing rate
 		if ($this->landing_rate >= 1000)
 		{
 			$this->status = self::REJECTED;
-			$this->set_note('Automatically rejected due to landing rate in excess of 1,000 feet per minute.', 0);
+			$this->set_note('[SYSTEM] - Automatically rejected due to landing rate in excess of 1,000 feet per minute.', 0);
 		}
-				
+
+		/* 
+		 * User level checks
+		 */
+		$user = new User($this->user_id);
+		
+		// Event?
+		$waive_cat = FALSE;
+		$waive_js = FALSE;
+		if ($this->event)
+		{
+			$curr_event = new Event();
+			// @todo get current event
+			$waive_cat = $curr_event->waiver_cat;
+			$waive_js = $curr_event->waiver_js;
+		}
+		
+		// CAT checks
+		if (!$waive_cat)
+		{
+			$rank = new Rank($user->rank_id);
+			if (!$rank->check_aircraft_category($this->airline_aircraft_id))
+			{
+				if ($user->waivers_cat < 1)
+				{
+					$this->status = self::REJECTED;
+					$this->set_note('[SYSTEM] - Automatically rejected due to flying out of category.', 0);
+				}
+			}
+		}
+		
+		// Jumpseat?
+		if (!$waive_js && $user->get_user_stats()->current_location != $this->dep_icao)
+		{
+			$user->charge_jumpseat($this->dep_icao);
+			$this->set_note('[SYSTEM] - '.$user->name.' charged a jumpseat (waiver or hours).', 0);
+		}
+		
 		// Hold first PIREP and all PIREPs for users on Probation
 		if ($user->status == User::NEWREG OR $user->status == User::PROBATION)
 		{
+			$status_array = $this->config->item('pirep_status');
+			$status_name = $status_array[$this->status];
+			$this->set_note('[SYSTEM] - Automatically holding PIREP for probationary pilot. Previous status: '.$status_name, 0);
 			$this->status = self::HOLDING;
-			$this->set_note('Automatically holding PIREP for probationary pilot.', 0);
 		}
 
 	}

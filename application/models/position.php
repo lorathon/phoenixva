@@ -34,7 +34,7 @@ class Position extends PVA_Model {
 		parent::__construct($id);
 		
 		// Set defaults
-		$this->_order_by = 'created desc';
+		$this->_order_by = 'created asc';
 		$this->_timestamps = TRUE;
 		log_message('debug', 'Positions model Initialized');
 	}
