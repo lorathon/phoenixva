@@ -15,6 +15,21 @@ class Acars_Base extends CI_Controller {
 	// Used to enable/disable the profiler (can be overriden by child controllers)
 	protected $_profile_this = TRUE;
 	
+	/**
+	 * Holds any parameters to be returned to the client.
+	 * @var array
+	 */
+	protected $_params = array();
+	
+	/**
+	 * Separator between input fields
+	 * 
+	 * Used by the asynch messaging system.
+	 * 
+	 * @var string
+	 */
+	protected $_field_separator = '&';
+	
 	function __construct()
 	{
 		parent::__construct();
@@ -62,6 +77,34 @@ class Acars_Base extends CI_Controller {
 		log_message('debug', 'Message dispatching complete');
 	}
 	
+	/**
+	 * Outputs an XML response
+	 * 
+	 * @param array $params containing the name/value pairs for the XML
+	 * @param string $switch
+	 */
+	protected function sendXML($params, $switch = '') 
+	{
+		$xml = new SimpleXMLElement('<sitedata />');
+	
+		$info_xml = $xml->addChild('info');
+		if($switch != '')
+			$info_xml->addChild('xml_sw', $switch);
+			
+		foreach($params as $name => $value)	
+		{
+			$info_xml->addChild($name, $value);
+		}
+	
+		header('Content-type: text/xml');
+		$xml_string = $xml->asXML();
+
+		log_message('debug', "Sending XML: \n".print_r($xml_string, true));
+		
+		echo $xml_string;
+	}
+	
+
 	/**
 	 * PVA Application ACARS autoloader
 	 *
