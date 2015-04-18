@@ -15,7 +15,7 @@ class Aircraft_sub extends PVA_Model
 
     public function __construct($id = NULL)
     {
-	parent::__construct($id);
+        parent::__construct($id);
     }
 
     /**
@@ -29,13 +29,13 @@ class Aircraft_sub extends PVA_Model
      */
     public function find_sub($equip = NULL)
     {
-	$this->equips = $equip;
-	$sub = $this->find_all(TRUE);
+        $this->equips = $equip;
+        $sub = $this->find_all(TRUE);
 
-	if (!is_null($sub[0]->id))
-	    return $sub[0];
-	else
-	    return FALSE;
+        if (!is_null($sub[0]->id))
+            return $sub[0];
+        else
+            return FALSE;
     }
 
     /**
@@ -48,28 +48,19 @@ class Aircraft_sub extends PVA_Model
      */
     public function save()
     {
-	parent::save();
+        parent::save();
 
-	/*	 * *
-	 * If this is an update then check airframes
-	 * and update them.  Just incase the category has changed
-	 */
-	if (!is_null($this->id))
-	{
-	    $airframe = new Airframe();
-	    $airframe->aircraft_sub_id = $this->id;
-	    $airframe->_limit = $airframe->find_all(FALSE, TRUE);
-	    $airframes = $airframe->find_all();
-
-	    if (!$airframes)
-		return;
-
-	    foreach ($airframes as $obj)
-	    {
-		$obj->category = $this->category;
-		$obj->save();
-	    }
-	}
+        /*         * *
+         * If this is an update then check airframes
+         * and update them.  Just incase the category has changed
+         */
+        if (!is_null($this->id))
+        {
+            $airframe = new Airframe();
+            $airframe->aircraft_sub_id = $this->id;
+            $airframe->category = $this->category;
+            $airframe->update_categories();
+        }
     }
 
 }

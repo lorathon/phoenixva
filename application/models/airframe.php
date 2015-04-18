@@ -5,6 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Airframe extends PVA_Model
 {
     /* Airframe properties */
+
     public $iata = NULL;
     public $icao = NULL;
     public $name = NULL;
@@ -27,9 +28,23 @@ class Airframe extends PVA_Model
 
     public function __construct($id = NULL)
     {
-	$this->_order_by = 'name ASC';
-	$this->_timestamps = TRUE;
-	parent::__construct($id);
+        $this->_order_by = 'name ASC';
+        $this->_timestamps = TRUE;
+        parent::__construct($id);
     }
     
+    function update_categories()
+    {
+        $category = $this->category;
+        $this->category = NULL;
+        $this->_limit = $this->find_all(FALSE, TRUE);
+        $airframes = $this->find_all();
+        foreach ($airframes as $obj)
+        {
+            $obj->category = $category;
+            $obj->save();
+        }
+        $this->category = $category;
+    }
+
 }
