@@ -132,6 +132,7 @@ class Pirep extends PVA_Model {
 	 * 
 	 * This function will do all of the calculations and database updates when
 	 * a PIREP is filed.
+	 * 
 	 * @return Pirep
 	 */
 	public function file()
@@ -141,44 +142,80 @@ class Pirep extends PVA_Model {
 			$this->id = $this->find_open()->id;
 		}
 		
+		// Check for duplicate
+		if (is_null($this->id))
+		{
+			$dupe_pirep = new Pirep();
+			$dupe_pirep->user_id = $this->id;
+			$dupe_pirep->dep_icao = $this->dep_icao;
+			$dupe_pirep->arr_icao = $this->arr_icao;
+			if ($dupe_pirep->find())
+			{
+				return $dupe_pirep;
+			}
+		}
+		
 		// Save the PIREP right away so we are sure we have it. Default status is holding.
 		$this->status = self::HOLDING;
 		$this->save();
 		
 		$this->_validate();
 		
-		// Calculate finances
-		$user = new User($this->user_id);
-		$this->_pilot_pay_rate = $user->get_pay_rate();
-		$this->_pilot_pay_total = $this->_pilot_pay_rate * $this->hours_total();
-		
-		log_message('debug', 'PIREP '.$this->id.' filed.');
-		
-		$user->process_pirep($this);
-		
-		// Update hub
-		
-		// Update Airline
-		
-		// Update Airframe
-		
-		// Update Airline_airframe
-		
-		// Update Airport
-		
-		if ($this->event)
+		if ($this->status != self::REJECTED)
 		{
-			// Update event
+			// Calculate finances
+			$user = new User($this->user_id);
+			$this->_pilot_pay_rate = $user->get_pay_rate();
+			$this->_pilot_pay_total = $this->_pilot_pay_rate * $this->hours_total();
 		}
 		
-		// Update Passengers
-		
-		// Update Cargo
-		
 		// Now that the whole thing is processed, save it again
-		$this->save();
+		$this->save();		
+		log_message('debug', 'PIREP '.$this->id.' filed.');
+		
+		$this->_process_pireps();
 		
 		return $this;
+	}
+	
+	/**
+	 * Approves the PIREP
+	 * 
+	 * Only PIREPs that are holding can be approved.
+	 * 
+	 * @return boolean TRUE if the PIREP was approved
+	 */
+	public function approve()
+	{
+		if (is_null($id)) return FALSE;
+		
+		if ($this->status == self::HOLDING)
+		{
+			$this->status = self::APPROVED;
+			$this->save();
+			$this->_process_pireps();
+		}
+		return TRUE;
+	}
+	
+	/**
+	 * Rejects the PIREP
+	 * 
+	 * Only PIREPs that are holding can be rejected.
+	 * 
+	 * @return boolean TRUE if the PIREP was rejected
+	 */
+	public function reject()
+	{
+		if (is_null($id)) return FALSE;
+		
+		if ($this->status == self::HOLDING)
+		{
+			$this->status = self::REJECTED;
+			$this->save();
+			$this->_process_pireps();
+		}
+		return TRUE;
 	}
 	
 	// Override base save() so only certain fields can be modified.
@@ -228,11 +265,48 @@ class Pirep extends PVA_Model {
 		// Check aircraft type
 		
 		// Check airports
+		$dep_airport = new Airport(array('icao' => $this->dep_icao));
+		$dep_position = Position::find_position($this->id);
+		$dep_distance = Calculations::calculate_distance(
+				$dep_position->lat, 
+				$dep_position->long,
+				$dep_airport->lat,
+				$dep_airport->long
+				);
+		if ($dep_distance > 10)
+		{
+			$this->status = self::REJECTED;
+			$this->set_note('Automatically rejected due to wrong departure airport.', 0);
+		}
+		elseif ($dep_distance > 5)
+		{
+			$this->status = self::HOLDING;
+			$this->set_note('Automatically holding due to excessive departure distance.', 0);
+		}
+		
+		$arr_airport = new Airport(array('icao' => $this->arr_icao));
+		$arr_position = Position::find_position($pirep_id, FALSE);
+		$arr_distance = Calculations::calculate_distance(
+				$arr_position->lat,
+				$arr_position->long,
+				$arr_airport->lat,
+				$arr_airport->long
+				);
+		if ($arr_distance > 10)
+		{
+			$this->status = self::REJECTED;
+			$this->set_note('Automatically rejected due to wrong arrival airport.', 0);
+		}
+		elseif ($arr_distance > 5)
+		{
+			$this->status = self::HOLDING;
+			$this->set_note('Automatically holding due to excessive arrival distance.', 0);
+		}
 		
 		if ($this->afk_elapsed >= 60)
 		{
 			$this->status = self::REJECTED;
-			$this->set_note('Rejected due to excessive AFK.', 0);
+			$this->set_note('Automatically rejected due to excessive AFK.', 0);
 		}
 		
 		// Excessive overspeeds
@@ -244,14 +318,39 @@ class Pirep extends PVA_Model {
 		if ($this->landing_rate >= 1000)
 		{
 			$this->status = self::REJECTED;
-			$this->set_note('Rejected due to landing rate in excess of 1,000 feet per minute.', 0);
+			$this->set_note('Automatically rejected due to landing rate in excess of 1,000 feet per minute.', 0);
 		}
 				
 		// Hold first PIREP and all PIREPs for users on Probation
 		if ($user->status == User::NEWREG OR $user->status == User::PROBATION)
 		{
 			$this->status = self::HOLDING;
+			$this->set_note('Automatically holding PIREP for probationary pilot.', 0);
 		}
 
+	}
+	
+	private function _process_pireps()
+	{
+		$user->process_pirep($this);
+		
+		// Update hub
+		
+		// Update Airline
+		
+		// Update Airframe
+		
+		// Update Airline_airframe
+		
+		// Update Airport
+		
+		if ($this->event)
+		{
+			// Update event
+		}
+		
+		// Update Passengers
+		
+		// Update Cargo
 	}
 }

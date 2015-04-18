@@ -42,6 +42,8 @@ class User extends PVA_Model {
 	public $transfer_link          = NULL;
 	public $heard_about            = NULL;
 	public $ipbuser_id             = NULL;
+	public $waivers_js             = NULL;
+	public $waivers_cat            = NULL;
 	
 	/* Related objects */
 	protected $_user_profile        = NULL;
@@ -54,6 +56,7 @@ class User extends PVA_Model {
 	private $_is_manager = NULL;
 	private $_is_exec    = NULL;
 	private $_is_super   = NULL;
+	private $_manager_list = NULL;
 	
 	/* Constants */
 	const WAITING = 0;
@@ -65,6 +68,12 @@ class User extends PVA_Model {
 	const RESIGNED = 6;
 	const BANNED = 7;
 	const REJECTED = 8;
+	
+	const ACCESS_PREMIUM = 10;
+	const ACCESS_ADMIN = 50;
+	const ACCESS_MANAGER = 60;
+	const ACCESS_EXEC = 70;
+	const ACCESS_SUPER = 90;
 	
 	function __construct($id = NULL)
 	{
@@ -545,13 +554,21 @@ class User extends PVA_Model {
 		}
 		
 		// Filing a PIREP activates the user
-		$this->make_active();
+		if (in_array($this->status, array(
+				self::LOA,
+				self::RESIGNED,
+				self::FURLOUGH,
+		))) {
+			$this->make_active();
+		}
 				
 		$stats = $this->get_user_stats();
-		$stats->current_location = $pirep->arr_icao;
 		
-		if ($pirep->status != Pirep::REJECTED)
+		if ($pirep->status == Pirep::APPROVED)
 		{
+			// Set the updates flag so we know whether to save the user after processing
+			$user_updates = FALSE;
+			
 			$stats->fuel_used = $stats->fuel_used + $pirep->fuel_used;
 			$stats->total_landings = $stats->total_landings + $pirep->landing_rate;
 			$stats->hours_flights = $stats->hours_flights + $pirep->hours_total();
@@ -570,22 +587,76 @@ class User extends PVA_Model {
 			$stats->total_expenses = $stats->total_expenses + $pirep->get_property('_expenses');
 			$stats->total_gross = $stats->total_gross + $pirep->get_property('_gross_income');
 			$stats->total_pay = $stats->total_pay + $pirep->get_property('_pilot_pay_total');
+			
+			// Jumpseat?
+			if ($stats->current_location != $pirep->dep_icao)
+			{
+				$charge_js = TRUE;
+				
+				// Free jumpseat event?
+				if ($pirep->event)
+				{
+					$curr_event = new Event();
+					// @todo Get current event
+					
+					if ($curr_event->waiver_js)
+					{
+						$charge_js = FALSE;
+					}
+				}
+				
+				// Jumpseat waivers available?
+				if ($charge_js && $this->waivers_js > 0)
+				{
+					$this->waivers_js--;
+					$user_updates = TRUE;
+					$charge_js = FALSE;
+					$this->set_note('Jumpseat waiver used.', $this->id);
+				}
+				
+				if ($charge_js)
+				{
+					$curr_loc = new Airport(array('icao' => $stats->current_location));
+					$dep_loc = new Airport(array('icao' => $pirep->dep_icao));
+					$distance = Calculations::calculate_airport_distance($curr_loc, $dep_loc);
+					
+					if ($distance > 3000) $stats->hours_adjustment--;
+					if ($distance > 2000) $stats->hours_adjustment--;
+					if ($distance > 1000) $stats->hours_adjustment--;
+					if ($distance > 100) $stats->hours_adjustment--;
+					if ($distance > 1) $stats->hours_adjustment--;
+					$this->set_note("Jumpseat charged for {$distance} miles.", $this->id);
+				}
+			}
 
 			// Promote?
 			$rank = new Rank($this->rank_id);
 			$next_rank = $rank->next_rank();
-			if ($stats->total_hours() > $next_rank->min_hours)
+			if ($next_rank && $stats->total_hours() >= $next_rank->min_hours)
 			{
 				$this->rank_id = $next_rank->id;
 				$this->set_note('Promoted to '.$next_rank->rank, $this->id);
+				$user_updates = TRUE;
+			}
+			
+			// Online flyer award
+			if ($pirep->online)
+			{
+				$award = new Award(array('name' => 'Online Flyer'));
+				$this->grant_award($award->id);
+			}
+			
+			if ($user_updates)
+			{
 				$this->save();
 			}
 		}
-		else
+		elseif ($pirep->status == Pirep::REJECTED)
 		{
 			$stats->flights_rejected++;
 		}
 		
+		$stats->current_location = $pirep->arr_icao;
 		$stats->last_flight_date = date('Y-m-d');
 		$stats->save();
 	} 
@@ -948,6 +1019,27 @@ class User extends PVA_Model {
 	}
 	
 	/**
+	 * Finds all the managers for this user.
+	 * 
+	 * Managers are staff members, manager level or above, who are assigned to 
+	 * the same hub.
+	 * 
+	 * @return array|boolean Array of User objects for each manager or FALSE if
+	 * no managers are found.
+	 */
+	public function find_managers()
+	{
+		if (is_null($this->_manager_list))
+		{
+			$search = new User();
+			$search->hub = $this->hub;
+			$search->admin_level = '>= '.self::ACCESS_MANAGER;
+			$this->_manager_list = $search->find_all();
+		}
+		return $this->_manager_list;
+	}
+	
+	/**
 	 * Determines if user is a premium user.
 	 * 
 	 * @return boolean TRUE if user is a premium user.
@@ -1066,11 +1158,11 @@ class User extends PVA_Model {
 	 */
 	private function _set_access()
 	{
-		($this->admin_level >= 10) ? $this->_is_premium = TRUE : $this->_is_premium = FALSE;
-		($this->admin_level >= 50) ? $this->_is_admin = TRUE : $this->_is_admin = FALSE;
-		($this->admin_level >= 60) ? $this->_is_manager = TRUE : $this->_is_manager = FALSE;
-		($this->admin_level >= 70) ? $this->_is_exec = TRUE : $this->_is_exec = FALSE;
-		($this->admin_level >= 90) ? $this->_is_super = TRUE : $this->_is_super = FALSE;
+		($this->admin_level >= self::ACCESS_PREMIUM) ? $this->_is_premium = TRUE : $this->_is_premium = FALSE;
+		($this->admin_level >= self::ACCESS_ADMIN) ? $this->_is_admin = TRUE : $this->_is_admin = FALSE;
+		($this->admin_level >= self::ACCESS_MANAGER) ? $this->_is_manager = TRUE : $this->_is_manager = FALSE;
+		($this->admin_level >= self::ACCESS_EXEC) ? $this->_is_exec = TRUE : $this->_is_exec = FALSE;
+		($this->admin_level >= self::ACCESS_SUPER) ? $this->_is_super = TRUE : $this->_is_super = FALSE;
 	}
 	
 	/**

@@ -1,6 +1,20 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 $config = array(
+		'acars_processor/file_pirep' => array(
+				array(
+						'field' => 'user_id',
+						'label' => 'User ID',
+						'rules' => 'trim|required|xss_clean|numeric',
+				),
+				array(
+						'field' => 'client',
+						'label' => 'Client',
+						'rules' => 'trim|required|xss_clean',
+				),
+		),
+		'acars_processor/update' => array(
+		),
 		'articles/edit' => array(
 				array(
 						'field' => 'pagetitle',
@@ -32,7 +46,7 @@ $config = array(
 				array(
 						'field' => 'email',
 						'label' => 'Email',
-						'rules' => 'trim|required|xss_clean|valid_email]',
+						'rules' => 'trim|required|xss_clean|valid_email',
 						),
 				),
 		
@@ -140,7 +154,7 @@ $config = array(
 				array(
 						'field' => 'email',
 						'label' => 'Email',
-						'rules' => 'trim|required|xss_clean|valid_email]',
+						'rules' => 'trim|required|xss_clean|valid_email',
 						),
 				),
 		);

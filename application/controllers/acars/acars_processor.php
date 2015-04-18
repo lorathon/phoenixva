@@ -92,7 +92,32 @@ class Acars_processor extends PVA_Controller {
 			if ($prefile_user->rank_id != $postfile_user->rank_id)
 			{
 				// User promoted
+				$this->data['user'] = $postfile_user;
+				$this->data['rank'] = new Rank($postfile_user->rank_id);
 				$this->_send_email('promotion', $postfile_user->email, "You've Been Promoted!", $this->data);
+			}
+			
+			if ($pirep->status == Pirep::REJECTED)
+			{
+				// Notify user their PIREP was rejected
+				$this->data['user'] = $postfile_user;
+				$this->_send_email('pirep_rejected', $postfile_user->email, 'PIREP Rejected', $this->data);
+			}
+			
+			if ($pirep->status == Pirep::HOLDING)
+			{
+				// Notify user that the PIREP is held
+				$this->data['user'] = $postfile_user;
+				$this->_send_email('pirep_holding', $postfile_user->email, 'PIREP Held', $this->data);
+				
+				// Notify the crew center staff
+				if ($postfile_user->find_managers())
+				{
+					foreach ($postfile_user->find_managers() as $manager)
+					{
+						$this->_send_email('pirep_holding_staff', $manager->email, 'PIREP Held for '.$postfile_user->name, $this->data);
+					}
+				}
 			}
 		}
 		$this->_render();

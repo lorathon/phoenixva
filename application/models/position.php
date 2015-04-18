@@ -38,4 +38,30 @@ class Position extends PVA_Model {
 		$this->_timestamps = TRUE;
 		log_message('debug', 'Positions model Initialized');
 	}
+	
+	/**
+	 * Finds either the departure or arrival position
+	 * 
+	 * This actually finds the first or last position related to the provided
+	 * PIREP. If the pilot repositions after starting ACARS or before filing
+	 * a PIREP, an innaccurate position could be returned.
+	 * 
+	 * @param integer $pirep_id
+	 * @param boolean $departure set to FALSE to get the arrival position
+	 * @return Position|boolean a Position model if found or FALSE if not.
+	 */
+	public static function find_position($pirep_id, $departure = TRUE)
+	{
+		$position = new Position();
+		$position->pirep_id = $pirep_id;
+		if ($departure)
+		{
+			$position->_order_by = 'created asc';
+		}
+		else 
+		{
+			$position->_order_by = 'created desc';
+		}
+		return $position->find();		
+	}	
 }
