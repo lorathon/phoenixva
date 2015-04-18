@@ -52,10 +52,10 @@ $active = array(
     'class'	    => $field_class,
 );
 
-$category = array(
-    'name'	    => 'category',
-    'id'	    => 'category',
-    'value'	    => set_value('category', $record->category),
+$category_id = array(
+    'name'	    => 'category_id',
+    'id'	    => 'category_id',
+    'value'	    => set_value('category_id', $record->category_id),
     'class'         => $field_class,
 );
 
@@ -95,9 +95,9 @@ $category = array(
                     </div>
                     
                     <div class="form-group">
-                        <?php echo form_label('Category', $category['id'], $label_attributes); ?>
+                        <?php echo form_label('Category', $category_id['id'], $label_attributes); ?>
                         <div class="col-md-6">
-                            <?php echo form_dropdown('category', $categories, $category['value'], "class='{$field_class}'"); ?>
+                            <?php echo form_dropdown('category_id', $categories, $category_id['value'], "class='{$field_class}'"); ?>
                         </div>
                     </div>
 

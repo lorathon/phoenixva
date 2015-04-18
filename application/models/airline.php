@@ -4,13 +4,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Airline extends PVA_Model
 {
-    /* Airline properties */
+    
     public $fs = NULL;
     public $iata = NULL;
     public $icao = NULL;
     public $name = NULL;
     public $active = NULL;
-    public $category = NULL;
+    public $category_id = NULL;
     public $fuel_discount = NULL;
     public $airline_image = NULL;
     public $total_schedules = NULL;
@@ -39,7 +39,7 @@ class Airline extends PVA_Model
 
     function __construct($id = NULL)
     {
-	parent::__construct($id);
+        parent::__construct($id);
     }
 
     /**
@@ -47,19 +47,29 @@ class Airline extends PVA_Model
      * 
      * Airline id must be populated separately. Normal usage would be:
      * $airline = new Airline($airline_id);
-     * $airline_category = $airline->get_category();     * 
+     * $airline_category = $airline->get_category();     
+     * 
+     * OR
+     * 
+     * The following is used to get the airline category when only
+     * the value is known.  This is useful when retrieveing new
+     * airlines.
+     * $airline = new Airline();
+     * $airline_category = $airline->get_category($catergoy); 
      * 
      * @return object Airline_category
      */
-    function get_category()
+    function get_category($value = NULL)
     {
-	if (is_null($this->_cat))
-	{
-	    $this->_cat = new Airline_category();
-	    $this->_cat->value = $this->category;
-	    $this->_cat->find();
-	}
-	return $this->_cat;
+        if (!is_null($value))
+        {
+            $this->_cat = new Airline_category(array('value' => $value));
+        }
+        elseif (is_null($this->_cat))
+        {
+            $this->_cat = new Airline_category($this->category_id);
+        }
+        return $this->_cat;
     }
 
     /**
@@ -73,12 +83,12 @@ class Airline extends PVA_Model
      */
     function get_categories()
     {
-	if (is_null($this->_airline_categories))
-	{
-	    $cat = new Airline_category();
-	    $this->_airline_categories = $cat->find_all();
-	}
-	return $this->_airline_categories;
+        if (is_null($this->_airline_categories))
+        {
+            $cat = new Airline_category();
+            $this->_airline_categories = $cat->find_all();
+        }
+        return $this->_airline_categories;
     }
 
     /**
@@ -90,18 +100,18 @@ class Airline extends PVA_Model
      */
     function get_dropdown()
     {
-	$this->_limit = NULL;
-	$this->_order_by = 'name ASC';
+        $this->_limit = NULL;
+        $this->_order_by = 'name ASC';
 
-	$rows = $this->find_all();
+        $rows = $this->find_all();
 
-	$data = array();
-	$data[0] = '-- NONE --';
-	foreach ($rows as $row)
-	{
-	    $data[$row->id] = $row->name;
-	}
-	return $data;
+        $data = array();
+        $data[0] = '-- NONE --';
+        foreach ($rows as $row)
+        {
+            $data[$row->id] = $row->name;
+        }
+        return $data;
     }
 
     /**
@@ -113,15 +123,15 @@ class Airline extends PVA_Model
      */
     function get_category_dropdown()
     {
-	$cat = new Airline_category();
-	$rows = $cat->find_all();
+        $cat = new Airline_category();
+        $rows = $cat->find_all();
 
-	$data = array();
-	foreach ($rows as $row)
-	{
-	    $data[$row->value] = $row->description;
-	}
-	return $data;
+        $data = array();
+        foreach ($rows as $row)
+        {
+            $data[$row->id] = $row->description;
+        }
+        return $data;
     }
 
     /**
@@ -135,13 +145,13 @@ class Airline extends PVA_Model
      */
     function get_fleet()
     {
-	if (is_null($this->_fleet))
-	{
-	    $fleet = new Airline_aircraft();
-	    $fleet->airline_id = $this->id;
-	    $this->_fleet = $fleet->find_all();
-	}
-	return $this->_fleet;
+        if (is_null($this->_fleet))
+        {
+            $fleet = new Airline_aircraft();
+            $fleet->airline_id = $this->id;
+            $this->_fleet = $fleet->find_all();
+        }
+        return $this->_fleet;
     }
 
     /**
@@ -155,22 +165,22 @@ class Airline extends PVA_Model
      */
     function get_fleet_airlines($airframe_id = NULL)
     {
-	if (is_null($this->_airlines))
-	{
-	    $this->_airlines = array();
-	    $fleet = new Airline_aircraft();
-	    $fleet->airframe_id = $airframe_id;
-	    $aircraft = $fleet->find_all();
+        if (is_null($this->_airlines))
+        {
+            $this->_airlines = array();
+            $fleet = new Airline_aircraft();
+            $fleet->airframe_id = $airframe_id;
+            $aircraft = $fleet->find_all();
 
-	    if ($aircraft)
-	    {
-		foreach ($aircraft as $obj)
-		{
-		    $this->_airlines[] = new Airline($obj->airline_id);
-		}
-	    }
-	}
-	return $this->_airlines;
+            if ($aircraft)
+            {
+                foreach ($aircraft as $obj)
+                {
+                    $this->_airlines[] = new Airline($obj->airline_id);
+                }
+            }
+        }
+        return $this->_airlines;
     }
 
     /**
@@ -185,11 +195,11 @@ class Airline extends PVA_Model
      */
     function check_aircraft($aircraft_sub_id)
     {
-	if (is_null($this->id) OR is_null($aircraft_sub_id))
-	    return;
+        if (is_null($this->id) OR is_null($aircraft_sub_id))
+            return;
 
-	$aircraft = new Airline_aircraft(array('airline_id' => $this->id));
-	$aircraft->check_aircraft($aircraft_sub_id);
+        $aircraft = new Airline_aircraft(array('airline_id' => $this->id));
+        $aircraft->check_aircraft($aircraft_sub_id);
     }
 
     /**
@@ -200,11 +210,11 @@ class Airline extends PVA_Model
      */
     function get_aircraft($aircraft_id)
     {
-	if (is_null($this->_aircraft))
-	{
-	    $this->_aircraft = new Airline_aircraft($aircraft_id);
-	}
-	return $this->_aircraft;
+        if (is_null($this->_aircraft))
+        {
+            $this->_aircraft = new Airline_aircraft($aircraft_id);
+        }
+        return $this->_aircraft;
     }
 
     /**
@@ -219,10 +229,10 @@ class Airline extends PVA_Model
      */
     function check_destination($airport_id)
     {
-	if (is_null($this->id) OR is_null($airport_id))
-	    return;
+        if (is_null($this->id) OR is_null($airport_id))
+            return;
 
-	new Airline_airport(array('airline_id' => $this->id, 'airport_id' => $airport_id), TRUE);
+        new Airline_airport(array('airline_id' => $this->id, 'airport_id' => $airport_id), TRUE);
     }
 
     /**
@@ -237,12 +247,12 @@ class Airline extends PVA_Model
      */
     function get_destinations()
     {
-	if (is_null($this->_destinations))
-	{
-	    $airline_airport = new Airline_airport(array('airline_id' => $this->id));
-	    $this->_destinations = $airline_airport->get_destinations();
-	}
-	return $this->_destinations;
+        if (is_null($this->_destinations))
+        {
+            $airline_airport = new Airline_airport(array('airline_id' => $this->id));
+            $this->_destinations = $airline_airport->get_destinations();
+        }
+        return $this->_destinations;
     }
 
 }
@@ -257,8 +267,8 @@ class Airline_category extends PVA_Model
 
     function __construct($id = NULL)
     {
-	parent::__construct($id);
-	$this->_table_name = 'airlines_categories';
+        $this->_table_name = 'airlines_categories';
+        parent::__construct($id);
     }
 
 }
@@ -283,12 +293,12 @@ class Airline_aircraft extends PVA_Model
 
     function __construct($id = NULL, $create = FALSE)
     {
-	$this->_timestamps = TRUE;
-	parent::__construct($id);
-	if (is_null($this->id) && $create)
-	{
-	    $this->save();
-	}
+        $this->_timestamps = TRUE;
+        parent::__construct($id);
+        if (is_null($this->id) && $create)
+        {
+            $this->save();
+        }
     }
 
     /**
@@ -305,29 +315,29 @@ class Airline_aircraft extends PVA_Model
      */
     function check_aircraft($aircraft_sub_id = NULL)
     {
-	if (is_null($aircraft_sub_id))
-	    return;
+        if (is_null($aircraft_sub_id))
+            return;
 
-	$aircraft_sub = new Aircraft_sub($aircraft_sub_id);
-	$equips = explode(' ', $aircraft_sub->equips);
+        $aircraft_sub = new Aircraft_sub($aircraft_sub_id);
+        $equips = explode(' ', $aircraft_sub->equips);
 
-	if ($equips)
-	{
-	    foreach ($equips as $equip)
-	    {
-		$airframe = new Airframe(array('iata' => $equip));
-		$aircraft = new Airline_aircraft(array('airline_id'=>$this->airline_id, 'airframe_id'=>$airframe->id));
+        if ($equips)
+        {
+            foreach ($equips as $equip)
+            {
+                $airframe = new Airframe(array('iata' => $equip));
+                $aircraft = new Airline_aircraft(array('airline_id' => $this->airline_id, 'airframe_id' => $airframe->id));
 
-		if (!is_null($aircraft->id))
-		    continue;
+                if (!is_null($aircraft->id))
+                    continue;
 
-		$aircraft->pax_first = $airframe->pax_first;
-		$aircraft->pax_business = $airframe->pax_business;
-		$aircraft->pax_economy = $airframe->pax_economy;
-		$aircraft->payload = $airframe->payload;
-		$aircraft->save();
-	    }
-	}
+                $aircraft->pax_first = $airframe->pax_first;
+                $aircraft->pax_business = $airframe->pax_business;
+                $aircraft->pax_economy = $airframe->pax_economy;
+                $aircraft->payload = $airframe->payload;
+                $aircraft->save();
+            }
+        }
     }
 
     /**
@@ -337,13 +347,13 @@ class Airline_aircraft extends PVA_Model
      */
     function get_airframe()
     {
-	if (is_null($this->_airframe))
-	{
-	    $this->_airframe = new Airframe($this->airframe_id);
-	}
-	return $this->_airframe;
+        if (is_null($this->_airframe))
+        {
+            $this->_airframe = new Airframe($this->airframe_id);
+        }
+        return $this->_airframe;
     }
-    
+
 }
 
 class Airline_airport extends PVA_Model
@@ -357,11 +367,11 @@ class Airline_airport extends PVA_Model
 
     function __construct($id = NULL, $create = FALSE)
     {
-	parent::__construct($id);
-	if (is_null($this->id) && $create)
-	{
-	    $this->save();
-	}
+        parent::__construct($id);
+        if (is_null($this->id) && $create)
+        {
+            $this->save();
+        }
     }
 
     /**
@@ -372,18 +382,18 @@ class Airline_airport extends PVA_Model
      */
     function get_destinations()
     {
-	if (is_null($this->_destinations))
-	{
-	    $this->_destinations = array();
-	    if ($destinations = $this->find_all())
-	    {
-		foreach ($destinations as $airport)
-		{
-		    $this->_destinations[] = new Airport($airport->airport_id);
-		}
-	    }
-	}
-	return $this->_destinations;
+        if (is_null($this->_destinations))
+        {
+            $this->_destinations = array();
+            if ($destinations = $this->find_all())
+            {
+                foreach ($destinations as $airport)
+                {
+                    $this->_destinations[] = new Airport($airport->airport_id);
+                }
+            }
+        }
+        return $this->_destinations;
     }
-    
+
 }
