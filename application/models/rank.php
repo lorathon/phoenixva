@@ -13,7 +13,7 @@ class Rank extends PVA_Model {
 	protected $_users	    = NULL;
 	protected $_user_count	    = NULL;
 		
-	function __construct($id = NULL)
+	public function __construct($id = NULL)
 	{
 		parent::__construct($id);
 		
@@ -24,14 +24,19 @@ class Rank extends PVA_Model {
 	/**
 	 * Finds the next rank.
 	 * 
+	 * This function can be used to find the next rank either above or below
+	 * the current rank.
+	 * 
+	 * @param boolean $down Set to TRUE to find the previous rank.
 	 * @return boolean|object Fully populated Rank object or FALSE on failure
 	 */
-	function next_rank()
+	public function next_rank($down = FALSE)
 	{
 		if (is_null($this->id)) return FALSE;
 				
 		// Query the database
-		$this->db->where('min_hours >', $this->min_hours);
+		($down) ? $op = '<' : $op = '>';
+		$this->db->where('min_hours '.$op, $this->min_hours);
 		$query = $this->db->get($this->_table_name, 1);
 		 
 		// Did we get a result?
@@ -53,7 +58,7 @@ class Rank extends PVA_Model {
 		return FALSE;
 	}
 	
-	function get_users()
+	public function get_users()
 	{
 	    if(is_null($this->_users))
 	    {
@@ -64,7 +69,7 @@ class Rank extends PVA_Model {
 	    return $this->_users;
 	}
 	
-	function get_user_count()
+	public function get_user_count()
 	{
 	    if ( is_null($this->_user_count))
 	    {		
