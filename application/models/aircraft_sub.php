@@ -30,6 +30,7 @@ class Aircraft_sub extends PVA_Model
     public function find_sub($equip = NULL)
     {
         $this->equips = $equip;
+        $this->_limit = 1;
         $sub = $this->find_all(TRUE);
 
         if (!is_null($sub[0]->id))
