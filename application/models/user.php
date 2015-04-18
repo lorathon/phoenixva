@@ -499,6 +499,14 @@ class User extends PVA_Model {
 		$this->name = $this->_set_name($this->name);
 		$this->_set_retirement('+14 days');
 		
+		// Set starting location
+		if (is_null($this->_user_stats->current_location))
+		{
+			$airport = new Airport($this->hub);
+			$this->_user_stats->current_location = $airport->icao;
+			$this->grant_jumpseat();
+		}
+		
 		// Prep the data
 		$user_parms = $this->_prep_data();
 		
@@ -588,47 +596,6 @@ class User extends PVA_Model {
 			$stats->total_gross = $stats->total_gross + $pirep->get_property('_gross_income');
 			$stats->total_pay = $stats->total_pay + $pirep->get_property('_pilot_pay_total');
 			
-			// Jumpseat?
-			if ($stats->current_location != $pirep->dep_icao)
-			{
-				$charge_js = TRUE;
-				
-				// Free jumpseat event?
-				if ($pirep->event)
-				{
-					$curr_event = new Event();
-					// @todo Get current event
-					
-					if ($curr_event->waiver_js)
-					{
-						$charge_js = FALSE;
-					}
-				}
-				
-				// Jumpseat waivers available?
-				if ($charge_js && $this->waivers_js > 0)
-				{
-					$this->waivers_js--;
-					$user_updates = TRUE;
-					$charge_js = FALSE;
-					$this->set_note('Jumpseat waiver used.', $this->id);
-				}
-				
-				if ($charge_js)
-				{
-					$curr_loc = new Airport(array('icao' => $stats->current_location));
-					$dep_loc = new Airport(array('icao' => $pirep->dep_icao));
-					$distance = Calculations::calculate_airport_distance($curr_loc, $dep_loc);
-					
-					if ($distance > 3000) $stats->hours_adjustment--;
-					if ($distance > 2000) $stats->hours_adjustment--;
-					if ($distance > 1000) $stats->hours_adjustment--;
-					if ($distance > 100) $stats->hours_adjustment--;
-					if ($distance > 1) $stats->hours_adjustment--;
-					$this->set_note("Jumpseat charged for {$distance} miles.", $this->id);
-				}
-			}
-
 			// Promote?
 			$rank = new Rank($this->rank_id);
 			$next_rank = $rank->next_rank();
@@ -1037,6 +1004,107 @@ class User extends PVA_Model {
 			$this->_manager_list = $search->find_all();
 		}
 		return $this->_manager_list;
+	}
+	
+	/**
+	 * Grants a jumpseat to the user
+	 * 
+	 * Users can have up to 128 jumpseats. This increases the number of jumpseats
+	 * they have available by 1.
+	 * 
+	 * @return boolean TRUE if granted, FALSE otherwise
+	 */
+	public function grant_jumpseat()
+	{
+		if ($this->find())
+		{
+			$this->waivers_js++;
+			$this->save();
+			return TRUE;
+		}
+		return FALSE;
+	}
+	
+	/**
+	 * Charges a jumpseat
+	 * 
+	 * Will use a waiver if the user has one, otherwise charges an hours adjustment
+	 * based on the distance between the user's current location and the ICAO of
+	 * the airport passed in.
+	 * 
+	 * @param string $icao of the departure airport
+	 * @return boolean TRUE if jumpseat charged or waiver used. FALSE if the User
+	 * was not found.
+	 */
+	public function charge_jumpseat($icao)
+	{
+		if ($this->find())
+		{
+			// Jumpseat waivers available?
+			if ($this->waivers_js > 0)
+			{
+				$this->waivers_js--;
+				$this->save();
+				$this->set_note("Jumpseat waiver used to get to {$icao}.", $this->id);
+			}
+			else
+			{
+				$stats = $this->get_user_stats();
+				$curr_loc = new Airport(array('icao' => $stats->current_location));
+				$dep_loc = new Airport(array('icao' => $icao));
+				$distance = Calculations::calculate_airport_distance($curr_loc, $dep_loc);
+					
+				if ($distance > 3000) $stats->hours_adjustment--;
+				if ($distance > 2000) $stats->hours_adjustment--;
+				if ($distance > 1000) $stats->hours_adjustment--;
+				if ($distance > 100) $stats->hours_adjustment--;
+				if ($distance > 1) $stats->hours_adjustment--;
+				$stats->save();
+				$this->set_note("Jumpseat charged for {$distance} miles.", $this->id);
+			}
+			return TRUE;
+		}
+		return FALSE;
+	}
+	
+	/**
+	 * Grants a CATegory waiver to the user
+	 * 
+	 * Users can have up to 128 category waivers allowing them to fly any aircraft
+	 * in the fleet one time per waiver. This method increases the number of cat
+	 * waivers they have available by 1.
+	 * 
+	 * @return boolean TRUE if granted, FALSE otherwise
+	 */
+	public function grant_cat_waiver()
+	{
+		if ($this->find())
+		{
+			$this->waivers_cat++;
+			$this->save();
+			return TRUE;
+		}
+		return FALSE;
+	}
+	
+	/**
+	 * Charges a CATegory waiver
+	 * 
+	 * @return boolean TRUE if a waiver was charged. FALSE otherwise.
+	 */
+	public function charge_cat_waiver()
+	{
+		if ($this->find())
+		{
+			if ($this->waivers_cat > 0)
+			{
+				$this->waivers_cat--;
+				$this->save();
+				$this->set_note('CAT waiver charged.', $this->id);
+				return TRUE;
+			}
+		}
+		return FALSE;
 	}
 	
 	/**
