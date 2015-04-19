@@ -319,11 +319,14 @@ class Pirep extends PVA_Model {
 		
 		foreach ($pos_list as $position)
 		{
-			// @todo Need to determine when starting takeoff roll to set $taxi = FALSE;
+			if (!$landed && !$inflight && $position->ground_speed > 30)
+			{
+				// Assume takeoff roll
+				$taxi = FALSE;
+			}
 			if (!$inflight && $position->vertical_speed > 100)
 			{
 				// Takeoff
-				$taxi = FALSE;
 				$inflight = TRUE;
 				$prev_fob = $position->fuel_onboard;
 			}
@@ -364,7 +367,8 @@ class Pirep extends PVA_Model {
 			if ($taxi && $position->ground_speed > 30)
 			{
 				$this->status = self::HOLDING;
-				$this->set_note("[SYSTEM] - Automatically holding due to excessive taxi speed at {$location}.", 0);
+				$this->set_note("[SYSTEM] - Automatically holding due to excessive taxi speed ("
+						.$position->ground_speed."kts) at {$location}.", 0);
 			}
 		}
 		
@@ -373,6 +377,10 @@ class Pirep extends PVA_Model {
 		{
 			$this->status = self::REJECTED;
 			$this->set_note('[SYSTEM] - Automatically rejected due to landing rate in excess of 1,000 feet per minute.', 0);
+		}
+		if ($this->landing_rate >= 800)
+		{
+			$this->set_note('[SYSTEM] - Maintenance event: Struture inspection required due to hard landing.', 0);
 		}
 
 		/* 

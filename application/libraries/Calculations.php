@@ -147,11 +147,10 @@ class Calculations
 	 */
 	public static function heading_difference($hdg1, $hdg2)
 	{
-		// XXX Not working yet
 		$diff = abs($hdg1 - $hdg2);
 		if ($diff > 180)
 		{
-			$diff = $diff - 180;
+			$diff = 360 - $diff;
 		}
 		return $diff;
 	}

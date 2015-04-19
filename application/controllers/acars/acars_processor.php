@@ -91,10 +91,17 @@ class Acars_processor extends PVA_Controller {
 			$postfile_user = new User($user_id);
 			if ($prefile_user->rank_id != $postfile_user->rank_id)
 			{
-				// User promoted
 				$this->data['user'] = $postfile_user;
 				$this->data['rank'] = new Rank($postfile_user->rank_id);
-				$this->_send_email('promotion', $postfile_user->email, "You've Been Promoted!", $this->data);
+				$check_rank = new Rank($prefile_user->rank_id);
+				if ($check_rank->next_rank() == $this->data['rank'])
+				{
+					$this->_send_email('promotion', $postfile_user->email, "You've Been Promoted!", $this->data);
+				}
+				else 
+				{
+					$this->_send_email('demotion', $postfile_user->email, "You've Been Demoted", $this->data);
+				}
 			}
 			
 			if ($pirep->status == Pirep::REJECTED)
