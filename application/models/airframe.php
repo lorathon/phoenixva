@@ -1,51 +1,50 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php
+
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Airframe extends PVA_Model
-{    
-    public $iata		= NULL;
-    public $icao		= NULL;    
-    public $name		= NULL;
-    public $aircraft_sub_id	= NULL;
-    public $category		= NULL;
-    public $regional		= NULL;
-    public $turboprop		= NULL;
-    public $jet			= NULL;
-    public $widebody		= NULL;
-    public $pax_first		= NULL;
-    public $pax_business	= NULL;
-    public $pax_economy		= NULL;
-    public $payload		= NULL;
-    public $max_range		= NULL;
-    public $oew			= NULL;
-    public $mzfw		= NULL;    
-    public $mtow		= NULL; 
-    public $mlw			= NULL;
-    public $enabled		= NULL;
-    
+{
+    /* Airframe properties */
+
+    public $iata = NULL;
+    public $icao = NULL;
+    public $name = NULL;
+    public $aircraft_sub_id = NULL;
+    public $category = NULL;
+    public $regional = NULL;
+    public $turboprop = NULL;
+    public $jet = NULL;
+    public $widebody = NULL;
+    public $pax_first = NULL;
+    public $pax_business = NULL;
+    public $pax_economy = NULL;
+    public $payload = NULL;
+    public $max_range = NULL;
+    public $oew = NULL;
+    public $mzfw = NULL;
+    public $mtow = NULL;
+    public $mlw = NULL;
+    public $enabled = NULL;
+
     public function __construct($id = NULL)
     {
-	$this->_order_by = 'name ASC';
-	$this->_timestamps = TRUE;
-        parent::__construct($id);	
-    }  
-    
-    function enable_airframe()
-    {
-	$this->enabled = 1;
-	$this->save();
+        $this->_order_by = 'name ASC';
+        $this->_timestamps = TRUE;
+        parent::__construct($id);
     }
     
-    function check_sub()
+    function update_categories()
     {
-	$subs = new Aircraft_sub();
-	$subs->equips = $this->iata;
-	$sub = $subs->find_all(TRUE);
-	
-	if($sub)
-	{
-	    $this->aircraft_sub_id	= $sub[0]->id;
-	    $this->category		= $sub[0]->category;	    
-	}	    
+        $category = $this->category;
+        $this->category = NULL;
+        $this->_limit = $this->find_all(FALSE, TRUE);
+        $airframes = $this->find_all();
+        foreach ($airframes as $obj)
+        {
+            $obj->category = $category;
+            $obj->save();
+        }
+        $this->category = $category;
     }
-}
 
+}
