@@ -43,7 +43,7 @@
 						<td><?php echo $row->icao; ?></td>
 						<td><?php echo $row->name; ?></td>
 						<td><?php echo "$row->pax_first  |  $row->pax_business  |  $row->pax_economy"; ?></td>
-						<td><font color="<?php if($row->max_cargo == 0) echo "#ff0000"; ?>"><?php echo $row->payload; ?> lbs</td>
+						<td><font color="<?php if($row->payload == 0) echo "#ff0000"; ?>"><?php echo $row->payload; ?> lbs</td>
 						<td><font color="<?php if($row->oew == 0) echo "#ff0000"; ?>"><?php echo $row->oew; ?> lbs</td>
 						<td><font color="<?php if($row->mzfw == 0) echo "#ff0000"; ?>"><?php echo $row->mzfw; ?> lbs</td>
 						<td><font color="<?php if($row->mtow == 0) echo "#ff0000"; ?>"><?php echo $row->mtow; ?> lbs</td>
