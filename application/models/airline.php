@@ -96,12 +96,14 @@ class Airline extends PVA_Model
      * to be used in a dropdown form item
      * [airline_id]airline_name
      * 
+     * @param Airline Status boolean $active
      * @return array 
      */
-    function get_dropdown()
+    function get_dropdown($active = TRUE)
     {
         $this->_limit = NULL;
         $this->_order_by = 'name ASC';
+	$this->active = $active;
 
         $rows = $this->find_all();
 
