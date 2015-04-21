@@ -59,6 +59,11 @@ class Award extends PVA_Model {
             parent::__construct($id);
 	} 
         
+	/**
+	 * Returns the award type of this award
+	 * 
+	 * @return object Award_type object
+	 */
         function get_award_type() 
         {                
             if (is_null($this->_award_type)) {
@@ -67,18 +72,29 @@ class Award extends PVA_Model {
             return $this->_award_type;
         }   
 	
+	/**
+	 * Return the number of Awards with
+	 * Award_type_id
+	 * 
+	 * @return int Award count
+	 */
 	function get_awards_count()
 	{
 	    if ( is_null($this->_awards_count))
 	    {		
 		$award = new Award();
 		$award->award_type_id = $this->award_type_id;
-		$awards = $award->find_all();
-		$this->_awards_count = ($awards) ? count($awards) : 0;
+		$this->_awards_count = $award->find_all(FALSE, TRUE);
 	    }
 	    return $this->_awards_count;
 	}
 	
+	/**
+	 * Return array of Users that have been
+	 * awarded the award with Award_id
+	 * 
+	 * @return array of User Objects
+	 */
 	function get_users()
 	{
 	    if(is_null($this->_users))
@@ -104,6 +120,12 @@ class Award extends PVA_Model {
             return $this->_users;
 	}
         
+	/**
+	 * Return the number of users that have
+	 * been awarded the awrd with Award_id 
+	 * 
+	 * @return int count of users with Award
+	 */
         function get_user_count()
         {       
             if(is_null($this->_user_count))
@@ -113,8 +135,15 @@ class Award extends PVA_Model {
                 $this->_user_count = $this->db->count_all_results();
             }
             return $this->_user_count;
-        }
+        }	
 	
+	/**
+	 * Gets ALL awards and constructs an array
+	 * to be used in a dropdown form item
+	 * [award_id]award_name
+	 * 
+	 * @return array 
+	 */
 	function get_dropdown()
         {
 	    $this->_limit = NULL;
@@ -129,7 +158,6 @@ class Award extends PVA_Model {
                 $data[$row->id] = $row->name;
             }      
             return $data;
-        }
-        
+        }        
         
 }
