@@ -96,4 +96,24 @@ class Airport extends PVA_Model
 	return $data;
     }
 
+    function get_autocomplete($name)
+    {
+	$this->name = $name;
+	$airports = $this->find_all(TRUE);
+	if ($airports > 0)
+	{
+	    foreach ($airports as $row)
+	    {
+		$new_row['label'] = htmlentities(stripslashes($row->name));
+		$new_row['value'] = htmlentities(stripslashes($row->name));
+		$new_row['id'] = $row->id;
+		$new_row['icao'] = $row->icao;
+		$new_row['iata'] = $row->iata;
+		$row_set[] = $new_row; //build an array
+	    }
+	    $this->output->enable_profiler(FALSE);
+	    echo json_encode($row_set); //format the array into json data
+	}
+    }
+
 }
