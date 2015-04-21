@@ -33,6 +33,10 @@ class Airframe extends PVA_Model
         parent::__construct($id);
     }
     
+    /**
+     * Updates airframes on any
+     * Aircraft_sub catergory changes
+     */
     function update_categories()
     {
         $category = $this->category;
