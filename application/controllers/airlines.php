@@ -31,7 +31,7 @@ class Airlines extends PVA_Controller
 	{
 	    $airline->regional = FALSE;
 	}
-	$airline->active = 1;
+	$airline->active = TRUE;
 
 	$airlines = $airline->find_all();
 
