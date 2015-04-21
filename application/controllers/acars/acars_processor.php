@@ -8,14 +8,70 @@ class Acars_processor extends PVA_Controller {
 		$this->load->library('form_validation');
 	}
 	
+	/**
+	 * Files a position report
+	 * 
+	 * If the report does not include a PIREP ID and the pilot does not have an
+	 * open PIREP, this will open a PIREP using the position report as the 
+	 * departure point.
+	 */
 	public function update()
 	{
 		if ($this->form_validation->run())
 		{
+			$user_id = $this->form_validation->set_value('user_id');
+			$client = $this->form_validation->set_value('client');
+			$pirep_id = $this->form_validation->set_value('pirep_id'); 
 			
+			if ($pirep_id == 0)
+			{
+				$search = new Pirep();
+				$search->user_id = $user_id;
+				$pirep = $search->find_open();
+					
+				if (is_null($pirep->id))
+				{
+					$pirep->dep_lat = $this->form_validation->set_value('lat');
+					$pirep->dep_long = $this->form_validation->set_value('long');
+					$pirep->open();
+				}
+				$pirep_id = $pirep->id;
+			}
+				
+			$position = new Position();
+			$position->user_id = $user_id;
+			$position->pirep_id = $pirep_id;
+			$position->altitude = $this->form_validation->set_value('altitude');
+			$position->altitude_agl = $this->form_validation->set_value('altitude_agl');
+			$position->altitude_msl = $this->form_validation->set_value('altitude_msl');
+			$position->bank = $this->form_validation->set_value('bank');
+			$position->flown_time = $this->form_validation->set_value('flown_time');
+			$position->fuel_onboard = $this->form_validation->set_value('fuel_onboard');
+			$position->ground_speed = $this->form_validation->set_value('ground_speed');
+			$position->heading = $this->form_validation->set_value('heading');
+			$position->indicated_airspeed = $this->form_validation->set_value('indicated_airspeed');
+			$position->ip_address = $this->form_validation->set_value('ip_address');
+			$position->landed = $this->form_validation->set_value('landed');
+			$position->lat = $this->form_validation->set_value('lat');
+			$position->long = $this->form_validation->set_value('long');
+			$position->load = $this->form_validation->set_value('load');
+			$position->ontime = $this->form_validation->set_value('ontime');
+			$position->phase = $this->form_validation->set_value('phase');
+			$position->pitch = $this->form_validation->set_value('pitch');
+			$position->remain_dist = $this->form_validation->set_value('remain_dist');
+			$position->remain_time = $this->form_validation->set_value('remain_time');
+			$position->true_airspeed = $this->form_validation->set_value('true_airspeed');
+			$position->vertical_speed = $this->form_validation->set_value('vertical_speed');
+			$position->warning = $this->form_validation->set_value('warning');
+			$position->warning_detail = $this->form_validation->set_value('warning_detail');
+			$position->save();
 		}
+		$this->_render();
 	}
 	
+	/**
+	 * Files a PIREP at the completion of a flight.
+	 */
 	public function file_pirep()
 	{
 		if ($this->form_validation->run())

@@ -44,7 +44,7 @@ class Kacars extends Acars_Base
 		// Switch data contains the function to run
 		$function = $xml->switch->data;
 		
-		if (function_exists($this->$function))
+		if (method_exists($this, $function))
 		{
 			$this->_user_id = $xml->data->pilotID;
 			if ( ! is_int($this->_user_id))
@@ -175,8 +175,7 @@ class Kacars extends Acars_Base
 			$message = implode($this->_field_separator, $fields);
 
 			// Dispatch to appropriate handler
-			// XXX Need a better way to handle the processor location
-			$this->dispatch($message, '/cjtop/acars/acars_processor/update');
+			$this->dispatch($message, $this->_acars_processor_path.'update');
 			log_message('debug', 'Live Update returning to client');
 		}
 		else
@@ -253,8 +252,7 @@ class Kacars extends Acars_Base
 			$message = implode($this->_field_separator, $fields);
 
 			// Dispatch to appropriate handler
-			// XXX Need a better way to handle the processor location
-			$this->dispatch($message, '/cjtop/acars/acars_processor/file_pirep');
+			$this->dispatch($message, $this->_acars_processor_path.'file_pirep');
 			log_message('debug', 'PIREP Returning to client');
 			$this->_params['pirepStatus'] = 1;
 			

@@ -264,52 +264,18 @@ class Pirep extends PVA_Model {
 	{
 		$this->status = self::APPROVED;
 		
-		// Check airports
-		$dep_airport = new Airport(array('icao' => $this->dep_icao));
-		$dep_position = Position::find_position($this->id);
-		$dep_distance = Calculations::calculate_distance(
-				$dep_position->lat, 
-				$dep_position->long,
-				$dep_airport->lat,
-				$dep_airport->long
-				);
-		if ($dep_distance > 10)
-		{
-			$this->status = self::REJECTED;
-			$this->set_note('[SYSTEM] - Automatically rejected due to wrong departure airport.', 0);
-		}
-		elseif ($dep_distance > 5)
-		{
-			$this->status = self::HOLDING;
-			$this->set_note('[SYSTEM] - Automatically holding due to excessive departure distance.', 0);
-		}
+		// Check departure airport
+		$this->_check_airport();
 		
-		$arr_airport = new Airport(array('icao' => $this->arr_icao));
-		$arr_position = Position::find_position($pirep_id, FALSE);
-		$arr_distance = Calculations::calculate_distance(
-				$arr_position->lat,
-				$arr_position->long,
-				$arr_airport->lat,
-				$arr_airport->long
-				);
-		if ($arr_distance > 10)
-		{
-			$this->status = self::REJECTED;
-			$this->set_note('[SYSTEM] - Automatically rejected due to wrong arrival airport.', 0);
-		}
-		elseif ($arr_distance > 5)
-		{
-			$this->status = self::HOLDING;
-			$this->set_note('[SYSTEM] - Automatically holding due to excessive arrival distance.', 0);
-		}
+		// Check arrival airport
+		$this->_check_airport(FALSE);
 		
-		if ($this->afk_elapsed >= 60)
-		{
-			$this->status = self::REJECTED;
-			$this->set_note('[SYSTEM] - Automatically rejected due to excessive AFK.', 0);
-		}
+		// Check AFK
+		$this->_check_afk();
 		
 		// FOQA Checks
+		$flight_phase = 'preflight';  //preflight, engine start, pushback, taxi, takeoff, climb, cruise, descent, holding, approach, landing, taxi, and postflight
+		$next_phase = 'engine_start';
 		$taxi = TRUE;
 		$inflight = FALSE;
 		$landed = FALSE;
@@ -319,6 +285,51 @@ class Pirep extends PVA_Model {
 		
 		foreach ($pos_list as $position)
 		{
+			switch ($flight_phase)
+			{
+				case 'preflight':
+					break;
+				case 'engine_start':
+					$fob = $position->fuel_onboard;
+					$next_phase = 'pushback';
+					break;
+				case 'pushback':
+					break;
+				case 'taxi':
+					$next_phase = ($landed) ? 'postflight' : 'takeoff';
+					$this->_check_speed($position, $flight_phase);
+					break;
+				case 'takeoff':
+					$next_phase = 'climb';
+					$fob = $this->_check_fuel($position, $fob);
+					$this->_check_speed($position, $flight_phase);
+					break;
+				case 'climb':
+					$next_phase = 'cruise';
+					$fob = $this->_check_fuel($position, $fob);
+					break;
+				case 'cruise':
+					$next_phase = 'descent';
+					$fob = $this->_check_fuel($position, $fob);
+					break;
+				case 'descent':
+					$fob = $this->_check_fuel($position, $fob);
+					break;
+				case 'holding':
+					$fob = $this->_check_fuel($position, $fob);
+					break;
+				case 'approach':
+					$next_phase = 'landing';
+					$fob = $this->_check_fuel($position, $fob);
+					break;
+				case 'landing':
+					$next_phase = 'taxi';
+					$fob = $this->_check_fuel($position, $fob);
+					break;
+				case 'postflight':
+					break;
+			}
+			
 			if (!$landed && !$inflight && $position->ground_speed > 30)
 			{
 				// Assume takeoff roll
@@ -341,18 +352,6 @@ class Pirep extends PVA_Model {
 				
 				$location = $position->lat.' / '.$position->long;
 				
-				// Midair Refueling
-				if (!$landed && $position->fuel_onboard > $prev_fob)
-				{
-					$this->status = self::REJECTED;
-					$this->set_note("[SYSTEM] - Automatically rejected due to midair refueling at {$location}.", 0);
-				}
-				if (!$landed && $position->fuel_onboard == $prev_fob)
-				{
-					$this->status = self::HOLDING;
-					$this->set_note("[SYSTEM] - Automatically holding due to no fuel burn at {$location}.", 0);
-				}
-				$prev_fob = $position->fuel_onboard;
 			}
 			if ($landed)
 			{
@@ -361,27 +360,11 @@ class Pirep extends PVA_Model {
 				{
 					$taxi = TRUE;
 				}
-			}
-			
-			// Taxi speed check
-			if ($taxi && $position->ground_speed > 30)
-			{
-				$this->status = self::HOLDING;
-				$this->set_note("[SYSTEM] - Automatically holding due to excessive taxi speed ("
-						.$position->ground_speed."kts) at {$location}.", 0);
-			}
+			}			
 		}
 		
 		// Excessive landing rate
-		if ($this->landing_rate >= 1000)
-		{
-			$this->status = self::REJECTED;
-			$this->set_note('[SYSTEM] - Automatically rejected due to landing rate in excess of 1,000 feet per minute.', 0);
-		}
-		if ($this->landing_rate >= 800)
-		{
-			$this->set_note('[SYSTEM] - Maintenance event: Struture inspection required due to hard landing.', 0);
-		}
+		$this->_check_landing();
 
 		/* 
 		 * User level checks
@@ -429,6 +412,99 @@ class Pirep extends PVA_Model {
 			$this->status = self::HOLDING;
 		}
 
+	}
+	
+	private function _check_afk()
+	{
+		if ($this->afk_elapsed >= 60)
+		{
+			$this->status = self::REJECTED;
+			$this->set_note('[SYSTEM] - Automatically rejected due to excessive AFK.', 0);
+		}
+	}
+	
+	private function _check_airport($departure = TRUE)
+	{
+		$icao = ($departure) ? $this->dep_icao : $this->arr_icao;
+		$which = ($departure) ? 'departure' : 'arrival';
+		$airport = new Airport(array('icao' => $icao));
+		$position = Position::find_position($this->id, $departure);
+		$distance = Calculations::calculate_distance(
+				$position->lat,
+				$position->long,
+				$airport->lat,
+				$airport->long
+		);
+		if ($distance > 10)
+		{
+			$this->status = self::REJECTED;
+			$this->set_note("[SYSTEM] - Automatically rejected due to wrong {$which} airport.", 0);
+		}
+		elseif ($distance > 5)
+		{
+			$this->status = self::HOLDING;
+			$this->set_note("[SYSTEM] - Automatically holding due to excessive {$which} distance.", 0);
+		}
+	}
+	
+	private function _check_fuel($position, $prev_fob)
+	{
+		// Refuel check
+		if ($position->fuel_onboard > $prev_fob)
+		{
+			$this->status = self::REJECTED;
+			$this->set_note("[SYSTEM] - Automatically rejected due to midair refueling at {$location}.", 0);
+		}
+		
+		// No fuel burn check
+		if ($position->fuel_onboard == $prev_fob)
+		{
+			$this->status = self::HOLDING;
+			$this->set_note("[SYSTEM] - Automatically holding due to no fuel burn at {$location}.", 0);
+		}
+		
+		// Excessive fuel check
+		
+		// Low fuel check
+		
+		return $position->fuel_onboard;
+	}
+	
+	private function _check_speed($position, $phase)
+	{
+		switch ($phase)
+		{
+			case 'taxi':
+				$max_speed = 30;
+				$check = 'ground_speed';
+				break;
+			case 'takeoff':
+				$max_speed = 250;
+				$check = 'indicated_airspeed';
+				break;
+			default:
+				$max_speed = FALSE;
+		}
+		
+		if ($max_speed && $position->$check > $max_speed)
+		{
+			$this->status = self::HOLDING;
+			$this->set_note("[SYSTEM] - Automatically holding due to excessive {$phase} speed ("
+					.$position->$check."kts) at {$location}.", 0);
+		}		
+	}
+	
+	private function _check_landing()
+	{
+		if ($this->landing_rate >= 1000)
+		{
+			$this->status = self::REJECTED;
+			$this->set_note('[SYSTEM] - Automatically rejected due to landing rate in excess of 1,000 feet per minute.', 0);
+		}
+		if ($this->landing_rate >= 800)
+		{
+			$this->set_note('[SYSTEM] - Maintenance event: Struture inspection required due to hard landing.', 0);
+		}
 	}
 	
 	private function _process_pireps()

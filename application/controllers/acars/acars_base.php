@@ -12,6 +12,8 @@
 */
 class Acars_Base extends CI_Controller {
 	
+	protected $_acars_processor_path = '/cjtop/acars/acars_processor/';
+	
 	// Used to enable/disable the profiler (can be overriden by child controllers)
 	protected $_profile_this = TRUE;
 	

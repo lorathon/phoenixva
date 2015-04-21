@@ -275,7 +275,14 @@ class PVA_Model extends CI_Model
             $this->db->update($this->_table_name, $this->_prep_data());            
         }
     }
-        
+
+    /**
+     * Deletes the object
+     * 
+     * The object must have the primary key populated prior to deleting.
+     * 
+     * @return boolean FALSE if the object ID is not populated.
+     */
     public function delete()
     {        
         if (is_null($this->id))
