@@ -42,9 +42,10 @@ class Kacars extends Acars_Base
 		log_message('debug', '-----------------------------');
 		
 		// Switch data contains the function to run
-		$function = $xml->switch->data;
+		$func = (string)$xml->switch->data;
+		log_message('debug', 'Method: '.print_r($func, TRUE));
 		
-		if (method_exists($this, $function))
+		if (method_exists($this, $func))
 		{
 			$this->_user_id = $xml->data->pilotID;
 			if ( ! is_int($this->_user_id))
@@ -52,11 +53,11 @@ class Kacars extends Acars_Base
 				// Probably used PVA#### instead of just ####
 				$this->_user_id = substr($this->_user_id, 3);
 			}
-			$this->$function($xml);
+			$this->$func($xml);
 		}
 				
 		// Respond to the ACARS client
-		$this->sendXML($this->_params, $function);
+		$this->sendXML($this->_params, $func);
 	}
 	
 	/**
