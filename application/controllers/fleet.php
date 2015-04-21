@@ -21,10 +21,10 @@ class Fleet extends PVA_Controller
 	$this->data['fleet_cat'] = $this->config->item('aircraft_cat');
 	$fleet = array();
 	
-	$aircraft = new Airframe();
-	$aircraft->category = $id;	
-	$aircraft->enabled = 1;
-	$fleet = $aircraft->find_all();
+	$airframe = new Airframe();
+	$airframe->category = $id;	
+	$airframe->enabled = TRUE;
+	$fleet = $airframe->find_all();
 	
 	$this->data['fleet'] = $fleet;
 	$this->session->set_flashdata('return_url','fleet/'.$id);	
@@ -41,10 +41,10 @@ class Fleet extends PVA_Controller
 	if(is_null($tab))
 	    redirect('fleet/view/'.$id.'/pireps');
 	
-	$aircraft = new Airframe($id);
+	$airframe = new Airframe($id);
 	
-	// Send back to index if $aircraft is not found
-	if(! $aircraft->name)
+	// Send back to index if $airframe is not found
+	if(! $airframe->name)
 	    $this->index();	
 	
 	if($tab == 'pireps')
@@ -54,11 +54,16 @@ class Fleet extends PVA_Controller
 	}
 	elseif($tab == 'flights')
 	{
-	    // Get schedules using this airframe
+	    // Get schedules using this airframes aircraft sub id
 	    $this->data['flights'] = array();
 	    $sched = new Schedule();
-	    $sched->airframe_id = $aircraft->id;
+	    $sched->aircraft_sub_id = $airframe->aircraft_sub_id;
 	    $this->data['flights'] = $sched->find_all();
+	}
+	elseif($tab == 'aircraft')
+	{
+	    // Get Airline Airfraft with the same Airframe_id
+	    $this->data['aircraft'] = array();	    
 	}
 	else
 	{
@@ -69,9 +74,9 @@ class Fleet extends PVA_Controller
 	    $this->data['airline_categories'] = $airline->get_categories();
 	}
 	
-	$this->data['title'] = $aircraft->name;
+	$this->data['title'] = $airframe->name;
 	$this->data['breadcrumb']['fleet'] = 'Fleet';
-	$this->data['aircraft'] = $aircraft;
+	$this->data['airframe'] = $airframe;
 	$this->_render();	
     }
     

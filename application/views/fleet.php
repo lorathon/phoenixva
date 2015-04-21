@@ -58,28 +58,34 @@ $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
     </div>
     <!-- End: Category View -->
     
-    <?php elseif(isset($aircraft)) : ?>
+    <?php elseif(isset($airframe)) : ?>
     
     <!-- Start: Aircraft Detail -->
     <div class="row">
 	<ul class="nav nav-tabs">		
 		<li role="presentation" 
-		<?php if (uri_string() == 'fleet/view/' . $aircraft->id . '/pireps'): ?>
+		<?php if (uri_string() == 'fleet/view/' . $airframe->id . '/pireps'): ?>
 		    class="active"
 		    <?php endif; ?> >
-			<?php echo anchor('/fleet/view/' . $aircraft->id . '/pireps', 'PIREPs'); ?> 
+			<?php echo anchor('/fleet/view/' . $airframe->id . '/pireps', 'PIREPs'); ?> 
 		</li>
 		<li role="presentation" 
-		<?php if (uri_string() == 'fleet/view/' . $aircraft->id . '/flights'): ?>
+		<?php if (uri_string() == 'fleet/view/' . $airframe->id . '/flights'): ?>
 		    class="active"
 		    <?php endif; ?> >
-			<?php echo anchor('/fleet/view/' . $aircraft->id . '/flights', 'Flights'); ?> 
+			<?php echo anchor('/fleet/view/' . $airframe->id . '/flights', 'Flights'); ?> 
 		</li>
 		<li role="presentation" 
-		<?php if (uri_string() == 'fleet/view/' . $aircraft->id . '/airlines'): ?>
+		<?php if (uri_string() == 'fleet/view/' . $airframe->id . '/airlines'): ?>
 		    class="active"
 		    <?php endif; ?> >
-			<?php echo anchor('/fleet/view/' . $aircraft->id . '/airlines', 'Airlines'); ?> 
+			<?php echo anchor('/fleet/view/' . $airframe->id . '/airlines', 'Airlines'); ?> 
+		</li>	
+		<li role="presentation" 
+		<?php if (uri_string() == 'fleet/view/' . $airframe->id . '/aircraft'): ?>
+		    class="active"
+		    <?php endif; ?> >
+			<?php echo anchor('/fleet/view/' . $airframe->id . '/aircraft', 'Aircraft'); ?> 
 		</li>	
 	</ul>            
     </div>
@@ -120,6 +126,39 @@ $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
 	    </div>	    	    
 	    
 	    <!-- End: Flight Table -->
+	    <?php elseif(isset($aircraft)) : ?>
+	    <!-- Start: Airline Aircraft Table -->
+	    
+	    <div class="table-responsive">
+		<table class="table table-hover mb-none">
+		    <thead>
+			<tr>
+			    <th>Airline</th>
+			    <th>Schedule Count</th>
+			    <th>Pirep Count</th>
+			    <th>Total Hours</th>
+			</tr>
+		    </thead>
+		    <tbody>
+			<?php if($aircraft) : ?>
+			<?php foreach ($aircraft as $row): ?>
+			    <tr>
+				<td><?php echo $row->carrier; ?></td>
+				<td><?php echo $row->operator; ?></td>
+				<td><?php echo $row->flight_num; ?></td>
+				<td><?php echo $row->dep_airport; ?></td>
+			    </tr>
+			<?php endforeach; ?>
+			<?php else : ?>
+			    <tr>
+				<td colspan="5">There are no aircraft in this category.</td>
+			    </tr>
+			<?php endif; ?>
+		    </tbody>
+		</table>
+	    </div>	    	    
+	    
+	    <!-- End: Airline Aircraft Table -->
 	    <?php else : ?>
 	    <!-- Start: Airlines Table (main and regional) -->
 	    
@@ -140,7 +179,7 @@ $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
 				<td><?php echo $row->iata; ?></td>
 				<td><?php echo $row->icao; ?></td>
 				<td><?php echo airline($row); ?></td>
-				<td data-toggle="tooltip" title="<?php echo $row->get_category()->description; ?>"><?php echo $row->category; ?></td>
+				<td><?php echo $row->get_category()->value; ?></td>
 			    </tr>
 			<?php endforeach; ?>
 			<?php else : ?>
@@ -163,35 +202,35 @@ $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
 		    <table class="table table-hover table-condensed">
 			<tr>
 			    <td>Name: </td>
-			    <td><?php echo $aircraft->name; ?></td>
+			    <td><?php echo $airframe->name; ?></td>
 			</tr>
 			<tr>
 			    <td>Standard Seating: </td>
-			    <td><?php echo '(1st)'.$aircraft->pax_first . ' | (bus)' . $aircraft->pax_business . ' | (eco)' . $aircraft->pax_economy; ?></td>
+			    <td><?php echo '(1st)'.$airframe->pax_first . ' | (bus)' . $airframe->pax_business . ' | (eco)' . $airframe->pax_economy; ?></td>
 			</tr>	
 			<tr>
 			    <td>Standard Payload: </td>
-			    <td><?php echo $aircraft->payload; ?></td>
+			    <td><?php echo $airframe->payload; ?></td>
 			</tr>
 			<tr>
 			    <td>Range: </td>
-			    <td><?php echo $aircraft->max_range; ?></td>
+			    <td><?php echo $airframe->max_range; ?></td>
 			</tr>
 			<tr>
 			    <td>OEW: </td>
-			    <td><?php echo $aircraft->oew; ?></td>
+			    <td><?php echo $airframe->oew; ?></td>
 			</tr>
 			<tr>
 			    <td>MZFW: </td>
-			    <td><?php echo $aircraft->mzfw; ?></td>
+			    <td><?php echo $airframe->mzfw; ?></td>
 			</tr>
 			<tr>
 			    <td>MLW: </td>
-			    <td><?php echo $aircraft->mlw; ?></td>
+			    <td><?php echo $airframe->mlw; ?></td>
 			</tr>
 			<tr>
 			    <td>MTOW: </td>
-			    <td><?php echo $aircraft->mtow; ?></td>
+			    <td><?php echo $airframe->mtow; ?></td>
 			</tr>
 		    </table>
 		</div>
