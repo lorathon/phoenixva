@@ -96,17 +96,40 @@ class Airport extends PVA_Model
 	return $data;
     }
 
-    function get_autocomplete($name)
+    function get_autocomplete($name = NULL, $iata = NULL, $icao = NULL)
     {
-	$this->name = $name;
+	if(! is_null($name))
+	    $this->name = $name;
+	
+	if(! is_null($iata))
+	    $this->iata = $iata;
+	
+	if(! is_null($icao))
+	    $this->icao = $icao;
+		
 	$airports = $this->find_all(TRUE);
 	if ($airports > 0)
 	{
 	    foreach ($airports as $row)
 	    {
-		$new_row['label'] = htmlentities(stripslashes($row->name));
-		$new_row['value'] = htmlentities(stripslashes($row->name));
+		if(! is_null($name))
+		{
+		    $new_row['label'] = htmlentities(stripslashes($row->name));
+		    $new_row['value'] = htmlentities(stripslashes($row->name));
+		}
+		if(! is_null($iata))
+		{
+		    $new_row['label'] = htmlentities(stripslashes($row->iata));
+		    $new_row['value'] = htmlentities(stripslashes($row->iata));
+		}
+		if(! is_null($icao))
+		{
+		    $new_row['label'] = htmlentities(stripslashes($row->icao));
+		    $new_row['value'] = htmlentities(stripslashes($row->icao));
+		}
+		
 		$new_row['id'] = $row->id;
+		$new_row['name'] = $row->name;
 		$new_row['icao'] = $row->icao;
 		$new_row['iata'] = $row->iata;
 		$row_set[] = $new_row; //build an array

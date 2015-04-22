@@ -1,24 +1,35 @@
-/*
-$(document).ready(function () {
-        var oTable = $('#big_table').DataTable( {
-            "processing": true,
-            "serverSide": true,
-            "jQueryUI": true,
-            "ajax": {
-                "url": "http://dev.phoenixva.org/lorathon/test/datatable",
-                "type": "POST",
-            },            
-        });
-    });*/
+$(function(){
+  $("#dep_airport_name").autocomplete({
+    source: "test/get_airports_name",
+    select: function( event, ui ) {
+            $( "#dep_airport_name" ).val( ui.item.name);
+            $( "#dep_airport_id" ).val( ui.item.id);
+            $( "#dep_airport_icao" ).val( ui.item.icao);
+            $( "#dep_airport_iata" ).val( ui.item.iata);
+    }
+  });
+});
 
 $(function(){
-  $("#airports").autocomplete({
-    source: "test/get_airports",
+  $("#dep_airport_iata").autocomplete({
+    source: "test/get_airports_iata",
     select: function( event, ui ) {
-            $( "#airports" ).val( ui.item.label);
-            $( "#airports-id" ).val( ui.item.id);
-            $( "#airports-icao" ).val( ui.item.icao);
-            $( "#airports-iata" ).val( ui.item.iata);
+            $( "#dep_airport_name" ).val( ui.item.name);
+            $( "#dep_airport_id" ).val( ui.item.id);
+            $( "#dep_airport_icao" ).val( ui.item.icao);
+            $( "#dep_airport_iata" ).val( ui.item.iata);
+    }
+  });
+});
+
+$(function(){
+  $("#dep_airport_icao").autocomplete({
+    source: "test/get_airports_icao",
+    select: function( event, ui ) {
+            $( "#dep_airport_name" ).val( ui.item.name);
+            $( "#dep_airport_id" ).val( ui.item.id);
+            $( "#dep_airport_icao" ).val( ui.item.icao);
+            $( "#dep_airport_iata" ).val( ui.item.iata);
     }
   });
 });

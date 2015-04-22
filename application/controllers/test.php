@@ -18,13 +18,33 @@ class Test extends PVA_Controller
 	$this->_render();
     }
 
-    function get_airports()
+    function get_airports_name()
     {
 	$airport = new Airport();
 	if (isset($_GET['term']))
 	{
-	    $name = strtolower($_GET['term']);
-	    $airport->get_autocomplete($name);
+	    $data = strtolower($_GET['term']);
+	    $airport->get_autocomplete($data, NULL, NULL);
+	}
+    }
+    
+    function get_airports_iata()
+    {
+	$airport = new Airport();
+	if (isset($_GET['term']))
+	{
+	    $data = strtolower($_GET['term']);
+	    $airport->get_autocomplete(NULL, $data, NULL);
+	}
+    }
+    
+    function get_airports_icao()
+    {
+	$airport = new Airport();
+	if (isset($_GET['term']))
+	{
+	    $data = strtolower($_GET['term']);
+	    $airport->get_autocomplete(NULL, NULL, $data);
 	}
     }
 
