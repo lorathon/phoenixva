@@ -16,8 +16,7 @@
                 <h2 class="panel-title">View All Aircraft Substitutions</h2>
             </header>
             <div class="panel-body">
-                <div class="table-responsive">
-                    <table class="table table-hover mb-none">
+                    <table class="datatable table table-striped table-bordered table-condensed table-hover">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -39,14 +38,13 @@
                                     <td><?php echo $row->hours_needed ?></td>   
 				    <td><?php echo $cat[$row->category] ?></td>
                                     <td align="center">
-                                        <?php echo anchor('admin/airframes/create_sub/' . $row->id,'<i class="fa fa-pencil"></i> Edit', button('info')); ?>
+                                        <?php echo anchor('admin/airframes/create_sub/' . $row->id,'<i class="fa fa-pencil"></i> Edit', button('btn btn-xs btn-info')); ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
 
                         </tbody>
                     </table>
-                </div>
             </div>
         </section>
     </div>
