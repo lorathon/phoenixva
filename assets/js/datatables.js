@@ -386,7 +386,7 @@ if ( $.fn.DataTable.TableTools ) {
 	} );
 }
 
-$(document).ready(function() {
+/*$(document).ready(function() {
 			$('.datatable').dataTable({
 				"sPaginationType": "full_numbers"
 			});	
@@ -400,4 +400,4 @@ $(document).ready(function() {
 				var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
 				length_sel.addClass('form-control input-sm');
 			});
-		});
+		}); */
