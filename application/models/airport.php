@@ -107,6 +107,8 @@ class Airport extends PVA_Model
 	if(! is_null($icao))
 	    $this->icao = $icao;
 		
+	$this->active = TRUE;
+	
 	$airports = $this->find_all(TRUE);
 	if ($airports > 0)
 	{
