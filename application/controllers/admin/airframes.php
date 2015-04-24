@@ -20,7 +20,9 @@ class Airframes extends PVA_Controller
         $this->load->helper('url');
         
         $this->data['stylesheets'][] = base_url('assets/css/datatables.css');
-        $this->data['scripts'][] = "//cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/jquery.dataTables.min.js";
+        //$this->data['scripts'][] = "//cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/jquery.dataTables.min.js";
+        $this->data['scripts'][] = "//cdn.datatables.net/1.10.6/js/jquery.dataTables.min.js";
+        $this->data['scripts'][] = "//cdn.datatables.net/plug-ins/1.10.6/integration/bootstrap/3/dataTables.bootstrap.js";
         $this->data['scripts'][] = base_url('assets/js/datatables.js');
         
 	$sub = new Aircraft_sub();	

@@ -388,7 +388,7 @@ if ( $.fn.DataTable.TableTools ) {
 
 $(document).ready(function() {
 			$('.datatable').dataTable({
-				"sPaginationType": "bs_full"
+				"sPaginationType": "full_numbers"
 			});	
 			$('.datatable').each(function(){
 				var datatable = $(this);
