@@ -91,11 +91,6 @@ class Events extends PVA_Controller
 	$this->data['airline'] = $event->get_airline_name();
 	$this->data['airport'] = $event->get_airport_name();
 	$this->data['aircraft'] = $this->config->item('aircraft_cat');
-	$this->data['award_1'] = new Award($event->award_id_winner);
-	$this->data['award_2'] = new Award($event->award_id_participant);
-	$this->data['user_1'] = new User($event->user_id_1);
-	$this->data['user_2'] = new User($event->user_id_2);
-	$this->data['user_3'] = new User($event->user_id_3);	
 	
 	// fill with pilots who are participating ?
 	$this->data['pilots'] = array();
@@ -261,10 +256,7 @@ class Events extends PVA_Controller
 	$this->data['aircraft_cats'] = $this->config->item('aircraft_cat');
 	
 	$this->data['zero_to_ten'] = array(0,1,2,3,4,5,6,7,8,9);
-	
-	$award = new Award();
-	$this->data['awards'] = $award->get_dropdown();
-        
+	        
         $this->data['scripts'][] = base_url('assets/admin/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js');
 	$this->data['scripts'][] = base_url('assets/js/typeahead.bundle.js');
 	$this->data['scripts'][] = base_url('assets/js/prefetch.js');
@@ -302,17 +294,8 @@ class Events extends PVA_Controller
 	    $event->landing_rate    = $this->form_validation->set_value('landing_rate');
 	    $event->total_flights   = intval($this->input->post('total_flights', TRUE));
 	    $event->flight_time	    = $this->input->post('flight_time', TRUE);
-	    $event->bonus_1	    = intval($this->input->post('bonus_1', TRUE));
-	    $event->bonus_2	    = intval($this->input->post('bonus_2', TRUE));
-	    $event->bonus_3	    = intval($this->input->post('bonus_3', TRUE));
-	    $event->award_id_winner = intval($this->input->post('award_id_winner', TRUE));
-	    $event->award_id_participant    = intval($this->input->post('award_id_participant', TRUE));
 	    $event->enabled	    = $this->input->post('enabled', TRUE); 
-	    
 	    $event->completed	    = $event->completed == NULL ? 0 : $event->completed;
-	    $event->user_id_1	    = $event->user_id_1 == NULL ? 0 : $event->user_id_1;
-	    $event->user_id_2	    = $event->user_id_2 == NULL ? 0 : $event->user_id_2;
-	    $event->user_id_3	    = $event->user_id_3 == NULL ? 0 : $event->user_id_3;
                 
             $event->save();
 	    $this->_alert('Event - Record Saved', 'success', TRUE);
