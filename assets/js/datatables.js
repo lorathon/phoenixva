@@ -385,8 +385,8 @@ if ( $.fn.DataTable.TableTools ) {
 		}
 	} );
 }
-
-/*$(document).ready(function() {
+/*
+$(document).ready(function() {
 			$('.datatable').dataTable({
 				"sPaginationType": "full_numbers"
 			});	

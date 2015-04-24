@@ -319,29 +319,29 @@
 		<!-- Examples -->
 		<script src="<?php echo base_url('assets/admin/javascripts/dashboard/examples.dashboard.js'); ?>"></script>
                 <script type="text/javascript">
-$(document).ready(function() {
-    $('#big_table').dataTable( {
-        "processing": true,
-        "serverSide": true,
-        "ajax": {
-            "url": "datatable_view_sub",
-            "type": "POST",
-            "data": function ( data ) {
-                data.<?=$this->security->get_csrf_token_name()?> = "<?=$this->security->get_csrf_hash()?>"
-            }
-        },
-        
-        "columns": [
-            { "data": "id" },
-            { "data": "designation" },
-            { "data": "manufacturer" },
-            { "data": "equips" },
-            { "data": "hours_needed" },
-            { "data": "category" },
-            { "data": "rated" }
-        ]
-    } );
-} );
-</script>
+                    $(document).ready(function() {
+                        $('#big_table').dataTable( {
+                            "processing": true,
+                            "serverSide": true,
+                            "pagingType": "full_numbers",
+                            "ajax": {
+                                "url": "datatable_view_sub",
+                                "type": "POST",
+                                "data": function ( data ) {
+                                    data.<?=$this->security->get_csrf_token_name()?> = "<?=$this->security->get_csrf_hash()?>"
+                                }
+                            },
+                            "columns": [
+                                { "data": "id" },
+                                { "data": "designation" },
+                                { "data": "manufacturer" },
+                                { "data": "equips" },
+                                { "data": "hours_needed" },
+                                { "data": "category" },
+                                { "data": "rated" }
+                            ]
+                        } );
+                } );
+                </script>
 	</body>
 </html>

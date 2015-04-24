@@ -8,6 +8,11 @@ class Airframes extends PVA_Controller
         $this->load->library(array('Datatables', 'table'));
         $this->load->helper('url');
         $this->output->enable_profiler(FALSE);
+        
+        $this->data['stylesheets'][] = base_url('assets/css/datatables.css');
+        $this->data['scripts'][] = "//cdn.datatables.net/1.10.6/js/jquery.dataTables.min.js";
+        $this->data['scripts'][] = "//cdn.datatables.net/plug-ins/1.10.6/integration/bootstrap/3/dataTables.bootstrap.js";
+        
     }
     
     public function index()
@@ -20,26 +25,20 @@ class Airframes extends PVA_Controller
     
     public function view_sub()
     {
-        $this->data['stylesheets'][] = base_url('assets/css/datatables.css');
-        $this->data['scripts'][] = "//cdn.datatables.net/1.10.6/js/jquery.dataTables.min.js";
-        $this->data['scripts'][] = "//cdn.datatables.net/plug-ins/1.10.6/integration/bootstrap/3/dataTables.bootstrap.js";
-        $this->data['scripts'][] = base_url('assets/js/datatables.js');
-        
         //set table id in table open tag
         $tmpl = array('table_open' => '<table id="big_table" class="table table-striped table-bordered table-condensed table-hover">');
         $this->table->set_template($tmpl);
  
-        $this->table->set_heading('ID', 'Designation', 'Manufacturer', 'Equips', 'Hours Needed', 'category', 'rated');
+        $this->table->set_heading('ID', 'Designation', 'Manufacturer', 'Equips', 'Hours Needed', 'Category', 'Actions');
 	
 	$this->data['cat'] = $this->config->item('aircraft_cat');
         $this->_render('admin/airframe_sub');	
     }
     
-            //function to handle callbacks
+    //function to handle callbacks
     public function datatable_view_sub()
     {
-        $this->datatables->from('aircraft_subs');
- 
+        $this->datatables->select('id,designation,manufacturer,equips,hours_needed,category,rated')->from('aircraft_subs');
         echo $this->datatables->generate('json');
     }
     
