@@ -59,6 +59,33 @@ class Event extends PVA_Model
 	$this->_timestamps = TRUE;
 	parent::__construct($id);
     }
+    
+    /**
+     * OVERRIDE
+     * 
+     * Ensure deletion of all associated rows in
+     * foreign tables.
+     * 
+     * Event_awards
+     * Event_participants
+     */
+    function delete()
+    {
+	/* Remove all associated event_awards */
+	$this->get_event_awards();
+	foreach($this->_event_awards as $event_award)
+	{
+	    $event_award->delete();	    
+	}
+	
+	/* Remove all associated event_participants */
+	$this->get_participants();
+	foreach($this->_participants as $participant)
+	{
+	    $participant->delete();
+	}
+	parent::delete();
+    }
 
     function get_event_type()
     {
@@ -175,7 +202,7 @@ class Event extends PVA_Model
 	if (is_null($this->_event_awards))
 	{
 	    $event_award = new Event_award();
-	    $event_award->event_id = $this->id();
+	    $event_award->event_id = $this->id;
 	    $this->_event_awards = $event_award->find_all();	    
 	}
 	return $this->_event_awards;
@@ -191,7 +218,7 @@ class Event extends PVA_Model
 	    $this->_awards = array();
 	    
 	    if(is_null($this->_event_awards))
-		$this->get_event_awards ();
+		$this->get_event_awards();
 	    
 	    if($this->_event_awards)
 	    {
@@ -228,10 +255,10 @@ class Event extends PVA_Model
 	    return FALSE;
 	
 	if (is_null($this->_participants))
-	{
+	{	    
 	    $event_participant = new Event_participant();
-	    $event_participant->event_id = $this->id();
-	    $this->_participants = $event_participants->find_all();	    
+	    $event_participant->event_id = $this->id;
+	    $this->_participants = $event_participant->find_all();	    
 	}
 	return $this->_participants;
     }

@@ -109,6 +109,18 @@ class Events extends PVA_Controller
 	    $this->data['body'] .= '<p>Logbook not yet implemented</p>';
 	}
 	
+	if ($page == 'awards')
+	{
+	    $this->data['event_awards'] = $event->get_event_awards();
+	    $this->data['body'] = ' ';
+	}
+	
+	if ($page == 'participants')
+	{
+	    $this->data['event_participants'] = $event->get_participants();
+	    $this->data['body'] = ' ';
+	}
+	
 	$this->session->set_flashdata('return_url','events/'.$id);	
 	$this->_render();
     }    
@@ -400,6 +412,37 @@ class Events extends PVA_Controller
 	    redirect($this->session->flashdata('return_url'));
 	}
     }   
+    
+    public function add_user($id = NULL)
+    {
+	if(! is_null($id))
+	{
+	    $user_id = $this->session->userdata('user_id');
+	    $event = new Event($id);
+	    $event->add_participant($user_id);
+	}
+	
+	$this->load->helper('url');
+	redirect('events/'.$id.'/participants');
+    }
+    
+    public function remove_user($id = NULL)
+    {
+	if(! is_null($id))
+	{
+	    $user_id = $this->session->userdata('user_id');
+	    $event = new Event($id);
+	    $event->remove_participant($user_id);
+	}
+	
+	$this->load->helper('url');
+	redirect('events/'.$id.'/participants');
+    }
+    
+    public function create_award($id = NULL)
+    {
+	
+    }
     
     public function get_json()
     {

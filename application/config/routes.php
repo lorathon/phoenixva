@@ -60,6 +60,8 @@ $route['private/events/create-type/(:any)'] = "events/create_event_type/$1";
 $route['private/events/create-type'] = "events/create_event_type";
 $route['private/events/delete-event/(:any)'] = "events/delete_event/$1";
 $route['private/events/delete-type/(:any)'] = "events/delete_event_type/$1";
+$route['private/events/add-user/(:any)'] = "events/add_user/$1";
+$route['private/events/create-award/(:any)'] = "events/create_award/$1";
 $route['events/get-json'] = "events/get_json";
 $route['private/events/get-json'] = "events/get_json";
 
