@@ -9,7 +9,8 @@ class Airframes extends PVA_Controller
         $this->load->helper('url');
         $this->output->enable_profiler(FALSE);
         
-        $this->data['stylesheets'][] = base_url('assets/css/datatables.css');
+        $this->data['stylesheets'][] = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css";
+        $this->data['stylesheets'][] = "//cdn.datatables.net/plug-ins/1.10.6/integration/bootstrap/3/dataTables.bootstrap.css";
         $this->data['scripts'][] = "//cdn.datatables.net/1.10.6/js/jquery.dataTables.min.js";
         $this->data['scripts'][] = "//cdn.datatables.net/plug-ins/1.10.6/integration/bootstrap/3/dataTables.bootstrap.js";
         
@@ -26,7 +27,7 @@ class Airframes extends PVA_Controller
     public function view_sub()
     {
         //set table id in table open tag
-        $tmpl = array('table_open' => '<table id="big_table" class="table table-striped table-bordered table-condensed table-hover">');
+        $tmpl = array('table_open' => '<table id="big_table" class="table table-striped table-bordered" width="100%">');
         $this->table->set_template($tmpl);
  
         $this->table->set_heading('ID', 'Designation', 'Manufacturer', 'Equips', 'Hours Needed', 'Category', 'Actions');

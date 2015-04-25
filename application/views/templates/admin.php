@@ -325,7 +325,7 @@
                             "serverSide": true,
                             "pagingType": "full_numbers",
                             "ajax": {
-                                "url": "datatable_view_sub",
+                                "url": "<?php echo base_url('admin/airframes/datatable_view_sub'); ?>",
                                 "type": "POST",
                                 "data": function ( data ) {
                                     data.<?=$this->security->get_csrf_token_name()?> = "<?=$this->security->get_csrf_hash()?>"
@@ -338,7 +338,13 @@
                                 { "data": "equips" },
                                 { "data": "hours_needed" },
                                 { "data": "category" },
-                                { "data": "rated" }
+                                {
+                                  "data": "id",
+                                  "className": "center",
+                                  "render": function ( data ) {
+                                    return '<a href="<?php echo base_url();?>admin/airframes/create_sub/' + data + '" class="btn btn-xs btn-primary" role="button"><i class="fa fa-pencil"></i> Edit</button>';
+                                }
+                            }
                             ]
                         } );
                 } );
