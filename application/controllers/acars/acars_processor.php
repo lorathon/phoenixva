@@ -94,26 +94,55 @@ class Acars_processor extends PVA_Controller {
 				$pirep->afk_elapsed = $this->form_validation->set_value('afk_elapsed');
 			}
 			
-			// Find the airline_aircraft ID
 			$airline_icao = substr($this->form_validation->set_value('flightnumber'), 0, 3);
 			$airline = new Airline(array('icao' => $airline_icao));
-			$airframe = new Airframe();
+			$pirep->carrier_id = $airline->id;
+			$pirep->operator_id = $airline->id;
+				
+			// Find the airline_aircraft ID
+			$airframe = new Airframe(array('icao' => $pirep->ac_model));
 			$aircraft = $airline->get_aircraft($airframe->id);
 			$pirep->airline_aircraft_id = $aircraft->id;
-			$pirep->arr_icao = $this->form_validation->set_value('arr_icao');
+			
+			// Departure airport
+			$airport = new Airport(array('icao' => $this->form_validation->set_value('dep_icao')));
+			$pirep->dep_airport_id = $airport->id;
+			// Arrival airport
+			$airport = new Airport(array('icao' => $this->form_validation->set_value('arr_icao')));
+			$pirep->arr_airport_id = $airport->id;
+			
+			// Actual arrival location
 			$pirep->arr_lat = $this->form_validation->set_value('arr_lat');
 			$pirep->arr_long = $this->form_validation->set_value('arr_long');
+
+			// Actual departure location
+			$pirep->dep_lat = $this->form_validation->set_value('dep_lat');
+			$pirep->dep_long = $this->form_validation->set_value('dep_long');
+
 			$pirep->cargo = $this->form_validation->set_value('cargo');
 			$pirep->checkride = $this->form_validation->set_value('checkride');
 			$pirep->client = $client;
-			$pirep->dep_icao = $this->form_validation->set_value('dep_icao');
-			$pirep->dep_lat = $this->form_validation->set_value('dep_lat');
-			$pirep->dep_long = $this->form_validation->set_value('dep_long');
+			
 			$pirep->distance = $this->form_validation->set_value('distance');
 			$pirep->event = $this->form_validation->set_value('event');
 			$pirep->flight_level = $this->form_validation->set_value('flight_level');
 			$pirep->flight_number = $this->form_validation->set_value('flightnumber');
-			$pirep->flight_type = $this->form_validation->set_value('flight_type');
+			
+			// Determine flight type
+			$flight_type = Pirep::UNKNOWN;
+			if (is_int($this->form_validation->set_value('flight_type')))
+			{
+				$flight_type = $this->form_validation->set_value('flight_type');
+			}
+			else 
+			{
+				$type_in = $this->form_validation->set_value('flight_type');
+				if ($type_in == 'P') $flight_type = Pirep::PASSENGER;
+				if ($type_in == 'C') $flight_type = Pirep::CARGO;
+			}
+			$pirep->flight_type = $flight_type;
+			
+			// Fuel
 			$pirep->fuel_out = $this->form_validation->set_value('fuel_out');
 			$pirep->fuel_off = $this->form_validation->set_value('fuel_off');
 			$pirep->fuel_toc = $this->form_validation->set_value('fuel_toc');
@@ -121,22 +150,43 @@ class Acars_processor extends PVA_Controller {
 			$pirep->fuel_on = $this->form_validation->set_value('fuel_on');
 			$pirep->fuel_in = $this->form_validation->set_value('fuel_in');
 			$pirep->fuel_used = $this->form_validation->set_value('fuel_used');
-			$pirep->hours_dawn = $this->form_validation->set_value('hours_dawn');
-			$pirep->hours_day = $this->form_validation->set_value('hours_day');
-			$pirep->hours_dusk = $this->form_validation->set_value('hours_dusk');
-			$pirep->hours_night = $this->form_validation->set_value('hours_night');
+			
+			// Hours flown
+			$pirep->hours_dawn = Calculations::hours_to_minutes($this->form_validation->set_value('hours_dawn'));
+			$pirep->hours_day = Calculations::hours_to_minutes($this->form_validation->set_value('hours_day'));
+			$pirep->hours_dusk = Calculations::hours_to_minutes($this->form_validation->set_value('hours_dusk'));
+			$pirep->hours_night = Calculations::hours_to_minutes($this->form_validation->set_value('hours_night'));
+			$pirep->hours_total = Calculations::hours_to_minutes($this->form_validation->set_value('hours_total'));
+			
 			$pirep->hub_id = $prefile_user->hub;
 			$pirep->landing_rate = $this->form_validation->set_value('landing_rate');
 			$pirep->online = $this->form_validation->set_value('online');
+			
+			// Passengers
 			$pirep->pax_business = $this->form_validation->set_value('pax_business');
 			$pirep->pax_economy = $this->form_validation->set_value('pax_economy');
 			$pirep->pax_first = $this->form_validation->set_value('pax_first');
+			if ($pirep->get_total_passengers() == 0)
+			{
+				$pirep->pax_economy = $this->form_validation->set_value('pax_total');
+			}
+			
 			$pirep->route = $this->form_validation->set_value('route');
-			$pirep->time_out = $this->form_validation->set_value('time_out');
-			$pirep->time_off = $this->form_validation->set_value('time_off');
-			$pirep->time_on = $this->form_validation->set_value('time_on');
-			$pirep->time_in = $this->form_validation->set_value('time_in');
+			
+			// Times
+			$format = 'Y-m-d H:i:s';
+			$today = date('Y-m-d').' ';
+			$pirep->schedule_out = date($format, strtotime($today.$this->form_validation->set_value('schedule_out')));
+			$pirep->time_out = date($format, strtotime($today.$this->form_validation->set_value('time_out')));			
+			$pirep->time_off = date($format, strtotime($today.$this->form_validation->set_value('time_off')));
+			$pirep->time_on = date($format, strtotime($today.$this->form_validation->set_value('time_on')));
+			$pirep->time_in = date($format, strtotime($today.$this->form_validation->set_value('time_in')));
+			$pirep->schedule_in = date($format, strtotime($today.$this->form_validation->set_value('schedule_in')));
+			
 			$pirep->user_id = $user_id;
+			log_message('debug', 'PIREP object to be filed:');
+			log_message('debug', print_r($pirep, TRUE));
+			log_message('debug', '*************************');
 			$pirep->file();
 			
 			if ($this->form_validation->set_value('comments') != '')

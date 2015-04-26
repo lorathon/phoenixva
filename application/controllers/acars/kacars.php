@@ -198,8 +198,10 @@ class Kacars extends Acars_Base
 		{
 			$update = $xml->liveupdate;
 			$pirep = $xml->pirep;
+			$schedule = $xml->schedule;
+			$fuel = $xml->fuel;
 			
-			// Translate KACARS to PIREP fields
+			// Translate KACARS to PIREP fields			
 			$fields = array(
 					'client='.$this->_client,
 					'user_id='.$this->_user_id,
@@ -219,24 +221,26 @@ class Kacars extends Acars_Base
 					'pax_economy=0',
 					'pax_total='.$pirep->pax,
 					'cargo='.$pirep->cargo,
+					'schedule_out='.$schedule->deptime,
 					'time_out=0',
 					'time_off=0',
 					'time_on=0',
 					'time_in=0',
+					'schedule_in='.$schedule->arrtime,
 					'hours_dawn='.$pirep->time_dawn,
 					'hours_day='.$pirep->time_day,
 					'hours_dusk='.$pirep->time_dusk,
 					'hours_night='.$pirep->time_night,
-					'time_total='.$pirep->flighttime,
+					'hours_total='.$pirep->flighttime,
 					'distance=0.0',
 					'status=',
 					'landing_rate='.$pirep->landing,
-					'fuel_out='.$pirep->fuelstart,
-					'fuel_off=',
-					'fuel_toc=',
-					'fuel_tod=',
-					'fuel_on=',
-					'fuel_in=',
+					'fuel_out='.round($pirep->fuelstart),
+					'fuel_off='.round($fuel->load_takeoff),
+					'fuel_toc='.round($fuel->load_toc),
+					'fuel_tod='.round($fuel->load_tod),
+					'fuel_on='.round($fuel->load_landed),
+					'fuel_in='.round($fuel->load_end),
 					'fuel_used='.$pirep->fuelused,
 					'comments='.$pirep->comments,
 					'afk_elapsed='.$pirep->afk_elapsed,

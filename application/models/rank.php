@@ -85,9 +85,9 @@ class Rank extends PVA_Model {
 	{
 	    if ( is_null($this->_user_count))
 	    {		
-		$user = new User();
-		$user->rank_id = $this->id;
-		$this->_user_count = $user->find_all(FALSE, TRUE);
+			$user = new User();
+			$user->rank_id = $this->id;
+			$this->_user_count = $user->find_all(FALSE, TRUE);
 	    }
 	    return $this->_user_count;
 	}

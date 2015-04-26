@@ -289,11 +289,12 @@ class PVA_Controller extends CI_Controller {
 			$path = array('models','libraries');
 			foreach ($path as $dir)
 			{
+				$file_class = $class;
 				if ($dir == 'models')
 				{
-					$class = strtolower($class);
+					$file_class = strtolower($class);
 				}
-				$file = APPPATH.$dir.'/'.$class.'.php';
+				$file = APPPATH.$dir.'/'.$file_class.'.php';
 				log_message('debug', 'Looking for file '.$file);
 				if ($this->load_file($file))
 				{

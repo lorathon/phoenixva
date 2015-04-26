@@ -153,6 +153,11 @@ $config = array(
 						'rules' => 'trim|decimal',
 				),
 				array(
+						'field' => 'hours_total',
+						'label' => 'Hours Total',
+						'rules' => 'trim|required',
+				),
+				array(
 						'field' => 'landing_rate',
 						'label' => 'Landing Rate',
 						'rules' => 'trim|decimal',
@@ -178,9 +183,19 @@ $config = array(
 						'rules' => 'trim|integer',
 				),
 				array(
+						'field' => 'pax_total',
+						'label' => 'Passengers total',
+						'rules' => 'trim|integer',
+				),
+				array(
 						'field' => 'route',
 						'label' => 'Route',
 						'rules' => 'trim|xss_clean',
+				),
+				array(
+						'field' => 'schedule_out',
+						'label' => 'Scheduled departure',
+						'rules' => 'trim',
 				),
 				array(
 						'field' => 'time_out',
@@ -201,6 +216,11 @@ $config = array(
 						'field' => 'time_in',
 						'label' => 'Time In',
 						'rules' => 'trim|xss_clean',
+				),
+				array(
+						'field' => 'schedule_in',
+						'label' => 'Scheduled arrival',
+						'rules' => 'trim'
 				),
 				array(
 						'field' => 'comments',

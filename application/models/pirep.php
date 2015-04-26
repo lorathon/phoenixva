@@ -6,13 +6,15 @@ class Pirep extends PVA_Model {
 	public $user_id = NULL;
 	public $hub_id = NULL;
 	public $airline_aircraft_id = NULL;
+	public $carrier_id;
+	public $operator_id;
 	public $client = NULL;
 	public $flight_number = NULL;
 	public $flight_type = NULL;
-	public $dep_icao = NULL;
+	public $dep_airport_id = NULL;
 	public $dep_lat = NULL;
 	public $dep_long = NULL;
-	public $arr_icao = NULL;
+	public $arr_airport_id = NULL;
 	public $arr_lat = NULL;
 	public $arr_long = NULL;
 	public $flight_level = NULL;
@@ -21,14 +23,17 @@ class Pirep extends PVA_Model {
 	public $pax_business = NULL;
 	public $pax_economy = NULL;
 	public $cargo = NULL;
+	public $schedule_out;
 	public $time_out = NULL;
 	public $time_off = NULL;
 	public $time_on = NULL;
 	public $time_in = NULL;
+	public $schedule_in;
 	public $hours_dawn = NULL;
 	public $hours_day = NULL;
 	public $hours_dusk = NULL;
 	public $hours_night = NULL;
+	public $hours_total;
 	public $distance = NULL;
 	public $status = NULL;
 	public $landing_rate = NULL;
@@ -64,6 +69,10 @@ class Pirep extends PVA_Model {
 	const APPROVED = 1;
 	const REJECTED = 2;
 	const HOLDING = 3;
+	
+	const UNKNOWN = 0;
+	const PASSENGER = 1;
+	const CARGO = 2;
 	
 	public function __construct($id = NULL)
 	{
@@ -147,9 +156,9 @@ class Pirep extends PVA_Model {
 		{
 			log_message('debug', 'Checking for duplicate PIREP.');
 			$dupe_pirep = new Pirep();
-			$dupe_pirep->user_id = $this->id;
-			$dupe_pirep->dep_icao = $this->dep_icao;
-			$dupe_pirep->arr_icao = $this->arr_icao;
+			$dupe_pirep->user_id = $this->user_id;
+			$dupe_pirep->dep_airport_id = $this->dep_airport_id;
+			$dupe_pirep->arr_airport_id = $this->arr_airport_id;
 			if ($dupe_pirep->find())
 			{
 				log_message('debug', 'Duplicate PIREP found');
@@ -157,7 +166,7 @@ class Pirep extends PVA_Model {
 			}
 			log_message('debug', 'No duplicate PIREPs found');
 		}
-		
+
 		// Save the PIREP right away so we are sure we have it. Default status is holding.
 		$this->status = self::HOLDING;
 		$this->save();
@@ -169,8 +178,7 @@ class Pirep extends PVA_Model {
 		{
 			// Calculate finances
 			$user = new User($this->user_id);
-			$this->_pilot_pay_rate = $user->get_pay_rate();
-			$this->_pilot_pay_total = $this->_pilot_pay_rate * $this->hours_total();
+			$this->pilot_pay_rate = $user->get_pay_rate();
 		}
 		
 		// Now that the whole thing is processed, save it again
@@ -254,22 +262,18 @@ class Pirep extends PVA_Model {
 	}
 	
 	/**
-	 * The total hours flown for this PIREP
+	 * Gets the total passenger count for this PIREP.
 	 * 
 	 * @return number
 	 */
-	public function hours_total()
+	public function get_total_passengers()
 	{
-		return array_sum(array(
-				$this->hours_dawn,
-				$this->hours_day,
-				$this->hours_dusk,
-				$this->hours_night,
-		));
+		return $this->pax_business + $this->pax_economy + $this->pax_first;
 	}
 	
 	private function _validate()
 	{
+		log_message('debug', 'Validating PIREP');
 		$this->status = self::APPROVED;
 		
 		// Check departure airport
@@ -282,6 +286,153 @@ class Pirep extends PVA_Model {
 		$this->_check_afk();
 		
 		// FOQA Checks
+		$this->_check_foqa();
+		
+		// Excessive landing rate
+		$this->_check_landing();
+
+		/* 
+		 * User level checks
+		 */
+		$user = new User($this->user_id);
+		
+		// Event?
+		$waive_cat = FALSE;
+		$waive_js = FALSE;
+		if ($this->event)
+		{
+			$curr_event = new Event();
+			// @todo get current event
+			$waive_cat = $curr_event->waiver_cat;
+			$waive_js = $curr_event->waiver_js;
+		}
+		
+		// CAT checks
+		if (!$waive_cat)
+		{
+			$rank = new Rank($user->rank_id);
+			if (!$rank->check_aircraft_category($this->airline_aircraft_id))
+			{
+				if ($user->waivers_cat < 1)
+				{
+					$this->status = self::REJECTED;
+					$this->set_note('[SYSTEM] - Automatically rejected due to flying out of category.', 0);
+				}
+			}
+		}
+		
+		// Jumpseat?
+		if (!$waive_js && $user->get_user_stats()->current_location != $this->dep_airport_id)
+		{
+			$user->charge_jumpseat($this->dep_airport_id);
+			$this->set_note('[SYSTEM] - '.$user->name.' charged a jumpseat (waiver or hours).', 0);
+		}
+		
+		// Hold first PIREP and all PIREPs for users on Probation
+		if ($user->status == User::NEWREG OR $user->status == User::PROBATION)
+		{
+			$status_array = $this->config->item('pirep_status');
+			$status_name = $status_array[$this->status];
+			$this->set_note('[SYSTEM] - Automatically holding PIREP for probationary pilot. Previous status: '.$status_name, 0);
+			$this->status = self::HOLDING;
+		}
+
+	}
+	
+	private function _check_afk()
+	{
+		log_message('debug', 'Checking AFK');
+		if ($this->afk_elapsed >= 60)
+		{
+			$this->status = self::REJECTED;
+			$this->set_note('[SYSTEM] - Automatically rejected due to excessive AFK.', 0);
+		}
+	}
+	
+	private function _check_airport($departure = TRUE)
+	{
+		$id = ($departure) ? $this->dep_airport_id : $this->arr_airport_id;
+		$which = ($departure) ? 'departure' : 'arrival';
+		log_message('debug', "Checking {$which} airport");
+		$airport = new Airport($id);
+		$position = Position::find_position($this->id, $departure);
+		if ($position !== FALSE)
+		{
+			$distance = Calculations::calculate_distance(
+					$position->lat,
+					$position->long,
+					$airport->lat,
+					$airport->long
+			);
+			if ($distance > 10)
+			{
+				$this->status = self::REJECTED;
+				$this->set_note("[SYSTEM] - Automatically rejected due to wrong {$which} airport.", 0);
+			}
+			elseif ($distance > 5)
+			{
+				$this->status = self::HOLDING;
+				$this->set_note("[SYSTEM] - Automatically holding due to excessive {$which} distance.", 0);
+			}
+		}
+		else 
+		{
+			log_message('debug', 'No position reports to check against.');
+		}
+	}
+	
+	private function _check_fuel($position, $prev_fob)
+	{
+		log_message('debug', 'Checking fuel');
+		// Refuel check
+		if ($position->fuel_onboard > $prev_fob)
+		{
+			$this->status = self::REJECTED;
+			$this->set_note("[SYSTEM] - Automatically rejected due to midair refueling at {$location}.", 0);
+		}
+		
+		// No fuel burn check
+		if ($position->fuel_onboard == $prev_fob)
+		{
+			$this->status = self::HOLDING;
+			$this->set_note("[SYSTEM] - Automatically holding due to no fuel burn at {$location}.", 0);
+		}
+		
+		// Excessive fuel check
+		
+		// Low fuel check
+		
+		return $position->fuel_onboard;
+	}
+	
+	private function _check_speed($position, $phase)
+	{
+		log_message('debug', 'Checking speed');
+		switch ($phase)
+		{
+			case 'taxi':
+				$max_speed = 30;
+				$check = 'ground_speed';
+				break;
+			case 'takeoff':
+				$max_speed = 250;
+				$check = 'indicated_airspeed';
+				break;
+			default:
+				$max_speed = FALSE;
+		}
+		
+		if ($max_speed && $position->$check > $max_speed)
+		{
+			$this->status = self::HOLDING;
+			$this->set_note("[SYSTEM] - Automatically holding due to excessive {$phase} speed ("
+					.$position->$check."kts) at {$location}.", 0);
+		}		
+	}
+	
+	private function _check_foqa()
+	{
+		log_message('debug', 'FOQA checks');
 		$flight_phase = 'preflight';  //preflight, engine start, pushback, taxi, takeoff, climb, cruise, descent, holding, approach, landing, taxi, and postflight
 		$next_phase = 'engine_start';
 		$taxi = TRUE;
@@ -337,7 +488,7 @@ class Pirep extends PVA_Model {
 				case 'postflight':
 					break;
 			}
-			
+				
 			if (!$landed && !$inflight && $position->ground_speed > 30)
 			{
 				// Assume takeoff roll
@@ -357,9 +508,9 @@ class Pirep extends PVA_Model {
 					$inflight = FALSE;
 					$land_heading = $position->heading;
 				}
-				
+		
 				$location = $position->lat.' / '.$position->long;
-				
+		
 			}
 			if ($landed)
 			{
@@ -368,142 +519,13 @@ class Pirep extends PVA_Model {
 				{
 					$taxi = TRUE;
 				}
-			}			
-		}
-		
-		// Excessive landing rate
-		$this->_check_landing();
-
-		/* 
-		 * User level checks
-		 */
-		$user = new User($this->user_id);
-		
-		// Event?
-		$waive_cat = FALSE;
-		$waive_js = FALSE;
-		if ($this->event)
-		{
-			$curr_event = new Event();
-			// @todo get current event
-			$waive_cat = $curr_event->waiver_cat;
-			$waive_js = $curr_event->waiver_js;
-		}
-		
-		// CAT checks
-		if (!$waive_cat)
-		{
-			$rank = new Rank($user->rank_id);
-			if (!$rank->check_aircraft_category($this->airline_aircraft_id))
-			{
-				if ($user->waivers_cat < 1)
-				{
-					$this->status = self::REJECTED;
-					$this->set_note('[SYSTEM] - Automatically rejected due to flying out of category.', 0);
-				}
 			}
 		}
-		
-		// Jumpseat?
-		if (!$waive_js && $user->get_user_stats()->current_location != $this->dep_icao)
-		{
-			$user->charge_jumpseat($this->dep_icao);
-			$this->set_note('[SYSTEM] - '.$user->name.' charged a jumpseat (waiver or hours).', 0);
-		}
-		
-		// Hold first PIREP and all PIREPs for users on Probation
-		if ($user->status == User::NEWREG OR $user->status == User::PROBATION)
-		{
-			$status_array = $this->config->item('pirep_status');
-			$status_name = $status_array[$this->status];
-			$this->set_note('[SYSTEM] - Automatically holding PIREP for probationary pilot. Previous status: '.$status_name, 0);
-			$this->status = self::HOLDING;
-		}
-
-	}
-	
-	private function _check_afk()
-	{
-		if ($this->afk_elapsed >= 60)
-		{
-			$this->status = self::REJECTED;
-			$this->set_note('[SYSTEM] - Automatically rejected due to excessive AFK.', 0);
-		}
-	}
-	
-	private function _check_airport($departure = TRUE)
-	{
-		$icao = ($departure) ? $this->dep_icao : $this->arr_icao;
-		$which = ($departure) ? 'departure' : 'arrival';
-		$airport = new Airport(array('icao' => $icao));
-		$position = Position::find_position($this->id, $departure);
-		$distance = Calculations::calculate_distance(
-				$position->lat,
-				$position->long,
-				$airport->lat,
-				$airport->long
-		);
-		if ($distance > 10)
-		{
-			$this->status = self::REJECTED;
-			$this->set_note("[SYSTEM] - Automatically rejected due to wrong {$which} airport.", 0);
-		}
-		elseif ($distance > 5)
-		{
-			$this->status = self::HOLDING;
-			$this->set_note("[SYSTEM] - Automatically holding due to excessive {$which} distance.", 0);
-		}
-	}
-	
-	private function _check_fuel($position, $prev_fob)
-	{
-		// Refuel check
-		if ($position->fuel_onboard > $prev_fob)
-		{
-			$this->status = self::REJECTED;
-			$this->set_note("[SYSTEM] - Automatically rejected due to midair refueling at {$location}.", 0);
-		}
-		
-		// No fuel burn check
-		if ($position->fuel_onboard == $prev_fob)
-		{
-			$this->status = self::HOLDING;
-			$this->set_note("[SYSTEM] - Automatically holding due to no fuel burn at {$location}.", 0);
-		}
-		
-		// Excessive fuel check
-		
-		// Low fuel check
-		
-		return $position->fuel_onboard;
-	}
-	
-	private function _check_speed($position, $phase)
-	{
-		switch ($phase)
-		{
-			case 'taxi':
-				$max_speed = 30;
-				$check = 'ground_speed';
-				break;
-			case 'takeoff':
-				$max_speed = 250;
-				$check = 'indicated_airspeed';
-				break;
-			default:
-				$max_speed = FALSE;
-		}
-		
-		if ($max_speed && $position->$check > $max_speed)
-		{
-			$this->status = self::HOLDING;
-			$this->set_note("[SYSTEM] - Automatically holding due to excessive {$phase} speed ("
-					.$position->$check."kts) at {$location}.", 0);
-		}		
 	}
 	
 	private function _check_landing()
 	{
+		log_message('debug', 'Checking landing');
 		if ($this->landing_rate >= 1000)
 		{
 			$this->status = self::REJECTED;
@@ -517,6 +539,7 @@ class Pirep extends PVA_Model {
 	
 	private function _process_pireps()
 	{
+		log_message('debug', 'Processing PIREP in other entities');
 		$user->process_pirep($this);
 		
 		// Update hub

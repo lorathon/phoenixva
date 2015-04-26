@@ -417,6 +417,7 @@ class PVA_Model extends CI_Model
      * 
      * The hours is expected to use HH.MM format.
      * 
+     * @deprecated use Calculations::hours_to_mins(string $time) instead.
      * @param string $time in HH.MM format
      * @return number of minutes
      */
