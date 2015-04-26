@@ -66,7 +66,6 @@ class Acars_processor extends PVA_Controller {
 			$position->warning_detail = $this->form_validation->set_value('warning_detail');
 			$position->save();
 		}
-		$this->_render();
 	}
 	
 	/**
@@ -241,6 +240,5 @@ class Acars_processor extends PVA_Controller {
 			log_message('debug', validation_errors());
 			log_message('debug', '********************************************');
 		}
-		$this->_render();
 	}
 }

@@ -73,6 +73,7 @@ class Kacars extends Acars_Base
 		$user->last_ip = $_SERVER['REMOTE_ADDR'];
 		if ($user->login())
 		{
+			log_message('debug', 'kACARS user logged in');
 			// Login was successful, prepare result
 			$this->_params['loginStatus'] = 1;
 			$this->_params['pilotcode'] = $user->id;
@@ -117,6 +118,7 @@ class Kacars extends Acars_Base
 		else 
 		{
 			// Login failed
+			log_message('debug', 'kACARS user login failed');
 			$this->_params['loginStatus'] = 0;
 			$this->_params['message'] = 'Unable to log in with that user and password.';
 		}

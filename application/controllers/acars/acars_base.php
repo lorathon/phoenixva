@@ -121,7 +121,7 @@ class Acars_Base extends CI_Controller {
 		if (substr($class,0,3) != 'CI_')
 		{
 			log_message('debug', 'Autoloading '.$class);
-			$path = array('models','libraries');
+			$path = array('models','libraries','core');
 			foreach ($path as $dir)
 			{
 				$file_class = $class;
@@ -137,6 +137,12 @@ class Acars_Base extends CI_Controller {
 					break;
 				}
 			}
+		}
+		else
+		{
+			log_message('debug', 'Autoloading CI core class '.$class);
+			$file = BASEPATH.'core/'.substr($class,3).'.php';
+			$this->load_file($file);
 		}
 	}
 	
