@@ -90,7 +90,7 @@ $config = array(
 				array(
 						'field' => 'flight_level',
 						'label' => 'Flight Level',
-						'rules' => 'trim|required|number',
+						'rules' => 'trim|required|numeric',
 				),
 				array(
 						'field' => 'flight_type',
@@ -100,37 +100,37 @@ $config = array(
 				array(
 						'field' => 'fuel_out',
 						'label' => 'Fuel Out',
-						'rules' => 'trim|decimal',
+						'rules' => 'trim|integer',
 				),
 				array(
 						'field' => 'fuel_off',
 						'label' => 'Fuel Off',
-						'rules' => 'trim|decimal',
+						'rules' => 'trim|integer',
 				),
 				array(
 						'field' => 'fuel_toc',
 						'label' => 'Fuel Top of Climb',
-						'rules' => 'trim|decimal',
+						'rules' => 'trim|integer',
 				),
 				array(
 						'field' => 'fuel_tod',
 						'label' => 'Fuel Top of Descent',
-						'rules' => 'trim|decimal',
+						'rules' => 'trim|integer',
 				),
 				array(
 						'field' => 'fuel_on',
 						'label' => 'Fuel On',
-						'rules' => 'trim|decimal',
+						'rules' => 'trim|integer',
 				),
 				array(
 						'field' => 'fuel_in',
 						'label' => 'Fuel In',
-						'rules' => 'trim|decimal',
+						'rules' => 'trim|integer',
 				),
 				array(
 						'field' => 'fuel_used',
 						'label' => 'Fuel Used',
-						'rules' => 'trim|required|decimal',
+						'rules' => 'trim|required|integer',
 				),
 				array(
 						'field' => 'hours_dawn',

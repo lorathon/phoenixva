@@ -74,8 +74,10 @@ class Acars_processor extends PVA_Controller {
 	 */
 	public function file_pirep()
 	{
+		log_message('debug', 'Filing PIREP');
 		if ($this->form_validation->run())
 		{
+			log_message('debug', 'PIREP passed validation.');
 			$user_id = $this->form_validation->set_value('user_id');
 			$client = $this->form_validation->set_value('client');
 
@@ -182,6 +184,12 @@ class Acars_processor extends PVA_Controller {
 					}
 				}
 			}
+		}
+		else 
+		{
+			log_message('debug', '********* PIREP failed validation **********');
+			log_message('debug', validation_errors());
+			log_message('debug', '********************************************');
 		}
 		$this->_render();
 	}

@@ -58,6 +58,12 @@ class Rank extends PVA_Model {
 		return FALSE;
 	}
 	
+	/**
+     * Return array of Users with
+     * rank of rank_id
+     * 
+     * @return array of User Objects
+     */
 	public function get_users()
 	{
 	    if(is_null($this->_users))
@@ -69,6 +75,12 @@ class Rank extends PVA_Model {
 	    return $this->_users;
 	}
 	
+	/**
+	 * Return number of user with
+	 * rank of rank_id
+	 *
+	 * @return int of Users with rank
+	 */
 	public function get_user_count()
 	{
 	    if ( is_null($this->_user_count))

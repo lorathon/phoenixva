@@ -145,19 +145,23 @@ class Pirep extends PVA_Model {
 		// Check for duplicate
 		if (is_null($this->id))
 		{
+			log_message('debug', 'Checking for duplicate PIREP.');
 			$dupe_pirep = new Pirep();
 			$dupe_pirep->user_id = $this->id;
 			$dupe_pirep->dep_icao = $this->dep_icao;
 			$dupe_pirep->arr_icao = $this->arr_icao;
 			if ($dupe_pirep->find())
 			{
+				log_message('debug', 'Duplicate PIREP found');
 				return $dupe_pirep;
 			}
+			log_message('debug', 'No duplicate PIREPs found');
 		}
 		
 		// Save the PIREP right away so we are sure we have it. Default status is holding.
 		$this->status = self::HOLDING;
 		$this->save();
+		log_message('debug', 'PIREP quicksave complete');
 		
 		$this->_validate();
 		
@@ -224,7 +228,11 @@ class Pirep extends PVA_Model {
 	// Override base save() so only certain fields can be modified.
 	public function save()
 	{
-		
+		if (! is_null($this->id))
+		{
+			
+		}
+		parent::save();
 	}
 	
 	/**

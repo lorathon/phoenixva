@@ -87,6 +87,7 @@ class Acars_Base extends CI_Controller {
 	 */
 	protected function sendXML($params, $switch = '') 
 	{
+		$this->output->enable_profiler(false);
 		$xml = new SimpleXMLElement('<sitedata />');
 	
 		$info_xml = $xml->addChild('info');
