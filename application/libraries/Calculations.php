@@ -137,6 +137,35 @@ class Calculations
 	}
 	
 	/**
+	 * Changes hours into minutes.
+	 *
+	 * The hours is expected to use HH.MM format.
+	 *
+	 * @param string $time in HH.MM or HH:MM format
+	 * @return number of minutes
+	 */
+	public static function hours_to_minutes($time)
+	{
+		$hours = 0;
+		$mins = 0;
+		$delim = '.';
+		if (strstr($time, ':') !== FALSE)
+		{
+			$delim = ':';
+		}
+		$parts = explode($delim, $time);
+		if (count($parts) == 2)
+		{
+			list ($hours, $mins) = $parts;
+		}
+		else
+		{
+			$hours = $time;
+		}
+		return ($hours * 60) + $mins;
+	}
+	
+	/**
 	 * Calculate the difference between two headings
 	 * 
 	 * Headings must be between 0 and 360.

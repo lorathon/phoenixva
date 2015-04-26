@@ -121,13 +121,32 @@ class Acars_Base extends CI_Controller {
 		if (substr($class,0,3) != 'CI_')
 		{
 			log_message('debug', 'Autoloading '.$class);
-			$file = APPPATH.'models/'.strtolower($class).'.php';
-			log_message('debug', 'Looking for file '.$file);
-			if ($this->load_file($file))
+			$path = array('models','libraries');
+			foreach ($path as $dir)
 			{
-				log_message('debug', 'File '.$file.' loaded');
-				break;
+				if ($dir == 'models')
+				{
+					$class = strtolower($class);
+				}
+				$file = APPPATH.$dir.'/'.$class.'.php';
+				log_message('debug', 'Looking for file '.$file);
+				if ($this->load_file($file))
+				{
+					log_message('debug', 'File '.$file.' loaded');
+					break;
+				}
 			}
 		}
-	}	
+	}
+	
+	private function load_file($file)
+	{
+		if (file_exists($file) && is_file($file))
+		{
+			log_message('debug', 'Autoloading file '.$file);
+			@include_once($file);
+			return TRUE;
+		}
+		return FALSE;
+	}
 }
