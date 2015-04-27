@@ -20,12 +20,15 @@ class Events extends PVA_Controller
 	$this->data['scripts'][] = base_url('assets/js/events.calendar.js');
 	
 	$event = new Event();
-	
-	if ($events = $event->find_all())
+	$events = $event->get_events_calender(date('Y-m-d'), date('Y-m-d', strtotime("+20days")), 5);
+		
+	if ($events)
 	{
 	    foreach ($events as $event)
 	    {
-		$this->data['events'][$event->id] = $event->name;
+		$start = date_format(new DateTime($event->time_start), 'm/d');
+		$end = date_format(new DateTime($event->time_end), 'm/d');
+		$this->data['events'][$event->id] = $event->name . ' ('.$start.' - '.$end.')';
 	    }
 	}
 

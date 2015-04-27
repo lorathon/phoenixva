@@ -319,11 +319,15 @@ $edit_page = TRUE;
     	<div class="col-md-8">
     	    <p class="lead">
     	    </p>
-    	    <p>Click on an event to learn more about it.</p>
+    	    <p>Current or Upcoming Events.</p>
     	    <ul>
+		<?php if($events) : ?>
 		    <?php foreach ($events as $key => $value): ?>
 			<li><?php echo anchor('events/' . $key, $value); ?></li>
 		    <?php endforeach; ?>
+		<?php else : ?>
+			<li>No events scheduled</li>
+		<?php endif; ?>
     	    </ul>
     	</div>
     	<div class="col-md-4">

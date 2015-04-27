@@ -85,19 +85,19 @@ class Event extends PVA_Model
 	    $participant->delete();
 	}
 	parent::delete();
-    }
+    }   
         
-    function get_events_calender($date_start = NULL, $date_end = NULL)
+    function get_events_calender($date_start = NULL, $date_end = NULL, $count = 25)
     {	
 	if(is_null($date_start) OR is_null($date_end))
 	    return array();
 	
 	$this->db->select()
 		->from($this->_table_name)
-		->where("`time_start` >= '{$date_start}' AND `time_start` <= '{$date_end}' OR `time_end` >= '{$date_end}' AND `time_end` <= '{$date_end}'")
-		->limit($this->_limit)
+		->where("`time_start` >= '{$date_start}' AND `time_start` <= '{$date_end}' OR `time_end` >= '{$date_start}' AND `time_end` <= '{$date_end}'")
+		->limit($count)
 		;
-	$query = $this->db->get();    	
+	$query = $this->db->get();
     	return $this->_get_objects($query);
     }
 
