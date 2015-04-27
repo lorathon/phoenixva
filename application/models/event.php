@@ -31,7 +31,7 @@ class Event extends PVA_Model
     public $created = NULL;
     public $modified = NULL;
     
-    protected $_event_type = NULL;
+    protected $_event_type = NULL;  
     
     /* Airline Object */
     protected $_airline = NULL;
@@ -86,6 +86,20 @@ class Event extends PVA_Model
 	}
 	parent::delete();
     }
+        
+    function get_events_calender($date_start = NULL, $date_end = NULL)
+    {	
+	if(is_null($date_start) OR is_null($date_end))
+	    return array();
+	
+	$this->db->select()
+		->from($this->_table_name)
+		->where("`time_start` >= '{$date_start}' AND `time_start` <= '{$date_end}' OR `time_end` >= '{$date_end}' AND `time_end` <= '{$date_end}'")
+		->limit($this->_limit)
+		;
+	$query = $this->db->get();    	
+    	return $this->_get_objects($query);
+    }
 
     function get_event_type()
     {
@@ -94,24 +108,6 @@ class Event extends PVA_Model
 	    $this->_event_type = new Event_type($this->event_type_id);
 	}
 	return $this->_event_type;
-    }
-
-    function get_type_name()
-    {
-	if (is_null($this->_event_type))
-	{
-	    $this->get_event_type();
-	}
-	return $this->_event_type->name;
-    }
-
-    function get_color_id()
-    {
-	if (is_null($this->_event_type))
-	{
-	    $this->get_event_type();
-	}
-	return $this->_event_type->color_id;
     }
 
     function get_airline()
@@ -123,15 +119,6 @@ class Event extends PVA_Model
 	return $this->_airline;
     }
 
-    function get_airline_name()
-    {
-	if (is_null($this->_airline))
-	{
-	    $this->get_airline();
-	}
-	return $this->_airline->name;
-    }
-
     function get_airport()
     {
 	if (is_null($this->_airport))
@@ -139,16 +126,7 @@ class Event extends PVA_Model
 	    $this->_airport = new Airport($this->airport_id);
 	}
 	return $this->_airport;
-    }
-
-    function get_airport_name()
-    {
-	if (is_null($this->_airport))
-	{
-	    $this->get_airport();
-	}
-	return $this->_airport->iata . ' - ' . $this->_airport->name;
-    }
+    }    
 
     function get_aircraft_list()
     {
@@ -188,9 +166,6 @@ class Event extends PVA_Model
 	    return FALSE;
 
 	$this->comleted = FALSE;
-	$this->user_id_1 = NULL;
-	$this->user_id_2 = NULL;
-	$this->user_id_3 = NULL;
 	$this->save();
     }
     

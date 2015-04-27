@@ -87,9 +87,9 @@ class Events extends PVA_Controller
 	$this->data['pages'] = $this->_event_navigation($id);
 	$this->data['breadcrumb']['events'] = 'Events';
 	$this->data['event'] = $event;
-	$this->data['event_type'] = $event->get_type_name();
-	$this->data['airline'] = $event->get_airline_name();
-	$this->data['airport'] = $event->get_airport_name();
+	$this->data['event_type'] = $event->get_event_type()->name;
+	$this->data['airline'] = $event->get_airline()->name;
+	$this->data['airport'] = $event->get_airport()->name;
 	$this->data['aircraft'] = $this->config->item('aircraft_cat');
 	
 	// fill with pilots who are participating ?
@@ -446,28 +446,40 @@ class Events extends PVA_Controller
     
     public function get_json()
     {
+	$this->load->library('form_validation'); 
 	$this->load->helper('url');
 	
+	$this->form_validation->set_rules('start', 'Start', 'alpha-numberic|trim|xss_clean');
+        $this->form_validation->set_rules('end', 'End', 'alpha-numberic|trim|xss_clean');
+	
+	$this->form_validation->run();
+	
+	$date_start = $this->form_validation->set_value('start');
+	$date_end = $this->form_validation->set_value('end');
+	
 	$event = new Event();
-	$events = $event->find_all();
+	$events = $event->get_events_calender($date_start, $date_end);
 	
 	$linklist=array();
 	$link=array();
 	
 	$colors = $this->config->item('calendar_colors');
 		
-	foreach($events as $ev)
+	if($events)
 	{
-	    $start_date = new DateTime($ev->time_start);
-	    $end_date = new DateTime($ev->time_end);	    
-	    
-	    $link["id"]		= $ev->id;
-	    $link["title"]	= $ev->name;
-	    $link["start"]	= $start_date->format(DateTime::ISO8601);
-	    $link["end"]	= $end_date->format(DateTime::ISO8601);
-	    $link["url"]	= base_url() . 'events/' . $ev->id;
-	    $link["className"]	= 'fc-event-' . $colors[$ev->get_color_id()];
-	    array_push($linklist,$link);
+	    foreach($events as $ev)
+	    {
+		$start_date = new DateTime($ev->time_start);
+		$end_date = new DateTime($ev->time_end);	    
+
+		$link["id"]		= $ev->id;
+		$link["title"]	= $ev->name;
+		$link["start"]	= $start_date->format(DateTime::ISO8601);
+		$link["end"]	= $end_date->format(DateTime::ISO8601);
+		$link["url"]	= base_url() . 'events/' . $ev->id;
+		$link["className"]	= 'fc-event-' . $colors[$ev->get_event_type()->color_id];
+		array_push($linklist,$link);
+	    }
 	}
 	$this->output->enable_profiler(FALSE);
 	echo json_encode($linklist);
