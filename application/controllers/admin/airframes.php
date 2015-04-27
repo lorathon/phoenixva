@@ -5,6 +5,15 @@ class Airframes extends PVA_Controller
     public function __construct()
     {
         parent::__construct();
+        $this->load->library(array('Datatables', 'table'));
+        $this->load->helper('url');
+        $this->output->enable_profiler(FALSE);
+        
+        $this->data['stylesheets'][] = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css";
+        $this->data['stylesheets'][] = "//cdn.datatables.net/plug-ins/1.10.6/integration/bootstrap/3/dataTables.bootstrap.css";
+        $this->data['scripts'][] = "//cdn.datatables.net/1.10.6/js/jquery.dataTables.min.js";
+        $this->data['scripts'][] = "//cdn.datatables.net/plug-ins/1.10.6/integration/bootstrap/3/dataTables.bootstrap.js";
+        
     }
     
     public function index()
@@ -17,10 +26,21 @@ class Airframes extends PVA_Controller
     
     public function view_sub()
     {
-	$sub = new Aircraft_sub();	
-	$this->data['airframe_subs'] = $sub->find_all();
+        //set table id in table open tag
+        $tmpl = array('table_open' => '<table id="big_table" class="table table-striped table-bordered" width="100%">');
+        $this->table->set_template($tmpl);
+ 
+        $this->table->set_heading('ID', 'Designation', 'Manufacturer', 'Equips', 'Hours Needed', 'Category', 'Actions');
+	
 	$this->data['cat'] = $this->config->item('aircraft_cat');
         $this->_render('admin/airframe_sub');	
+    }
+    
+    //function to handle callbacks
+    public function datatable_view_sub()
+    {
+        $this->datatables->select('id,designation,manufacturer,equips,hours_needed,category,rated')->from('aircraft_subs');
+        echo $this->datatables->generate('json');
     }
     
     public function create_airframe($id = NULL)
