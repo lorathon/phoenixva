@@ -215,12 +215,12 @@ class Event extends PVA_Model
 	$event_award->save();
     }
     
-    function remove_award($award_id = NULL)
+    function remove_award($event_award_id = NULL)
     {
-	if(is_null($award_id) OR is_null($this->id))
+	if(is_null($event_award_id))
 	    return FALSE;
 	
-	$event_award = new Event_award(array('event_id' => $this->id, 'award_id' => $award_id));
+	$event_award = new Event_award($event_award_id);
 	$event_award->delete();
     }
     

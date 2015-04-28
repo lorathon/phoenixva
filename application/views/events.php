@@ -136,7 +136,7 @@ $edit_page = TRUE;
 					    <?php if ($show_admin) : ?>
 					    <td>
 						<?php echo anchor('private/events/create-award/' . $event_award->id,'<i class="fa fa-pencil"></i> Edit', button('info')); ?>
-						<?php echo anchor_delete('private/events/delete-award/' . $event_award->id,'<i class="fa fa-pencil"></i> Delete', button_delete('danger')); ?>
+						<?php echo anchor('private/events/delete-award/' . $event_award->id,'<i class="fa fa-trash"></i> Delete', button_delete('danger')); ?>
 					    </td>
 					    <?php endif; ?>
 					</tr>			    
@@ -162,17 +162,14 @@ $edit_page = TRUE;
 			    </thead>
 			    <tbody>
 				<?php if ($event_participants) : ?>
-				    <?php foreach ($event_participants as $user) : ?>
+				    <?php foreach ($event_participants as $participant) : ?>
 					<tr>
-					    <td><?php echo user(new User($user->user_id)); ?></td>
-					    <td><?php echo $user->event_result; ?></td>
-					    <td><?php echo $user->position; ?></td>
-					    <td>					
-						<?php if ($show_admin) : ?>
-		    				<?php echo anchor('/private/events/edit-user/' . $user->id,'<i class="fa fa-pencil"></i> Edit', button('info')); ?>
-						<?php endif; ?>
-						<?php if ($user->user_id == $this->session->userdata('user_id')) : ?>
-						    <?php echo anchor("/private/events/remove-user/{$id}", "<i class='fa fa-pencil'></i> Remove", button('info')); ?>
+					    <td><?php echo user(new User($participant->user_id)); ?></td>
+					    <td><?php echo $participant->event_result; ?></td>
+					    <td><?php echo $participant->position; ?></td>
+					    <td>
+						<?php if ($participant->user_id == $this->session->userdata('user_id')) : ?>
+						    <?php echo anchor("/private/events/remove-user/{$id}", "<i class='fa fa-trash'></i> Remove", button_delete('danger')); ?>
 						<?php endif; ?>
 					    </td>
 					</tr>			    
@@ -210,7 +207,7 @@ $edit_page = TRUE;
 				</li>
 				<?php if (uri_string() == 'events/' . $id . '/awards'): ?>
 				<li role="presentation">
-				    <?php echo anchor("/private/events/create-award/{$id}", 'Add Award'); ?>
+				    <a href="#" data-toggle="modal" data-target="#awardModal">Add Award</a>
 				</li>
 				<?php endif; ?>
 				<?php if ($edit_page) : ?>
@@ -309,7 +306,33 @@ $edit_page = TRUE;
     	    </div>
     	    <!-- End: Event Details -->    	    
     	</div>
+	    <!-- Add Award Modal -->
+	<div class="modal fade" id="awardModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	    <div class="modal-dialog">
+		<div class="modal-content">
+		    <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h4 class="modal-title" id="myModalLabel">Add Award to Event</h4>
+		    </div>
+		    <div class="modal-body">
+			<?php $this->load->library('form_validation'); ?>
+			<?php echo form_open_multipart('private/events/create-award/'. $event->id); ?>
+
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">Award <span class="required">*</span></label>
+                        <?php echo form_dropdown('award_id', $awards); ?>
+                    </div>                    
+		    </div>
+		    <div class="modal-footer">
+			<?php echo form_submit('save', 'Save / Edit', 'class = "btn btn-primary btn-block"'); ?>
+			<?php echo form_close(); ?>
+		    </div>
+		</div>
+	    </div>
+	</div>
+	<!-- Add Award Modal -->
         </div>
+	
         <!-- End: Event Page -->
 
     <?php else: ?>
@@ -356,5 +379,5 @@ $edit_page = TRUE;
     	</div>
         </div>
         <!-- End: Event List -->
-    <?php endif; ?>
+    <?php endif; ?>	
 </div>

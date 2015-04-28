@@ -101,7 +101,7 @@ class Events extends PVA_Controller
 	$article = new Article();
 	$article->slug = $this->_build_slug($id, $page);
 	$article->find();
-
+	
 	if ($article->body_html)
 	{
 	    $this->data['body'] = $article->body_html;
@@ -114,6 +114,8 @@ class Events extends PVA_Controller
 	
 	if ($page == 'awards')
 	{
+	    $award = new Award();
+	    $this->data['awards'] = $award->get_dropdown();
 	    $this->data['event_awards'] = $event->get_event_awards();
 	    $this->data['body'] = ' ';
 	}
@@ -124,7 +126,7 @@ class Events extends PVA_Controller
 	    $this->data['body'] = ' ';
 	}
 	
-	$this->session->set_flashdata('return_url','events/'.$id);	
+	$this->session->set_flashdata('return_url',"events/{$id}/{$page}");		
 	$this->_render();
     }    
 
@@ -253,8 +255,8 @@ class Events extends PVA_Controller
         $this->load->helper('url');
                 
         $this->form_validation->set_rules('id', 'ID', '');
-        $this->form_validation->set_rules('name', 'Name', 'alpha-numberic|trim|required|xss_clean');
-        $this->form_validation->set_rules('description', 'Description', 'alpha-numberic|trim|required|xss_clean');
+        $this->form_validation->set_rules('name', 'Name', 'alpha-numeric|trim|required|xss_clean');
+        $this->form_validation->set_rules('description', 'Description', 'alpha-numeric|trim|required|xss_clean');
         $this->form_validation->set_rules('event_type_id', 'Event Type', 'numeric|trim|required|xss_clean');
 	$this->form_validation->set_rules('landing_rate', 'Landing Rate', 'numeric|required|trim|xss_clean');
 	$this->form_validation->set_rules('flight_time', 'Flight Time', 'numeric|required|trim|xss_clean');
@@ -345,8 +347,8 @@ class Events extends PVA_Controller
         $this->load->helper('url');
                 
         $this->form_validation->set_rules('id', 'ID', '');
-        $this->form_validation->set_rules('name', 'Name', 'alpha-numberic|trim|required|xss_clean');
-        $this->form_validation->set_rules('description', 'Description', 'alpha-numberic|trim|xss_clean');
+        $this->form_validation->set_rules('name', 'Name', 'alpha-numeric|trim|required|xss_clean');
+        $this->form_validation->set_rules('description', 'Description', 'alpha-numeric|trim|xss_clean');
 	
 	$this->data['calendar_colors'] = $this->config->item('calendar_colors');
         
@@ -426,25 +428,54 @@ class Events extends PVA_Controller
 	}
 	
 	$this->load->helper('url');
-	redirect('events/'.$id.'/participants');
+	redirect($this->session->flashdata('return_url'));
     }
-    
-    public function remove_user($id = NULL)
+        
+    public function remove_user($event_id = NULL)
     {
-	if(! is_null($id))
+	if(! is_null($event_id))
 	{
 	    $user_id = $this->session->userdata('user_id');
-	    $event = new Event($id);
+	    $event = new Event($event_id);
 	    $event->remove_participant($user_id);
 	}
 	
 	$this->load->helper('url');
-	redirect('events/'.$id.'/participants');
+	redirect($this->session->flashdata('return_url'));
     }
     
-    public function create_award($id = NULL)
+    public function create_award($event_id = NULL)
     {
+	$this->load->library('form_validation'); 
+	$this->load->helper('url');
 	
+	$this->form_validation->set_rules('award_id', 'Award', 'numeric|requried|trim|xss_clean');
+	
+	$event = new Event($event_id);
+	
+	if ($this->form_validation->run() == FALSE)
+	{             
+            
+	}
+	else
+	{
+	    $award_id = $this->form_validation->set_value('award_id');
+	    $event->add_award($award_id);
+	    
+	    $this->_alert('Event - Award Added', 'success', FALSE);
+	    redirect($this->session->flashdata('return_url'));
+	}   	
+    }
+    
+    public function delete_award($event_award_id = NULL)
+    {
+	if(! is_null($event_award_id))
+	{
+	    $event = new Event();
+	    $event->remove_award($event_award_id);
+	}
+	$this->load->helper('url');
+	redirect($this->session->flashdata('return_url'));
     }
     
     public function get_json()
@@ -452,8 +483,8 @@ class Events extends PVA_Controller
 	$this->load->library('form_validation'); 
 	$this->load->helper('url');
 	
-	$this->form_validation->set_rules('start', 'Start', 'alpha-numberic|trim|xss_clean');
-        $this->form_validation->set_rules('end', 'End', 'alpha-numberic|trim|xss_clean');
+	$this->form_validation->set_rules('start', 'Start', 'alpha-numeric|trim|xss_clean');
+        $this->form_validation->set_rules('end', 'End', 'alpha-numeric|trim|xss_clean');
 	
 	$this->form_validation->run();
 	
