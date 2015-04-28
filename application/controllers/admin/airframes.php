@@ -27,7 +27,7 @@ class Airframes extends PVA_Controller
     public function view_sub()
     {
         //set table id in table open tag
-        $tmpl = array('table_open' => '<table id="big_table" class="table table-striped table-bordered" width="100%">');
+        $tmpl = array('table_open' => '<table id="big_table" class="table table-striped table-bordered table-condensed" width="100%">');
         $this->table->set_template($tmpl);
  
         $this->table->set_heading('ID', 'Designation', 'Manufacturer', 'Equips', 'Hours Needed', 'Category', 'Actions');
@@ -39,8 +39,8 @@ class Airframes extends PVA_Controller
     //function to handle callbacks
     public function datatable_view_sub()
     {
-        $this->datatables->select('id,designation,manufacturer,equips,hours_needed,category,rated')->from('aircraft_subs');
-        echo $this->datatables->generate('json');
+        $aircraft_sub = new Aircraft_sub();
+        return $aircraft_sub->datatable();
     }
     
     public function create_airframe($id = NULL)
