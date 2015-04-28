@@ -63,5 +63,11 @@ class Aircraft_sub extends PVA_Model
             $airframe->update_categories();
         }
     }
+    
+    public function datatable()
+    {
+        $this->datatables->select('id,designation,manufacturer,equips,hours_needed,category,rated')->from('aircraft_subs');
+        echo $this->datatables->generate();
+    }
 
 }
