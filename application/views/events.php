@@ -122,24 +122,7 @@ $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
 			    <div class="box-content">
 				<h2>Event Results</h2>
 				<table class="table table-hover table-condensed">
-				    <?php if ($event->user_id_1) : ?>
-				    <tr>
-					<td>1st Place: </td>
-					<td><?php echo user($user_1); ?></td>
-				    </tr>
-				    <?php endif; ?>
-				    <?php if ($event->user_id_2) : ?>
-				    <tr>
-					<td>2nd Place: </td>
-					<td><?php echo user($user_3); ?></td>
-				    </tr>
-				    <?php endif; ?>
-				    <?php if ($event->user_id_3) : ?>
-				    <tr>
-					<td>3rd Place: </td>
-					<td><?php echo user($user_3); ?></td>
-				    </tr>
-				    <?php endif; ?>
+				    
 				</table>
 			    </div>
 			</div>		    
@@ -208,41 +191,6 @@ $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
 				    <tr>
 					<td>Min Flight Time: </td>
 					<td><?php echo $event->flight_time; ?> Hours</td>
-				    </tr>
-				<?php endif; ?>
-
-				<?php if ($event->award_id_winner) : ?>
-				    <tr>
-					<td>Award: </td>
-					<td><?php echo anchor('awards/view/' . $award_1->id, $award_1->name); ?></td>
-				    </tr>
-				<?php endif; ?>
-
-				<?php if ($event->award_id_participant) : ?>
-				    <tr>
-					<td>Participant Award: </td>
-					<td><?php echo anchor('awards/view/' . $award_2->id, $award_2->name); ?></td>
-				    </tr>
-				<?php endif; ?>
-
-				<?php if ($event->bonus_1) : ?>
-				    <tr>
-					<td>1st Place Bonus: </td>
-					<td><?php echo $event->bonus_1; ?> Hours</td>
-				    </tr>
-				<?php endif; ?>
-
-				<?php if ($event->bonus_2) : ?>
-				    <tr>
-					<td>2nd Place Bonus: </td>
-					<td><?php echo $event->bonus_2; ?> Hours</td>
-				    </tr>
-				<?php endif; ?>
-
-				<?php if ($event->bonus_3) : ?>
-				    <tr>
-					<td>3rd Place Bonus: </td>
-					<td><?php echo $event->bonus_3; ?> Hours</td>
 				    </tr>
 				<?php endif; ?>
 			</table>
