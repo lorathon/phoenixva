@@ -68,6 +68,7 @@ class Flightstats_schedules extends PVA_Controller
                 $version = $this->input->post('version');
                                         
                 $counter = 0;
+                echo "$apt processing";
                 
                 $processed  = $this->start($apt, $year, $month, $day, 0, $appid, $appkey, $version, $dayofweek, $counter);
 		$processed += $this->start($apt, $year, $month, $day, 1, $appid, $appkey, $version, $dayofweek, $counter);
@@ -94,7 +95,7 @@ class Flightstats_schedules extends PVA_Controller
 		$processed += $this->start($apt, $year, $month, $day, 22, $appid, $appkey, $version, $dayofweek, $counter);
 		$processed += $this->start($apt, $year, $month, $day, 23, $appid, $appkey, $version, $dayofweek, $counter);
                 
-                echo "$apt - Version $version - $processed flights processed. <br />";
+                echo "Version $version - $processed flights processed. <br />";
                 
                 // create flightstats log entry for flight entry
                 $log_obj = new Flightstats_log();
@@ -105,6 +106,8 @@ class Flightstats_schedules extends PVA_Controller
                 $log_obj->note      = "$processed flights processed.";
                 
                 $log_obj->save();
+                
+                unset($log_obj);
 	}
 
 
@@ -117,6 +120,7 @@ class Flightstats_schedules extends PVA_Controller
 		$decode = json_decode($json);
 		
 		$counter = 0;
+                echo ".";
                 
                 // GET AIRPORT UTC OFFSET, ADD TO ARRAY FOR LATER
                 foreach($decode->appendix->airports as $airport) {
@@ -134,18 +138,17 @@ class Flightstats_schedules extends PVA_Controller
                         $equip_obj->iata       = $equipments->iata;
                         $equip_obj->find();
                         
-                        // only insert name if adding new airframe.
+                        // only insert if adding new airframe.
                         if( ! $equip_obj->id )
                         {
                             $equip_obj->name        = $equipments->name;
-                        }
-                        
-                        $equip_obj->regional    = $equipments->regional == true ? 1 : 0;
-                        $equip_obj->turboprop   = $equipments->turboProp == true ? 1 : 0;
-                        $equip_obj->jet         = $equipments->jet == true ? 1 : 0;
-                        $equip_obj->widebody    = $equipments->widebody == true ? 1 : 0;
+                            $equip_obj->regional    = $equipments->regional == true ? 1 : 0;
+                            $equip_obj->turboprop   = $equipments->turboProp == true ? 1 : 0;
+                            $equip_obj->jet         = $equipments->jet == true ? 1 : 0;
+                            $equip_obj->widebody    = $equipments->widebody == true ? 1 : 0;
 
-                        $equip_obj->save();
+                            $equip_obj->save();
+                        }
                         
                         unset($equip_obj);
                     }
@@ -249,7 +252,7 @@ class Flightstats_schedules extends PVA_Controller
                         unset($sched_obj);
                     }
                     // END IF CODESHARE IS FALSE
-                    
+                    unset($flight);
                 }
                 // END FOR EACH FLIGHT IN JSON
                 return $counter;

@@ -91,7 +91,7 @@
                                                             <label class="col-sm-3 control-label">Flightstats Credentials</label>
                                                             <section class="col-sm-6 form-group-vertical">
                                                                 <input class="form-control" type="text" name="appid" placeholder="App ID" value="f48100ea">
-                                                                <input class="form-control last" type="text" name="appkey" placeholder="App Key" value="217ebf7797870e89ad05a5a69e4f4bf6">
+                                                                <input class="form-control last" type="text" name="appkey" placeholder="App Key">
                                                             </section>
                                                     </div>
                                                     <div class="form-group">
@@ -112,7 +112,7 @@
                                                     <div class="form-group">
                                                             <label class="col-md-3 control-label">Schedule Version</label>
                                                             <div class="col-md-6">
-                                                                <input type="text" class="form-control" name="version" value="SU15">
+                                                                <input type="text" class="form-control" name="version"  placeholder="SU15, W15/16, etc.">
                                                             </div>
                                                     </div>
                                                     <footer class="panel-footer" align="center">
@@ -122,6 +122,59 @@
                                             </div>
                                     </section>
                             <?php echo form_close(); ?>
+                    <div class="row">
+                    <div class="col-md-6">    
+                            <?php $attributes = array('class' => 'form-horizontal form-bordered');
+                            echo form_open('admin/flightstats_airport/deactivate_empty_airport'); ?>
+                                    <section class="panel panel-featured">
+                                            <header class="panel-heading">
+                                                    <div class="panel-actions">
+                                                            <a href="#" class="fa fa-caret-down"></a>
+                                                            <a href="#" class="fa fa-times"></a>
+                                                    </div>
+
+                                                    <h2 class="panel-title">Deactivate Empty Airports</h2>
+
+                                                    <p class="panel-subtitle">
+                                                            After running an initial day of schedules, this will deactivate airports with no departures or arrivals.
+                                                    </p>
+                                            </header>
+                                            <div class="panel-body">
+                                                <center>No parameters needed.</center>
+                                                    <footer class="panel-footer" align="center">
+                                                            <button class="btn btn-primary">Submit</button>
+                                                    </footer>
+                                            </div>
+                                    </section>
+                            <?php echo form_close(); ?>
+                    </div>
+                    <div class="col-md-6">
+                            <?php $attributes = array('class' => 'form-horizontal form-bordered');
+                            echo form_open('admin/flightstats_airport/get_stranded_flights'); ?>
+                                    <section class="panel panel-featured">
+                                            <header class="panel-heading">
+                                                    <div class="panel-actions">
+                                                            <a href="#" class="fa fa-caret-down"></a>
+                                                            <a href="#" class="fa fa-times"></a>
+                                                    </div>
+
+                                                    <h2 class="panel-title">Get Stranded Flights</h2>
+
+                                                    <p class="panel-subtitle">
+                                                            After running an initial day of schedules, this will create a list of airports with arrivals but no departures.
+                                                    </p>
+                                            </header>
+                                            <div class="panel-body">
+                                                <center>No parameters needed.</center>
+                                                    <footer class="panel-footer" align="center">
+                                                            <button class="btn btn-primary">Submit</button>
+                                                    </footer>
+                                            </div>
+                                    </section>
+                            <?php echo form_close(); ?>
+                    </div>
+                    </div>
+                        
                             
                             <?php $attributes = array('class' => 'form-horizontal form-bordered');
                             echo form_open('admin/flightstats_airport/writeJsonApt'); ?>
@@ -153,7 +206,6 @@
                                                     </div>
                                                     <footer class="panel-footer" align="center">
                                                             <button class="btn btn-primary">Submit</button>
-                                                            <button type="reset" class="btn btn-default">Reset</button>
                                                     </footer>
                                             </div>
                                     </section>
@@ -184,13 +236,13 @@
                                                             <label class="col-sm-3 control-label">Flightstats Credentials</label>
                                                             <section class="col-sm-6 form-group-vertical">
                                                                 <input class="form-control" type="text" name="appid" placeholder="App ID" value="f48100ea">
-                                                                <input class="form-control last" type="text" name="appkey" placeholder="App Key" value="217ebf7797870e89ad05a5a69e4f4bf6">
+                                                                <input class="form-control last" type="text" name="appkey" placeholder="App Key">
                                                             </section>
                                                     </div>
                                                     <div class="form-group">
                                                             <label class="col-md-3 control-label">Schedule Version</label>
                                                             <div class="col-md-6">
-                                                                <input type="text" class="form-control" name="version" value="SU15">
+                                                                <input type="text" class="form-control" name="version"  placeholder="SU15, W15/16, etc.">
                                                             </div>
                                                     </div>
                                                     <footer class="panel-footer" align="center">
@@ -217,10 +269,9 @@
                                                     </p>
                                             </header>
                                             <div class="panel-body">
-                                                    
+                                                    <center>No parameters needed.</center>
                                                     <footer class="panel-footer" align="center">
                                                             <button class="btn btn-primary">Submit</button>
-                                                            <button type="reset" class="btn btn-default">Reset</button>
                                                     </footer>
                                             </div>
                                     </section>
@@ -250,7 +301,7 @@
                                                             <label class="col-sm-3 control-label">Flightstats Credentials</label>
                                                             <section class="col-sm-6 form-group-vertical">
                                                                 <input class="form-control" type="text" name="appid" placeholder="App ID" value="f48100ea">
-                                                                <input class="form-control last" type="text" name="appkey" placeholder="App Key" value="217ebf7797870e89ad05a5a69e4f4bf6">
+                                                                <input class="form-control last" type="text" name="appkey" placeholder="App Key">
                                                             </section>
                                                     </div>
                                                     <div class="form-group">
@@ -273,7 +324,7 @@
                                                     <div class="form-group">
                                                             <label class="col-md-3 control-label">Schedule Version</label>
                                                             <div class="col-md-6">
-                                                                <input type="text" class="form-control" name="version" value="SU15">
+                                                                <input type="text" class="form-control" name="version"  placeholder="SU15, W15/16, etc.">
                                                             </div>
                                                     </div>
                                                     <footer class="panel-footer" align="center">
@@ -304,7 +355,7 @@
                                                             <label class="col-sm-3 control-label">Flightstats Credentials</label>
                                                             <section class="col-sm-6 form-group-vertical">
                                                                 <input class="form-control" type="text" name="appid" placeholder="App ID" value="f48100ea">
-                                                                <input class="form-control last" type="text" name="appkey" placeholder="App Key" value="217ebf7797870e89ad05a5a69e4f4bf6">
+                                                                <input class="form-control last" type="text" name="appkey" placeholder="App Key">
                                                             </section>
                                                     </div>
                                                     <div class="form-group">
@@ -328,7 +379,7 @@
                                                     <div class="form-group">
                                                             <label class="col-md-3 control-label">Schedule Version</label>
                                                             <div class="col-md-6">
-                                                                <input type="text" class="form-control" name="version" value="SU15">
+                                                                <input type="text" class="form-control" name="version" placeholder="SU15, W15/16, etc.">
                                                             </div>
                                                     </div>
                                                     <footer class="panel-footer" align="center">
