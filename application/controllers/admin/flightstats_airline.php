@@ -111,28 +111,35 @@ class Flightstats_airline extends PVA_Controller
 	function getLogos ()
 	{
 		// get all active airlines in the DB table
-		$this->db->from('airlines')->where('active =', 1)->order_by('fs ASC');
-		$query = $this->db->get();
+                $airlines = new Airline();
+                $airlines->active = 1;
+                $this->_order_by = 'fs ASC';
+                $airline = $airlines->find_all();
+                
 		
-		foreach ($query->result() as $row)
+		foreach ($airline as $row)
 		{
 			// make lowercase version to get from flightstats
 			$fs = $row->fs;
 			$fs_lower = strtolower($fs);
 			
-			/**
+			
 			$content_png = file_get_contents("http://dskx8vepkd3ev.cloudfront.net/airline-logos/v2/logos/png/300x100/$fs_lower-logo.png");
 
 			//store in the assets/img/airline-logos folder
 			$fp = fopen("/home/phoenix/public_html/zz_dev/gofly02/assets/img/airline_logos_png/$fs.png", "w");
 			fwrite($fp, $content_png);
 			fclose($fp);
-			*/
+			
 			
 			$content_gif = file_get_contents("http://dem5xqcn61lj8.cloudfront.net/logos/$fs.gif");
-			$fp2 = fopen("/home/phoenix/public_html/zz_dev/gofly02/assets/img/airline_logos_gif/$fs.gif", "w");
-			fwrite($fp2, $content_gif);
-			fclose($fp2);
+                        if(isset($content_gif))
+                        {
+                            $fp2 = fopen("/home/phoenix/public_html/zz_dev/gofly02/assets/img/airline_logos_gif/$fs.gif", "w");
+                            fwrite($fp2, $content_gif);
+                            fclose($fp2);
+                        }
+			
 		}
 		
 	}
@@ -154,20 +161,20 @@ class Flightstats_airline extends PVA_Controller
 	
 	function writeJsonAirline ()
 	{
-		header('Content-Type: application/json');
-		
 		$linklist=array();
 		$link=array();
 		
 		// get only active airlines from DB table.
-		$this->db->from('airlines')->where('active =', 1)->order_by('fs ASC');
-		$query = $this->db->get();
+		$airlines = new Airline();
+                $airlines->active = 1;
+                $this->_order_by = 'fs ASC';
+                $airline = $airlines->find_all();
 		
 		$counter = 0;
 		
-		foreach ($query->result() as $row)
+		foreach ($airline as $row)
 		{
-			$link["fs"]=$row->fs;
+			$link["id"]=$row->id;
 			$link["typeAhead"]="$row->fs - $row->name";
 			array_push($linklist,$link);
 			$counter++;
@@ -177,9 +184,8 @@ class Flightstats_airline extends PVA_Controller
 		// save JSON file to assets folder
 		$fp = fopen("/home/phoenix/public_html/zz_dev/gofly02/assets/data/airlines.json", "w");
 		fwrite($fp, json_encode($linklist));
-		//echo json_encode($linklist);
 		
-		echo "TypeAhead file created, showing $counter Airlines.";
+		echo "TypeAhead file created, showing $counter airlines.";
 	}
 }
 

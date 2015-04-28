@@ -52,8 +52,9 @@ class Flightstats_airport extends PVA_Controller
 		$heliports = 0;
                 
                 // mark all airports as inactive
-                $aptdata = array('active' => 0);
-                $this->db->update('airports', $aptdata);
+                $airports = new Airport();
+                $airports->active = 0;
+                $airports->save();
 		
                 
                  
