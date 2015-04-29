@@ -13,30 +13,10 @@ class Test extends PVA_Controller
     public function index()
     {
 	$this->load->helper('url');
+	$this->data['styles'][] = base_url('assets/css/custom.css');
         $this->data['scripts'][] = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js';
-	$this->data['scripts'][] = base_url('assets/js/views/view.test.js');
+	$this->data['scripts'][] = base_url('assets/js/custom.autocomplete.js');
 	$this->_render();
-    }
-    
-    public function create()
-    {
-	$airport = new Airport();
-	$airports = $airport->get_all_airports();
-	
-	foreach($airports as $obj)
-	{
-	    $obj->create_autocomplete();
-	}
-    }
-
-    function get_airports()
-    {
-	$airport = new Airport();
-	if (isset($_GET['term']))
-	{
-	    $data = strtolower($_GET['term']);
-	    $airport->get_autocomplete($data);
-	}
     }
     
     function results()

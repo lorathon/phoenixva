@@ -97,12 +97,26 @@ class Airport extends PVA_Model
 	return $data;
     }
     
+    /**
+     * Find ALL.
+     * Can be removed during final deployment
+     * XXX
+     * 
+     * @return array of Airport Objects
+     */
     function get_all_airports()
     {
 	$this->_limit = NULL;
 	return $this->find_all();
     }
 
+    /**
+     * Search Airport tables autocomplete 
+     * column using %LIKE%
+     * 
+     * @param string $search
+     * @return json JSON search results
+     */
     function get_autocomplete($search = NULL)
     {
 	if(is_null($search))
@@ -122,10 +136,15 @@ class Airport extends PVA_Model
 		$row_set[] = $new_row; //build an array
 	    }
 	    $this->output->enable_profiler(FALSE);
-	    echo json_encode($row_set); //format the array into json data
+	    return json_encode($row_set); //format the array into json data
 	}
     }
     
+    /**
+     * Create autocomplete string
+     * and save to table.
+     * Used for autocomplete searches
+     */
     function create_autocomplete()
     {
 	if(is_null($this->id))
