@@ -20,10 +20,11 @@ class Airports extends PVA_Controller
     
     function autocomplete()
     {
-	$airport = new Airport();
-	if (isset($_GET['term']))
+	$airport = new Airport();	
+	$search = $this->input->get('term', TRUE);
+	if (isset($search))
 	{
-	    $data = strtolower($_GET['term']);
+	    $data = strtolower($search);
 	    echo $airport->get_autocomplete($data);
 	}
     }

@@ -166,9 +166,10 @@ class Airlines extends PVA_Controller
     function autocomplete()
     {
 	$airline = new Airline();
-	if (isset($_GET['term']))
+	$search = $this->input->get('term', TRUE);
+	if (isset($search))
 	{
-	    $data = strtolower($_GET['term']);
+	    $data = strtolower($search);
 	    echo $airline->get_autocomplete($data);
 	}
     }
