@@ -17,35 +17,30 @@ class Test extends PVA_Controller
 	$this->data['scripts'][] = base_url('assets/js/views/view.test.js');
 	$this->_render();
     }
-
-    function get_airports_name()
-    {
-	$airport = new Airport();
-	if (isset($_GET['term']))
-	{
-	    $data = strtolower($_GET['term']);
-	    $airport->get_autocomplete($data, NULL, NULL);
-	}
-    }
     
-    function get_airports_iata()
+    public function create()
     {
 	$airport = new Airport();
-	if (isset($_GET['term']))
+	$airports = $airport->get_all_airports();
+	
+	foreach($airports as $obj)
 	{
-	    $data = strtolower($_GET['term']);
-	    $airport->get_autocomplete(NULL, $data, NULL);
-	}
-    }
-    
-    function get_airports_icao()
-    {
-	$airport = new Airport();
-	if (isset($_GET['term']))
-	{
-	    $data = strtolower($_GET['term']);
-	    $airport->get_autocomplete(NULL, NULL, $data);
+	    $obj->create_autocomplete();
 	}
     }
 
+    function get_airports()
+    {
+	$airport = new Airport();
+	if (isset($_GET['term']))
+	{
+	    $data = strtolower($_GET['term']);
+	    $airport->get_autocomplete($data);
+	}
+    }
+    
+    function results()
+    {
+	
+    }
 }

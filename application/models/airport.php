@@ -26,6 +26,7 @@ class Airport extends PVA_Model
     public $delay_url = NULL;
     public $weather_url = NULL;
     public $version = NULL;
+    public $autocomplete = NULL;
 
     function __construct($id = NULL)
     {
@@ -95,50 +96,55 @@ class Airport extends PVA_Model
 	}
 	return $data;
     }
-
-    function get_autocomplete($name = NULL, $iata = NULL, $icao = NULL)
+    
+    function get_all_airports()
     {
-	if(! is_null($name))
-	    $this->name = $name;
+	$this->_limit = NULL;
+	return $this->find_all();
+    }
+
+    function get_autocomplete($search = NULL)
+    {
+	if(is_null($search))
+	    echo json_encode($row_set);
 	
-	if(! is_null($iata))
-	    $this->iata = $iata;
-	
-	if(! is_null($icao))
-	    $this->icao = $icao;
-		
+	$this->autocomplete = $search;		
 	$this->active = TRUE;
 	
 	$airports = $this->find_all(TRUE);
 	if ($airports > 0)
 	{
 	    foreach ($airports as $row)
-	    {
-		if(! is_null($name))
-		{
-		    $new_row['label'] = htmlentities(stripslashes($row->name));
-		    $new_row['value'] = htmlentities(stripslashes($row->name));
-		}
-		if(! is_null($iata))
-		{
-		    $new_row['label'] = htmlentities(stripslashes($row->iata));
-		    $new_row['value'] = htmlentities(stripslashes($row->iata));
-		}
-		if(! is_null($icao))
-		{
-		    $new_row['label'] = htmlentities(stripslashes($row->icao));
-		    $new_row['value'] = htmlentities(stripslashes($row->icao));
-		}
-		
+	    {		
+		$new_row['label'] = htmlentities(stripslashes($row->autocomplete));
+		$new_row['value'] = htmlentities(stripslashes($row->autocomplete));		
 		$new_row['id'] = $row->id;
-		$new_row['name'] = $row->name;
-		$new_row['icao'] = $row->icao;
-		$new_row['iata'] = $row->iata;
 		$row_set[] = $new_row; //build an array
 	    }
 	    $this->output->enable_profiler(FALSE);
 	    echo json_encode($row_set); //format the array into json data
 	}
+    }
+    
+    function create_autocomplete()
+    {
+	if(is_null($this->id))
+	    return;
+	
+	if(! is_null($this->icao))
+	    $code = $this->iata . '/' . $this->icao;
+	else
+	    $code = $this->iata;
+	
+	if(! is_null($this->state_code))
+	    $state = $this->state_code . ', ';
+	else
+	    $state = NULL;
+	
+	$auto = "{$code} - {$this->name}, {$this->city}, {$state}{$this->country_code}";
+	
+	$this->autocomplete = $auto;
+	$this->save();	
     }
 
 }
