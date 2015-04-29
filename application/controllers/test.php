@@ -13,7 +13,6 @@ class Test extends PVA_Controller
     public function index()
     {
 	$this->load->helper('url');
-	$this->data['styles'][] = base_url('assets/css/custom.css');
         $this->data['scripts'][] = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js';
 	$this->data['scripts'][] = base_url('assets/js/custom.autocomplete.js');
 	$this->_render();
