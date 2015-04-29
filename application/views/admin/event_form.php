@@ -132,41 +132,6 @@ $total_flights = array(
     'class'         => $field_class,
 );
 
-$bonus_1 = array(
-    'name'	    => 'bonus_1',
-    'id'	    => 'bonus_1',
-    'value'	    => set_value('bonus_1', $record->bonus_1),
-    'class'         => $field_class,
-);
-
-$bonus_2 = array(
-    'name'	    => 'bonus_2',
-    'id'	    => 'bonus_2',
-    'value'	    => set_value('bonus_2', $record->bonus_2),
-    'class'         => $field_class,
-);
-
-$bonus_3 = array(
-    'name'	    => 'bonus_3',
-    'id'	    => 'bonus_3',
-    'value'	    => set_value('bonus_3', $record->bonus_3),
-    'class'         => $field_class,
-);
-
-$award_id_winner = array(
-    'name'	    => 'award_id_winner',
-    'id'	    => 'award_id_winner',
-    'value'	    => set_value('award_id_winner', $record->award_id_winner),
-    'class'         => $field_class,
-);
-
-$award_id_participant = array(
-    'name'	    => 'award_id_participant',
-    'id'	    => 'award_id_participant',
-    'value'	    => set_value('award_id_participant', $record->award_id_participant),
-    'class'         => $field_class,
-);
-
 $enabled = array(
     'name'	    => 'enabled',
     'id'	    => 'enabled',
@@ -240,16 +205,7 @@ $enabled = array(
                         <div class="col-md-6">
                             <?php echo form_dropdown('airport_id', $airports, $airport_id['value'], "class='{$field_class}'"); ?>
                         </div>
-                    </div>
-		    
-		    <div class="form-group">
-                        <?php echo form_label('Airport', $airport_id['id'], $label_attributes); ?>
-                        <div class="col-md-6">
-			    <div id="airports">
-                            <input class="typeahead" name="airport" type="text" placeholder="Search for Airport">
-			    </div>
-                        </div>
-                    </div>		    
+                    </div>	    
 		    
 		    <div class="form-group">
                         <?php echo form_label('Aircraft Category', $aircraft_cat_id['id'], $label_attributes); ?>
@@ -273,42 +229,7 @@ $enabled = array(
                         <div class="col-md-6">
                             <?php echo form_dropdown('total_flights', $zero_to_ten, $total_flights['value'], "class='{$field_class}'"); ?>
                         </div>
-                    </div>
-		    
-		    <div class="form-group">
-                        <?php echo form_label('1st Place Bonus Hours', $bonus_1['id'], $label_attributes); ?>
-                        <div class="col-md-6">
-                            <?php echo form_dropdown('bonus_1', $zero_to_ten, $bonus_1['value'], "class='{$field_class}'"); ?>
-                        </div>
-                    </div>
-		    
-		    <div class="form-group">
-                        <?php echo form_label('2nd Place Bonus Hours', $bonus_2['id'], $label_attributes); ?>
-                        <div class="col-md-6">
-                            <?php echo form_dropdown('bonus_2', $zero_to_ten, $bonus_2['value'], "class='{$field_class}'"); ?>
-                        </div>
-                    </div>
-		    
-		    <div class="form-group">
-                        <?php echo form_label('3rd Place Bonus Hours', $bonus_3['id'], $label_attributes); ?>
-                        <div class="col-md-6">
-                            <?php echo form_dropdown('bonus_3', $zero_to_ten, $bonus_3['value'], "class='{$field_class}'"); ?>
-                        </div>
-                    </div>
-		    
-		    <div class="form-group">
-                        <?php echo form_label('Winner Award', $award_id_winner['id'], $label_attributes); ?>
-                        <div class="col-md-6">
-                            <?php echo form_dropdown('award_id_winner', $awards, $award_id_winner['value'], "class='{$field_class}'"); ?>
-                        </div>
-                    </div>
-		    
-		    <div class="form-group">
-                        <?php echo form_label('Participant Award', $award_id_participant['id'], $label_attributes); ?>
-                        <div class="col-md-6">
-                            <?php echo form_dropdown('award_id_participant', $awards, $award_id_participant['value'], "class='{$field_class}'"); ?>
-                        </div>
-                    </div>
+                    </div>		    
 		    
 		    <div class="form-group">
                         <?php echo form_label('Enabled', $enabled['id'], $label_attributes); ?>
