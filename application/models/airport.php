@@ -132,16 +132,16 @@ class Airport extends PVA_Model
 	    return;
 	
 	if(! is_null($this->icao))
-	    $code = $this->iata . '/' . $this->icao;
+	    $code = '( ' . $this->iata . ' | ' . $this->icao . ' )';
 	else
-	    $code = $this->iata;
+	    $code = '( ' . $this->iata . ' )';
 	
 	if(! is_null($this->state_code))
 	    $state = $this->state_code . ', ';
 	else
 	    $state = NULL;
 	
-	$auto = "{$code} - {$this->name}, {$this->city}, {$state}{$this->country_code}";
+	$auto = "{$code} {$this->name}, {$this->city}, {$state}{$this->country_code}";
 	
 	$this->autocomplete = $auto;
 	$this->save();	
