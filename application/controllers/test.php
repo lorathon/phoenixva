@@ -12,10 +12,10 @@ class Test extends PVA_Controller
 
     public function index()
     {
-	$this->load->helper('url');
-        $this->data['scripts'][] = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js';
-	$this->data['scripts'][] = base_url('assets/js/custom.autocomplete.js');
-	$this->_render();
+	$bid = new Bid(1);
+	
+	print_r($bid);
+	
     }
     
     function results()
