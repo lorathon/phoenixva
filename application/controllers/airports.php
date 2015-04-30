@@ -8,7 +8,7 @@ class Airports extends PVA_Controller
 	parent::__construct();
     }
 
-    public function index($type = NULL)
+    public function index()
     {
 	$this->_render();
     }
