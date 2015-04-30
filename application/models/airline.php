@@ -252,10 +252,84 @@ class Airline extends PVA_Model
     {
         if (is_null($this->_destinations))
         {
-            $airline_airport = new Airline_airport(array('airline_id' => $this->id));
+            $airline_airport = new Airline_airport();
+	    $airline_airport->airline_id = $this->id;
             $this->_destinations = $airline_airport->get_destinations();
         }
         return $this->_destinations;
+    }
+    
+    function get_destination_airlines($airport_id = NULL)
+    {
+	$airport = new Airline_airport();
+	$airport->airport_id = $airport_id;
+	return $airport->get_airlines();
+    }
+    
+    /**
+     * Find ALL.
+     * Can be removed during final deployment
+     * XXX
+     * 
+     * @return array of Airline Objects
+     */
+    function get_all_airlines()
+    {
+	$this->_limit = NULL;
+	return $this->find_all();
+    }
+    
+    /**
+     * Search Airline tables autocomplete 
+     * column using %LIKE%
+     * 
+     * @param string $search
+     * @return json JSON search results
+     */
+    function get_autocomplete($search = NULL)
+    {
+	if(is_null($search))
+	    echo json_encode($row_set);
+	
+	$this->autocomplete = $search;		
+	$this->active = TRUE;
+	
+	$airlines = $this->find_all(TRUE);
+	if ($airlines > 0)
+	{
+	    foreach ($airlines as $row)
+	    {		
+		$new_row['label'] = htmlentities(stripslashes($row->autocomplete));
+		$new_row['value'] = htmlentities(stripslashes($row->autocomplete));		
+		$new_row['id'] = $row->id;
+		$row_set[] = $new_row; //build an array
+	    }
+	    $this->output->enable_profiler(FALSE);
+	    return json_encode($row_set); //format the array into json data
+	}
+    }
+    
+    /**
+     * Create autocomplete string
+     * and save to table.
+     * Used for autocomplete searches
+     */
+    function create_autocomplete()
+    {
+	if(is_null($this->id))
+	    return;
+	
+	if(! is_null($this->icao) && ! is_null($this->iata))
+	    $code = '( ' . $this->iata . ' | ' . $this->icao . ' )';
+	elseif(is_null($this->icao))
+	    $code = '( ' . $this->iata . ' )';
+	else
+	    $code = '( ' . $this->icao . ' )';
+		
+	$auto = "{$code} {$this->name}";
+	
+	$this->autocomplete = $auto;
+	$this->save();	
     }
     
     /**
@@ -433,6 +507,8 @@ class Airline_airport extends PVA_Model
     
     // Array of Airport Object
     protected $_destinations = NULL;
+    
+    protected $_airlines = NULL;
 
     function __construct($id = NULL, $create = FALSE)
     {
@@ -447,10 +523,10 @@ class Airline_airport extends PVA_Model
      * Gets array of Airport based on Airline_id
      * Should Only called by Airline.
      * 
-     * @return array Airport
+     * @return array Airport Objects
      */
     function get_destinations()
-    {
+    {	
         if (is_null($this->_destinations))
         {
             $this->_destinations = array();
@@ -463,6 +539,28 @@ class Airline_airport extends PVA_Model
             }
         }
         return $this->_destinations;
+    }
+    
+    /**
+     * Gets array of Airline based on Airport_id
+     * Should Only called by Airline.
+     * 
+     * @return array Airline Objects
+     */
+    function get_airlines()
+    {	
+        if (is_null($this->_airlines))
+        {
+            $this->_airlines = array();
+            if ($airlines = $this->find_all())
+            {
+                foreach ($airlines as $airline)
+                {
+                    $this->_airlines[] = new Airline($airline->airline_id);
+                }
+            }
+        }
+        return $this->_airlines;
     }
 
 }

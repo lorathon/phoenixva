@@ -100,6 +100,8 @@ $route['private/airlines/edit-aircraft'] = "airlines/edit_aircraft";
 $route['airports/view/(:any)'] = "airports/view/$1";
 $route['airports/autocomplete'] = "airports/autocomplete";
 $route['airports/(:any)'] = "airports/index/$1";
+$route['private/airports/edit-airport/(:any)'] = "airports/edit_airport/$1";
+$route['private/airports/edit-airport'] = "airports/edit_airport";
 
 // Default route
 $route['default_controller'] = 'pages/view';
