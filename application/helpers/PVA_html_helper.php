@@ -15,7 +15,7 @@ function airport($airport)
 		$attribs['class'] = 'hub';
 	}
 	
-	return anchor('airport/view/'.$airport->id, $airport->icao.' '.$airport->name, $attribs);
+	return anchor('airports/view/'.$airport->id, $airport->icao.' '.$airport->name, $attribs);
 }
 
 /**

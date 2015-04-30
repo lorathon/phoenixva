@@ -27,14 +27,14 @@ class Airport extends PVA_Model
     public $weather_url = NULL;
     public $version = NULL;
     public $autocomplete = NULL;
+    
+    /* Array of Airline Objects */
+    protected $_airlines = NULL;
 
     function __construct($id = NULL)
     {
-	parent::__construct($id);
-
-	// Set default order
-	$this->_order_by = 'icao asc';
-	log_message('debug', 'Airport model Initialized');
+	$this->_order_by = 'icao asc';	
+	parent::__construct($id);	
     }
 
     /**
@@ -95,6 +95,16 @@ class Airport extends PVA_Model
 	    $data[$row->id] = $row->name;
 	}
 	return $data;
+    }
+    
+    function get_airlines()
+    {
+	if(is_null($this->_airlines))
+	{
+	    $airline = new Airline();
+	    $this->_airlines = $airline->get_destination_airlines($this->id);
+	}
+	return $this->_airlines;
     }
     
     /**
