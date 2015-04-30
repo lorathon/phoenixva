@@ -259,6 +259,13 @@ class Airline extends PVA_Model
         return $this->_destinations;
     }
     
+    function get_destination_airlines($airport_id = NULL)
+    {
+	$airport = new Airline_airport();
+	$airport->airport_id = $airport_id;
+	return $airport->get_airlines();
+    }
+    
     /**
      * Find ALL.
      * Can be removed during final deployment
@@ -434,6 +441,8 @@ class Airline_airport extends PVA_Model
     
     // Array of Airport Object
     protected $_destinations = NULL;
+    
+    protected $_airlines = NULL;
 
     function __construct($id = NULL, $create = FALSE)
     {
@@ -448,7 +457,7 @@ class Airline_airport extends PVA_Model
      * Gets array of Airport based on Airline_id
      * Should Only called by Airline.
      * 
-     * @return array Airport
+     * @return array Airport Objects
      */
     function get_destinations()
     {	
@@ -464,6 +473,28 @@ class Airline_airport extends PVA_Model
             }
         }
         return $this->_destinations;
+    }
+    
+    /**
+     * Gets array of Airline based on Airport_id
+     * Should Only called by Airline.
+     * 
+     * @return array Airline Objects
+     */
+    function get_airlines()
+    {	
+        if (is_null($this->_airlines))
+        {
+            $this->_airlines = array();
+            if ($airlines = $this->find_all())
+            {
+                foreach ($airlines as $airline)
+                {
+                    $this->_airlines[] = new Airline($airline->airline_id);
+                }
+            }
+        }
+        return $this->_airlines;
     }
 
 }

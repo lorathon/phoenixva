@@ -177,16 +177,15 @@ $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
 		    <h2>Airline Details</h2>
 		    <table class="table table-hover table-condensed">
 			<tr>
+			    <td colspan="2">IMAGE</td>
+			</tr>
+			<tr>
 			    <td>IATA: </td>
 			    <td><?php echo $airline->iata ?></td>
 			</tr>
 			<tr>
 			    <td>ICAO: </td>
 			    <td><?php echo $airline->icao; ?></td>
-			</tr>
-			<tr>
-			    <td>Name: </td>
-			    <td><?php echo $airline->name; ?></td>
 			</tr>
 			<tr>
 			    <td>Name: </td>
