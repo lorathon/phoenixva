@@ -174,42 +174,6 @@
                             <?php echo form_close(); ?>
                     </div>
                     </div>
-                        
-                            
-                            <?php $attributes = array('class' => 'form-horizontal form-bordered');
-                            echo form_open('admin/flightstats_airport/writeJsonApt'); ?>
-                                    <section class="panel panel-featured">
-                                            <header class="panel-heading">
-                                                    <div class="panel-actions">
-                                                            <a href="#" class="fa fa-caret-down"></a>
-                                                            <a href="#" class="fa fa-times"></a>
-                                                    </div>
-
-                                                    <h2 class="panel-title">Create Typeahead JSON File</h2>
-
-                                                    <p class="panel-subtitle">
-                                                            Create Typeahead JSON file for all the active airports in the database. This is used to populate schedule search.
-                                                    </p>
-                                            </header>
-                                            <div class="panel-body">
-                                                    <div class="form-group">
-                                                            <label class="col-sm-3 control-label">Classification Limit</label>
-                                                            <div class="col-sm-6">
-                                                                    <select class="form-control mb-md" name="class">
-                                                                            <option value="1">1 - Top 100 Airports</option>
-                                                                            <option value="2">2 - Top 300 Airports</option>
-                                                                            <option value="3">3 - Top 700 Airports</option>
-                                                                            <option value="4" selected="true">4 - All Airports w/ history (approx 4,000)</option>
-                                                                            <option value="5">5 - All Published Airports (approx 25,000)</option>
-                                                                    </select>
-                                                            </div>
-                                                    </div>
-                                                    <footer class="panel-footer" align="center">
-                                                            <button class="btn btn-primary">Submit</button>
-                                                    </footer>
-                                            </div>
-                                    </section>
-                            </form>
                     </div>
                     
                     
@@ -248,30 +212,6 @@
                                                     <footer class="panel-footer" align="center">
                                                             <button class="btn btn-primary">Submit</button>
                                                             <button type="reset" class="btn btn-default">Reset</button>
-                                                    </footer>
-                                            </div>
-                                    </section>
-                            <?php echo form_close(); ?>
-                        
-                            <?php $attributes = array('class' => 'form-horizontal form-bordered');
-                            echo form_open('admin/flightstats_airline/writeJsonAirline'); ?>
-                                    <section class="panel panel-featured">
-                                            <header class="panel-heading">
-                                                    <div class="panel-actions">
-                                                            <a href="#" class="fa fa-caret-down"></a>
-                                                            <a href="#" class="fa fa-times"></a>
-                                                    </div>
-
-                                                    <h2 class="panel-title">Create Typeahead JSON File</h2>
-
-                                                    <p class="panel-subtitle">
-                                                            Create Typeahead JSON file for all the airlines from active airlines in the database. This is used to populate schedule search.
-                                                    </p>
-                                            </header>
-                                            <div class="panel-body">
-                                                    <center>No parameters needed.</center>
-                                                    <footer class="panel-footer" align="center">
-                                                            <button class="btn btn-primary">Submit</button>
                                                     </footer>
                                             </div>
                                     </section>
