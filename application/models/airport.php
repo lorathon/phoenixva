@@ -26,6 +26,7 @@ class Airport extends PVA_Model
     public $delay_url = NULL;
     public $weather_url = NULL;
     public $version = NULL;
+    public $autocomplete = NULL;
 
     function __construct($id = NULL)
     {
@@ -94,6 +95,75 @@ class Airport extends PVA_Model
 	    $data[$row->id] = $row->name;
 	}
 	return $data;
+    }
+    
+    /**
+     * Find ALL.
+     * Can be removed during final deployment
+     * XXX
+     * 
+     * @return array of Airport Objects
+     */
+    function get_all_airports()
+    {
+	$this->_limit = NULL;
+	return $this->find_all();
+    }
+
+    /**
+     * Search Airport tables autocomplete 
+     * column using %LIKE%
+     * 
+     * @param string $search
+     * @return json JSON search results
+     */
+    function get_autocomplete($search = NULL)
+    {
+	if(is_null($search))
+	    echo json_encode($row_set);
+	
+	$this->autocomplete = $search;		
+	$this->active = TRUE;
+	
+	$airports = $this->find_all(TRUE);
+	if ($airports > 0)
+	{
+	    foreach ($airports as $row)
+	    {		
+		$new_row['label'] = htmlentities(stripslashes($row->autocomplete));
+		$new_row['value'] = htmlentities(stripslashes($row->autocomplete));		
+		$new_row['id'] = $row->id;
+		$row_set[] = $new_row; //build an array
+	    }
+	    $this->output->enable_profiler(FALSE);
+	    return json_encode($row_set); //format the array into json data
+	}
+    }
+    
+    /**
+     * Create autocomplete string
+     * and save to table.
+     * Used for autocomplete searches
+     */
+    function create_autocomplete()
+    {
+	if(is_null($this->id))
+	    return;
+	
+	if(! is_null($this->icao))
+	    $code = '( ' . $this->iata . ' | ' . $this->icao . ' )';
+	else
+	    $code = '( ' . $this->iata . ' )';
+	
+	if(! is_null($this->state_code))
+	    $state = $this->state_code . ', ';
+	else
+	    $state = NULL;
+	
+	$auto = "{$code} {$this->name}, {$this->city}, {$state}{$this->country_code}";
+	
+	$this->autocomplete = $auto;
+	$this->save();	
     }
 
 }

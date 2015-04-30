@@ -31,6 +31,18 @@ function airline($airline)
 }
 
 /**
+ * Returns award info in a consistent format.
+ * 
+ * @param object $award Award object of the award to display.
+ * @return string in the format award name with a link to the award details page.
+ */
+function award($award)
+{
+	$attribs = array();	
+	return anchor('awards/view/'.$award->id, $award->name, $attribs);
+}
+
+/**
  * Returns button attributes for an anchor link.
  * 
  * @param string $type The button type to create

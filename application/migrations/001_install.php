@@ -216,7 +216,8 @@ class Migration_Install extends Migration_base {
 				'hub' => $this->get_boolean_field(),
 				'delay_url' => $this->get_input_field(),
 				'weather_url' => $this->get_input_field(),
-				'version' => $this->get_short_input_field()
+				'version' => $this->get_short_input_field(),
+				'autocomplete' => $this->get_input_field()
 		));
 		$this->add_key(array (
 				'iata',
@@ -269,7 +270,8 @@ class Migration_Install extends Migration_base {
 				'total_pireps' => $this->get_counter_field(),
 				'total_hours' => $this->get_counter_field(),
 				'regional' => $this->get_boolean_field(),
-				'version' => $this->get_short_input_field()
+				'version' => $this->get_short_input_field(),
+				'autocomplete' => $this->get_input_field()
 		));
 		$this->add_key(array (
 				'iata',

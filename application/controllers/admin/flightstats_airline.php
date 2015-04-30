@@ -38,8 +38,13 @@ class Flightstats_airline extends PVA_Controller
 		$counter = 0;
                 
                 // mark all airports as inactive (except PVA*)
-                $airdata = array('active' => 0);
-                $this->db->where_not_in('fs', 'PVA*')->update('airlines', $airdata);
+                $airlines = new Airline();
+                $airlines->fs != 'PVA*';
+                $airlines_all = $airlines->get_all_airlines();
+                
+                $airlines_all->active = 0;
+                $airlines_all->save();
+                
 		
 		foreach($data['airlines'] as $stat => $value) {
 					
@@ -114,7 +119,7 @@ class Flightstats_airline extends PVA_Controller
                 $airlines = new Airline();
                 $airlines->active = 1;
                 $this->_order_by = 'fs ASC';
-                $airline = $airlines->find_all();
+                $airline = $airlines->get_all_airlines();
                 
 		
 		foreach ($airline as $row)
@@ -138,54 +143,7 @@ class Flightstats_airline extends PVA_Controller
                             $fp2 = fopen("/home/phoenix/public_html/zz_dev/gofly02/assets/img/airline_logos_gif/$fs.gif", "w");
                             fwrite($fp2, $content_gif);
                             fclose($fp2);
-                        }
-			
+                        }	
 		}
-		
-	}
-	
-	
-	
-	
-	
-	/**
-	 * writeJsonAirline function
-	 *
-	 * Goes through airlines table and creates Twitter Typeahead JSON file for
-	 * searching of active airlines. Saves to assets/data folder.
-	 * 
-	 * folder path to save JSON may need to be changed depending on environment you are working in.
-	 * 
-	 * @author Dustin
-	 */
-	
-	function writeJsonAirline ()
-	{
-		$linklist=array();
-		$link=array();
-		
-		// get only active airlines from DB table.
-		$airlines = new Airline();
-                $airlines->active = 1;
-                $this->_order_by = 'fs ASC';
-                $airline = $airlines->find_all();
-		
-		$counter = 0;
-		
-		foreach ($airline as $row)
-		{
-			$link["id"]=$row->id;
-			$link["typeAhead"]="$row->fs - $row->name";
-			array_push($linklist,$link);
-			$counter++;
-		}
-		// end foreach
-		
-		// save JSON file to assets folder
-		$fp = fopen("/home/phoenix/public_html/zz_dev/gofly02/assets/data/airlines.json", "w");
-		fwrite($fp, json_encode($linklist));
-		
-		echo "TypeAhead file created, showing $counter airlines.";
 	}
 }
-

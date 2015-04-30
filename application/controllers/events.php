@@ -20,12 +20,15 @@ class Events extends PVA_Controller
 	$this->data['scripts'][] = base_url('assets/js/events.calendar.js');
 	
 	$event = new Event();
-	
-	if ($events = $event->find_all())
+	$events = $event->get_events_calender(date('Y-m-d'), date('Y-m-d', strtotime("+20days")), 5);
+		
+	if ($events)
 	{
 	    foreach ($events as $event)
 	    {
-		$this->data['events'][$event->id] = $event->name;
+		$start = date_format(new DateTime($event->time_start), 'm/d');
+		$end = date_format(new DateTime($event->time_end), 'm/d');
+		$this->data['events'][$event->id] = $event->name . ' ('.$start.' - '.$end.')';
 	    }
 	}
 
@@ -87,15 +90,10 @@ class Events extends PVA_Controller
 	$this->data['pages'] = $this->_event_navigation($id);
 	$this->data['breadcrumb']['events'] = 'Events';
 	$this->data['event'] = $event;
-	$this->data['event_type'] = $event->get_type_name();
-	$this->data['airline'] = $event->get_airline_name();
-	$this->data['airport'] = $event->get_airport_name();
+	$this->data['event_type'] = $event->get_event_type()->name;
+	$this->data['airline'] = $event->get_airline()->name;
+	$this->data['airport'] = $event->get_airport()->name;
 	$this->data['aircraft'] = $this->config->item('aircraft_cat');
-	$this->data['award_1'] = new Award($event->award_id_winner);
-	$this->data['award_2'] = new Award($event->award_id_participant);
-	$this->data['user_1'] = new User($event->user_id_1);
-	$this->data['user_2'] = new User($event->user_id_2);
-	$this->data['user_3'] = new User($event->user_id_3);	
 	
 	// fill with pilots who are participating ?
 	$this->data['pilots'] = array();
@@ -103,7 +101,7 @@ class Events extends PVA_Controller
 	$article = new Article();
 	$article->slug = $this->_build_slug($id, $page);
 	$article->find();
-
+	
 	if ($article->body_html)
 	{
 	    $this->data['body'] = $article->body_html;
@@ -114,7 +112,21 @@ class Events extends PVA_Controller
 	    $this->data['body'] .= '<p>Logbook not yet implemented</p>';
 	}
 	
-	$this->session->set_flashdata('return_url','events/'.$id);	
+	if ($page == 'awards')
+	{
+	    $award = new Award();
+	    $this->data['awards'] = $award->get_dropdown();
+	    $this->data['event_awards'] = $event->get_event_awards();
+	    $this->data['body'] = ' ';
+	}
+	
+	if ($page == 'participants')
+	{
+	    $this->data['event_participants'] = $event->get_participants();
+	    $this->data['body'] = ' ';
+	}
+	
+	$this->session->set_flashdata('return_url',"events/{$id}/{$page}");		
 	$this->_render();
     }    
 
@@ -243,8 +255,8 @@ class Events extends PVA_Controller
         $this->load->helper('url');
                 
         $this->form_validation->set_rules('id', 'ID', '');
-        $this->form_validation->set_rules('name', 'Name', 'alpha-numberic|trim|required|xss_clean');
-        $this->form_validation->set_rules('description', 'Description', 'alpha-numberic|trim|required|xss_clean');
+        $this->form_validation->set_rules('name', 'Name', 'alpha-numeric|trim|required|xss_clean');
+        $this->form_validation->set_rules('description', 'Description', 'alpha-numeric|trim|required|xss_clean');
         $this->form_validation->set_rules('event_type_id', 'Event Type', 'numeric|trim|required|xss_clean');
 	$this->form_validation->set_rules('landing_rate', 'Landing Rate', 'numeric|required|trim|xss_clean');
 	$this->form_validation->set_rules('flight_time', 'Flight Time', 'numeric|required|trim|xss_clean');
@@ -261,10 +273,7 @@ class Events extends PVA_Controller
 	$this->data['aircraft_cats'] = $this->config->item('aircraft_cat');
 	
 	$this->data['zero_to_ten'] = array(0,1,2,3,4,5,6,7,8,9);
-	
-	$award = new Award();
-	$this->data['awards'] = $award->get_dropdown();
-        
+	        
         $this->data['scripts'][] = base_url('assets/admin/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js');
 	$this->data['scripts'][] = base_url('assets/js/typeahead.bundle.js');
 	$this->data['scripts'][] = base_url('assets/js/prefetch.js');
@@ -302,17 +311,8 @@ class Events extends PVA_Controller
 	    $event->landing_rate    = $this->form_validation->set_value('landing_rate');
 	    $event->total_flights   = intval($this->input->post('total_flights', TRUE));
 	    $event->flight_time	    = $this->input->post('flight_time', TRUE);
-	    $event->bonus_1	    = intval($this->input->post('bonus_1', TRUE));
-	    $event->bonus_2	    = intval($this->input->post('bonus_2', TRUE));
-	    $event->bonus_3	    = intval($this->input->post('bonus_3', TRUE));
-	    $event->award_id_winner = intval($this->input->post('award_id_winner', TRUE));
-	    $event->award_id_participant    = intval($this->input->post('award_id_participant', TRUE));
 	    $event->enabled	    = $this->input->post('enabled', TRUE); 
-	    
 	    $event->completed	    = $event->completed == NULL ? 0 : $event->completed;
-	    $event->user_id_1	    = $event->user_id_1 == NULL ? 0 : $event->user_id_1;
-	    $event->user_id_2	    = $event->user_id_2 == NULL ? 0 : $event->user_id_2;
-	    $event->user_id_3	    = $event->user_id_3 == NULL ? 0 : $event->user_id_3;
                 
             $event->save();
 	    $this->_alert('Event - Record Saved', 'success', TRUE);
@@ -347,8 +347,8 @@ class Events extends PVA_Controller
         $this->load->helper('url');
                 
         $this->form_validation->set_rules('id', 'ID', '');
-        $this->form_validation->set_rules('name', 'Name', 'alpha-numberic|trim|required|xss_clean');
-        $this->form_validation->set_rules('description', 'Description', 'alpha-numberic|trim|xss_clean');
+        $this->form_validation->set_rules('name', 'Name', 'alpha-numeric|trim|required|xss_clean');
+        $this->form_validation->set_rules('description', 'Description', 'alpha-numeric|trim|xss_clean');
 	
 	$this->data['calendar_colors'] = $this->config->item('calendar_colors');
         
@@ -418,30 +418,102 @@ class Events extends PVA_Controller
 	}
     }   
     
-    public function get_json()
+    public function add_user($id = NULL)
     {
+	if(! is_null($id))
+	{
+	    $user_id = $this->session->userdata('user_id');
+	    $event = new Event($id);
+	    $event->add_participant($user_id);
+	}
+	
+	$this->load->helper('url');
+	redirect($this->session->flashdata('return_url'));
+    }
+        
+    public function remove_user($event_id = NULL)
+    {
+	if(! is_null($event_id))
+	{
+	    $user_id = $this->session->userdata('user_id');
+	    $event = new Event($event_id);
+	    $event->remove_participant($user_id);
+	}
+	
+	$this->load->helper('url');
+	redirect($this->session->flashdata('return_url'));
+    }
+    
+    public function create_award($event_id = NULL)
+    {
+	$this->load->library('form_validation'); 
 	$this->load->helper('url');
 	
+	$this->form_validation->set_rules('award_id', 'Award', 'numeric|requried|trim|xss_clean');
+	
+	$event = new Event($event_id);
+	
+	if ($this->form_validation->run() == FALSE)
+	{             
+            
+	}
+	else
+	{
+	    $award_id = $this->form_validation->set_value('award_id');
+	    $event->add_award($award_id);
+	    
+	    $this->_alert('Event - Award Added', 'success', FALSE);
+	    redirect($this->session->flashdata('return_url'));
+	}   	
+    }
+    
+    public function delete_award($event_award_id = NULL)
+    {
+	if(! is_null($event_award_id))
+	{
+	    $event = new Event();
+	    $event->remove_award($event_award_id);
+	}
+	$this->load->helper('url');
+	redirect($this->session->flashdata('return_url'));
+    }
+    
+    public function get_json()
+    {
+	$this->load->library('form_validation'); 
+	$this->load->helper('url');
+	
+	$this->form_validation->set_rules('start', 'Start', 'alpha-numeric|trim|xss_clean');
+        $this->form_validation->set_rules('end', 'End', 'alpha-numeric|trim|xss_clean');
+	
+	$this->form_validation->run();
+	
+	$date_start = $this->form_validation->set_value('start');
+	$date_end = $this->form_validation->set_value('end');
+	
 	$event = new Event();
-	$events = $event->find_all();
+	$events = $event->get_events_calender($date_start, $date_end);
 	
 	$linklist=array();
 	$link=array();
 	
 	$colors = $this->config->item('calendar_colors');
 		
-	foreach($events as $ev)
+	if($events)
 	{
-	    $start_date = new DateTime($ev->time_start);
-	    $end_date = new DateTime($ev->time_end);	    
-	    
-	    $link["id"]		= $ev->id;
-	    $link["title"]	= $ev->name;
-	    $link["start"]	= $start_date->format(DateTime::ISO8601);
-	    $link["end"]	= $end_date->format(DateTime::ISO8601);
-	    $link["url"]	= base_url() . 'events/' . $ev->id;
-	    $link["className"]	= 'fc-event-' . $colors[$ev->get_color_id()];
-	    array_push($linklist,$link);
+	    foreach($events as $ev)
+	    {
+		$start_date = new DateTime($ev->time_start);
+		$end_date = new DateTime($ev->time_end);	    
+
+		$link["id"]		= $ev->id;
+		$link["title"]	= $ev->name;
+		$link["start"]	= $start_date->format(DateTime::ISO8601);
+		$link["end"]	= $end_date->format(DateTime::ISO8601);
+		$link["url"]	= base_url() . 'events/' . $ev->id;
+		$link["className"]	= 'fc-event-' . $colors[$ev->get_event_type()->color_id];
+		array_push($linklist,$link);
+	    }
 	}
 	$this->output->enable_profiler(FALSE);
 	echo json_encode($linklist);

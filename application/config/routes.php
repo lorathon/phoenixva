@@ -60,6 +60,9 @@ $route['private/events/create-type/(:any)'] = "events/create_event_type/$1";
 $route['private/events/create-type'] = "events/create_event_type";
 $route['private/events/delete-event/(:any)'] = "events/delete_event/$1";
 $route['private/events/delete-type/(:any)'] = "events/delete_event_type/$1";
+$route['private/events/add-user/(:any)'] = "events/add_user/$1";
+$route['private/events/create-award/(:any)'] = "events/create_award/$1";
+$route['private/events/delete-award/(:any)'] = "events/delete_award/$1";
 $route['events/get-json'] = "events/get_json";
 $route['private/events/get-json'] = "events/get_json";
 
@@ -86,11 +89,17 @@ $route['fleet/(:any)'] = "fleet/index/$1";
 
 // Route all airlines related stuff
 $route['airlines/view/(:any)'] = "airlines/view/$1";
+$route['airlines/autocomplete'] = "airlines/autocomplete";
 $route['airlines/(:any)'] = "airlines/index/$1";
 $route['private/airlines/edit-airline/(:any)'] = "airlines/edit_airline/$1";
 $route['private/airlines/edit-airline'] = "airlines/edit_airline";
 $route['private/airlines/edit-aircraft/(:any)'] = "airlines/edit_aircraft/$1";
 $route['private/airlines/edit-aircraft'] = "airlines/edit_aircraft";
+
+// Route all airports related stuff
+$route['airports/view/(:any)'] = "airports/view/$1";
+$route['airports/autocomplete'] = "airports/autocomplete";
+$route['airports/(:any)'] = "airports/index/$1";
 
 // Default route
 $route['default_controller'] = 'pages/view';
