@@ -70,7 +70,7 @@ class Flightstats_schedules extends PVA_Controller
                 $processed = 0;
                 echo "$apt processing";
                 
-                for ($hour = 8; $hour < 10; $hour++) 
+                for ($hour = 0; $hour < 24; $hour++) 
                 {
                     $processed += $this->start($apt, $year, $month, $day, $hour, $appid, $appkey, $version, $dayofweek, $counter);
 		}
@@ -112,13 +112,13 @@ class Flightstats_schedules extends PVA_Controller
                 if(isset($decode->appendix->equipments)) {
                     foreach($decode->appendix->equipments as $equipments) {
                         
-                        $equip = new Airframe();
+                        $equip_obj = new Airframe();
                         
                         // look up IATA
-                        $equip->iata       = $equipments->iata;
-                        $equip_obj = $equip->find();
+                        $equip_obj->iata       = $equipments->iata;
+                        $equip_obj->find();
                         
-                        /* only insert if adding new airframe.
+                        // only insert if adding new airframe.
                         if( ! $equip_obj->id )
                         {
                             $equip_obj->name        = $equipments->name;
@@ -130,7 +130,7 @@ class Flightstats_schedules extends PVA_Controller
                             $equip_obj->save();
                         }
                         
-                        unset($equip_obj); */
+                        unset($equip_obj);
                     }
                     
                 } 
