@@ -68,7 +68,6 @@ class Airlines extends PVA_Controller
 
 	$this->data['airline'] = $airline;
 	$this->session->set_flashdata('return_url', 'airlines/view/' . $id);
-	//$this->_render('airline_view');
 	$this->_render();
     }
 
