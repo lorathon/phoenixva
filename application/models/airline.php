@@ -252,7 +252,8 @@ class Airline extends PVA_Model
     {
         if (is_null($this->_destinations))
         {
-            $airline_airport = new Airline_airport(array('airline_id' => $this->id));
+            $airline_airport = new Airline_airport();
+	    $airline_airport->airline_id = $this->id;
             $this->_destinations = $airline_airport->get_destinations();
         }
         return $this->_destinations;
@@ -450,7 +451,7 @@ class Airline_airport extends PVA_Model
      * @return array Airport
      */
     function get_destinations()
-    {
+    {	
         if (is_null($this->_destinations))
         {
             $this->_destinations = array();
