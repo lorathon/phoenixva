@@ -38,8 +38,13 @@ class Flightstats_airline extends PVA_Controller
 		$counter = 0;
                 
                 // mark all airports as inactive (except PVA*)
-                $airdata = array('active' => 0);
-                $this->db->where_not_in('fs', 'PVA*')->update('airlines', $airdata);
+                $airlines = new Airline();
+                $airlines->fs != 'PVA*';
+                $airlines_all = $airlines->get_all_airlines();
+                
+                $airlines_all->active = 0;
+                $airlines_all->save();
+                
 		
 		foreach($data['airlines'] as $stat => $value) {
 					
@@ -111,75 +116,34 @@ class Flightstats_airline extends PVA_Controller
 	function getLogos ()
 	{
 		// get all active airlines in the DB table
-		$this->db->from('airlines')->where('active =', 1)->order_by('fs ASC');
-		$query = $this->db->get();
+                $airlines = new Airline();
+                $airlines->active = 1;
+                $this->_order_by = 'fs ASC';
+                $airline = $airlines->get_all_airlines();
+                
 		
-		foreach ($query->result() as $row)
+		foreach ($airline as $row)
 		{
 			// make lowercase version to get from flightstats
 			$fs = $row->fs;
 			$fs_lower = strtolower($fs);
 			
-			/**
+			
 			$content_png = file_get_contents("http://dskx8vepkd3ev.cloudfront.net/airline-logos/v2/logos/png/300x100/$fs_lower-logo.png");
 
 			//store in the assets/img/airline-logos folder
 			$fp = fopen("/home/phoenix/public_html/zz_dev/gofly02/assets/img/airline_logos_png/$fs.png", "w");
 			fwrite($fp, $content_png);
 			fclose($fp);
-			*/
+			
 			
 			$content_gif = file_get_contents("http://dem5xqcn61lj8.cloudfront.net/logos/$fs.gif");
-			$fp2 = fopen("/home/phoenix/public_html/zz_dev/gofly02/assets/img/airline_logos_gif/$fs.gif", "w");
-			fwrite($fp2, $content_gif);
-			fclose($fp2);
+                        if(isset($content_gif))
+                        {
+                            $fp2 = fopen("/home/phoenix/public_html/zz_dev/gofly02/assets/img/airline_logos_gif/$fs.gif", "w");
+                            fwrite($fp2, $content_gif);
+                            fclose($fp2);
+                        }	
 		}
-		
-	}
-	
-	
-	
-	
-	
-	/**
-	 * writeJsonAirline function
-	 *
-	 * Goes through airlines table and creates Twitter Typeahead JSON file for
-	 * searching of active airlines. Saves to assets/data folder.
-	 * 
-	 * folder path to save JSON may need to be changed depending on environment you are working in.
-	 * 
-	 * @author Dustin
-	 */
-	
-	function writeJsonAirline ()
-	{
-		header('Content-Type: application/json');
-		
-		$linklist=array();
-		$link=array();
-		
-		// get only active airlines from DB table.
-		$this->db->from('airlines')->where('active =', 1)->order_by('fs ASC');
-		$query = $this->db->get();
-		
-		$counter = 0;
-		
-		foreach ($query->result() as $row)
-		{
-			$link["fs"]=$row->fs;
-			$link["typeAhead"]="$row->fs - $row->name";
-			array_push($linklist,$link);
-			$counter++;
-		}
-		// end foreach
-		
-		// save JSON file to assets folder
-		$fp = fopen("/home/phoenix/public_html/zz_dev/gofly02/assets/data/airlines.json", "w");
-		fwrite($fp, json_encode($linklist));
-		//echo json_encode($linklist);
-		
-		echo "TypeAhead file created, showing $counter Airlines.";
 	}
 }
-
