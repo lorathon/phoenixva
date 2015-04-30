@@ -46,6 +46,11 @@ class Airports extends PVA_Controller
     
     public function view($id, $page = NULL)
     {
+	$this->load->helper('url');
+	
+	if(is_null($page))
+	    redirect('airports/view/'.$id.'/airlines');
+	
 	$this->data['meta_title'] = 'Phoenix Virtual Airways Airports';
 	$this->data['breadcrumb']['airports'] = 'Airports';
 
@@ -84,6 +89,54 @@ class Airports extends PVA_Controller
 	$this->data['airport'] = $airport;
 	$this->session->set_flashdata('return_url', 'airports/view/' . $id);
 	$this->_render();
+    }
+    
+    function edit_airport($id = NULL)
+    {
+	$this->_check_access('manager');
+	$this->load->library('form_validation');
+	$this->load->helper('url');
+
+	$this->data['title'] = 'Edit Airport';
+	$this->data['breadcrumb']['airports'] = 'Airports';
+
+	$airport = New Airport($id);
+
+	$this->form_validation->set_rules('id', 'ID', '');
+	$this->form_validation->set_rules('iata', 'IATA', 'alpha-numeric|trim|xss_clean');
+	$this->form_validation->set_rules('icao', 'ICAO', 'alpha-numeric|trim|xss_clean');
+	$this->form_validation->set_rules('name', 'Name', 'alpha-numeric|trim|required|xss_clean');
+	$this->form_validation->set_rules('lat', 'Latitude', 'numeric|trim|required|xss_clean');
+	$this->form_validation->set_rules('long', 'Logitude', 'numeric|trim|required|xss_clean');
+	$this->form_validation->set_rules('elevation', 'Elevation', 'numeric|trim|xss_clean');
+
+	$this->data['scripts'][] = base_url('assets/admin/vendor/jquery-validation/jquery.validate.js');
+	$this->data['scripts'][] = base_url('assets/js/forms.validation.js');
+
+	if ($this->form_validation->run() == FALSE)
+	{
+	    $this->data['errors'] = validation_errors();
+	    $this->data['record'] = $airport;
+	    $this->session->keep_flashdata('return_url');
+	    $this->_render('admin/airport_form');
+	}
+	else
+	{
+	    $airport->id = $this->input->post('id', TRUE);
+	    $airport->iata = $this->form_validation->set_value('iata');
+	    $airport->icao = $this->form_validation->set_value('icao');
+	    $airport->name = $this->form_validation->set_value('name');
+	    $airport->lat = $this->form_validation->set_value('lat');
+	    $airport->long = $this->form_validation->set_value('long');
+	    $airport->elevation = $this->form_validation->set_value('elevation');
+	    $airport->active = $this->input->post('active', TRUE);
+	    $airport->hub = $this->input->post('hub', TRUE);
+
+	    $airport->save();
+
+	    $this->_alert('Airport - Record Saved', 'success', TRUE);
+	    //redirect($this->session->flashdata('return_url'));
+	}
     }
     
     function autocomplete()

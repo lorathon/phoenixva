@@ -206,10 +206,10 @@ $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
 	    <?php if ($show_admin): ?>
 		<div class="featured-box featured-box-red">
 		    <div class="box-content">
-			<h2>Airline Admin</h2>
+			<h2>Airport Admin</h2>
 			<ul class="nav nav-pills">			    
 			    <li role="presentation">
-				<?php echo anchor("/private/airports/edit-airport/" . $airline->id, 'Edit Airport'); ?>
+				<?php echo anchor("/private/airports/edit-airport/" . $airport->id, 'Edit Airport'); ?>
 			    </li>
 			</ul>
 		    </div>
