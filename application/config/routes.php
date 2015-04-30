@@ -89,11 +89,17 @@ $route['fleet/(:any)'] = "fleet/index/$1";
 
 // Route all airlines related stuff
 $route['airlines/view/(:any)'] = "airlines/view/$1";
+$route['airlines/autocomplete'] = "airlines/autocomplete";
 $route['airlines/(:any)'] = "airlines/index/$1";
 $route['private/airlines/edit-airline/(:any)'] = "airlines/edit_airline/$1";
 $route['private/airlines/edit-airline'] = "airlines/edit_airline";
 $route['private/airlines/edit-aircraft/(:any)'] = "airlines/edit_aircraft/$1";
 $route['private/airlines/edit-aircraft'] = "airlines/edit_aircraft";
+
+// Route all airports related stuff
+$route['airports/view/(:any)'] = "airports/view/$1";
+$route['airports/autocomplete'] = "airports/autocomplete";
+$route['airports/(:any)'] = "airports/index/$1";
 
 // Default route
 $route['default_controller'] = 'pages/view';

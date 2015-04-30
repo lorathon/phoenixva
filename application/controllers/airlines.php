@@ -162,5 +162,16 @@ class Airlines extends PVA_Controller
 	    redirect($this->session->flashdata('return_url'));
 	}
     }
+    
+    function autocomplete()
+    {
+	$airline = new Airline();
+	$search = $this->input->get('term', TRUE);
+	if (isset($search))
+	{
+	    $data = strtolower($search);
+	    echo $airline->get_autocomplete($data);
+	}
+    }
 
 }
