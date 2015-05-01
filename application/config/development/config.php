@@ -301,7 +301,7 @@ if ($_SERVER['REMOTE_ADDR'] == $_SERVER['SERVER_ADDR'])
 }
 else 
 {
-	$config['csrf_protection'] = TRUE;
+	$config['csrf_protection'] = FALSE;
 }
 $config['csrf_token_name'] = 'csrf_pva_token';
 $config['csrf_cookie_name'] = 'csrf_pva_cookie';
