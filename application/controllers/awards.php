@@ -62,7 +62,7 @@ class Awards extends PVA_Controller
 	$this->data['award_type'] = $award_type;
 	$this->data['users'] = $users;
 	$this->session->set_flashdata('return_url','awards/view/'.$id);
-	$this->_render('award_view');	
+	$this->_render();
     }
     
     public function create_award($id = NULL)

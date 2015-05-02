@@ -15,7 +15,7 @@ function airport($airport)
 		$attribs['class'] = 'hub';
 	}
 	
-	return anchor('airport/view/'.$airport->id, $airport->icao.' '.$airport->name, $attribs);
+	return anchor('airports/view/'.$airport->id, $airport->icao.' '.$airport->name, $attribs);
 }
 
 /**
@@ -28,6 +28,18 @@ function airline($airline)
 {
 	$attribs = array();	
 	return anchor('airlines/view/'.$airline->id, $airline->name, $attribs);
+}
+
+/**
+ * Returns award info in a consistent format.
+ * 
+ * @param object $award Award object of the award to display.
+ * @return string in the format award name with a link to the award details page.
+ */
+function award($award)
+{
+	$attribs = array();	
+	return anchor('awards/view/'.$award->id, $award->name, $attribs);
 }
 
 /**
