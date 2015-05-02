@@ -159,6 +159,8 @@ class Pirep extends PVA_Model {
 			$dupe_pirep->user_id = $this->user_id;
 			$dupe_pirep->dep_airport_id = $this->dep_airport_id;
 			$dupe_pirep->arr_airport_id = $this->arr_airport_id;
+			$dupe_pirep->fuel_off = $this->fuel_off;
+			$dupe_pirep->fuel_on = $this->fuel_on;
 			if ($dupe_pirep->find())
 			{
 				log_message('debug', 'Duplicate PIREP found');
