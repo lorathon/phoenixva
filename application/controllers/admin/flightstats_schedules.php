@@ -29,8 +29,8 @@ class Flightstats_schedules extends PVA_Controller
                 
                 // get list of all active airports between POST IDs
                 $airports = new Airport();
-                $airports->id >= $idstart;
-                $airports->id <= $idstop;
+                $airports->id = ">= $idstart";
+                $airports->id = "<= $idstop";
                 $airports->active = 1;
                 $airports_all = $airports->get_all_airports();
                 
