@@ -27,15 +27,14 @@ class Flightstats_schedules extends PVA_Controller
                 $day = date('j', strtotime($date));
                 $dayofweek = date('D', strtotime($date));
                 
+                // get list of all active airports between POST IDs
+                $airports = new Airport();
+                $airports->id >= $idstart;
+                $airports->id <= $idstop;
+                $airports->active = 1;
+                $airports_all = $airports->get_all_airports();
                 
-                $query = $this->db->select('fs')
-                                    ->from('airports')
-                                    ->where('id >=', $idstart)
-                                    ->where('id <=', $idstop)
-                                    ->where('active', 1)
-                                    ->get();
-                
-                foreach ($query->result() as $row)
+                foreach ($airports_all as $row)
                 {
                     $apt = $row->fs;
                     $this->apt($apt, $year, $month, $day, $dayofweek);
@@ -68,33 +67,15 @@ class Flightstats_schedules extends PVA_Controller
                 $version = $this->input->post('version');
                                         
                 $counter = 0;
+                $processed = 0;
+                echo "$apt processing";
                 
-                $processed  = $this->start($apt, $year, $month, $day, 0, $appid, $appkey, $version, $dayofweek, $counter);
-		$processed += $this->start($apt, $year, $month, $day, 1, $appid, $appkey, $version, $dayofweek, $counter);
-		$processed += $this->start($apt, $year, $month, $day, 2, $appid, $appkey, $version, $dayofweek, $counter);
-		$processed += $this->start($apt, $year, $month, $day, 3, $appid, $appkey, $version, $dayofweek, $counter);
-		$processed += $this->start($apt, $year, $month, $day, 4, $appid, $appkey, $version, $dayofweek, $counter);
-		$processed += $this->start($apt, $year, $month, $day, 5, $appid, $appkey, $version, $dayofweek, $counter);
-		$processed += $this->start($apt, $year, $month, $day, 6, $appid, $appkey, $version, $dayofweek, $counter);
-		$processed += $this->start($apt, $year, $month, $day, 7, $appid, $appkey, $version, $dayofweek, $counter);
-		$processed += $this->start($apt, $year, $month, $day, 8, $appid, $appkey, $version, $dayofweek, $counter);
-		$processed += $this->start($apt, $year, $month, $day, 9, $appid, $appkey, $version, $dayofweek, $counter);
-		$processed += $this->start($apt, $year, $month, $day, 10, $appid, $appkey, $version, $dayofweek, $counter);
-		$processed += $this->start($apt, $year, $month, $day, 11, $appid, $appkey, $version, $dayofweek, $counter);
-		$processed += $this->start($apt, $year, $month, $day, 12, $appid, $appkey, $version, $dayofweek, $counter);
-		$processed += $this->start($apt, $year, $month, $day, 13, $appid, $appkey, $version, $dayofweek, $counter);
-		$processed += $this->start($apt, $year, $month, $day, 14, $appid, $appkey, $version, $dayofweek, $counter);
-		$processed += $this->start($apt, $year, $month, $day, 15, $appid, $appkey, $version, $dayofweek, $counter);
-		$processed += $this->start($apt, $year, $month, $day, 16, $appid, $appkey, $version, $dayofweek, $counter);
-		$processed += $this->start($apt, $year, $month, $day, 17, $appid, $appkey, $version, $dayofweek, $counter);
-		$processed += $this->start($apt, $year, $month, $day, 18, $appid, $appkey, $version, $dayofweek, $counter);
-		$processed += $this->start($apt, $year, $month, $day, 19, $appid, $appkey, $version, $dayofweek, $counter);
-		$processed += $this->start($apt, $year, $month, $day, 20, $appid, $appkey, $version, $dayofweek, $counter);
-		$processed += $this->start($apt, $year, $month, $day, 21, $appid, $appkey, $version, $dayofweek, $counter);
-		$processed += $this->start($apt, $year, $month, $day, 22, $appid, $appkey, $version, $dayofweek, $counter);
-		$processed += $this->start($apt, $year, $month, $day, 23, $appid, $appkey, $version, $dayofweek, $counter);
+                for ($hour = 0; $hour < 24; $hour++) 
+                {
+                    $processed += $this->start($apt, $year, $month, $day, $hour, $appid, $appkey, $version, $dayofweek, $counter);
+		}
                 
-                echo "$apt - Version $version - $processed flights processed. <br />";
+                echo "Version $version - $processed flights processed. <br />";
                 
                 // create flightstats log entry for flight entry
                 $log_obj = new Flightstats_log();
@@ -105,6 +86,8 @@ class Flightstats_schedules extends PVA_Controller
                 $log_obj->note      = "$processed flights processed.";
                 
                 $log_obj->save();
+                
+                unset($log_obj);
 	}
 
 
@@ -117,7 +100,8 @@ class Flightstats_schedules extends PVA_Controller
 		$decode = json_decode($json);
 		
 		$counter = 0;
-                
+                echo ".";
+               
                 // GET AIRPORT UTC OFFSET, ADD TO ARRAY FOR LATER
                 foreach($decode->appendix->airports as $airport) {
                     $fs = $airport->fs;
@@ -134,23 +118,21 @@ class Flightstats_schedules extends PVA_Controller
                         $equip_obj->iata       = $equipments->iata;
                         $equip_obj->find();
                         
-                        // only insert name if adding new airframe.
+                        // only insert if adding new airframe.
                         if( ! $equip_obj->id )
                         {
                             $equip_obj->name        = $equipments->name;
-                        }
-                        
-                        $equip_obj->regional    = $equipments->regional == true ? 1 : 0;
-                        $equip_obj->turboprop   = $equipments->turboProp == true ? 1 : 0;
-                        $equip_obj->jet         = $equipments->jet == true ? 1 : 0;
-                        $equip_obj->widebody    = $equipments->widebody == true ? 1 : 0;
+                            $equip_obj->regional    = $equipments->regional == true ? 1 : 0;
+                            $equip_obj->turboprop   = $equipments->turboProp == true ? 1 : 0;
+                            $equip_obj->jet         = $equipments->jet == true ? 1 : 0;
+                            $equip_obj->widebody    = $equipments->widebody == true ? 1 : 0;
 
-                        $equip_obj->save();
-                        
+                            $equip_obj->save();
+                        }
                         unset($equip_obj);
                     }
                     
-                }
+                } 
                     
                 
                 // BUILD FLIGHTS AND ADD TO / UPDATE PENDING SCHEDULES TABLE
@@ -249,7 +231,7 @@ class Flightstats_schedules extends PVA_Controller
                         unset($sched_obj);
                     }
                     // END IF CODESHARE IS FALSE
-                    
+                    unset($flight);
                 }
                 // END FOR EACH FLIGHT IN JSON
                 return $counter;
