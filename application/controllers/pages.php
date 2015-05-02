@@ -87,22 +87,6 @@ class Pages extends PVA_Controller {
                         $this->data['scripts'][] = base_url('assets/vendor/jquery.validation/jquery.validation.js');
 		}
                 
-                if ($page == 'typeahead')
-		{
-                        // custom page title
-                        $this->data['title'] = "Type Ahead";
-                        
-                        // page specific stylesheets
-                        $this->data['stylesheets'][] = base_url('assets/admin/vendor/summernote/summernote.css');
-                        $this->data['stylesheets'][] = base_url('assets/admin/vendor/bootstrap-timepicker/css/bootstrap-timepicker.css');
-                        
-                        // page specific javascripts
-			$this->data['scripts'][] = base_url('assets/js/typeahead.bundle.js');
-			$this->data['scripts'][] = base_url('assets/js/prefetch.js');
-                        $this->data['scripts'][] = base_url('assets/admin/vendor/summernote/summernote.js');
-                        $this->data['scripts'][] = base_url('assets/admin/vendor/bootstrap-timepicker/js/bootstrap-timepicker.js');                        
-		}		
-		
-		$this->_render('pages/'.$page);
+                $this->_render('pages/'.$page);
 	}
 }

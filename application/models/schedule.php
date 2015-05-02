@@ -33,12 +33,65 @@ class Schedule extends PVA_Model
     public $sat = NULL;
     public $created = NULL;
     public $modified = NULL;
+    
+    protected $_flightnumber = NULL;
+    
+    /* Airline Object*/
+    protected $_airline = NULL;    
+    
+    /* Airport Object */
+    protected $_departure = NULL;
+    protected $_arrival = NULL;
+    
+    /* Airline_aircraft Object */
+    protected $_aircraft = NULL;
+	    
 
     function __construct($id = NULL)
     {
 	$this->_timestamps = TRUE;
 	parent::__construct($id);
     }
+    
+    function get_flightnumber()
+    {
+	if(is_null($this->_flightnumber))
+	{
+	    $airline = new Airline($this->operator_id);
+	    $this->_flightnumber = $airline->fs.$this->flight_num;
+	}
+	return $this->_flightnumber;
+    }
+    
+    function get_airline()
+    {
+	if(is_null($this->_airline))
+	{
+	    $this->_airline = new Airline($this->carrier_id);
+	}
+	return $this->_airline;
+    }
+    
+    function get_airport($arrival = FALSE)
+    {
+	if($arrival)
+	{
+	    $this->_arrival = new Airport($this->arr_airport_id);
+	    return $this->_arrival;		
+	}
+	else
+	{
+	    $this->_departure = new Airport($this->dep_airport_id);
+	    return $this->_departure;	
+	}
+    }
+    
+    function get_aircraft()
+    {
+	
+	return $this->_aircraft;
+    }
+    
 
     /**
      * Activates $limit number of Schedules_pending 

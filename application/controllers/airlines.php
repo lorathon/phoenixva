@@ -68,7 +68,7 @@ class Airlines extends PVA_Controller
 
 	$this->data['airline'] = $airline;
 	$this->session->set_flashdata('return_url', 'airlines/view/' . $id);
-	$this->_render('airline_view');
+	$this->_render();
     }
 
     public function edit_airline($id = NULL)
@@ -83,9 +83,9 @@ class Airlines extends PVA_Controller
 	$airline = New Airline($id);
 
 	$this->form_validation->set_rules('id', 'ID', '');
-	$this->form_validation->set_rules('iata', 'IATA', 'alpha-numberic|trim|xss_clean');
-	$this->form_validation->set_rules('icao', 'ICAO', 'alpha-numberic|trim|xss_clean');
-	$this->form_validation->set_rules('name', 'Name', 'alpha-numberic|trim|required|xss_clean');
+	$this->form_validation->set_rules('iata', 'IATA', 'alpha-numeric|trim|xss_clean');
+	$this->form_validation->set_rules('icao', 'ICAO', 'alpha-numeric|trim|xss_clean');
+	$this->form_validation->set_rules('name', 'Name', 'alpha-numeric|trim|required|xss_clean');
 
 	$this->data['categories'] = $airline->get_category_dropdown();
 
@@ -160,6 +160,17 @@ class Airlines extends PVA_Controller
 
 	    $this->_alert('Aircraft - Record Saved', 'success', TRUE);
 	    redirect($this->session->flashdata('return_url'));
+	}
+    }
+    
+    function autocomplete()
+    {
+	$airline = new Airline();
+	$search = $this->input->get('term', TRUE);
+	if (isset($search))
+	{
+	    $data = strtolower($search);
+	    echo $airline->get_autocomplete($data);
 	}
     }
 

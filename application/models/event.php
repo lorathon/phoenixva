@@ -31,7 +31,7 @@ class Event extends PVA_Model
     public $created = NULL;
     public $modified = NULL;
     
-    protected $_event_type = NULL;
+    protected $_event_type = NULL;  
     
     /* Airline Object */
     protected $_airline = NULL;
@@ -59,6 +59,47 @@ class Event extends PVA_Model
 	$this->_timestamps = TRUE;
 	parent::__construct($id);
     }
+    
+    /**
+     * OVERRIDE
+     * 
+     * Ensure deletion of all associated rows in
+     * foreign tables.
+     * 
+     * Event_awards
+     * Event_participants
+     */
+    function delete()
+    {
+	/* Remove all associated event_awards */
+	$this->get_event_awards();
+	foreach($this->_event_awards as $event_award)
+	{
+	    $event_award->delete();	    
+	}
+	
+	/* Remove all associated event_participants */
+	$this->get_participants();
+	foreach($this->_participants as $participant)
+	{
+	    $participant->delete();
+	}
+	parent::delete();
+    }   
+        
+    function get_events_calender($date_start = NULL, $date_end = NULL, $count = 25)
+    {	
+	if(is_null($date_start) OR is_null($date_end))
+	    return array();
+	
+	$this->db->select()
+		->from($this->_table_name)
+		->where("`time_start` >= '{$date_start}' AND `time_start` <= '{$date_end}' OR `time_end` >= '{$date_start}' AND `time_end` <= '{$date_end}'")
+		->limit($count)
+		;
+	$query = $this->db->get();
+    	return $this->_get_objects($query);
+    }
 
     function get_event_type()
     {
@@ -67,24 +108,6 @@ class Event extends PVA_Model
 	    $this->_event_type = new Event_type($this->event_type_id);
 	}
 	return $this->_event_type;
-    }
-
-    function get_type_name()
-    {
-	if (is_null($this->_event_type))
-	{
-	    $this->get_event_type();
-	}
-	return $this->_event_type->name;
-    }
-
-    function get_color_id()
-    {
-	if (is_null($this->_event_type))
-	{
-	    $this->get_event_type();
-	}
-	return $this->_event_type->color_id;
     }
 
     function get_airline()
@@ -96,15 +119,6 @@ class Event extends PVA_Model
 	return $this->_airline;
     }
 
-    function get_airline_name()
-    {
-	if (is_null($this->_airline))
-	{
-	    $this->get_airline();
-	}
-	return $this->_airline->name;
-    }
-
     function get_airport()
     {
 	if (is_null($this->_airport))
@@ -112,16 +126,7 @@ class Event extends PVA_Model
 	    $this->_airport = new Airport($this->airport_id);
 	}
 	return $this->_airport;
-    }
-
-    function get_airport_name()
-    {
-	if (is_null($this->_airport))
-	{
-	    $this->get_airport();
-	}
-	return $this->_airport->iata . ' - ' . $this->_airport->name;
-    }
+    }    
 
     function get_aircraft_list()
     {
@@ -161,9 +166,6 @@ class Event extends PVA_Model
 	    return FALSE;
 
 	$this->comleted = FALSE;
-	$this->user_id_1 = NULL;
-	$this->user_id_2 = NULL;
-	$this->user_id_3 = NULL;
 	$this->save();
     }
     
@@ -175,7 +177,7 @@ class Event extends PVA_Model
 	if (is_null($this->_event_awards))
 	{
 	    $event_award = new Event_award();
-	    $event_award->event_id = $this->id();
+	    $event_award->event_id = $this->id;
 	    $this->_event_awards = $event_award->find_all();	    
 	}
 	return $this->_event_awards;
@@ -191,7 +193,7 @@ class Event extends PVA_Model
 	    $this->_awards = array();
 	    
 	    if(is_null($this->_event_awards))
-		$this->get_event_awards ();
+		$this->get_event_awards();
 	    
 	    if($this->_event_awards)
 	    {
@@ -213,12 +215,12 @@ class Event extends PVA_Model
 	$event_award->save();
     }
     
-    function remove_award($award_id = NULL)
+    function remove_award($event_award_id = NULL)
     {
-	if(is_null($award_id) OR is_null($this->id))
+	if(is_null($event_award_id))
 	    return FALSE;
 	
-	$event_award = new Event_award(array('event_id' => $this->id, 'award_id' => $award_id));
+	$event_award = new Event_award($event_award_id);
 	$event_award->delete();
     }
     
@@ -228,10 +230,10 @@ class Event extends PVA_Model
 	    return FALSE;
 	
 	if (is_null($this->_participants))
-	{
+	{	    
 	    $event_participant = new Event_participant();
-	    $event_participant->event_id = $this->id();
-	    $this->_participants = $event_participants->find_all();	    
+	    $event_participant->event_id = $this->id;
+	    $this->_participants = $event_participant->find_all();	    
 	}
 	return $this->_participants;
     }
