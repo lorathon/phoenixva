@@ -23,18 +23,17 @@ class Airports extends PVA_Controller
 
 	$airport = new Airport();
 
-	if ($type == 'heli')
-	{
-	    $airport->port_type = 'heli';
-	}
-	elseif ($type == 'sea')
-	{
-	    $airport->port_type = 'sea';
-	}
-	else
-	{
-	    $airport->port_type = 'land';
-	}
+	switch ($type)
+        {
+          case 'heli':
+            $airport->port_type = 'heli';
+            break;
+          case 'sea':
+            $airport->port_type = 'sea';
+            break;
+          default:
+            $airport->port_type = 'land';
+        }
 	$airport->active = TRUE;
 
 	$airports = $airport->find_all();
