@@ -39,7 +39,7 @@ class Flightstats_airline extends PVA_Controller
                 
                 // mark all airports as inactive (except PVA*)
                 $airlines = new Airline();
-                $airlines->fs != 'PVA*';
+                $airlines->fs = '!= PVA*';
                 $airlines_all = $airlines->get_all_airlines();
                 
                 $airlines_all->active = 0;
