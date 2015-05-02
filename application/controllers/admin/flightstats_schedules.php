@@ -101,7 +101,7 @@ class Flightstats_schedules extends PVA_Controller
 		
 		$counter = 0;
                 echo ".";
-                
+               
                 // GET AIRPORT UTC OFFSET, ADD TO ARRAY FOR LATER
                 foreach($decode->appendix->airports as $airport) {
                     $fs = $airport->fs;
@@ -129,7 +129,6 @@ class Flightstats_schedules extends PVA_Controller
 
                             $equip_obj->save();
                         }
-                        
                         unset($equip_obj);
                     }
                     
