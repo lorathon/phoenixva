@@ -29,7 +29,6 @@ class Flightstats_airport extends PVA_Controller
 	 *
 	 * @author Dustin
 	 */
-	
 	function getactive()
 	{
             
@@ -52,8 +51,9 @@ class Flightstats_airport extends PVA_Controller
 		$heliports = 0;
                 
                 // mark all airports as inactive
-                $aptdata = array('active' => 0);
-                $this->db->update('airports', $aptdata);
+                $airports = new Airport();
+                $airports->active = 0;
+                $airports->save();
 		
                 
                  
@@ -228,77 +228,85 @@ class Flightstats_airport extends PVA_Controller
 	}
 	// end getactive function
 	
-	
-	
-	
-	/**
-	 * writeJsonApt function
-	 *
-	 * Goes through airports table and creates Twitter Typeahead JSON file for
-	 * searching of airports in class 1-4. Makes typeahead show the highest volume
-	 * airports first, ordering by highest volume class and then by fs code. 
-	 * Saves to assets folder.
-	 * 
-	 * Folder path for assets may need to be changed depending on environment you are working in.
-	 * 
-	 * $class is required to select which classification level to stop at for writing:
-	 * 
-	 * 1 - Top 100 airports (volume)
-	 * 2 - Next 200 airports
-	 * 3 - Next 400 airports
-	 * 4 - Airports with flight history (approx 4,700 apts)
-	 * 5 - Airports with no flight history (approximately 16,125 apts)
-	 *
-	 * @author Dustin
-	 */
-	
-	function writeJsonApt ()
-	{
-		header('Content-Type: application/json');
-	
-		$linklist=array();
-		$link=array();
-		
-                // required from Post
-                $class = $this->input->post('class');
+	function deactivate_empty_airport()
+        {
+            // get list of airport codes
+            $airports = new Airport();
+            $airports_all = $airports->get_all_airports();
+            $counter = 0;
+            
+            foreach($airports_all as $airport) {
+            
+                $fs = $airport->fs;
                 
-		// get airports in class at or below $class parameter, sets up order for putting into JSON file.
-		$this->db->from('airports')->where('classification <=', $class)->order_by('classification ASC, fs ASC');
-		$query = $this->db->get();
-		
-		$counter = 0;
-	
-		foreach ($query->result() as $row)
-		{
-			// set fs code
-			$link["fs"] = $row->fs;
-			 
-			// if there is no state code, do not include it in airport name
-			if($row->state_code == "" || $row->state_code == null)
-			{
-				$link["typeAhead"] = "$row->fs - $row->name, $row->city, $row->country_code";
-			}
-			 
-			// if there is a state code, include it in the airport name
-			else
-			{
-				$link["typeAhead"] = "$row->fs - $row->name, $row->city, $row->state_code, $row->country_code";
-			}
-
-			$counter++;
-			array_push($linklist,$link);
-		}
-		// end foreach
-		
-		$fp = fopen("/home/phoenix/public_html/zz_dev/gofly02/assets/data/airports.json", "w");
-		fwrite($fp, json_encode($linklist));
-		//echo json_encode($linklist);
-		
-		echo "TypeAhead file created, showing $counter Airports.";
-	}
-	// end writeJsonApt function
-	
-
-
+                //look in schedules pending table for the id in dep or arr fields
+                $query = $this->db->from('schedules_pending')
+                                    ->where('dep_airport', $fs)
+                                    ->or_where('arr_airport', $fs)
+                                    ->limit(1)
+                                    ->get();
+                
+                // if airport has no departures or arrivals, make it inactive
+                if($query->num_rows() == 0 )
+                {
+                    $airport_obj = new Airport();
+                    
+                    $airport_obj->fs = $fs;
+                    $airport_obj->find();
+                    
+                    $airport_obj->active = 0;
+                    $airport_obj->save();
+                    
+                    $counter++;
+                    
+                    echo ".";
+                }
+                
+            }
+            echo "<br />$counter airports deactivated.";
+        }
+        
+        function get_stranded_flights()
+        {
+            // get list of active airport codes
+            $airports = new Airport();
+            $airports->active = 1;
+            $airports->get_all_airports();
+            
+            foreach($airports as $airport) {
+            
+                $fs = $airport->fs;
+                
+                //look in schedules pending table for the id in dep or arr fields
+                $query = $this->db->from('schedules_pending')
+                                    ->where('dep_airport', $fs)
+                                    ->get();
+                
+                // if airport has no departures or arrivals, make it inactive
+                if($query->num_rows() == 0 )
+                {
+                    $airport_obj = new Airport();
+                    
+                    $airport_obj->fs = $fs;
+                    $airport_obj->find();
+                    
+                    $id = $airport_obj->id;
+                    $name = $airport_obj->name;
+                    $city = $airport_obj->city;
+                    $state = $airport_obj->state_code;
+                    $country_code = $airport_obj->country_code;
+                    
+                    if(isset($state)) 
+                    {
+                        echo "<br />$fs - $name, $city, $state, $country_code (ID: $id) ";
+                    }
+                    else {
+                        echo "<br />$fs - $name, $city, $country_code (ID: $id) ";
+                    }
+                    
+                }
+                
+                echo ".";
+            }
+        }
 }
-
