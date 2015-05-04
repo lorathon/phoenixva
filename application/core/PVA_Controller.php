@@ -56,6 +56,8 @@ class PVA_Controller extends CI_Controller {
 		
 		// Holds view specific javascripts 
 		$this->data['scripts'] = array();
+                
+                $this->data['js_templates'] = array();
 		
 		// Holds errors for display by the view
 		$this->data['errors'] = array();
@@ -194,8 +196,14 @@ class PVA_Controller extends CI_Controller {
 		
 		// No cacheing
 		$this->_no_cache();
-		 
-		// Get the view(s) and place in view_output
+                
+                // Load Javascript code at the bottom of the page if it exists
+                if (file_exists(APPPATH . 'views/js/' . $view . '.php') && is_file(APPPATH . 'views/js/' . $view . '.php'))
+                {
+                    $this->data['js_templates'][] = $this->load->view('js/' . $view . '.php', '',TRUE);
+                }
+                
+                // Get the view(s) and place in view_output
 		if (is_array($view))
 		{
 			foreach ($view as $subview)
@@ -209,7 +217,7 @@ class PVA_Controller extends CI_Controller {
 			log_message('debug', 'Rendering '.$view);
 			$this->data['view_output'] = $this->load->view($view, $this->data, TRUE);
 		}
-		 
+		                
 		// Render the appropriate template
 		if ($this->_access == 'admin')
 		{
