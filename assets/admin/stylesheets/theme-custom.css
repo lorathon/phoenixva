@@ -7,3 +7,9 @@
 .dataTables_wrapper .dataTables_filter input {
   width: 85%;
 }
+
+/* datatables condensed settings */
+.table-condensed>tbody>tr>td {
+    line-height: 1;
+    font-size: 12px;
+}
