@@ -16,10 +16,17 @@
             "columns": [
                 { "data": "iata",
                   "className": "center" },
+              
                 { "data": "icao",
                   "className": "center" },
+              
                 { "data": "name" },
-                { "data": "pax_first" },
+                
+                { "data": getPassengers,
+                  "className": "center",
+                  "sortable": false,
+                  "searchable": false },
+              
                 { "data": "payload",
                   "className": "center",
                   "render": function ( data ) {
@@ -30,6 +37,7 @@
                       }
                   }
                 },
+                
                 { "data": "oew",
                   "className": "center",
                   "render": function ( data ) {
@@ -50,6 +58,7 @@
                       }
                   }
                 },
+                
                 { "data": "mtow",
                   "className": "center",
                   "render": function ( data ) {
@@ -60,6 +69,7 @@
                       }
                   }
                 },
+                
                 { "data": "mlw",
                   "className": "center",
                   "render": function ( data ) {
@@ -70,6 +80,7 @@
                       }
                   }
                 },
+                
                 { "data": "aircraft_sub_id",
                   "className": "center" },
                 { "data": "category",
@@ -77,10 +88,15 @@
                 { "data": "id",
                   "className": "center",
                   "render": function ( data ) {
-                    return '<a href="<?php echo base_url();?>admin/airframes/create_airframes/' + data + '">Edit</button>';
+                    return '<a href="<?php echo base_url();?>admin/airframes/create_airframe/' + data + '">Edit</button>';
                 }
             }
             ]
         } );
 } );
+
+// create string for seating type
+function getPassengers(data, type, dataToSet) {
+    return data.pax_first + " | " + data.pax_business + " | " + data.pax_economy;
+};
 </script>
