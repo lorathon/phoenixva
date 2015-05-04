@@ -17,9 +17,13 @@ class Airframes extends PVA_Controller
     }
     
     public function index()
-    {		
-	$airframe = new Airframe();
-	$this->data['airframes'] = $airframe->find_all();
+    {	
+        //set table id in table open tag
+        $tmpl = array('table_open' => '<table id="big_table" class="table table-striped table-bordered table-hover table-condensed" width="100%">');
+        $this->table->set_template($tmpl);
+ 
+        $this->table->set_heading('IATA', 'ICAO', 'Name', 'Seating', 'Payload', 'OEW', 'MZFW', 'MTOW', 'MLW', 'TR ID', 'CAT', 'Edit');
+        
 	$this->data['cat'] = $this->config->item('aircraft_cat');
         $this->_render('admin/airframes');
     }
@@ -27,13 +31,20 @@ class Airframes extends PVA_Controller
     public function view_sub()
     {
         //set table id in table open tag
-        $tmpl = array('table_open' => '<table id="big_table" class="table table-striped table-bordered table-condensed" width="100%">');
+        $tmpl = array('table_open' => '<table id="big_table" class="table table-striped table-bordered table-hover table-condensed" width="100%">');
         $this->table->set_template($tmpl);
  
-        $this->table->set_heading('ID', 'Designation', 'Manufacturer', 'Equips', 'Hours Needed', 'Category', 'Actions');
+        $this->table->set_heading('ID', 'Designation', 'Manufacturer', 'Equipment Codes', 'Hours Needed', 'Category', 'Edit');
 	
 	$this->data['cat'] = $this->config->item('aircraft_cat');
         $this->_render('admin/airframe_sub');	
+    }
+    
+    //function to handle callbacks
+    public function datatable_airframes()
+    {
+        $airframe = new Airframe();
+        return $airframe->datatable();
     }
     
     //function to handle callbacks
