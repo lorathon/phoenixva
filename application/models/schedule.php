@@ -43,8 +43,8 @@ class Schedule extends PVA_Model
     protected $_departure = NULL;
     protected $_arrival = NULL;
     
-    /* Airline_aircraft Object */
-    protected $_aircraft = NULL;
+    /* Airframe Object */
+    protected $_airframe = NULL;
     
     /* Bids Table */
     protected $_bids_table = 'bids';
@@ -90,10 +90,10 @@ class Schedule extends PVA_Model
 	}
     }
     
-    function get_aircraft()
+    function get_airframe()
     {
-	
-	return $this->_aircraft;
+	$this->_airframe = new Airframe($this->aircraft_sub_id);
+	return $this->_airframe;
     }
     
 
