@@ -105,7 +105,10 @@ $route['private/airports/edit-airport'] = "airports/edit_airport";
 
 // Route all schedules/bids related stuff
 $route['private/schedules/search-schedules'] = "schedules/search_schedules";
-$route['private/schedules/create-bid/(:any)'] = "schedules/create_bid/$1";
+$route['private/bids/(:any)'] = "schedules/bids/$1";
+$route['private/bids'] = "schedules/bids";
+$route['private/create-bid/(:any)'] = "schedules/create_bid/$1";
+$route['private/delete-bid/(:any)'] = "schedules/delete_bid/$1";
 
 // Default route
 $route['default_controller'] = 'pages/view';
