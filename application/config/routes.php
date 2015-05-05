@@ -103,6 +103,10 @@ $route['airports/(:any)'] = "airports/index/$1";
 $route['private/airports/edit-airport/(:any)'] = "airports/edit_airport/$1";
 $route['private/airports/edit-airport'] = "airports/edit_airport";
 
+// Route all schedules/bids related stuff
+$route['private/schedules/search-schedules'] = "schedules/search_schedules";
+$route['private/schedules/create-bid/(:any)'] = "schedules/create_bid/$1";
+
 // Default route
 $route['default_controller'] = 'pages/view';
 

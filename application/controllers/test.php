@@ -15,7 +15,7 @@ class Test extends PVA_Controller
 	$this->load->helper('url');
         $this->data['scripts'][] = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js';
 	$this->data['scripts'][] = base_url('assets/js/custom.autocomplete.js');
-	$this->_render();
+	$this->_render();	
     }
     
     function results()
