@@ -22,18 +22,4 @@ class Test extends PVA_Controller
     {
 	
     }
-    
-    function bids()
-    {
-	$this->load->helper('url');
-        $this->data['scripts'][] = base_url('assets/admin/vendor/jquery-nestable/jquery.nestable.js');
-	$this->data['scripts'][] = base_url('assets/js/views/view.test.js');
-	
-	$bid = new Bid();
-	$bid->user_id = 2;
-	$bids = $bid->find_all();
-	
-	$this->data['bids'] = $bids;
-	$this->_render('bids');
-    }
 }
