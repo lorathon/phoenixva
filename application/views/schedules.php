@@ -2,8 +2,6 @@
 $this->load->helper('html');
 $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
 
-$own_bids = ($user->id == $userdata['user_id']);
-
 $form_attributes = array(
     'class' => 'form-horizontal form-bordered',
     'role' => 'form',
@@ -168,12 +166,14 @@ $carrier_id = array(
     	</div>
 
 	<?php else : ?>
+	
+	<?php $own_bids = ($user->id == $userdata['user_id']); ?>
 
     	<div class="row">
     	    <!-- View bids results -->
     	    <div class="col-md-12">
     		<div class="table-responsive">
-    		    <table class="table table-hover mb-none">
+    		    <table class="table table-hover mb-none" id="bidTable">
     			<thead>
     			    <tr>
     				<th>Flight Number</th>
@@ -186,7 +186,7 @@ $carrier_id = array(
     			<tbody>
 				<?php if ($bids) : ?>
 				    <?php foreach ($bids as $row): ?>
-	    			    <tr>
+	    			    <tr id="item-<?php echo $row->id; ?>">
 	    				<td><?php echo $row->get_flightnumber(); ?></td>
 	    				<td><?php echo airport($row->get_airport(FALSE)); ?></td>
 	    				<td><?php echo airport($row->get_airport(TRUE)); ?></td>   

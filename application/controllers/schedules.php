@@ -10,12 +10,17 @@ class Schedules extends PVA_Controller
         parent::__construct();       
     }
 
-    function index()
+    public function index()
     {	
-        $this->search_schedules();
+	$this->load->helper('url');
+	
+	if(isset($this->data['userdata']['name']))
+	    $this->search_schedules();
+	else
+	    redirect('');
     }
     
-    function search_schedules()
+    public function search_schedules()
     {
 	$this->data['meta_title'] = 'Phoenix Virtual Airways Schedules';
 	$this->data['title'] = 'Schedules';
@@ -58,11 +63,12 @@ class Schedules extends PVA_Controller
 	$this->_render();
     }
     
-    function bids($user_id = NULL)
+    public function bids($user_id = NULL)
     {
 	$this->data['meta_title'] = 'Phoenix Virtual Airways Bids';	
+	$this->data['scripts'][] = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js';
 	
-	if(is_null($user_id))
+	if(is_null($user_id) || $this->_check_access('manager'))
 	    $user_id = $this->data['userdata']['user_id'];
 	
 	$user = new User($user_id);
@@ -80,18 +86,31 @@ class Schedules extends PVA_Controller
 	$this->_render();
     }
     
-    function create_bid($user_id = NULL, $schedule_id = NULL)
+    public function create_bid($user_id = NULL, $schedule_id = NULL)
     {
+	if(is_null($user_id) || is_null($schedule_id))
+	    return FALSE;
+	
 	$bid = new Schedule($schedule_id);
 	$bid->create_bid($user_id);
 	$this->bids($user_id);
     }
     
-    function delete_bid($user_id = NULL, $bid_id = NULL)
+    public function delete_bid($user_id = NULL, $bid_id = NULL)
     {
+	if(is_null($user_id) || is_null($schedule_id))
+	    return FALSE;
+	
 	$bid = new Schedule();
 	$bid->delete_bid($bid_id);
 	$this->bids($user_id);
+    }
+    
+    public function reorder_bids()
+    {
+	$post = $this->input->get('item', TRUE);	
+	$bid = new Schedule();
+	$bid->reorder_bids($post);
     }
 
 }

@@ -350,7 +350,7 @@ class Schedule extends PVA_Model
      * Expects an array of bids
      * Bids should be in order of new sort
      * 
-     * @param array $bids Array of Bids
+     * @param array $bids Array of Bids ids
      */
     function reorder_bids($bids = NULL)
     {
@@ -358,8 +358,10 @@ class Schedule extends PVA_Model
 	    return;
 	
 	$i = 0;
-	foreach($bids as $bid)
+	foreach($bids as $value)
 	{
+	    $bid = new Schedule();
+	    $bid->id = $value;
 	    $bid->_table_name = $this->_bids_table;
 	    $bid->sort = $i;
 	    $bid->save();

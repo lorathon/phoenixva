@@ -17,7 +17,6 @@ class Events extends PVA_Controller
 	$this->data['scripts'][] = base_url('assets/vendor/jquery/jquery.js');
 	$this->data['scripts'][] = base_url('assets/admin/vendor/fullcalendar/lib/moment.min.js');
 	$this->data['scripts'][] = base_url('assets/admin/vendor/fullcalendar/fullcalendar.js');
-	$this->data['scripts'][] = base_url('assets/js/events.calendar.js');
 	
 	$event = new Event();
 	$events = $event->get_events_calender(date('Y-m-d'), date('Y-m-d', strtotime("+20days")), 5);
@@ -480,16 +479,10 @@ class Events extends PVA_Controller
     
     public function get_json()
     {
-	$this->load->library('form_validation'); 
 	$this->load->helper('url');
 	
-	$this->form_validation->set_rules('start', 'Start', 'alpha-numeric|trim|xss_clean');
-        $this->form_validation->set_rules('end', 'End', 'alpha-numeric|trim|xss_clean');
-	
-	$this->form_validation->run();
-	
-	$date_start = $this->form_validation->set_value('start');
-	$date_end = $this->form_validation->set_value('end');
+	$date_start = $this->input->get('start', TRUE);
+	$date_end = $this->input->get('end', TRUE);
 	
 	$event = new Event();
 	$events = $event->get_events_calender($date_start, $date_end);

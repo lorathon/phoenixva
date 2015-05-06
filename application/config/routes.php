@@ -104,6 +104,7 @@ $route['private/airports/edit-airport/(:any)'] = "airports/edit_airport/$1";
 $route['private/airports/edit-airport'] = "airports/edit_airport";
 
 // Route all schedules/bids related stuff
+$route['private/schedules'] = "schedules";
 $route['private/schedules/search-schedules'] = "schedules/search_schedules";
 $route['private/bids/(:any)'] = "schedules/bids/$1";
 $route['private/bids'] = "schedules/bids";
