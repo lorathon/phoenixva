@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    
+   
 var fixHelper = function(e, ui) {
     ui.children().each(function() {
         $(this).width($(this).width());
@@ -17,7 +17,7 @@ $('#bidTable tbody').sortable({
         $.ajax({
             data: data,
             type: 'POST',
-            url: '<?php echo base_url();?>test/results'
+            url: '<?php echo base_url();?>schedules/reorder_bids'
         });
     }
 });
