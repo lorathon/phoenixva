@@ -1,7 +1,7 @@
 <?php $this->load->helper('html'); ?>
 
 <header class="page-header">
-    <h2>View All Airframes</h2>
+    <h2>View All Airports</h2>
 </header>
 
 <!-- start: page -->

@@ -31,11 +31,11 @@
 		<link rel="stylesheet" href="<?php echo base_url('assets/admin/stylesheets/skins/default.css'); ?>" />
                 
                 <!-- load page specific CSS -->
-     			<?php foreach ($stylesheets as $row): ?>
-                            <link rel="stylesheet" href="<?=$row; ?>">
-                        <?php endforeach; ?>
-
-		<!-- Theme Custom CSS -->
+                <?php foreach ($stylesheets as $row): ?>
+                    <link rel="stylesheet" href="<?=$row; ?>">
+                <?php endforeach; ?>
+                
+                <!-- Theme Custom CSS -->
 		<link rel="stylesheet" href="<?php echo base_url('assets/admin/stylesheets/theme-custom.css'); ?>">
 
 		<!-- Head Libs -->
@@ -305,9 +305,9 @@
 		<script src="<?php echo base_url('assets/admin/javascripts/theme.js'); ?>"></script>
                 
                 <!-- load page specific scripts -->
-        <?php foreach ($scripts as $row): ?>
-        	<script src="<?=$row; ?>"></script>
-        <?php endforeach; ?>
+                <?php foreach ($scripts as $row): ?>
+                        <script src="<?=$row; ?>"></script>
+                <?php endforeach; ?>
 		
 		<!-- Theme Custom -->
 		<script src="<?php echo base_url('assets/admin/javascripts/theme.custom.js'); ?>"></script>
@@ -318,5 +318,13 @@
 
 		<!-- Examples -->
 		<script src="<?php echo base_url('assets/admin/javascripts/dashboard/examples.dashboard.js'); ?>"></script>
+                
+                <!-- Page specific Javascript code-->
+                <?php 
+                foreach ($js_templates as $js)
+                {
+                    echo $js;
+                }
+                ?>
 	</body>
 </html>

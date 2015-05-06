@@ -50,5 +50,11 @@ class Airframe extends PVA_Model
         }
         $this->category = $category;
     }
+    
+    public function datatable()
+    {
+        $this->datatables->select('id,iata,icao,name,aircraft_sub_id,category,pax_first,pax_business,pax_economy,payload,max_range,oew,mzfw,mtow,mlw')->from('airframes');
+        echo $this->datatables->generate();
+    }
 
 }

@@ -175,5 +175,11 @@ class Airport extends PVA_Model
 	$this->autocomplete = $auto;
 	$this->save();	
     }
+    
+    public function datatable()
+    {
+        $this->datatables->select('id,fs,iata,icao,name,city,state_code,country_name,utc_offset,elevation,classification,active,port_type')->from('airports');
+        echo $this->datatables->generate();
+    }
 
 }
