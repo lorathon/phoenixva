@@ -108,7 +108,7 @@ class Schedules extends PVA_Controller
     
     public function reorder_bids()
     {
-	$post = $this->input->post('item', TRUE);	
+	$post = $this->input->get('item', TRUE);	
 	$bid = new Schedule();
 	$bid->reorder_bids($post);
     }

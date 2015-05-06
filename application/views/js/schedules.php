@@ -11,15 +11,14 @@ $('#bidTable tbody').sortable({
     axis: 'y',
     helper: fixHelper, 
     update: function (event, ui) {
+	
         var data = $(this).sortable('serialize');
-
-        // POST to server using $.post or $.ajax
-        $.ajax({
-            data: data,
-            type: 'POST',
+	
+        $.ajax({   
+	    data: data,
+            type: 'GET',
             url: '<?php echo base_url();?>schedules/reorder_bids'
         });
     }
 });
-
 </script>
