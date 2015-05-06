@@ -103,4 +103,15 @@ class Fleet extends PVA_Controller
 	$this->data['sub_fleet'] = $sub_fleet;;
 	$this->_render();
     }
+    
+    function autocomplete_sub()
+    {
+	$aircraft = new Aircraft_sub();	
+	$search = $this->input->get('term', TRUE);
+	if (isset($search))
+	{
+	    $data = strtolower($search);
+	    echo $aircraft->get_autocomplete($data);
+	}
+    }
 }
