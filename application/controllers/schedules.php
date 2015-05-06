@@ -17,6 +17,9 @@ class Schedules extends PVA_Controller
     
     function search_schedules()
     {
+	$this->data['meta_title'] = 'Phoenix Virtual Airways Schedules';
+	$this->data['title'] = 'Schedules';
+	
 	$this->load->helper(array('form', 'url'));
 	$this->load->library('form_validation'); 
 	
@@ -57,10 +60,22 @@ class Schedules extends PVA_Controller
     
     function bids($user_id = NULL)
     {
+	$this->data['meta_title'] = 'Phoenix Virtual Airways Bids';	
+	
+	if(is_null($user_id))
+	    $user_id = $this->data['userdata']['user_id'];
+	
+	$user = new User($user_id);
+	
+	if($user_id == $this->data['userdata']['user_id'])
+	    $this->data['title'] = 'Your Bids';
+	else
+	    $this->data['title'] = $user->name . ' - Bids';
+	
 	$bid = new Schedule();
 	$bids = $bid->get_bids($user_id, TRUE);
 	
-	$this->data['user'] = new User($user_id);
+	$this->data['user'] = $user;
 	$this->data['bids'] = $bids;
 	$this->_render();
     }
@@ -69,12 +84,14 @@ class Schedules extends PVA_Controller
     {
 	$bid = new Schedule($schedule_id);
 	$bid->create_bid($user_id);
+	$this->bids($user_id);
     }
     
-    function delete_bid($bid_id = NULL)
+    function delete_bid($user_id = NULL, $bid_id = NULL)
     {
 	$bid = new Schedule();
-	$bid->delete_bid($bid_id);	
+	$bid->delete_bid($bid_id);
+	$this->bids($user_id);
     }
 
 }

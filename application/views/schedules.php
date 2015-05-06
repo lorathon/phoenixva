@@ -2,6 +2,8 @@
 $this->load->helper('html');
 $show_admin = (isset($userdata['name']) && $userdata['is_manager']);
 
+$own_bids = ($user->id == $userdata['user_id']);
+
 $form_attributes = array(
     'class' => 'form-horizontal form-bordered',
     'role' => 'form',
@@ -79,7 +81,7 @@ $carrier_id = array(
     	<!--  Schedule Search Form -->
     	<div class="col-md-12">
     	    <div class="toogle active" data-plugin-toggle>
-    		<section class="toggle <?php if($search) echo 'active'; ?>">
+    		<section class="toggle <?php if ($search) echo 'active'; ?>">
     		    <label>Schedule Search</label>
     		    <div class="toggle-content">
 			    <?php echo form_open_multipart('private/schedules/search-schedules', $form_attributes); ?>
@@ -125,7 +127,7 @@ $carrier_id = array(
     	<!-- Search Results -->
     	<div class="col-md-12">
     	    <div class="toogle" data-plugin-toggle>
-    		<section class="toggle <?php if(!$search) echo 'active'; ?>">
+    		<section class="toggle <?php if (!$search) echo 'active'; ?>">
     		    <label>Search Results</label>
     		    <div class="toggle-content">
     			<div class="table-responsive">
@@ -169,6 +171,43 @@ $carrier_id = array(
 
     	<div class="row">
     	    <!-- View bids results -->
+    	    <div class="col-md-12">
+    		<div class="table-responsive">
+    		    <table class="table table-hover mb-none">
+    			<thead>
+    			    <tr>
+    				<th>Flight Number</th>
+    				<th>Departure</th>
+    				<th>Arrival</th>
+    				<th>Aircraft</th>
+    				<th>Actions</th>
+    			    </tr>
+    			</thead>
+    			<tbody>
+				<?php if ($bids) : ?>
+				    <?php foreach ($bids as $row): ?>
+	    			    <tr>
+	    				<td><?php echo $row->get_flightnumber(); ?></td>
+	    				<td><?php echo airport($row->get_airport(FALSE)); ?></td>
+	    				<td><?php echo airport($row->get_airport(TRUE)); ?></td>   
+	    				<td><?php echo $row->get_airframe()->icao; ?></td>
+	    				<td align="center">
+					    <?php if($show_admin || $own_bids) : ?>
+						<?php echo anchor('private/schedules/delete-bid/' . $user->id . '/' . $row->id, '<i class="fa fa-trash"></i> Delete', button_delete('danger')); ?>					
+					    <?php endif; ?>
+					</td>
+	    			    </tr>
+				    <?php endforeach; ?>
+				<?php else : ?>
+				    <tr>
+					<td colspan="5">No schedules have been located.</td>
+				    </tr>
+				<?php endif; ?>
+    			</tbody>
+    		    </table>
+
+    		</div>    		
+    	    </div>
     	</div>
 
 	<?php endif; ?>

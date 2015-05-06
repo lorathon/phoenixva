@@ -121,7 +121,7 @@
 							{
 								echo anchor('private/brief', '<i class="fa fa-plane"></i> Flight Brief', button('success'));
 								echo "\n";
-								echo anchor('private/bid/pilot/'.$user_id, 'Bids', button('default'));
+								echo anchor('private/bids/'.$user_id, 'Bids', button('default'));
 								echo "\n";
 								echo anchor('private/schedules', 'Schedules', button('default'));
 							}

@@ -249,7 +249,8 @@ class Schedule extends PVA_Model
 	
 	$schedule = new Schedule();
 	$schedule->_table_name = $this->_bids_table;
-	$schedule->_order_by = $this->_bids_sort;	
+	$schedule->_order_by = $this->_bids_sort;
+	$schedule->user_id = $user_id;
 	
 	if($all)
 	    $schedule->_limit = $schedule->find_all(FALSE, TRUE);
