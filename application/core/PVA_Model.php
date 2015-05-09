@@ -218,6 +218,42 @@ class PVA_Model extends CI_Model
     	
     	return $this->_get_objects($query);
     }
+    
+    /**
+     * Gets a datatables.net return
+     * 
+     * @param string $columns The columns to include in the output.
+     * @return Ambigous <string, mixed>
+     */
+    public function get_datatable($columns = NULL)
+    {
+        log_message('debug', 'PVA_Model get_datatable()');
+        $datatable = new Datatables();
+        
+        if (is_null($columns))
+        {
+            log_message('debug', 'Getting column list');         
+            $props = get_object_vars($this);
+            $first = TRUE;
+            foreach ($props as $key => $value)
+            {
+                if (substr($key,0,1) != '_')
+                {
+                    if (!$first)
+                    {
+                    	$columns .= ', ';
+                    }
+                    
+                    $columns .= $key;
+                    
+                    if ($first) $first = FALSE;
+                }
+            }
+        }
+        log_message('debug', 'Columns: '.$columns);
+        $datatable->select($columns)->from($this->_table_name);
+        return $datatable->generate();
+    }
         
     /**
      * Allows access to all properties of an object.
