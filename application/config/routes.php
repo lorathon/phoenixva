@@ -85,6 +85,7 @@ $route['private/ranks/delete-rank/(:any)'] = "ranks/delete_rank/$1";
 // Route all fleet related stuff
 $route['fleet/view/(:any)'] = "fleet/view/$1";
 $route['fleet/view-sub/(:any)'] = "fleet/view_sub/$1";
+$route['fleet/autocomplete_sub'] = "fleet/autocomplete_sub";
 $route['fleet/(:any)'] = "fleet/index/$1";
 
 // Route all airlines related stuff
@@ -102,6 +103,13 @@ $route['airports/autocomplete'] = "airports/autocomplete";
 $route['airports/(:any)'] = "airports/index/$1";
 $route['private/airports/edit-airport/(:any)'] = "airports/edit_airport/$1";
 $route['private/airports/edit-airport'] = "airports/edit_airport";
+
+// Route all schedules/bids related stuff
+$route['private/schedules/search-schedules'] = "private/schedules/search_schedules";
+$route['private/bids/(:any)'] = "private/schedules/bids/$1";
+$route['private/bids'] = "private/schedules/bids";
+$route['private/create-bid/(:any)'] = "private/schedules/create_bid/$1";
+$route['private/delete-bid/(:any)'] = "private/schedules/delete_bid/$1";
 
 // Default route
 $route['default_controller'] = 'pages/view';

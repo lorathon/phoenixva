@@ -63,5 +63,40 @@ class Aircraft_sub extends PVA_Model
             $airframe->update_categories();
         }
     }
+    
+    /**
+     * Search Aircraft_sub tables autocomplete 
+     * column using %LIKE%
+     * 
+     * @param string $search
+     * @return json JSON search results
+     */
+    function get_autocomplete($search = NULL)
+    {
+	if(is_null($search))
+	    echo json_encode($row_set);
+	
+	$this->autocomplete = $search;
+	
+	$aircraft = $this->find_all(TRUE);
+	if ($aircraft > 0)
+	{
+	    foreach ($aircraft as $row)
+	    {		
+		$new_row['label'] = htmlentities(stripslashes($row->autocomplete));
+		$new_row['value'] = htmlentities(stripslashes($row->autocomplete));		
+		$new_row['id'] = $row->id;
+		$row_set[] = $new_row; //build an array
+	    }
+	    $this->output->enable_profiler(FALSE);
+	    return json_encode($row_set); //format the array into json data
+	}
+    }
+    
+    public function datatable()
+    {
+        $this->datatables->select('id,designation,manufacturer,equips,hours_needed,category,rated')->from('aircraft_subs');
+        echo $this->datatables->generate();
+    }
 
 }

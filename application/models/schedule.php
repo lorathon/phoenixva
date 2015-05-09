@@ -43,8 +43,12 @@ class Schedule extends PVA_Model
     protected $_departure = NULL;
     protected $_arrival = NULL;
     
-    /* Airline_aircraft Object */
-    protected $_aircraft = NULL;
+    /* Airframe Object */
+    protected $_airframe = NULL;
+    
+    /* Bids Table */
+    protected $_bids_table = 'bids';
+    protected $_bids_sort = 'sort asc';
 	    
 
     function __construct($id = NULL)
@@ -86,10 +90,10 @@ class Schedule extends PVA_Model
 	}
     }
     
-    function get_aircraft()
+    function get_airframe()
     {
-	
-	return $this->_aircraft;
+	$this->_airframe = new Airframe($this->aircraft_sub_id);
+	return $this->_airframe;
     }
     
 
@@ -236,6 +240,144 @@ class Schedule extends PVA_Model
 	}
 	// Return total number of schedules activated
 	return $count;
+    }    
+    
+    function get_bids($user_id = NULL, $all = FALSE)
+    {
+	if(is_null($user_id))
+	    return FALSE;
+	
+	$schedule = new Schedule();
+	$schedule->_table_name = $this->_bids_table;
+	$schedule->_order_by = $this->_bids_sort;
+	$schedule->user_id = $user_id;
+	
+	if($all)
+	    $schedule->_limit = $schedule->find_all(FALSE, TRUE);
+	else
+	    $schedule->_limit = 1;
+	
+	return $schedule->find_all();
+    }
+    
+    /**
+     * Create a new bid.  
+     * Retrieves schedule based on $schedule_id
+     * Adds new bid using $user_id
+     * 
+     * Normal Usage
+     * $bid = new Schedule($schedule_id);
+     * $schedule->create_bid($user_id);
+     * 
+     * @param int $user_id
+     * @return boolean
+     */
+    function create_bid($user_id = NULL)
+    {
+	$this->_table_name = $this->_bids_table;
+	
+	if(is_null($user_id))
+	    return FALSE;
+	
+	$this->id = NULL;
+	
+	$this->user_id = $user_id;
+	$this->sort = self::get_bid_sort($user_id);
+	
+	$this->save();
+    }
+    
+    /**
+     * Retrieve the next sort number 
+     * used for adding a new bid
+     * 
+     * @param int $user_id
+     * @return int
+     */
+    function get_bid_sort($user_id = NULL)
+    {	
+	if(is_null($user_id))
+	    return FALSE;	
+	
+	$bid = new Schedule();
+	$bid->_table_name = $this->_bids_table;
+	$bid->user_id = $user_id;
+	
+	$bid->sort_bids($user_id);
+	
+	$bid->id = NULL;
+	
+	return $bid->find_all(FALSE, TRUE);	
+    }
+    
+    /**
+     * Sorts all current bids to
+     * remove any numerical spaces
+     * in sort order.
+     * 
+     * @param int $user_id
+     */
+    function sort_bids($user_id = NULL)
+    {
+	
+	if(is_null($user_id))
+	    return;
+	
+	$schedule = new Schedule();	
+	$schedule->_table_name = $this->_bids_table;
+	$schedule->_order_by = $this->_bids_sort;	
+	$schedule->user_id = $user_id;
+	$schedule->_limit = $schedule->find_all(FALSE, TRUE);
+	
+	$bids = $schedule->find_all();
+	
+	$i = 0;
+	
+	if($bids)
+	{
+	    foreach($bids as $bid)
+	    {
+		$bid->_table_name = $this->_bids_table;
+		$bid->sort = $i;
+		$bid->save();
+		$i++;
+	    }
+	}
+    }
+    
+    /**
+     * Reorder a users bids
+     * Expects an array of bids
+     * Bids should be in order of new sort
+     * 
+     * @param array $bids Array of Bids ids
+     */
+    function reorder_bids($bids = NULL)
+    {
+	if(is_null($bids))
+	    return;
+	
+	$i = 0;
+	foreach($bids as $value)
+	{
+	    $bid = new Schedule();
+	    $bid->id = $value;
+	    $bid->_table_name = $this->_bids_table;
+	    $bid->sort = $i;
+	    $bid->save();
+	    $i++;
+	}
+    }
+    
+    function delete_bid($bid_id = NULL)
+    {
+	if(is_null($bid_id))
+	    return FALSE;
+	    
+	$schedule = new Schedule();
+	$schedule->_table_name = $this->_bids_table;
+	$schedule->id = $bid_id;
+	$schedule->delete();	
     }
 
 }

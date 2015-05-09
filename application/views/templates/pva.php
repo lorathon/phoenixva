@@ -449,6 +449,14 @@
 				<?php echo $GLOBALS['page_script']; ?>
 			</script>
 		<?php endif; ?>
+			
+		<!-- Page specific Javascript code-->
+                <?php 
+                foreach ($js_templates as $js)
+                {
+                    echo $js;
+                }
+                ?>
                 
                	<!-- Google Analytics: Change UA-XXXXX-X to be your site's ID. Go to http://www.google.com/analytics/ for more information.
 		<script type="text/javascript">
