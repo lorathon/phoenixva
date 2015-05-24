@@ -131,6 +131,45 @@ class PVA_Controller extends CI_Controller {
 	}
 	
 	/**
+	 * Handles Datatable POST
+	 * 
+	 * @param $model Optional Model object to use with this request.
+	 */
+	public function datatable($model = NULL)
+	{
+	    log_message('debug', 'Datatable POST:');
+	    log_message('debug', print_r($_POST, TRUE));
+	    
+	    // Turn off profiling since the return is JSON
+	    $this->output->enable_profiler(FALSE);
+	    
+	    $this->load->library('form_validation');
+	    
+	    if ($this->form_validation->run('datatables'))
+	    {
+	        if (is_null($model))
+	        {
+	            $class = get_class($this);
+	            $model_name = substr($class, 0, strlen($class)-1);
+	            $model = new $model_name();
+	        }
+	        
+	        echo $model->get_datatable();
+	        return;
+	    }
+	    log_message('debug', 'Form validation failed.');
+	    (isset($_POST['draw'])) ? $draw = intval($_POST['draw']) : $draw = 1;
+	    $error = array(
+	        'draw' => $draw,
+	        'recordsTotal' => 0,
+	        'recordsFiltered' => 0,
+	        'data' => NULL,
+	        'error' => 'Improper datatable request sent.'
+	    );
+	    echo json_encode($error);
+	}
+	
+	/**
 	 * Checks that the user has sufficient privileges
 	 * 
 	 * Redirects to the unauthorized screen if they don't.

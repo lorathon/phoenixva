@@ -3,6 +3,9 @@
 require_once 'acars_base.php';
 /**
  * ACARS controller for the kACARS client by Jeffrey Kobus (www.fs-products.net).
+ * 
+ * Updated to the new ACARS Communications Specification:
+ * https://github.com/cjtop/phoenixva/wiki/ACARS-Communications-Specification
  *
  * @author Chuck Topinka
  * @author Jeffrey Kobus
@@ -16,6 +19,15 @@ class Kacars extends Acars_Base
 	 * @var integer
 	 */
 	private $_user_id = NULL;
+	
+	/**
+	 * Authorization token
+	 * 
+	 * Used to identify the user after login.
+	 * 
+	 * @var string
+	 */
+	private $_auth_token = NULL;
 	
 	/**
 	 * Identifier for this ACARS client
