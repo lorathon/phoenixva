@@ -44,10 +44,7 @@ class Kacars extends Acars_Base
 		if (method_exists($this, $func))
 		{
 			$this->$func($xml);
-		}
-				
-		// Respond to the ACARS client
-		$this->sendXML($this->_params, $func);
+		}				
 	}
 	
 	/**
@@ -113,13 +110,15 @@ class Kacars extends Acars_Base
 			
 			($user->is_manager()) ? $staff = 1 : $staff = 0;
 			$this->_params['staff'] = $staff;
+			
+			// Respond to the ACARS client
+			$this->sendXML('login');
 		}
 		else 
 		{
 			// Login failed
 			log_message('debug', 'kACARS user login failed');
-			$this->_params['loginStatus'] = 0;
-			$this->_params['message'] = 'Unable to log in with that user and password.';
+			$this->sendError('Unable to log in with that user and password.');
 		}
 	}
 
@@ -182,7 +181,7 @@ class Kacars extends Acars_Base
 		}
 		else
 		{
-			// No liveupdate data provided
+			$this->sendError('No liveupdate data provided');
 		}
 	}
 	
@@ -264,11 +263,13 @@ class Kacars extends Acars_Base
 			
 			// Won't be able to return the actual PIREP ID due to asynch comms
 			$this->_params['pirepID'] = time();
+			
+			// Respond to the ACARS client
+			$this->sendXML('pirep');
 		}
 		else 
 		{
-			$this->_params['pirepStatus'] = 0;
-			$this->_params['message'] = 'No PIREP data to file.';
+			$this->sendError('No PIREP data to file.');
 		}
 	}
 	
@@ -305,5 +306,11 @@ class Kacars extends Acars_Base
 	protected function getCargo($xml)
 	{
 	
+	}
+	
+	protected function sendError($msg)
+	{
+	    $this->_params['message'] = $msg;
+	    $this->sendXML('error');
 	}
 }

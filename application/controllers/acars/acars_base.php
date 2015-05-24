@@ -124,7 +124,7 @@ class Acars_Base extends CI_Controller {
 	 * @param array $params containing the name/value pairs for the XML
 	 * @param string $switch
 	 */
-	protected function sendXML($params, $switch = '') 
+	protected function sendXML($switch = '') 
 	{
 		$this->output->enable_profiler(false);
 		$xml = new SimpleXMLElement('<'.$this->_client.' />');
@@ -134,7 +134,7 @@ class Acars_Base extends CI_Controller {
 		
 		$info_xml = $xml->addChild('data');
 		
-		foreach($params as $name => $value)	
+		foreach($this->_params as $name => $value)	
 		{
 			$info_xml->addChild($name, $value);
 		}
