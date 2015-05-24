@@ -10,13 +10,26 @@ require_once 'acars_base.php';
  * @author Chuck Topinka
  * @author Jeffrey Kobus
  *
-*/
+ */
 class Kacars extends Acars_Base
 {
+	protected $xml;
 	
 	public function __construct()
 	{
 	    $this->_client = 'kACARS';
+	    
+	    $this->xml = simplexml_load_string(file_get_contents('php://input'));
+	    
+	    log_message('debug', 'Incoming kACARS Message:');
+	    log_message('debug', print_r($this->xml, TRUE));
+	    log_message('debug', '-----------------------------');
+	    
+	    if ($this->xml->authToken)
+	    {
+	        $this->_auth_token = $this->xml->authToken;
+	    }
+	     
 	    parent::__construct();
 	}
 	
@@ -28,22 +41,18 @@ class Kacars extends Acars_Base
 	 * to execute.
 	 */
 	public function index()
-	{
-		// XXX Probably need more security here.
-		$input = file_get_contents('php://input');
-		$xml = simplexml_load_string($input);
-		
-		log_message('debug', 'Incoming kACARS Message:');
-		log_message('debug', print_r($xml, TRUE));
-		log_message('debug', '-----------------------------');
-		
+	{		
 		// Switch data contains the function to run
-		$func = (string)$xml->switch->data;
+		$func = (string)$this->xml->switch;
 		log_message('debug', 'Method: '.print_r($func, TRUE));
 		
 		if (method_exists($this, $func))
 		{
-			$this->$func($xml);
+			$this->$func($this->xml);
+		}
+		else 
+		{
+		    $this->sendError("Function {$func} does not exist");
 		}				
 	}
 	
@@ -124,7 +133,29 @@ class Kacars extends Acars_Base
 
 	protected function getBid($xml)
 	{
-		
+		if (! is_null($this->_user_id)) {
+		    $bid = $this->get_bid();
+		    
+		    $this->_params['aircraftid'] = $bid->aircraft_sub_id;
+		    $this->_params['carrierid'] = $bid->carrier_id;
+		    $this->_params['operatorid'] = $bid->operator_id;
+		    $this->_params['flightnumber'] = $bid->flight_num;
+		    $this->_params['flighttype'] = 'unknown';
+		    $this->_params['depairport'] = $bid->get_airport()->icao;
+		    $this->_params['deptime'] = $bid->dep_time_utc;
+		    $this->_params['arrairport'] = $bid->get_airport(TRUE)->icao;
+		    $this->_params['arrtime'] = $bid->arr_time_utc;
+		    $this->_params['paxfirst'] = $bid->get_airframe()->pax_first;
+		    $this->_params['paxbusiness'] = $bid->get_airframe()->pax_business;
+		    $this->_params['paxeconomy'] = $bid->get_airframe()->pax_economy;
+		    $this->_params['cargo'] = $bid->get_airframe()->payload;
+		    
+		    $this->sendXML('bid');
+		}
+		else
+		{
+		    $this->sendError('Invalid authToken');
+		}
 	}
 	
 	protected function getFlight($xml)
@@ -139,49 +170,38 @@ class Kacars extends Acars_Base
 	 * 
 	 * @param SimpleXMLElement $xml
 	 */
-	protected function liveUpdate($xml)
+	protected function liveupdate($xml)
 	{
-		if ($xml->liveupdate)
+		if ($xml->data)
 		{
-			$update = $xml->liveupdate;
+			$update = $xml->data;
 			
-			// Translate KACARS to Live Update fields
-			$fields = array(
-					'client='.$this->_client,
-					'user_id='.$this->_user_id,
-					'ip_address='.$_SERVER['REMOTE_ADDR'],
-					'pirep_id=0',
-					'load=',
-					'lat='.$update->lat,
-					'long='.$update->lng,
-					'altitude='.$update->alt,
-					'altitude_agl=',
-					'altitude_msl=',
-					'heading='.$update->heading,
-					'ground_speed='.$update->gs,
-					'true_airspeed=',
-					'indicated_airspeed=',
-					'vertical_speed='.$update->vs,
-					'bank=',
-					'pitch=',
-					'fuel_onboard='.$update->fob,
-					'phase='.$update->phase,
-					'warning=',
-					'warning_detail=',
-					'remain_dist='.$update->remain_dist,
-					'flown_time='.$update->flown_time,
-					'landed='.$update->landed,
-			);
+			$report = new Position();
 			
-			$message = implode($this->_field_separator, $fields);
+			// Translate values
+			$report->user_id = $this->_user_id;
+			$report->ip_address = $_SERVER['REMOTE_ADDR'];
+			$report->lat = $update->lat;
+			$report->long = $update->lng;
+			$report->altitude = $update->alt;
+			$report->heading = $update->heading;
+			$report->ground_speed = $update->gs;
+			$report->vertical_speed = $update->vs;
+			$report->fuel_onboard = $update->fob;
+			$report->phase = $update->phase;
+			$report->remain_dist = $update->remain_dist;
+			$report->flown_time = $update->flown_time;
+			$report->landed = $update->landed;
 
-			// Dispatch to appropriate handler
-			$this->dispatch($message, $this->_acars_processor_path.'update');
+			$this->position_report($report);
 			log_message('debug', 'Live Update returning to client');
+			
+			$this->_params['message'] = 'Update processed';
+			$this->sendXML('liveupdate');
 		}
 		else
 		{
-			$this->sendError('No liveupdate data provided');
+			$this->sendError('No data provided');
 		}
 	}
 	
@@ -194,77 +214,55 @@ class Kacars extends Acars_Base
 	 */
 	protected function pirep($xml)
 	{
-		if ($xml->pirep)
+		if ($xml->data)
 		{
-			$update = $xml->liveupdate;
-			$pirep = $xml->pirep;
-			$schedule = $xml->schedule;
-			$fuel = $xml->fuel;
+			$data = $xml->data;
 			
-			// Translate KACARS to PIREP fields			
-			$fields = array(
-					'client='.$this->_client,
-					'user_id='.$this->_user_id,
-					'hub_id='.$xml->data->crewcenter,
-					'flightnumber='.$pirep->flightnumber,
-					'flight_type='.$pirep->flighttype,
-					'dep_icao='.$pirep->depicao,
-					'dep_lat=0.0',
-					'dep_long=0.0',
-					'arr_icao='.$pirep->arricao,
-					'arr_lat=0.0',
-					'arr_long=0.0',
-					'flight_level=0',
-					'route='.$update->route,
-					'pax_first=0',
-					'pax_business=0',
-					'pax_economy=0',
-					'pax_total='.$pirep->pax,
-					'cargo='.$pirep->cargo,
-					'schedule_out='.$schedule->deptime,
-					'time_out=0',
-					'time_off=0',
-					'time_on=0',
-					'time_in=0',
-					'schedule_in='.$schedule->arrtime,
-					'hours_dawn='.$pirep->time_dawn,
-					'hours_day='.$pirep->time_day,
-					'hours_dusk='.$pirep->time_dusk,
-					'hours_night='.$pirep->time_night,
-					'hours_total='.$pirep->flighttime,
-					'distance=0.0',
-					'status=',
-					'landing_rate='.$pirep->landing,
-					'fuel_out='.round($pirep->fuelstart),
-					'fuel_off='.round($fuel->load_takeoff),
-					'fuel_toc='.round($fuel->load_toc),
-					'fuel_tod='.round($fuel->load_tod),
-					'fuel_on='.round($fuel->load_landed),
-					'fuel_in='.round($fuel->load_end),
-					'fuel_used='.$pirep->fuelused,
-					'comments='.$pirep->comments,
-					'afk_elapsed='.$pirep->afk_elapsed,
-					'afk_attempts='.$pirep->afk_attempts,
-					'log='.$pirep->log,
-					'online='.$pirep->online,
-					'event='.$pirep->event,
-					'checkride='.$pirep->checkride,
-					'ac_model='.$pirep->ac_model,
-					'ac_title='.$pirep->ac_title,
-					'date='.$pirep->submitdate,
-			);
+			// Translate KACARS to PIREP fields
+			$pirep = new Pirep();
 			
-			$message = implode($this->_field_separator, $fields);
-
-			// Dispatch to appropriate handler
-			$this->dispatch($message, $this->_acars_processor_path.'file_pirep');
+			$pirep->client = $this->_client;
+			$pirep->user_id = $this->_user_id;
+			$pirep->airline_aircraft_id = $data->aircraftid;
+			$pirep->carrier_id = $data->carrierid;
+			$pirep->operator_id = $data->operatorid;
+			$pirep->flight_number = $data->flightnumber;
+			$pirep->flight_type = $data->flighttype;
+			$pirep->dep_airport_id = $data->depairport;
+			$pirep->arr_airport_id = $data->arrairport;
+			$pirep->pax_first = $data->paxfirst;
+			$pirep->pax_business = $data->paxbusiness;
+			$pirep->pax_economy = $data->paxeconomy;
+			$pirep->cargo = $data->cargo;
+			$pirep->route = $data->route;
+			$pirep->flight_level = $data->flightlevel;
+			// XXX Starttime
+			$pirep->hours_dawn = $data->time_dawn;
+			$pirep->hours_day = $data->time_day;
+			$pirep->hours_dusk = $data->time_dusk;
+			$pirep->hours_night = $data->time_night;
+			$pirep->hours_total = $data->flown_time;
+			$pirep->fuel_out = $data->fuelstart;
+			$pirep->fuel_off = $data->fuel->load_takeoff;
+			$pirep->fuel_toc = $data->fuel->load_toc;
+			$pirep->fuel_tod = $data->fuel->load_tod;
+			$pirep->fuel_on = $data->fuel->load_landed;
+			$pirep->fuel_in = $data->fuel->load_end;
+			$pirep->fuel_used = $data->fuelused;
+			$pirep->landing_rate = $data->landing;
+			$pirep->online = $data->online;
+			$pirep->event = $data->event;
+			$pirep->checkride = $data->checkride;
+			$pirep->afk_elapsed = $data->afk_elapsed;
+			$pirep->afk_attempts = $data->afk_attempts;
+			$pirep->ac_model = $data->ac_model;
+			$pirep->ac_title = $data->ac_title;
+			
+			$this->file_pirep($pirep);			
 			log_message('debug', 'PIREP Returning to client');
-			$this->_params['pirepStatus'] = 1;
-			
-			// Won't be able to return the actual PIREP ID due to asynch comms
-			$this->_params['pirepID'] = time();
 			
 			// Respond to the ACARS client
+			$this->_params['message'] = 'PIREP filed';
 			$this->sendXML('pirep');
 		}
 		else 

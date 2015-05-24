@@ -76,9 +76,15 @@ class Acars_Base extends CI_Controller {
 		parent::__construct();
 		
 		$this->output->enable_profiler($this->_profile_this);
-		
+				
 		// Register autoloader
 		spl_autoload_register(array('Acars_Base','_autoload'));
+		
+		if (! is_null($this->_auth_token))
+		{
+			$session = new Acars_session(array('authToken' => (string)$this->_auth_token));
+			$this->_user_id = $session->user_id;
+		}
 	}
 	
 	/**
@@ -167,6 +173,50 @@ class Acars_Base extends CI_Controller {
 	    }
 	    
 	    return FALSE;
+	}
+	
+	/**
+	 * Gets the latest bid for the user
+	 * 
+	 * @return Schedule object representing the user's next bid or empty if no bids.
+	 */
+	protected function get_bid()
+	{
+	    // Get the bid
+	    $schedule = new Schedule();
+	    $bid = $schedule->get_bids($this->_user_id);
+	    
+	    if ($bid)
+	    {
+	        return $bid[0];  // XXX get_bids should probably return an object or an array
+	    }
+	    else 
+	    {
+	        return $schedule;
+	    }
+	}
+	
+	protected function position_report($position)
+	{
+	    // Set any defaults
+	    
+	    
+	    // Prep the message
+	    $message = implode($this->_field_separator, get_object_vars($position));
+	    
+	    // Dispatch to appropriate handler
+	    //$this->dispatch($message, $this->_acars_processor_path.'update');
+	}
+	
+	protected function file_pirep($pirep)
+	{
+	    // Set any defaults
+	    
+	    // Prep the message
+	    $message = implode($this->_field_separator, $fields);
+	    
+	    // Dispatch to appropriate handler
+	    //$this->dispatch($message, $this->_acars_processor_path.'update');
 	}
 
 	/**

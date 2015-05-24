@@ -9,14 +9,10 @@ class Acars_session extends PVA_Model {
     public $created;
     public $modified;
     
-    public function __construct($token = NULL)
+    public function __construct($id = NULL)
     {
         $this->_timestamps = TRUE;
-        if (! is_null($token))
-        {
-            $token = array('authToken' => $token);
-        }
-        parent::__construct($token);
+        parent::__construct($id);
         
         // Update modified date for latest activity
         if (! is_null($this->id))
@@ -29,6 +25,10 @@ class Acars_session extends PVA_Model {
     
     public function create($user_id, $ip_address, $client)
     {
+        // Only one session at a time
+        $session = new Acars_session(array('user_id' => $user_id));
+        $session->destroy();
+        
         $this->authToken = md5($user_id.$ip_address.time());
         $this->user_id = $user_id;
         $this->ip_address = $ip_address;
