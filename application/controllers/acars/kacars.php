@@ -160,7 +160,7 @@ class Kacars extends Acars_Base
 	
 	protected function getFlight($xml)
 	{
-		
+	    $this->sendError("The get flight function has not been implemented yet");
 	}
 	
 	/**
@@ -273,37 +273,37 @@ class Kacars extends Acars_Base
 	
 	protected function parseRoute($xml)
 	{
-		
+	    $this->sendError("The parse route function has not been implemented");
 	}
 	
 	protected function chatConnect($xml)
 	{
-		
+	    $this->sendError("Chat functions are not supported");
 	}
 	
 	protected function chatRetrieve($xml)
 	{
-		
+	    $this->sendError("Chat functions are not supported");
 	}
 	
 	protected function chatSend($xml)
 	{
-		
+	    $this->sendError("Chat functions are not supported");
 	}
 	
 	protected function previousRoutes($xml)
 	{
-		
+	    $this->sendError("The previous routes function has not been implemented");
 	}
 	
 	protected function getPax($xml)
 	{
-		
+	    $this->sendError("The getPax function should no longer be needed");
 	}
 	
 	protected function getCargo($xml)
 	{
-	
+	    $this->sendError("The getCargo function should no longer be needed");
 	}
 	
 	protected function sendError($msg)
