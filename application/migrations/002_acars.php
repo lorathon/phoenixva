@@ -22,6 +22,7 @@ class Migration_Acars extends Migration_base {
 		// List the tables included in this migration in the order they should be created
 		$this->table_list = array(
 				'acars_chat',
+		    	'acars_sessions',
 				'acars_settings',
 				'positions',
 				'pireps',
@@ -47,6 +48,20 @@ class Migration_Acars extends Migration_base {
 		$this->add_key('sender_id');
 		$this->add_key('receiver_id');
 		$this->add_key('created');
+	}
+	
+	protected function _define_acars_sessions()
+	{
+	    $this->add_fields(array(
+	        'authToken' => $this->get_input_field(),
+	        'ip_address' => $this->get_input_field(),
+	        'acars_client' => $this->get_input_field(),
+	        'user_id' => $this->get_fk_field(),
+	        'created' => $this->get_timestamp_field(),
+	        'modified' => $this->get_timestamp_field(),
+	    ));
+	    $this->add_key('authToken', TRUE);
+	    $this->add_key('user_id');
 	}
 	
 	protected function _define_acars_settings()

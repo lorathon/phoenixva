@@ -13,28 +13,12 @@ require_once 'acars_base.php';
 */
 class Kacars extends Acars_Base
 {
-	/**
-	 * User ID for the incoming request
-	 * 
-	 * @var integer
-	 */
-	private $_user_id = NULL;
 	
-	/**
-	 * Authorization token
-	 * 
-	 * Used to identify the user after login.
-	 * 
-	 * @var string
-	 */
-	private $_auth_token = NULL;
-	
-	/**
-	 * Identifier for this ACARS client
-	 * 
-	 * @var string
-	 */
-	private $_client = 'PVACARSII';
+	public function __construct()
+	{
+	    $this->_client = 'kACARS';
+	    parent::__construct();
+	}
 	
 	/**
 	 * Handle incoming request
@@ -59,12 +43,6 @@ class Kacars extends Acars_Base
 		
 		if (method_exists($this, $func))
 		{
-			$this->_user_id = $xml->data->pilotID;
-			if ( ! is_int($this->_user_id))
-			{
-				// Probably used PVA#### instead of just ####
-				$this->_user_id = substr($this->_user_id, 3);
-			}
 			$this->$func($xml);
 		}
 				
@@ -79,14 +57,23 @@ class Kacars extends Acars_Base
 	 */
 	protected function login($xml)
 	{		
-		$user = new User();
-		$user->id = $this->_user_id;
-		$user->password = $xml->data->password;
-		$user->last_ip = $_SERVER['REMOTE_ADDR'];
-		if ($user->login())
+	    $this->_user_id = $xml->data->pilotID;
+	    $this->_password = $xml->data->password;
+	    
+	    if ( ! is_int($this->_user_id))
+	    {
+	    	// Probably used PVA#### instead of just ####
+	    	$this->_user_id = substr($this->_user_id, 3);
+	    }
+	    
+	    $user = parent::login();
+	    
+		if ($user)
 		{
 			log_message('debug', 'kACARS user logged in');
 			// Login was successful, prepare result
+			// XXX This needs to be updated based on https://github.com/cjtop/phoenixva/wiki/ACARS-Communications-Specification#login-1 
+			$this->_params['authToken'] = $this->_auth_token;
 			$this->_params['loginStatus'] = 1;
 			$this->_params['pilotcode'] = $user->id;
 			

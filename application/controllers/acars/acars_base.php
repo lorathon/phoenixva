@@ -12,9 +12,41 @@
 */
 class Acars_Base extends CI_Controller {
 	
-	protected $_acars_processor_path = '/cjtop/acars/acars_processor/';
+	/**
+	 * User ID for the incoming request
+	 * 
+	 * @var integer
+	 */
+	protected $_user_id;
 	
-	// Used to enable/disable the profiler (can be overriden by child controllers)
+	/**
+	 * User's password for the incoming request
+	 * 
+	 * @var string
+	 */
+	protected $_password;
+	
+	/**
+	 * Authorization token
+	 * 
+	 * Used to identify the user after login.
+	 * 
+	 * @var string
+	 */
+	protected $_auth_token;
+	
+	/**
+	 * Identifier for this ACARS client
+	 * 
+	 * @var string
+	 */
+	protected $_client;
+    
+	/**
+	 * Used to enable/disable the profiler (can be overriden by child controllers)
+	 * 
+	 * @var boolean
+	 */
 	protected $_profile_this = TRUE;
 	
 	/**
@@ -24,13 +56,20 @@ class Acars_Base extends CI_Controller {
 	protected $_params = array();
 	
 	/**
+	 * URI path to the ACARS processor
+	 * 
+	 * @var string
+	 */
+	const ACARS_PROCESSOR_PATH = '/cjtop/acars/acars_processor/';
+	
+	/**
 	 * Separator between input fields
 	 * 
 	 * Used by the asynch messaging system.
 	 * 
 	 * @var string
 	 */
-	protected $_field_separator = '&';
+	const FIELD_SEPARATOR = '&';
 	
 	function __construct()
 	{
@@ -88,12 +127,13 @@ class Acars_Base extends CI_Controller {
 	protected function sendXML($params, $switch = '') 
 	{
 		$this->output->enable_profiler(false);
-		$xml = new SimpleXMLElement('<sitedata />');
+		$xml = new SimpleXMLElement('<'.$this->_client.' />');
 	
-		$info_xml = $xml->addChild('info');
 		if($switch != '')
-			$info_xml->addChild('xml_sw', $switch);
-			
+			$xml->addChild('switch', $switch);
+		
+		$info_xml = $xml->addChild('data');
+		
 		foreach($params as $name => $value)	
 		{
 			$info_xml->addChild($name, $value);
@@ -107,6 +147,27 @@ class Acars_Base extends CI_Controller {
 		echo $xml_string;
 	}
 	
+	/**
+	 * Logs the user in and creates an ACARS session
+	 * 
+	 * @return User|boolean User object on success or false on failure
+	 */
+	protected function login()
+	{
+	    $user = new User();
+	    $user->id = $this->_user_id;
+	    $user->password = $this->_password;
+	    $user->last_ip = $_SERVER['REMOTE_ADDR'];
+	    if ($user->login())
+	    {
+	        $session = new Acars_session();
+	        $session->create($user->id, $user->last_ip, $this->_client);
+	        $this->_auth_token = $session->authToken;
+	        return $user;
+	    }
+	    
+	    return FALSE;
+	}
 
 	/**
 	 * PVA Application ACARS autoloader
