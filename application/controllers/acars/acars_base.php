@@ -199,10 +199,11 @@ class Acars_Base extends CI_Controller {
 	protected function position_report($position)
 	{
 	    // Set any defaults
-	    
+	    $position->user_id = $this->_user_id;
+	    $position->ip_address = $_SERVER['REMOTE_ADDR'];
 	    
 	    // Prep the message
-	    $message = implode($this->_field_separator, get_object_vars($position));
+	    $message = implode(self::FIELD_SEPARATOR, get_object_vars($position));
 	    
 	    // Dispatch to appropriate handler
 	    //$this->dispatch($message, $this->_acars_processor_path.'update');
@@ -213,10 +214,10 @@ class Acars_Base extends CI_Controller {
 	    // Set any defaults
 	    
 	    // Prep the message
-	    $message = implode($this->_field_separator, $fields);
+	    $message = implode(self::FIELD_SEPARATOR, get_object_vars($pirep));
 	    
 	    // Dispatch to appropriate handler
-	    //$this->dispatch($message, $this->_acars_processor_path.'update');
+	    //$this->dispatch($message, $this->_acars_processor_path.'pirep');
 	}
 
 	/**

@@ -176,20 +176,20 @@ class Kacars extends Acars_Base
 		{
 			$update = $xml->data;
 			
-			$report = new Position();
+			$report = new stdClass();
 			
 			// Translate values
-			$report->user_id = $this->_user_id;
-			$report->ip_address = $_SERVER['REMOTE_ADDR'];
 			$report->lat = $update->lat;
 			$report->long = $update->lng;
 			$report->altitude = $update->alt;
 			$report->heading = $update->heading;
 			$report->ground_speed = $update->gs;
+			$report->true_airspeed = $update->tas;
+			$report->indicated_airspeed = $update->ias;
 			$report->vertical_speed = $update->vs;
+			$report->bank = $update->bank;
+			$report->pitch = $update->pitch;
 			$report->fuel_onboard = $update->fob;
-			$report->phase = $update->phase;
-			$report->remain_dist = $update->remain_dist;
 			$report->flown_time = $update->flown_time;
 			$report->landed = $update->landed;
 

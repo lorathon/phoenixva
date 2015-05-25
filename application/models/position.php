@@ -31,11 +31,11 @@ class Position extends PVA_Model {
 	
 	public function __construct($id = NULL)
 	{
-		parent::__construct($id);
-		
 		// Set defaults
 		$this->_order_by = 'created asc';
 		$this->_timestamps = TRUE;
+	    parent::__construct($id);
+		
 		log_message('debug', 'Positions model Initialized');
 	}
 	
