@@ -8,7 +8,7 @@
             "lengthMenu": [ 15, 25, 40, 50 ],
             "pageLength": 25,
             "ajax": {
-                "url": "<?php echo base_url('admin/airports/datatable_airports'); ?>",
+                "url": "<?php echo base_url('admin/airports/datatable'); ?>",
                 "type": "POST",
                 "data": function ( data ) {
                     data.<?=$this->security->get_csrf_token_name()?> = "<?=$this->security->get_csrf_hash()?>"

@@ -218,6 +218,42 @@ class PVA_Model extends CI_Model
     	
     	return $this->_get_objects($query);
     }
+    
+    /**
+     * Gets a datatables.net return
+     * 
+     * @param string $columns The columns to include in the output.
+     * @return Ambigous <string, mixed>
+     */
+    public function get_datatable($columns = NULL)
+    {
+        log_message('debug', 'PVA_Model get_datatable()');
+        $datatable = new Datatables();
+        
+        if (is_null($columns))
+        {
+            log_message('debug', 'Getting column list');         
+            $props = get_object_vars($this);
+            $first = TRUE;
+            foreach ($props as $key => $value)
+            {
+                if (substr($key,0,1) != '_')
+                {
+                    if (!$first)
+                    {
+                    	$columns .= ', ';
+                    }
+                    
+                    $columns .= $key;
+                    
+                    if ($first) $first = FALSE;
+                }
+            }
+        }
+        log_message('debug', 'Columns: '.$columns);
+        $datatable->select($columns)->from($this->_table_name);
+        return $datatable->generate();
+    }
         
     /**
      * Allows access to all properties of an object.
@@ -275,7 +311,14 @@ class PVA_Model extends CI_Model
             $this->db->update($this->_table_name, $this->_prep_data());            
         }
     }
-        
+
+    /**
+     * Deletes the object
+     * 
+     * The object must have the primary key populated prior to deleting.
+     * 
+     * @return boolean FALSE if the object ID is not populated.
+     */
     public function delete()
     {        
         if (is_null($this->id))
@@ -410,6 +453,7 @@ class PVA_Model extends CI_Model
      * 
      * The hours is expected to use HH.MM format.
      * 
+     * @deprecated use Calculations::hours_to_mins(string $time) instead.
      * @param string $time in HH.MM format
      * @return number of minutes
      */

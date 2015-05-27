@@ -42,6 +42,8 @@ class User extends PVA_Model {
 	public $transfer_link          = NULL;
 	public $heard_about            = NULL;
 	public $ipbuser_id             = NULL;
+	public $waivers_js             = NULL;
+	public $waivers_cat            = NULL;
 	
 	/* Related objects */
 	protected $_user_profile        = NULL;
@@ -54,6 +56,7 @@ class User extends PVA_Model {
 	private $_is_manager = NULL;
 	private $_is_exec    = NULL;
 	private $_is_super   = NULL;
+	private $_manager_list = NULL;
 	
 	/* Constants */
 	const WAITING = 0;
@@ -65,6 +68,12 @@ class User extends PVA_Model {
 	const RESIGNED = 6;
 	const BANNED = 7;
 	const REJECTED = 8;
+	
+	const ACCESS_PREMIUM = 10;
+	const ACCESS_ADMIN = 50;
+	const ACCESS_MANAGER = 60;
+	const ACCESS_EXEC = 70;
+	const ACCESS_SUPER = 90;
 	
 	function __construct($id = NULL)
 	{
@@ -490,6 +499,14 @@ class User extends PVA_Model {
 		$this->name = $this->_set_name($this->name);
 		$this->_set_retirement('+14 days');
 		
+		// Set starting location
+		if (is_null($this->_user_stats->current_location))
+		{
+			$airport = new Airport($this->hub);
+			$this->_user_stats->current_location = $airport->icao;
+			$this->grant_jumpseat();
+		}
+		
 		// Prep the data
 		$user_parms = $this->_prep_data();
 		
@@ -545,13 +562,34 @@ class User extends PVA_Model {
 		}
 		
 		// Filing a PIREP activates the user
-		$this->make_active();
+		if (in_array($this->status, array(
+				self::LOA,
+				self::RESIGNED,
+				self::FURLOUGH,
+		))) {
+			$this->make_active();
+		}
+		$this->_set_retirement();
 				
 		$stats = $this->get_user_stats();
-		$stats->current_location = $pirep->arr_icao;
 		
-		if ($pirep->status != Pirep::REJECTED)
+		if ($pirep->status == Pirep::APPROVED)
 		{
+			// Charge the category if needed so the PIREP is Rejected post haste
+			$rank = new Rank($this->rank_id);
+			if (!$rank->check_aircraft_category($pirep->airline_aircraft_id))
+			{
+				if (!$this->charge_cat_waiver())
+				{
+					$pirep->status == Pirep::REJECTED;
+					$pirep->save();
+					$pirep->set_note('[SYSTEM] - PIREP Rejected/Unable to charge CAT waiver.', $this->id);
+				}
+			}
+		}
+		
+		if ($pirep->status == Pirep::APPROVED)
+		{	
 			$stats->fuel_used = $stats->fuel_used + $pirep->fuel_used;
 			$stats->total_landings = $stats->total_landings + $pirep->landing_rate;
 			$stats->hours_flights = $stats->hours_flights + $pirep->hours_total();
@@ -570,24 +608,46 @@ class User extends PVA_Model {
 			$stats->total_expenses = $stats->total_expenses + $pirep->get_property('_expenses');
 			$stats->total_gross = $stats->total_gross + $pirep->get_property('_gross_income');
 			$stats->total_pay = $stats->total_pay + $pirep->get_property('_pilot_pay_total');
-
-			// Promote?
-			$rank = new Rank($this->rank_id);
-			$next_rank = $rank->next_rank();
-			if ($stats->total_hours() > $next_rank->min_hours)
+			
+			// Promote/Demote?
+			if ($rank->min_hours > $stats->total_hours())
 			{
-				$this->rank_id = $next_rank->id;
-				$this->set_note('Promoted to '.$next_rank->rank, $this->id);
-				$this->save();
+				// Demotion
+				$prev_rank = $rank->next_rank(TRUE);
+				if ($prev_rank)
+				{
+					$this->rank_id = $prev_rank->id;
+					$this->set_note('Demoted to '.$prev_rank->rank, $this->id);
+				}
 			}
+			else 
+			{
+				$next_rank = $rank->next_rank();
+				if ($next_rank && $stats->total_hours() >= $next_rank->min_hours)
+				{
+					// Promotion
+					$this->rank_id = $next_rank->id;
+					$this->set_note('Promoted to '.$next_rank->rank, $this->id);
+					$user_updates = TRUE;
+				}
+			}
+			
+			// Online flyer award
+			if ($pirep->online)
+			{
+				$award = new Award(array('name' => 'Online Flyer'));
+				$this->grant_award($award->id);
+			}			
 		}
-		else
+		elseif ($pirep->status == Pirep::REJECTED)
 		{
 			$stats->flights_rejected++;
 		}
 		
+		$stats->current_location = $pirep->arr_icao;
 		$stats->last_flight_date = date('Y-m-d');
 		$stats->save();
+		$this->save();
 	} 
 	
 	/**
@@ -948,6 +1008,128 @@ class User extends PVA_Model {
 	}
 	
 	/**
+	 * Finds all the managers for this user.
+	 * 
+	 * Managers are staff members, manager level or above, who are assigned to 
+	 * the same hub.
+	 * 
+	 * @return array|boolean Array of User objects for each manager or FALSE if
+	 * no managers are found.
+	 */
+	public function find_managers()
+	{
+		if (is_null($this->_manager_list))
+		{
+			$search = new User();
+			$search->hub = $this->hub;
+			$search->admin_level = '>= '.self::ACCESS_MANAGER;
+			$this->_manager_list = $search->find_all();
+		}
+		return $this->_manager_list;
+	}
+	
+	/**
+	 * Grants a jumpseat to the user
+	 * 
+	 * Users can have up to 128 jumpseats. This increases the number of jumpseats
+	 * they have available by 1.
+	 * 
+	 * @return boolean TRUE if granted, FALSE otherwise
+	 */
+	public function grant_jumpseat()
+	{
+		if ($this->find())
+		{
+			$this->waivers_js++;
+			$this->save();
+			return TRUE;
+		}
+		return FALSE;
+	}
+	
+	/**
+	 * Charges a jumpseat
+	 * 
+	 * Will use a waiver if the user has one, otherwise charges an hours adjustment
+	 * based on the distance between the user's current location and the ICAO of
+	 * the airport passed in.
+	 * 
+	 * @param string $icao of the departure airport
+	 * @return boolean TRUE if jumpseat charged or waiver used. FALSE if the User
+	 * was not found.
+	 */
+	public function charge_jumpseat($icao)
+	{
+		if ($this->find())
+		{
+			// Jumpseat waivers available?
+			if ($this->waivers_js > 0)
+			{
+				$this->waivers_js--;
+				$this->save();
+				$this->set_note("Jumpseat waiver used to get to {$icao}.", $this->id);
+			}
+			else
+			{
+				$stats = $this->get_user_stats();
+				$curr_loc = new Airport(array('icao' => $stats->current_location));
+				$dep_loc = new Airport(array('icao' => $icao));
+				$distance = Calculations::calculate_airport_distance($curr_loc, $dep_loc);
+					
+				if ($distance > 3000) $stats->hours_adjustment--;
+				if ($distance > 2000) $stats->hours_adjustment--;
+				if ($distance > 1000) $stats->hours_adjustment--;
+				if ($distance > 100) $stats->hours_adjustment--;
+				if ($distance > 1) $stats->hours_adjustment--;
+				$stats->save();
+				$this->set_note("Jumpseat charged for {$distance} miles.", $this->id);
+			}
+			return TRUE;
+		}
+		return FALSE;
+	}
+	
+	/**
+	 * Grants a CATegory waiver to the user
+	 * 
+	 * Users can have up to 128 category waivers allowing them to fly any aircraft
+	 * in the fleet one time per waiver. This method increases the number of cat
+	 * waivers they have available by 1.
+	 * 
+	 * @return boolean TRUE if granted, FALSE otherwise
+	 */
+	public function grant_cat_waiver()
+	{
+		if ($this->find())
+		{
+			$this->waivers_cat++;
+			$this->save();
+			return TRUE;
+		}
+		return FALSE;
+	}
+	
+	/**
+	 * Charges a CATegory waiver
+	 * 
+	 * @return boolean TRUE if a waiver was charged. FALSE otherwise.
+	 */
+	public function charge_cat_waiver()
+	{
+		if ($this->find())
+		{
+			if ($this->waivers_cat > 0)
+			{
+				$this->waivers_cat--;
+				$this->save();
+				$this->set_note('CAT waiver charged.', $this->id);
+				return TRUE;
+			}
+		}
+		return FALSE;
+	}
+	
+	/**
 	 * Determines if user is a premium user.
 	 * 
 	 * @return boolean TRUE if user is a premium user.
@@ -1066,11 +1248,11 @@ class User extends PVA_Model {
 	 */
 	private function _set_access()
 	{
-		($this->admin_level >= 10) ? $this->_is_premium = TRUE : $this->_is_premium = FALSE;
-		($this->admin_level >= 50) ? $this->_is_admin = TRUE : $this->_is_admin = FALSE;
-		($this->admin_level >= 60) ? $this->_is_manager = TRUE : $this->_is_manager = FALSE;
-		($this->admin_level >= 70) ? $this->_is_exec = TRUE : $this->_is_exec = FALSE;
-		($this->admin_level >= 90) ? $this->_is_super = TRUE : $this->_is_super = FALSE;
+		($this->admin_level >= self::ACCESS_PREMIUM) ? $this->_is_premium = TRUE : $this->_is_premium = FALSE;
+		($this->admin_level >= self::ACCESS_ADMIN) ? $this->_is_admin = TRUE : $this->_is_admin = FALSE;
+		($this->admin_level >= self::ACCESS_MANAGER) ? $this->_is_manager = TRUE : $this->_is_manager = FALSE;
+		($this->admin_level >= self::ACCESS_EXEC) ? $this->_is_exec = TRUE : $this->_is_exec = FALSE;
+		($this->admin_level >= self::ACCESS_SUPER) ? $this->_is_super = TRUE : $this->_is_super = FALSE;
 	}
 	
 	/**
