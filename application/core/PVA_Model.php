@@ -311,7 +311,14 @@ class PVA_Model extends CI_Model
             $this->db->update($this->_table_name, $this->_prep_data());            
         }
     }
-        
+
+    /**
+     * Deletes the object
+     * 
+     * The object must have the primary key populated prior to deleting.
+     * 
+     * @return boolean FALSE if the object ID is not populated.
+     */
     public function delete()
     {        
         if (is_null($this->id))
@@ -446,6 +453,7 @@ class PVA_Model extends CI_Model
      * 
      * The hours is expected to use HH.MM format.
      * 
+     * @deprecated use Calculations::hours_to_mins(string $time) instead.
      * @param string $time in HH.MM format
      * @return number of minutes
      */

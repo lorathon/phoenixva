@@ -1,17 +1,30 @@
 <?php
 
+/**
+ * A library of common calculations
+ * 
+ * @author Jeffrey Kobus (@lorathon)
+ * @author Chuck Topinka (@cjtop)
+ */
 class Calculations
 {
     function __construct()
 	{
 	}
-    
-    function calculate_airport_distance($dep, $arr)
+
+	/**
+	 * Uses two airport objects to determine the distance between them.
+	 * 
+	 * @param Airport $dep
+	 * @param Airport $arr
+	 * @return number
+	 */
+    public static function calculate_airport_distance($dep, $arr)
     {
-        return $this->calculate_distance($dep->lat, $dep->lng, $arr->lat, $arr->lng);
+        return $this->calculate_distance($dep->lat, $dep->long, $arr->lat, $arr->long);
     }    
     
-    function calculate_distance($deplat = 0, $deplon = 0, $arrlat = 0, $arrlon = 0)
+    public static function calculate_distance($deplat = 0, $deplon = 0, $arrlat = 0, $arrlon = 0)
     {
         if(strtolower(config_item('units_distance')) === 'km') 
         {
@@ -46,7 +59,7 @@ class Calculations
 	 * Also converts to proper type based on UNIT setting
 	 * http://jan.ucc.nau.edu/~cvm/latlon_formula.html
 	 */
-	public function distance_between_points($lat1, $lng1, $lat2, $lng2)
+	public static function distance_between_points($lat1, $lng1, $lat2, $lng2)
 	{
 		if(strtolower(config_item('units_distance')) === 'mi') # miles
 			$radius = 3963.192;
@@ -70,7 +83,7 @@ class Calculations
 		return $distance;
 	}
     
-    function calculate_flighttime($deptime = 0, $arrtime = 0)
+    public static function calculate_flighttime($deptime = 0, $arrtime = 0)
     {        
         $arrCheck = str_replace(':', '.', $arrtime);
 		$depCheck = str_replace(':', '.', $deptime);
@@ -93,7 +106,7 @@ class Calculations
         }
     }    
     
-    function timeDifference( $start, $end )
+    public static function time_difference( $start, $end )
 	{
 	    $uts['start']      =    strtotime( $start );
 	    $uts['end']        =    strtotime( $end );
@@ -122,6 +135,54 @@ class Calculations
 	    }
 	    return false;
 	}
+	
+	/**
+	 * Changes hours into minutes.
+	 *
+	 * The hours is expected to use HH.MM format.
+	 *
+	 * @param string $time in HH.MM or HH:MM format
+	 * @return number of minutes
+	 */
+	public static function hours_to_minutes($time)
+	{
+		$hours = 0;
+		$mins = 0;
+		$delim = '.';
+		if (strstr($time, ':') !== FALSE)
+		{
+			$delim = ':';
+		}
+		$parts = explode($delim, $time);
+		if (count($parts) == 2)
+		{
+			list ($hours, $mins) = $parts;
+		}
+		else
+		{
+			$hours = $time;
+		}
+		return ($hours * 60) + $mins;
+	}
+	
+	/**
+	 * Calculate the difference between two headings
+	 * 
+	 * Headings must be between 0 and 360.
+	 * 
+	 * @param integer $hdg1
+	 * @param integer $hdg2
+	 * @return number the absolute degrees difference between hdg1 and hdg2
+	 */
+	public static function heading_difference($hdg1, $hdg2)
+	{
+		$diff = abs($hdg1 - $hdg2);
+		if ($diff > 180)
+		{
+			$diff = 360 - $diff;
+		}
+		return $diff;
+	}
     
     /**
      * Calculate a random pricing based on the distance of
@@ -133,7 +194,7 @@ class Calculations
      * This gives the pricing a random feel.
      * Return of two digit decimal (1234.56)
     */    
-    public function random_pricing($distance, $minPrice = 125, $maxPrice = 2000)
+    public static function random_pricing($distance, $minPrice = 125, $maxPrice = 2000)
     {
         // Min and Max Distances
         $minDist = 0;

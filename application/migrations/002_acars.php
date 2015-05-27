@@ -22,6 +22,7 @@ class Migration_Acars extends Migration_base {
 		// List the tables included in this migration in the order they should be created
 		$this->table_list = array(
 				'acars_chat',
+		    	'acars_sessions',
 				'acars_settings',
 				'positions',
 				'pireps',
@@ -47,6 +48,20 @@ class Migration_Acars extends Migration_base {
 		$this->add_key('sender_id');
 		$this->add_key('receiver_id');
 		$this->add_key('created');
+	}
+	
+	protected function _define_acars_sessions()
+	{
+	    $this->add_fields(array(
+	        'authToken' => $this->get_input_field(),
+	        'ip_address' => $this->get_input_field(),
+	        'acars_client' => $this->get_input_field(),
+	        'user_id' => $this->get_fk_field(),
+	        'created' => $this->get_timestamp_field(),
+	        'modified' => $this->get_timestamp_field(),
+	    ));
+	    $this->add_key('authToken', TRUE);
+	    $this->add_key('user_id');
 	}
 	
 	protected function _define_acars_settings()
@@ -103,13 +118,15 @@ class Migration_Acars extends Migration_base {
 				'user_id'             => $this->get_fk_field(),
 				'hub_id'              => $this->get_fk_field(),
 				'airline_aircraft_id' => $this->get_fk_field(),
+				'carrier_id'          => $this->get_fk_field(),
+				'operator_id'         => $this->get_fk_field(),
 				'client'              => $this->get_short_input_field(),
 				'flight_number'       => $this->get_short_input_field(),
 				'flight_type'         => $this->get_status_field(),
-				'dep_icao'            => $this->get_icao_field(),
+				'dep_airport_id'      => $this->get_fk_field(),
 				'dep_lat'             => $this->get_location_field(),
 				'dep_long'            => $this->get_location_field(),
-				'arr_icao'            => $this->get_icao_field(),
+				'arr_airport_id'      => $this->get_fk_field(),
 				'arr_lat'             => $this->get_location_field(),
 				'arr_long'            => $this->get_location_field(),
 				'flight_level'        => $this->get_altitude_field(),
@@ -122,18 +139,20 @@ class Migration_Acars extends Migration_base {
 				'price_business'      => $this->get_money_field(),
 				'price_economy'       => $this->get_money_field(),
 				'price_cargo'         => $this->get_money_field(),
-				'gross_income'        => $this->get_money_field(),
+				'schedule_out'        => $this->get_datetime_field(),
 				'time_out'            => $this->get_datetime_field(),
 				'time_off'            => $this->get_datetime_field(),
 				'time_on'             => $this->get_datetime_field(),
 				'time_in'             => $this->get_datetime_field(),
+				'schedule_in'         => $this->get_datetime_field(),
 				'hours_dawn'          => $this->get_counter_field(),
 				'hours_day'           => $this->get_counter_field(),
 				'hours_dusk'          => $this->get_counter_field(),
 				'hours_night'         => $this->get_counter_field(),
+				'hours_total'         => $this->get_counter_field(),
 				'distance'            => $this->get_calculated_field(),
 				'status'              => $this->get_status_field(),
-				'landing_rate'        => $this->get_landingrate_field(),
+				'landing_rate'        => $this->get_landing_rate_field(),
 				'fuel_out'            => $this->get_calculated_field(),
 				'fuel_off'            => $this->get_calculated_field(),
 				'fuel_toc'            => $this->get_calculated_field(),
@@ -142,12 +161,10 @@ class Migration_Acars extends Migration_base {
 				'fuel_in'             => $this->get_calculated_field(),
 				'fuel_used'           => $this->get_calculated_field(),
 				'fuel_price'          => $this->get_money_field(),
-				'fuel_cost'           => $this->get_money_field(),
 				'pilot_pay_rate'      => $this->get_money_field(),
-				'pilot_pay_total'     => $this->get_money_field(),
 				'expenses'            => $this->get_money_field(),
 				'afk_elapsed'         => $this->get_counter_field(),
-				'afk_attempts'        => $this->get_tiny_int_field(),
+				'afk_attempts'        => $this->get_tinyint_field(),
 				'online'              => $this->get_boolean_field(),
 				'event'               => $this->get_boolean_field(),
 				'checkride'           => $this->get_boolean_field(),
@@ -159,8 +176,10 @@ class Migration_Acars extends Migration_base {
 		$this->add_key('user_id');
 		$this->add_key('hub_id');
 		$this->add_key('airline_aircraft_id');
-		$this->add_key('dep_icao');
-		$this->add_key('arr_icao');
+		$this->add_key('carrier_id');
+		$this->add_key('operator_id');
+		$this->add_key('dep_airport_id');
+		$this->add_key('arr_airport_id');
 	}
 	
 	protected function _define_passengers()
@@ -260,7 +279,7 @@ class Migration_Acars extends Migration_base {
 	
 	protected function _finish_up()
 	{
-		$this->modify_fields('airline_aircraft', array(
+		$this->modify_fields('airline_aircrafts', array(
 				'max_cargo' => array(
 						'name' => 'payload'
 				),
@@ -278,8 +297,8 @@ class Migration_Acars extends Migration_base {
 				),
 		));
 		$this->dbforge->add_column('users', array(
-				'waivers_js' => $this->get_status_field(),
-				'waivers_cat' => $this->get_status_field(),
+				'waivers_js' => $this->get_tinyint_field(),
+				'waivers_cat' => $this->get_tinyint_field(),
 		));
 	}
 }
