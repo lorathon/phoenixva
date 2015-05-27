@@ -139,7 +139,7 @@ endif;
 			<div class="form-group">
 				<?php echo form_label('Flight Number', $flight_num['id'], $label_attributes); ?>
     			    <div class="col-md-6"><?php echo form_input($flight_num); ?></div>
-    			</div>
+    			</div>			
 
     			<div class="form-group">
 				<?php echo form_label('Departure Airport', $dep_airport['id'], $label_attributes); ?>
