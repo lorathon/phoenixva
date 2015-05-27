@@ -4,10 +4,8 @@ $(function(){
   $("#operator").autocomplete({
     source: "<?php echo base_url();?>airlines/autocomplete",
     select: function( event, ui ) {
-	    var span = document.getElementById('operator_code');
             $( "#operator" ).val( ui.item.name);
             $( "#operator_id" ).val( ui.item.id);
-	    document.getElementById("operator_code").textContent = ui.item.fs;
     }
   });
 });

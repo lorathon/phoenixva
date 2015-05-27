@@ -302,7 +302,6 @@ class Airline extends PVA_Model
 		$new_row['label'] = htmlentities(stripslashes($row->autocomplete));
 		$new_row['value'] = htmlentities(stripslashes($row->autocomplete));		
 		$new_row['id'] = $row->id;
-		$new_row['fs'] = $row->fs;
 		$row_set[] = $new_row; //build an array
 	    }
 	    $this->output->enable_profiler(FALSE);
