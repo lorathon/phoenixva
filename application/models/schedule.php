@@ -167,7 +167,7 @@ class Schedule extends PVA_Model
 		    $operator->check_destination($dep_airport->id);
 
 		    // Check for Carrier Airline airframe
-		    $operator->check_aircraft($airframe->id);
+		    $operator->check_aircraft($aircraft_sub->id);
 		}
 		else
 		{
